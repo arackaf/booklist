@@ -54,29 +54,6 @@ export const searchState = derived(page, $page => {
   };
 });
 
-export const searchMutationState = derived([page, searchState], ([$page, $searchState]) => {
-  return {
-    urlWithSubjectFilter(_id: string) {
-      if ($searchState.subjectsLookup.has(_id)) {
-        return null;
-      } else {
-        const searchParams = new URLSearchParams($page.url.searchParams);
-        searchParams.append("subjects", _id);
-        return `/books?${searchParams.toString()}`;
-      }
-    },
-    urlWithTagFilter(_id: string) {
-      if ($searchState.tagsLookup.has(_id)) {
-        return null;
-      } else {
-        const searchParams = new URLSearchParams($page.url.searchParams);
-        searchParams.append("tags", _id);
-        return `/books?${searchParams.toString()}`;
-      }
-    }
-  };
-});
-
 export const changeFilter = derived(page, $page => {
   return {
     withoutSearch: urlWithoutFilter($page.url, "search"),
@@ -96,11 +73,28 @@ export const changeFilter = derived(page, $page => {
       return urlWithFilter($page.url, "sort", `${field}-${direction}`);
     },
 
+    addSubject(_id: string) {
+      const subjects = $page.url.searchParams.getAll("subjects");
+      if (subjects.includes(_id)) {
+        return null;
+      }
+
+      return urlWithArrayFilter($page.url, "subjects", subjects.concat(_id));
+    },
     withoutSubject(_id: string) {
       const subjects = $page.url.searchParams.getAll("subjects");
       const newSubjects = subjects.filter(s => s !== _id);
 
       return urlWithArrayFilter($page.url, "subjects", newSubjects);
+    },
+
+    addTag(_id: string) {
+      const tags = $page.url.searchParams.getAll("tags");
+      if (tags.includes(_id)) {
+        return null;
+      }
+
+      return urlWithArrayFilter($page.url, "tags", tags.concat(_id));
     },
     withoutTag(_id: string) {
       const tags = $page.url.searchParams.getAll("tags");

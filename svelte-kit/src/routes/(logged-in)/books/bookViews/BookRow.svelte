@@ -14,7 +14,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import { runDelete } from "$lib/state/dataUpdates";
 
-  import { searchMutationState } from "../state/searchState";
+  import { changeFilter } from "../state/searchState";
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
   import BookRowDetails from "./BookRowDetails.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState";
@@ -127,17 +127,11 @@
       vertical={true}
       currentlySelected={book.subjects}
       {subjects}
-      href={s => $searchMutationState.urlWithSubjectFilter(s._id)}
+      href={s => $changeFilter.addSubject(s._id)}
     />
   </td>
   <td>
-    <DisplaySelectedTags
-      style="align-items: start"
-      vertical={true}
-      currentlySelected={book.tags}
-      {tags}
-      href={s => $searchMutationState.urlWithTagFilter(s._id)}
-    />
+    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} href={t => $changeFilter.addTag(t._id)} />
   </td>
   <td>
     <div style="margin-top: {!isPublic ? '3' : '0'}px">
