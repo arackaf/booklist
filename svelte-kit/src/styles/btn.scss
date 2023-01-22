@@ -17,7 +17,8 @@
   &:is(button):hover:not([disabled]) {
     background-color: var(--neutral-10);
   }
-  &:active:not([disabled]) {
+  &:is(a):active:not(.disabled),
+  &:is(button):active:not([disabled]) {
     background-color: var(--neutral-9);
   }
 
@@ -29,7 +30,8 @@
     &:is(button):hover:not([disabled]) {
       background-color: var(--primary-6);
     }
-    &:active:not([disabled]) {
+    &:is(a):active:not(.disabled),
+    &:is(button):active:not([disabled]) {
       background-color: var(--primary-5);
     }
 
@@ -49,7 +51,8 @@
       background-color: var(--info-4);
       border-color: var(--info-4);
     }
-    &:active:not([disabled]) {
+    &:is(a):active:not(.disabled),
+    &:is(button):active:not([disabled]) {
       background-color: var(--info-3);
       border-color: var(--info-3);
     }
@@ -65,7 +68,8 @@
       background-color: var(--primary-4);
       border-color: var(--primary-4);
     }
-    &:active:not([disabled]) {
+    &:is(a):active:not(.disabled),
+    &:is(button):active:not([disabled]) {
       background: var(--primary-3);
       border-color: var(--primary-3);
     }
@@ -81,7 +85,8 @@
       background-color: var(--success-4);
       border-color: var(--success-4);
     }
-    &:active:not([disabled]) {
+    &:is(a):active:not(.disabled),
+    &:is(button):active:not([disabled]) {
       background-color: var(--success-3);
       border-color: var(--success-3);
     }
@@ -97,7 +102,8 @@
       background-color: var(--danger-4);
       border-color: var(--danger-4);
     }
-    &:active:not([disabled]) {
+    &:is(a):active:not(.disabled),
+    &:is(button):active:not([disabled]) {
       background: var(--danger-3);
       border-color: var(--danger-3);
     }
@@ -147,8 +153,10 @@
   .btn.active {
     background-color: var(--primary-10);
   }
-  .btn:active:not([disabled]),
-  .btn.active:active:not([disabled]) {
+  .btn:is(a):active:not(.disabled),
+  .btn:is(button):active:not([disabled]),
+  .btn:is(a).active:active:not(.disabled),
+  .btn:is(button).active:active:not([disabled]) {
     background-color: var(--primary-8);
   }
 
