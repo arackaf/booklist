@@ -1,16 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { writable } from "svelte/store";
 
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { searchState, changeFilter, getSortDisplay } from "../state/searchState";
-
-  const currentSearch = writable({ selectedSubjects: [], selectedTags: [] } as any);
-  //import { clearAllFilters, removeFilters, removeFilterSubject, removeFilterTag } from '../setBookFilters';
-  const clearAllFilters = (...args: any[]) => {};
-  const removeFilters = (...args: any[]) => {};
-  const removeFilterSubject = (...args: any[]) => {};
-  const removeFilterTag = (...args: any[]) => {};
 
   $: ({ totalBooks } = $page.data);
   $: resultsCount = $totalBooks;
