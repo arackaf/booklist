@@ -31,6 +31,6 @@ export async function load({ cookies, locals, depends, isDataRequest }: any) {
     booksCache,
     subjects,
     subjectsHash,
-    tags
+    ...(await tags)
   };
 }

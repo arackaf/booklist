@@ -29,7 +29,7 @@ export const searchState = derived(page, $page => {
   const subjectsHash = $page.data.subjectsHash;
   const subjectsObjects = subjects.map(_id => subjectsHash[_id]).filter(s => s);
 
-  const tagHash = $page.data.tags.tagHash;
+  const tagHash = $page.data.tagHash;
   const tagObjects = tags.map(_id => tagHash[_id]).filter(s => s);
 
   return {

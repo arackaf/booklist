@@ -18,8 +18,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
-  $: tagsPacket = $page.data.tags;
-  $: ({ allTags } = tagsPacket);
+  $: allTags = $page.data.allTags;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
   export let onSave: (_id: string | string[], updates: UpdatesTo<Book>) => void;

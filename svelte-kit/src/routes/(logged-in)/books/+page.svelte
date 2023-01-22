@@ -97,9 +97,8 @@
   $: ({ /*books,*/ booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
 
   $: books = $page.data.books as Writable<Book[]>;
-  $: tagsPacket = $page.data.tags;
+  $: allTags = $page.data.allTags;
 
-  $: ({ allTags } = tagsPacket);
   $: allSubjects = $page.data.subjects;
 
   let filterModalOpen = false;
