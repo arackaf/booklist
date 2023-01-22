@@ -79,19 +79,29 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 
   console.log({ tags });
 
-  return queryBooks({
+  return queryBooks<{ resultsCount: [{ count: number }]; books: Book[] }>({
     pipeline: [
       $lookup ? { $lookup } : null,
       { $match },
       { $project: { ...bookProjections, subjectObjects: 1 } },
       { $addFields: { dateAdded: { $toDate: "$_id" } } },
-      { $limit: 50 },
-      { $sort: sort ?? { _id: -1 } }
+      { $sort: sort ?? { _id: -1 } },
+      {
+        $facet: {
+          resultsCount: [{ $count: "count" }],
+          books: [{ $skip: 0 }, { $limit: 50 }]
+        }
+      }
     ].filter(x => x)
   })
-    .then(books => {
+    .then(results => {
+      const [{ resultsCount, books }] = results;
+      const totalBooks = resultsCount[0].count;
+
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
+
+      console.log({ totalBooks });
 
       const arrayFieldsToInit = ["authors", "subjects", "tags"] as (keyof Book)[];
       books.forEach(book => {
@@ -104,7 +114,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
         const date = new Date(book.dateAdded);
         book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
       });
-      return books;
+      return { books, totalBooks };
     })
     .catch(err => {
       console.log({ err });

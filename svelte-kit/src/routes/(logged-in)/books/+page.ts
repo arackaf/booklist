@@ -10,7 +10,7 @@ export async function load({ url, parent, fetch, depends }: any) {
   const cache = getCurrentCookieValue(BOOKS_CACHE) || parentData.booksCache;
 
   const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}`);
-  const books = await resp.json();
+  const { books, totalBooks } = await resp.json();
 
   const { uxState, showMobile } = parentData;
 
@@ -18,6 +18,7 @@ export async function load({ url, parent, fetch, depends }: any) {
 
   return {
     bookView,
+    totalBooks: writable(totalBooks),
     books: writable(books)
   };
 }
