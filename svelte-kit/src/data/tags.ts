@@ -15,7 +15,7 @@ export const allTags = async (userId: string = "") => {
 
       const tagHash = toHash(tags);
 
-      return { allTags: tags, tagHash };
+      return { tags, tagHash };
     })
     .catch(err => {
       console.log({ err });

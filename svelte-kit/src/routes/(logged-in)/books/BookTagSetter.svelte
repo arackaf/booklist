@@ -18,7 +18,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
-  $: allTags = $page.data.allTags;
+  $: tags = $page.data.tags;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
   export let onSave: (_id: string | string[], updates: UpdatesTo<Book>) => void;
@@ -91,17 +91,17 @@
           {/each}
           <FlexRow>
             <div class="col-xs-3">
-              <SelectAvailableTags tags={allTags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
+              <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
             </div>
             <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
-              <DisplaySelectedTags tags={allTags} currentlySelected={addingTags} onRemove={dontAddTag} />
+              <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
             </div>
 
             <div class="col-xs-3">
-              <SelectAvailableTags tags={allTags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
+              <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
             </div>
             <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
-              <DisplaySelectedTags tags={allTags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+              <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
             </div>
 
             <div class="col-xs-12">

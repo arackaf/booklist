@@ -97,7 +97,6 @@
   $: ({ /*books,*/ booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
 
   $: books = $page.data.books as Writable<Book[]>;
-  $: allTags = $page.data.allTags;
 
   $: allSubjects = $page.data.subjects;
 
@@ -168,7 +167,7 @@
             {#if bookViewToUse == BASIC_LIST_VIEW}
               <h1>MOBILE</h1>
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={$books} subjects={allSubjects} tags={allTags} />
+              <GridView books={$books} subjects={allSubjects} {tags} />
             {:else}
               <h1>COVERS</h1>
             {/if}
@@ -181,7 +180,7 @@
           </div>
         {/if}
 
-        <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {allTags} {allSubjects} />
+        <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} {allSubjects} />
 
         <EditBookModal
           isOpen={editBookModalOpen}
@@ -189,7 +188,7 @@
           onBookUpdated={onBooksUpdated}
           onHide={stopEditingBook}
           subjects={allSubjects}
-          tags={allTags}
+          {tags}
         />
 
         <BookSubjectSetter
@@ -207,7 +206,7 @@
 
         <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
 
-        <TagEditModal {colors} tags={allTags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+        <TagEditModal {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
       </div>
     </div>
   </div>

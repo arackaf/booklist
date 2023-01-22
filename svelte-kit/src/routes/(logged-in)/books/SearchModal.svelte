@@ -21,13 +21,13 @@
   export let isOpen = false;
   export let onHide = () => {};
 
-  export let allTags: Tag[];
+  export let tags: Tag[];
   export let allSubjects: Subject[];
 
   let localSearchValues: UnwrapReadable<typeof searchState> = {} as any;
 
-  let subjects = [] as any[];
-  let tags = [] as any[];
+  let localSubjects = [] as any[];
+  let localTags = [] as any[];
   let noSubjects: boolean;
 
   $: {
@@ -37,15 +37,15 @@
   }
   function syncSearchState() {
     localSearchValues = { ...get(searchState) };
-    subjects = localSearchValues.subjects;
-    tags = localSearchValues.tags;
+    localSubjects = localSearchValues.subjects;
+    localTags = localSearchValues.tags;
     noSubjects = localSearchValues.noSubjects;
   }
 
-  const selectSubject = (subject: any) => (subjects = subjects.concat(subject._id));
-  const selectTag = (tag: any) => (tags = tags.concat(tag._id));
-  const removeSubject = (subject: any) => (subjects = subjects.filter(_id => _id != subject._id));
-  const removeTag = (tag: any) => (tags = tags.filter(_id => _id != tag._id));
+  const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject._id));
+  const selectTag = (tag: any) => (localTags = localTags.concat(tag._id));
+  const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(_id => _id != subject._id));
+  const removeTag = (tag: any) => (localTags = localTags.filter(_id => _id != tag._id));
 
   const onFormData = (evt: any) => {
     const searchParams: URLSearchParams = evt.formData;
@@ -120,18 +120,18 @@
       <div class="col-xs-6" />
 
       <div class="col-sm-3 col-xs-12">
-        <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
+        <SelectAvailableTags {tags} currentlySelected={localTags} onSelect={selectTag} />
       </div>
       <div class="col-sm-9 col-xs-12">
-        <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+        <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
       </div>
 
       {#if !noSubjects}
         <div class="col-sm-3 col-xs-12">
-          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
+          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
         </div>
         <div class="col-sm-9 col-xs-12">
-          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
         </div>
 
         <div class="col-xs-12">
