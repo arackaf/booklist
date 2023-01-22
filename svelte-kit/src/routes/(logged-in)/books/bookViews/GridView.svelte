@@ -9,7 +9,6 @@
   export let books: Book[];
   export let subjects: Subject[];
   export let tags: Tag[];
-  const noop = () => {};
 
   $: ({ sortField, sortDirection } = $searchState);
 
@@ -21,14 +20,6 @@
       selectionState.selectAll(books);
     }
   }
-
-  const setSort = (field: string) => {
-    let direction = "asc";
-    if (field === sortField && sortDirection === "desc") {
-      direction = "desc";
-    }
-    $changeFilter.withSort(`${field}-${direction}`);
-  };
 </script>
 
 <table style="position: relative; align-self: start;" class="table no-padding-top">
@@ -43,26 +34,26 @@
       {/if}
       <th style="width: 60px" />
       <th style="min-width: 200px">
-        <button class="raw-button bold no-underline" on:click={() => setSort("title")} on:keypress={noop}>
+        <a class="bold no-underline" href={$changeFilter.withSort("title")}>
           Title
           {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
-        </button>
+        </a>
       </th>
       <th style="min-width: 90px;">Subjects</th>
       <th style="min-width: 90px;">Tags</th>
       <th style="min-width: 90px;" />
       <th />
       <th style="min-width: 85px; ">
-        <button class="raw-button bold no-underline" on:click={() => setSort("pages")}>
+        <a class="bold no-underline" href={$changeFilter.withSort("pages")}>
           Pages
           {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
-        </button>
+        </a>
       </th>
       <th>
-        <button class="raw-button bold no-underline" on:click={() => setSort("_id")}>
+        <a class="bold no-underline" href={$changeFilter.withSort("_id")}>
           Added
           {#if sortField == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
-        </button>
+        </a>
       </th>
     </tr>
   </thead>

@@ -13,6 +13,8 @@ export const sortDisplayLookup = {
 
 export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal];
 
+const DEFAULT_SORT = "_id-desc";
+
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;
   const subjects = searchParams.getAll("subjects") ?? [];
@@ -21,7 +23,7 @@ export const searchState = derived(page, $page => {
   const noSubjects = searchParams.get("no-subjects") === "true";
 
   const sort = searchParams.get("sort");
-  const sortString = sort ?? "_id-desc";
+  const sortString = sort ?? DEFAULT_SORT;
   const [sortField, sortDirection] = sortString.split("-");
 
   const subjectsHash = $page.data.subjectsHash;
@@ -84,8 +86,14 @@ export const changeFilter = derived(page, $page => {
     withoutNoSubjects: urlWithoutFilter($page.url, "no-subjects"),
     withoutSort: urlWithoutFilter($page.url, "sort"),
 
-    withSort(value: string) {
-      urlWithFilter($page.url, "sort", value);
+    withSort(field: string) {
+      const [sortField, sortDirection] = ($page.url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
+
+      let direction = "asc";
+      if (field === sortField && sortDirection === "asc") {
+        direction = "desc";
+      }
+      return urlWithFilter($page.url, "sort", `${field}-${direction}`);
     },
 
     withoutSubject(_id: string) {
