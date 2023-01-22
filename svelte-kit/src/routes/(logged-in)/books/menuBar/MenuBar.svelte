@@ -10,9 +10,6 @@
   import { searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
 
-  const totalPages = 1;
-  const resultsCount = 50;
-
   let quickSearchEl: any = {};
 
   const resetSearch = () => {
@@ -70,7 +67,7 @@
         </div>
       </div>
 
-      <ActiveSearchFilters {resultsCount} />
+      <ActiveSearchFilters />
     </div>
   </div>
 </div>

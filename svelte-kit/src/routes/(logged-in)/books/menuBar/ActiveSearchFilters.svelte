@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { writable } from "svelte/store";
 
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
@@ -11,7 +12,8 @@
   const removeFilterSubject = (...args: any[]) => {};
   const removeFilterTag = (...args: any[]) => {};
 
-  export let resultsCount: string | number;
+  $: ({ totalBooks } = $page.data);
+  $: resultsCount = $totalBooks;
 
   $: resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
   const removeAllFiltersLabel = {
