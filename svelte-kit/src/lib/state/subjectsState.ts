@@ -26,7 +26,7 @@ export const stackAndGetTopLevelSubjects = (allSubjects: Subject[]): FullSubject
   }));
 
   subjects.forEach(parent => {
-    parent.children.push(...subjects.filter(child => new RegExp(`,${parent._id},$`).test(child.path)));
+    parent.children.push(...subjects.filter(child => new RegExp(`,${parent._id},$`).test(child.path || "")));
     parent.childLevel = !parent.path ? 0 : (parent.path.match(/\,/g) || []).length - 1;
   });
 
@@ -99,7 +99,7 @@ export const getChildSubjectsSorted = (_id: string, subjectHash: Hash<Subject>) 
   let regex = new RegExp(`,${_id},$`);
   return Object.keys(subjectHash)
     .map(_id => subjectHash[_id])
-    .filter(sc => regex.test(sc.path))
+    .filter(sc => regex.test(sc.path!))
     .sort(subjectSortCompare);
 };
 
