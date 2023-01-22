@@ -96,7 +96,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   })
     .then(results => {
       const [{ resultsCount, books }] = results;
-      const totalBooks = resultsCount[0].count;
+      const totalBooks = resultsCount?.[0]?.count ?? 0;
 
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
