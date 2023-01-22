@@ -55,8 +55,8 @@
   {#each $searchState.subjectsObjects as s}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={s} href={$changeFilter.withoutSubject(s._id)} />
   {/each}
-  {#each $currentSearch.selectedTags as t}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} doRemove={() => removeFilterTag(t._id)} />
+  {#each $searchState.tagObjects as t}
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} href={$changeFilter.withoutTag(t._id)} />
   {/each}
   {#if $currentSearch.activeFilterCount > 1}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />

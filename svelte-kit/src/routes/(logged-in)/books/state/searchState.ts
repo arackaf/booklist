@@ -27,6 +27,9 @@ export const searchState = derived(page, $page => {
   const subjectsHash = $page.data.subjectsHash;
   const subjectsObjects = subjects.map(_id => subjectsHash[_id]).filter(s => s);
 
+  const tagHash = $page.data.tags.tagHash;
+  const tagObjects = tags.map(_id => tagHash[_id]).filter(s => s);
+
   return {
     search: searchParams.get("search") ?? "",
     author: searchParams.get("author") ?? "",
@@ -39,6 +42,7 @@ export const searchState = derived(page, $page => {
     noSubjects,
     tags,
     tagsLookup: new Set(tags),
+    tagObjects,
     selectedSubjects: [],
     selectedTags: [],
     sort,
@@ -89,6 +93,12 @@ export const changeFilter = derived(page, $page => {
       const newSubjects = subjects.filter(s => s !== _id);
 
       return urlWithArrayFilter($page.url, "subjects", newSubjects);
+    },
+    withoutTag(_id: string) {
+      const tags = $page.url.searchParams.getAll("tags");
+      const newTags = tags.filter(s => s !== _id);
+
+      return urlWithArrayFilter($page.url, "tags", newTags);
     }
   };
 });

@@ -1,5 +1,6 @@
+import { toHash } from "$lib/state/helpers";
 import { deleteById, insertObject, queryTags, updateById } from "./dbUtils";
-import type { Hash, Tag, TagEditFields } from "./types";
+import type { TagEditFields } from "./types";
 
 export const allTags = async (userId: string = "") => {
   userId = userId || "";
@@ -12,10 +13,7 @@ export const allTags = async (userId: string = "") => {
       const httpEnd = +new Date();
       console.log("HTTP tags time", httpEnd - httpStart);
 
-      const tagHash = tags.reduce<Hash<Tag>>((hash, tag) => {
-        hash[tag._id] = tag;
-        return hash;
-      }, {});
+      const tagHash = toHash(tags);
 
       return { allTags: tags, tagHash };
     })
