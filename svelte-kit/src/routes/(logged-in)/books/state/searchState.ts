@@ -72,15 +72,16 @@ export const changeFilter = derived(page, $page => {
   const userId = url.searchParams.get("userId");
   const page = parseInt(url.searchParams.get("page")!) || 1;
 
-  function pageTo(val: number) {
-    if (val === page || val < 1) {
-      return null;
-    }
+  function pageTo(val: number, totalPages?: number) {
     if (val === 1) {
       return urlWithoutFilter(url, "page");
-    } else {
-      return urlWithFilter(url, "page", String(val));
     }
+
+    if (val === page || val < 1 || val > totalPages!) {
+      return null;
+    }
+
+    return urlWithFilter(url, "page", String(val));
   }
 
   return {
@@ -91,10 +92,7 @@ export const changeFilter = derived(page, $page => {
     withoutNoSubjects: urlWithoutFilter(url, "no-subjects"),
     withoutSort: urlWithoutFilter(url, "sort"),
     withoutFilters: `/books${userId ? `?userId=${userId}` : ""}`,
-    pageUp: pageTo(page + 1),
-    pageDown: pageTo(page - 1),
-    pageOne: pageTo(1),
-    pageTo: (val: number) => pageTo(val),
+    pageTo: (val: number, totalPages?: number) => pageTo(val, totalPages),
 
     withSort(field: string) {
       const [sortField, sortDirection] = (url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");

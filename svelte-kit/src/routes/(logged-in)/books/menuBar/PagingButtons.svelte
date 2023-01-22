@@ -35,8 +35,8 @@
 
 <div style="display: flex; margin-right: 5px; align-items: center">
   <div class="btn-group">
-    <a href={$changeFilter.pageOne} class:disabled={!canPageOne} class="btn btn-default page-edge"><i class="fal fa-angle-double-left" /></a>
-    <a href={$changeFilter.pageDown} class:disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
+    <a href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge"><i class="fal fa-angle-double-left" /></a>
+    <a href={$changeFilter.pageTo(page - 1, totalPages)} class:disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
       <i class="fal fa-angle-left" />
     </a>
   </div>
@@ -55,10 +55,10 @@
   </div>
 
   <div class="btn-group">
-    <a href={$changeFilter.pageUp} class:disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px">
+    <a href={$changeFilter.pageTo(page + 1, totalPages)} class:disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px">
       <i class="fal fa-angle-right" />
     </a>
-    <a href={$changeFilter.pageTo(totalPages)} class:disabled={!canPageLast} class="btn btn-default page-edge">
+    <a href={$changeFilter.pageTo(totalPages, totalPages)} class:disabled={!canPageLast} class="btn btn-default page-edge">
       <i class="fal fa-angle-double-right" />
     </a>
   </div>
