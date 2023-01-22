@@ -66,52 +66,56 @@ export const searchState = derived(page, $page => {
 });
 
 export const changeFilter = derived(page, $page => {
+  const { url } = $page;
+  const userId = url.searchParams.get("userId");
+
   return {
-    withoutSearch: urlWithoutFilter($page.url, "search"),
-    withoutAuthor: urlWithoutFilter($page.url, "author"),
-    withoutIsRead: urlWithoutFilter($page.url, "is-read"),
-    withoutPublisher: urlWithoutFilter($page.url, "publisher"),
-    withoutNoSubjects: urlWithoutFilter($page.url, "no-subjects"),
-    withoutSort: urlWithoutFilter($page.url, "sort"),
+    withoutSearch: urlWithoutFilter(url, "search"),
+    withoutAuthor: urlWithoutFilter(url, "author"),
+    withoutIsRead: urlWithoutFilter(url, "is-read"),
+    withoutPublisher: urlWithoutFilter(url, "publisher"),
+    withoutNoSubjects: urlWithoutFilter(url, "no-subjects"),
+    withoutSort: urlWithoutFilter(url, "sort"),
+    withoutFilters: `/books${userId ? `?userId=${userId}` : ""}`,
 
     withSort(field: string) {
-      const [sortField, sortDirection] = ($page.url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
+      const [sortField, sortDirection] = (url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
 
       let direction = "asc";
       if (field === sortField && sortDirection === "asc") {
         direction = "desc";
       }
-      return urlWithFilter($page.url, "sort", `${field}-${direction}`);
+      return urlWithFilter(url, "sort", `${field}-${direction}`);
     },
 
     addSubject(_id: string) {
-      const subjects = $page.url.searchParams.getAll("subjects");
+      const subjects = url.searchParams.getAll("subjects");
       if (subjects.includes(_id)) {
         return null;
       }
 
-      return urlWithArrayFilter($page.url, "subjects", subjects.concat(_id));
+      return urlWithArrayFilter(url, "subjects", subjects.concat(_id));
     },
     withoutSubject(_id: string) {
-      const subjects = $page.url.searchParams.getAll("subjects");
+      const subjects = url.searchParams.getAll("subjects");
       const newSubjects = subjects.filter(s => s !== _id);
 
-      return urlWithArrayFilter($page.url, "subjects", newSubjects);
+      return urlWithArrayFilter(url, "subjects", newSubjects);
     },
 
     addTag(_id: string) {
-      const tags = $page.url.searchParams.getAll("tags");
+      const tags = url.searchParams.getAll("tags");
       if (tags.includes(_id)) {
         return null;
       }
 
-      return urlWithArrayFilter($page.url, "tags", tags.concat(_id));
+      return urlWithArrayFilter(url, "tags", tags.concat(_id));
     },
     withoutTag(_id: string) {
-      const tags = $page.url.searchParams.getAll("tags");
+      const tags = url.searchParams.getAll("tags");
       const newTags = tags.filter(s => s !== _id);
 
-      return urlWithArrayFilter($page.url, "tags", newTags);
+      return urlWithArrayFilter(url, "tags", newTags);
     }
   };
 });

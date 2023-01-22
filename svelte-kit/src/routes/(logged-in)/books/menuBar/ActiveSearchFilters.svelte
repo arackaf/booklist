@@ -66,6 +66,6 @@
     />
   {/if}
   {#if $searchState.activeFilterCount > 1}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} href={$changeFilter.withoutFilters} />
   {/if}
 </div>
