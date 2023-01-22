@@ -1,6 +1,7 @@
 import { queryBooks, updateMultipleBooks, deleteBookById, updateById } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
+import { BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
 const bookFields = [
   "_id",
@@ -27,7 +28,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort } = searchPacket;
+  const { publicUser, page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort } = searchPacket;
   const $match: any = { userId };
   let $lookup: any = null;
 
@@ -89,7 +90,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       {
         $facet: {
           resultsCount: [{ $count: "count" }],
-          books: [{ $skip: 0 }, { $limit: 50 }]
+          books: [{ $skip: (page - 1) * BOOKS_PAGE_SIZE }, { $limit: BOOKS_PAGE_SIZE }]
         }
       }
     ].filter(x => x)

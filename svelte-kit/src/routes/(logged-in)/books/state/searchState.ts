@@ -17,6 +17,7 @@ const DEFAULT_SORT = "_id-desc";
 
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;
+
   const subjects = searchParams.getAll("subjects") ?? [];
   const tags = searchParams.getAll("tags") ?? [];
   const childSubjects = searchParams.get("child-subjects");
@@ -33,6 +34,7 @@ export const searchState = derived(page, $page => {
   const tagObjects = tags.map(_id => tagHash[_id]).filter(s => s);
 
   const result = {
+    page: parseInt(searchParams.get("page")!) || 1,
     search: searchParams.get("search") ?? "",
     author: searchParams.get("author") ?? "",
     publisher: searchParams.get("publisher") ?? "",

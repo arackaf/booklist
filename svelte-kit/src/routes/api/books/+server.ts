@@ -1,7 +1,7 @@
+import { json } from "@sveltejs/kit";
+
 import { searchBooks } from "$data/books";
 import type { BookSearch } from "$data/types";
-import { BOOKS_CACHE } from "$lib/state/cacheHelpers";
-import { json } from "@sveltejs/kit";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
   const session = await locals.getSession();
@@ -13,6 +13,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     "cache-control": "max-age=60"
   });
 
+  const publicUser = url.searchParams.get("userId") || "";
+  const page = parseInt(url.searchParams.get("page")!) || 1;
   const search = url.searchParams.get("search") || "";
   const publisher = url.searchParams.get("publisher") || "";
   const author = url.searchParams.get("author") || "";
@@ -24,6 +26,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const noSubjects = url.searchParams.get("no-subjects") === "true";
 
   const packet: BookSearch = {
+    publicUser,
+    page,
     author,
     search,
     publisher,
