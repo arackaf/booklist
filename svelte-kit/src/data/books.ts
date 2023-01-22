@@ -65,7 +65,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
         pipeline: [
           { $addFields: { subjectIdString: { $toString: "$_id" } } },
           //
-          { $match: { $expr: { $in: ["$subjectIdString", "$$subjectsArray"] } } }
+          { $match: { $expr: { $in: ["$subjectIdString", { $ifNull: ["$$subjectsArray", []] }] } } }
         ],
         as: "subjectObjects"
       };
