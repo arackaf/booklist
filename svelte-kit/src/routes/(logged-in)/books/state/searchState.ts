@@ -32,26 +32,37 @@ export const searchState = derived(page, $page => {
   const tagHash = $page.data.tagHash;
   const tagObjects = tags.map(_id => tagHash[_id]).filter(s => s);
 
-  return {
+  const result = {
     search: searchParams.get("search") ?? "",
     author: searchParams.get("author") ?? "",
     publisher: searchParams.get("publisher") ?? "",
     isRead: searchParams.get("is-read") ?? "",
     subjects,
-    subjectsLookup: new Set(subjects),
     subjectsObjects,
     childSubjects,
     noSubjects,
     tags,
-    tagsLookup: new Set(tags),
     tagObjects,
-    selectedSubjects: [],
-    selectedTags: [],
     sort,
     sortPacket: `${sortField}-${sortDirection}` as SortValue,
     sortField,
-    sortDirection
+    sortDirection,
+    activeFilterCount: 0
   };
+
+  type ResultKey = keyof typeof result;
+
+  const simpleFilters: ResultKey[] = ["search", "author", "publisher", "isRead"];
+  const arrayFilters: ResultKey[] = ["subjects", "tags"];
+  const toggleFilters: ResultKey[] = ["noSubjects", "childSubjects"];
+
+  result.activeFilterCount = [
+    ...simpleFilters.filter(key => result[key]),
+    ...arrayFilters.flatMap(key => result[key]),
+    ...toggleFilters.filter(key => result[key])
+  ].length;
+
+  return result;
 });
 
 export const changeFilter = derived(page, $page => {

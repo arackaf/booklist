@@ -58,14 +58,14 @@
   {#each $searchState.tagObjects as t}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} href={$changeFilter.withoutTag(t._id)} />
   {/each}
-  {#if $currentSearch.activeFilterCount > 1}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />
-  {/if}
   {#if $searchState.sort}
     <RemovableLabelDisplay
       extraStyles={filterDisplayStyles}
       item={{ name: `Sort: ${getSortDisplay($searchState.sortPacket)}` }}
       href={$changeFilter.withoutSort}
     />
+  {/if}
+  {#if $searchState.activeFilterCount > 1}
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} doRemove={clearAllFilters} />
   {/if}
 </div>
