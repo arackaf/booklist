@@ -24,6 +24,9 @@ export const searchState = derived(page, $page => {
   const sortString = sort ?? "_id-desc";
   const [sortField, sortDirection] = sortString.split("-");
 
+  const subjectsHash = $page.data.subjectsHash;
+  const subjectsObjects = subjects.map(_id => subjectsHash[_id]).filter(s => s);
+
   return {
     search: searchParams.get("search") ?? "",
     author: searchParams.get("author") ?? "",
@@ -31,6 +34,7 @@ export const searchState = derived(page, $page => {
     isRead: searchParams.get("is-read") ?? "",
     subjects,
     subjectsLookup: new Set(subjects),
+    subjectsObjects,
     childSubjects,
     noSubjects,
     tags,
@@ -78,6 +82,13 @@ export const changeFilter = derived(page, $page => {
 
     withSort(value: string) {
       urlWithFilter($page.url, "sort", value);
+    },
+
+    withoutSubject(_id: string) {
+      const subjects = $page.url.searchParams.getAll("subjects");
+      const newSubjects = subjects.filter(s => s !== _id);
+
+      return urlWithArrayFilter($page.url, "subjects", newSubjects);
     }
   };
 });
@@ -91,5 +102,17 @@ const urlWithoutFilter = (url: URL, filter: string) => {
 const urlWithFilter = (url: URL, filter: string, value: string) => {
   const newUrl = new URL(url);
   newUrl.searchParams.set(filter, value);
+
+  return newUrl.toString();
+};
+
+const urlWithArrayFilter = (url: URL, filter: string, values: string[]) => {
+  const newUrl = new URL(url);
+
+  newUrl.searchParams.delete(filter);
+  for (const s of values) {
+    newUrl.searchParams.append(filter, s);
+  }
+
   return newUrl.toString();
 };
