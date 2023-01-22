@@ -23,14 +23,11 @@ export async function load({ cookies, locals, depends, isDataRequest }: any) {
   depends("reload-root-data");
 
   const tags = allTags(session.userId);
-
-  const subjects = await allSubjects(session.userId);
-  const subjectsHash = getSubjectsHash(subjects);
+  const subjects = allSubjects(session.userId);
 
   return {
     booksCache,
-    subjects,
-    subjectsHash,
+    ...(await subjects),
     ...(await tags)
   };
 }
