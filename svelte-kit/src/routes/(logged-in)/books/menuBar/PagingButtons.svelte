@@ -1,13 +1,23 @@
 <script lang="ts">
+  import { page as pageStore } from "$app/stores";
+  import { BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+  import { changeFilter, searchState } from "../state/searchState";
+
   //import { appState } from "app/state/appState";
   //import { currentSearch } from "../booksSearchState";
   //import { pageOne, setPage } from "../setBookFilters";
 
-  let totalPages: number = 1;
-  let resultsCount: number = 50;
+  $: ({ page } = $searchState);
+  $: ({ totalBooks } = $pageStore.data);
+  $: resultsCount = $totalBooks;
 
-  const page = 1;
-  const pageSize = 50;
+  $: totalPages = Math.ceil(resultsCount / BOOKS_PAGE_SIZE);
+
+  //let totalPages: number = 1;
+  //let resultsCount: number = 50;
+
+  //const page = 1;
+
   const setPage = (page: number) => {};
   const pageOne = () => {};
 
@@ -25,10 +35,10 @@
 
 <div style="display: flex; margin-right: 5px; align-items: center">
   <div class="btn-group">
-    <button on:click={pageOne} disabled={!canPageOne} class="btn btn-default page-edge"><i class="fal fa-angle-double-left" /></button>
-    <button on:click={pageDown} disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
+    <a href={$changeFilter.pageOne} class:disabled={!canPageOne} class="btn btn-default page-edge"><i class="fal fa-angle-double-left" /></a>
+    <a href={$changeFilter.pageDown} class:disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
       <i class="fal fa-angle-left" />
-    </button>
+    </a>
   </div>
 
   <div class="results-holder overlay-holder">
@@ -45,8 +55,11 @@
   </div>
 
   <div class="btn-group">
-    <button on:click={pageUp} disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px"> <i class="fal fa-angle-right" /> </button>
-
-    <button on:click={pageLast} disabled={!canPageLast} class="btn btn-default page-edge"><i class="fal fa-angle-double-right" /></button>
+    <a href={$changeFilter.pageUp} class:disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px">
+      <i class="fal fa-angle-right" />
+    </a>
+    <a href={$changeFilter.pageTo(totalPages)} class:disabled={!canPageLast} class="btn btn-default page-edge">
+      <i class="fal fa-angle-double-right" />
+    </a>
   </div>
 </div>

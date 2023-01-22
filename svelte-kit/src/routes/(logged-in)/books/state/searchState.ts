@@ -70,6 +70,18 @@ export const searchState = derived(page, $page => {
 export const changeFilter = derived(page, $page => {
   const { url } = $page;
   const userId = url.searchParams.get("userId");
+  const page = parseInt(url.searchParams.get("page")!) || 1;
+
+  function pageTo(val: number) {
+    if (val === page || val < 1) {
+      return null;
+    }
+    if (val === 1) {
+      return urlWithoutFilter(url, "page");
+    } else {
+      return urlWithFilter(url, "page", String(val));
+    }
+  }
 
   return {
     withoutSearch: urlWithoutFilter(url, "search"),
@@ -79,6 +91,10 @@ export const changeFilter = derived(page, $page => {
     withoutNoSubjects: urlWithoutFilter(url, "no-subjects"),
     withoutSort: urlWithoutFilter(url, "sort"),
     withoutFilters: `/books${userId ? `?userId=${userId}` : ""}`,
+    pageUp: pageTo(page + 1),
+    pageDown: pageTo(page - 1),
+    pageOne: pageTo(1),
+    pageTo: (val: number) => pageTo(val),
 
     withSort(field: string) {
       const [sortField, sortDirection] = (url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
