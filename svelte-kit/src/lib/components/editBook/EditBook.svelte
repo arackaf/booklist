@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Subject, Tag } from "$data/types";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
-  //import EditBookCovers from "./EditBookCovers.svelte";
+  import EditBookCovers from "./EditBookCovers.svelte";
 
   import EditBookInfo from "./EditBookInfo.svelte";
   //import ManageBookCover from "./ManageBookCover.svelte";
@@ -26,15 +26,15 @@
   </TabHeaders>
   <TabContents>
     <TabContent tabName="basic">
-      <button on:click={testCover}>TEST</button>
-      <!-- {#if book}
+      <!-- <button on:click={testCover}>TEST</button> -->
+      {#if book}
         <EditBookInfo {book} {cancel} {subjects} {tags} {onBookUpdated} />
-      {/if} -->
+      {/if}
     </TabContent>
     <TabContent tabName="covers">
-      <!-- {#if book}
+      {#if book}
         <EditBookCovers {book} {updateBook} />
-      {/if} -->
+      {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>
   </TabContents>

@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { BookMutationInput, MutationOf, Mutations } from "gql/graphql-typings";
-  import UpdateBook from "gql/books/updateBook.graphql";
+  //import { BookMutationInput, MutationOf, Mutations } from "gql/graphql-typings";
+  //import UpdateBook from "gql/books/updateBook.graphql";
 
-  import { mutation } from "micro-graphql-svelte";
+  //import { mutation } from "micro-graphql-svelte";
 
   import ManageBookCover from "./ManageBookCover.svelte";
-  import UploadResults from "./UploadResults.svelte";
-  import { IBookRaw } from "modules/books/booksState";
+  // import UploadResults from "./UploadResults.svelte";
+  //import { IBookRaw } from "modules/books/booksState";
   import Button from "../buttons/Button.svelte";
   import ActionButton from "../buttons/ActionButton.svelte";
-  import CurrentCovers from "./CurrentCovers.svelte";
+  //import CurrentCovers from "./CurrentCovers.svelte";
 
-  export let book;
-  export let updateBook: (updater: (book: IBookRaw) => IBookRaw) => void;
+  export let book: any;
+  export let updateBook: (updater: (book: any) => any) => void;
 
-  const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
-  $: updateBookState = $updateMutationState;
+  //const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
+  //$: updateBookState = $updateMutationState;
 
   type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
   type UploadResultsType = {
@@ -26,15 +26,15 @@
     medium: IndividualCover;
   };
 
-  let coverProcessingResult: UploadResultsType = null;
+  let coverProcessingResult: any = null;
 
   let useNewMobile = false;
   let useNewSmall = false;
   let useNewMedium = false;
 
-  const setUseNewMobile = val => (useNewMobile = val);
-  const setUseNewSmall = val => (useNewSmall = val);
-  const setUseNewMedium = val => (useNewMedium = val);
+  const setUseNewMobile = (val: any) => (useNewMobile = val);
+  const setUseNewSmall = (val: any) => (useNewSmall = val);
+  const setUseNewMedium = (val: any) => (useNewMedium = val);
 
   let coverProcessingError = false;
   const onCoverError = () => {
@@ -60,9 +60,10 @@
   const runSave = () => {
     let { _id } = book;
 
-    const updateObject: Partial<
-      Pick<BookMutationInput, "mobileImage" | "mobileImagePreview" | "smallImage" | "smallImagePreview" | "mediumImage" | "mediumImagePreview">
-    > = {};
+    const updateObject: any = {};
+    // Partial<
+    //   Pick<BookMutationInput, "mobileImage" | "mobileImagePreview" | "smallImage" | "smallImagePreview" | "mediumImage" | "mediumImagePreview">
+    // > = {};
     if (useNewMobile) {
       updateObject.mobileImage = coverProcessingResult.mobile.image.url;
       updateObject.mobileImagePreview = coverProcessingResult.mobile.image.preview;
@@ -77,13 +78,13 @@
     }
 
     if (_id) {
-      return updateBookState.runMutation({ _id, book: updateObject }).then(() => {
-        coverProcessingResult = null;
-        updateBook(b => ({ ...b, ...updateObject }));
-      });
+      // return updateBookState.runMutation({ _id, book: updateObject }).then(() => {
+      //   coverProcessingResult = null;
+      //   updateBook(b => ({ ...b, ...updateObject }));
+      // });
     } else {
-      updateBook(b => ({ ...b, ...updateObject }));
-      coverProcessingResult = null;
+      // updateBook(b => ({ ...b, ...updateObject }));
+      // coverProcessingResult = null;
     }
   };
 
@@ -95,7 +96,7 @@
 </script>
 
 <div>
-  <CurrentCovers {book} />
+  <!-- <CurrentCovers {book} /> -->
   <hr />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
@@ -105,7 +106,7 @@
   {/if}
 
   {#if coverProcessingResult}
-    <UploadResults
+    <!-- <UploadResults
       {success}
       {status}
       {mobile}
@@ -117,7 +118,7 @@
       {setUseNewSmall}
       {useNewMedium}
       {setUseNewMedium}
-    />
+    /> -->
   {/if}
 
   {#if saveEligible && isNew}

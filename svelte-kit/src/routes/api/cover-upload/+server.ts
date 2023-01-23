@@ -5,10 +5,14 @@ import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
-export async function POST({ cookies, locals }: any) {
+export async function POST({ cookies, locals, request }: any) {
   // console.log("cover-upload", { locals });
   // const session = await locals.getSession();
   // console.log({ session });
+
+  const reqBody = await request.formData();
+
+  console.log({ file: reqBody.get("fileUploaded") });
 
   try {
     const client = new LambdaClient({
