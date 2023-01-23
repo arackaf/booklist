@@ -6,9 +6,6 @@ import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8-node";
 import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
 export async function POST({ cookies, locals, request }: any) {
-  // console.log("cover-upload", { locals });
-  // const session = await locals.getSession();
-  // console.log({ session });
   const session = await locals.getSession();
   if (!session) {
     return { success: false };
@@ -37,13 +34,14 @@ export async function POST({ cookies, locals, request }: any) {
     const response = await client.send(command);
 
     if (response.Payload) {
-      console.log("Payload response", toUtf8(response.Payload));
+      const respJson = JSON.parse(toUtf8(response.Payload));
+
+      return json(respJson);
     } else {
-      console.log("No response payload");
+      return json({ error: true });
     }
   } catch (er) {
     console.log("Error invoking lambda", er);
+    return json({ error: true });
   }
-
-  return json({});
 }

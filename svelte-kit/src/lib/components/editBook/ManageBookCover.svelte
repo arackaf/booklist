@@ -21,9 +21,13 @@
     remoteImageSaving = true;
 
     console.log("Hey");
-    fetch("/api/cover-set-url", { method: "POST", body: JSON.stringify({ url: remoteUrl }) });
-    //const request = { userId, loginToken, url: remoteUrl };
-    //ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, request, onResults, onError).then(() => (remoteImageSaving = false));
+    fetch("/api/cover-set-url", { method: "POST", body: JSON.stringify({ url: remoteUrl }) })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (!resp.error) {
+          onResults(resp);
+        }
+      });
   };
 
   const onDrop = (evt: any) => {

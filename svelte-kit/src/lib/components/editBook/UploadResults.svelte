@@ -4,9 +4,9 @@
 
   export let success: boolean;
   export let status: "success" | "invalid-size" | "error";
-  export let mobile;
-  export let small;
-  export let medium;
+  export let mobile: any;
+  export let small: any;
+  export let medium: any;
   export let useNewMobile: boolean;
   export let setUseNewMobile: (val: boolean) => void;
   export let useNewSmall: boolean;

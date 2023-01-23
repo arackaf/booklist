@@ -5,7 +5,7 @@
   //import { mutation } from "micro-graphql-svelte";
 
   import ManageBookCover from "./ManageBookCover.svelte";
-  // import UploadResults from "./UploadResults.svelte";
+  import UploadResults from "./UploadResults.svelte";
   //import { IBookRaw } from "modules/books/booksState";
   import Button from "../buttons/Button.svelte";
   import ActionButton from "../buttons/ActionButton.svelte";
@@ -106,7 +106,7 @@
   {/if}
 
   {#if coverProcessingResult}
-    <!-- <UploadResults
+    <UploadResults
       {success}
       {status}
       {mobile}
@@ -118,7 +118,7 @@
       {setUseNewSmall}
       {useNewMedium}
       {setUseNewMedium}
-    /> -->
+    />
   {/if}
 
   {#if saveEligible && isNew}

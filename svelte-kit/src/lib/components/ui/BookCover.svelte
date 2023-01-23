@@ -2,7 +2,7 @@
   import type { PreviewPacket } from "$data/types";
 
   export let url: string | null = null;
-  export let preview: string | PreviewPacket | null;
+  export let preview: string | PreviewPacket | null | undefined;
   export let size: "mobile" | "small" | "medium";
 
   $: previewString = preview == null ? "" : typeof preview === "string" ? preview : preview.b64;
