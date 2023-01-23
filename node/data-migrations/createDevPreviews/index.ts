@@ -13,10 +13,10 @@ const uuid = require("uuid/v4");
 import { connect } from "../dbConnect";
 import { downloadImage } from "../downloadImage";
 
-import downloadFromUrl from "../../util/downloadFromUrl";
-import uploadToS3 from "../../util/uploadToS3";
-import { resizeImage, getBuffer } from "../../util/resizeImage";
-import { SIZE_WIDTHS, QUALITIES } from "../../util/handleCover";
+import downloadFromUrl from "../../../lambda/util/downloadFromUrl";
+import uploadToS3 from "../../../lambda/util/uploadToS3";
+import { resizeImage, getBuffer } from "../../../lambda/util/resizeImage";
+import { SIZE_WIDTHS, QUALITIES } from "../../../lambda/util/handleCover";
 
 const imagePath = (size, filePath) => `${size}-covers/${filePath}`;
 

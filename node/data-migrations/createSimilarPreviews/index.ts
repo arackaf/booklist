@@ -1,9 +1,9 @@
 const path = require("path");
 const uuid = require("uuid/v4");
 
-import downloadFromUrl from "../../util/downloadFromUrl";
-import { handleCover } from "../../util/handleCover";
-import { getDbConnection } from "../../util/getDbConnection";
+import downloadFromUrl from "../../../lambda/util/downloadFromUrl";
+import { handleCover } from "../../../lambda/util/handleCover";
+import { getDbConnection } from "../../../lambda/util/getDbConnection";
 
 async function run() {
   process.env.stage = "live";
@@ -44,14 +44,12 @@ async function run() {
           console.log("#", idx, book.title, "saved");
           console.log(res.image.url, "previewSize", res.image.preview.length);
         } else {
-          await db
-            .collection("bookSummaries")
-            .updateOne(
-              { _id: book._id },
-              {
-                $set: { smallImage: "https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png", smallImagePreview: "" }
-              }
-            );
+          await db.collection("bookSummaries").updateOne(
+            { _id: book._id },
+            {
+              $set: { smallImage: "https://s.gr-assets.com/assets/nophoto/book/50x75-a91bf249278a81aabab721ef782c4a74.png", smallImagePreview: "" }
+            }
+          );
           console.log("#", idx, "Cover handling not successful", res.STATUS);
         }
       } else {

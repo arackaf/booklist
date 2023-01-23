@@ -1,4 +1,4 @@
-import { getDbConnection } from "../../util/getDbConnection";
+import { getDbConnection } from "../../../lambda/util/getDbConnection";
 
 import * as blurhash from "blurhash";
 import { createCanvas, loadImage, Image } from "canvas";
