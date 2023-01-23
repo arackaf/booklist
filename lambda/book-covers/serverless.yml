@@ -64,12 +64,6 @@ functions:
           method: post
           cors: true
 
-  bookRecommendationBadCoverSync:
-    timeout: 750
-    handler: handlerUpdateSimilarItemsCovers.handler
-    events:
-      - schedule: rate(24 hours)
-
 custom:
   esbuild:
     packager: yarn
