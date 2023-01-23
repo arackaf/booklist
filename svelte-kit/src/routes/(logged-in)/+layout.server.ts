@@ -3,7 +3,6 @@ import { redirect } from "@sveltejs/kit";
 import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
-import { getSubjectsHash } from "$lib/state/subjectsState";
 
 export async function load({ cookies, locals, depends, isDataRequest }: any) {
   const initialRequest = !isDataRequest;
