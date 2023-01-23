@@ -41,28 +41,13 @@ provider:
 functions:
   upload:
     handler: handlerFileUpload.handler
-    events:
-      - http:
-          path: upload
-          method: post
-          cors: true
 
   uploadFromUrl:
     handler: handlerUrlUpload.handler
-    events:
-      - http:
-          path: uploadFromUrl
-          method: post
-          cors: true
 
   isbnDbBookCoverLookup:
     timeout: 10
     handler: handlerIsbnDbLookup.handler
-    events:
-      - http:
-          path: /isbndb-cover-lookup
-          method: post
-          cors: true
 
   bookRecommendationBadCoverSync:
     timeout: 750
