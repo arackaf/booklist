@@ -17,15 +17,11 @@
   let remoteUrl = "";
   let remoteImageSaving = false;
 
-  const keyDown = (evt: any) => {
-    if (evt.keyCode == 13) {
-      doRemoteSave();
-    }
-  };
-
   const doRemoteSave = () => {
     remoteImageSaving = true;
 
+    console.log("Hey");
+    fetch("/api/cover-set-url", { method: "POST", body: JSON.stringify({ url: remoteUrl }) });
     //const request = { userId, loginToken, url: remoteUrl };
     //ajaxUtil.postWithCors(process.env.UPLOAD_BOOK_COVER_FROM_URL, request, onResults, onError).then(() => (remoteImageSaving = false));
   };
@@ -70,14 +66,16 @@
     {/if}
   </div>
 
-  <div style="flex: 1">
-    <div class="btn-group">
-      <input bind:value={remoteUrl} on:keydown={keyDown} style="min-width: 200px" class="form-control" placeholder="New Cover URL" tabIndex={-1} />
-      <button class="btn btn-default" disabled={!remoteUrl || remoteImageSaving} on:click={doRemoteSave}>
-        <i class="far fa-cloud-upload-alt" />
-      </button>
+  <form on:submit|preventDefault={doRemoteSave}>
+    <div style="flex: 1">
+      <div class="btn-group">
+        <input bind:value={remoteUrl} style="min-width: 200px" class="form-control" placeholder="New Cover URL" tabIndex={-1} />
+        <button class="btn btn-default" disabled={!remoteUrl || remoteImageSaving}>
+          <i class="far fa-cloud-upload-alt" />
+        </button>
+      </div>
     </div>
-  </div>
+  </form>
 </FlowItems>
 
 <style>

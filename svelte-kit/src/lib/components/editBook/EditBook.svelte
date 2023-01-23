@@ -13,10 +13,6 @@
 
   export let onBookUpdated: (_id: string, updates: any) => void;
   const updateBook = (fn: any) => (book = fn(book));
-
-  function testCover() {
-    fetch("/api/cover-upload", { method: "POST" });
-  }
 </script>
 
 <Tabs defaultTab="basic">
@@ -26,7 +22,6 @@
   </TabHeaders>
   <TabContents>
     <TabContent tabName="basic">
-      <!-- <button on:click={testCover}>TEST</button> -->
       {#if book}
         <EditBookInfo {book} {cancel} {subjects} {tags} {onBookUpdated} />
       {/if}
