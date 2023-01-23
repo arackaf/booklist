@@ -5,16 +5,12 @@ import { handleCover, HandleCoverResult } from "../util/handleCover";
 import downloadFromUrl from "../util/downloadFromUrl";
 
 export const handler = async event => {
-  const { a, userId, url, similarBookCover = false } = event;
-  return {
-    msg: "HELLO WORLD",
-    a
-  };
+  const { userId, url, similarBookCover = false } = event;
 
-  const { body, error } = await downloadFromUrl(url);
+  const { body, error, msg } = await downloadFromUrl(url);
 
   if (error) {
-    console.log("Error downloading", error);
+    console.log("Error downloading", error, msg);
     return { error: true };
   }
   const extension = path.extname(url) || ".jpg";
