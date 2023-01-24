@@ -25,7 +25,7 @@ export async function POST({ cookies, locals, request }: any) {
       }
     });
     const command = new InvokeCommand({
-      FunctionName: "TODO",
+      FunctionName: "book-scan-v2-dev-scanBook",
       Payload: fromUtf8(JSON.stringify({ isbn, userId }))
     });
     const response = await client.send(command);
