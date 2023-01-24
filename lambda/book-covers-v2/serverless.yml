@@ -36,9 +36,6 @@ provider:
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
 
 functions:
-  upload:
-    handler: handlerFileUpload.handler
-
   uploadFromUrl:
     handler: handlerUrlUpload.handler
 
