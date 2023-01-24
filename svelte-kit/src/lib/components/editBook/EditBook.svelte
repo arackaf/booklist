@@ -14,7 +14,17 @@
   export let tags: Tag[];
 
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
-  const updateBook = (fn: any) => (book = fn(book));
+
+  const updateLocalBook = (updates: UpdatesTo<Book>) => {
+    book = { ...book, ...updates.fieldsSet };
+  };
+
+  $: updateFunction = (_id: string, updates: UpdatesTo<Book>) => {
+    if (_id) {
+      onBookUpdated(_id, updates);
+    }
+    updateLocalBook(updates);
+  };
 
   let tabsInst: any;
   export const reset = () => {
@@ -30,12 +40,12 @@
   <TabContents>
     <TabContent tabName="basic">
       {#if book}
-        <EditBookInfo {book} {cancel} {subjects} {tags} {onBookUpdated} />
+        <EditBookInfo {book} {cancel} {subjects} {tags} onSave={updateFunction} />
       {/if}
     </TabContent>
     <TabContent tabName="covers">
       {#if book}
-        <EditBookCovers {book} {onBookUpdated} />
+        <EditBookCovers {book} onSave={updateFunction} />
       {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>

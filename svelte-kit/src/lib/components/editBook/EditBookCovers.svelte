@@ -11,7 +11,7 @@
   import { enhance } from "$app/forms";
 
   export let book: Book;
-  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
+  export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
 
   type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
   type UploadResultsType = {
@@ -65,13 +65,13 @@
   function updateLocalBook() {}
 
   let saving = false;
-  function executeSave({ cancel, data }: any) {
+  function executeSave() {
     const { _id } = book;
 
     saving = true;
 
     return async ({ result }: any) => {
-      onBookUpdated(_id, result.data.updates);
+      onSave(_id, result.data.updates);
       saving = false;
     };
   }

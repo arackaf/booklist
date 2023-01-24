@@ -19,7 +19,7 @@
   export let tags: Tag[];
   export let subjects: Subject[];
 
-  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
+  export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
 
   let editingBook: any;
   $: bookChanged(book);
@@ -54,7 +54,7 @@
     saving = true;
     return async ({ result }: any) => {
       saving = false;
-      onBookUpdated(_id, result.data.updates);
+      onSave(_id, result.data.updates);
     };
   }
 
