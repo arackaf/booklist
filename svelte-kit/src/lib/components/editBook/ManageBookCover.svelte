@@ -7,14 +7,14 @@
   export let onResults: (results: any) => void;
   export let onError: () => void;
 
-  let uploadState = { pendingImg: "", uploadError: "" };
+  let uploadState = { uploadError: "" };
 
   let uploading = false;
 
   let dragging = false;
   $: dropAddedStyles = uploading ? "border-color: var(--neutral-6); cursor: wait;" : dragging ? "border-color: var(--primary-8);" : "";
 
-  $: ({ pendingImg, uploadError } = uploadState);
+  $: ({ uploadError } = uploadState);
 
   let remoteUrl = "";
   let remoteImageSaving = false;
