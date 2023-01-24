@@ -2,6 +2,9 @@
   import { enhance } from "$app/forms";
 
   import type { Book } from "$data/types";
+  import type { CoverUploadResults } from "$lambda/types";
+
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
@@ -9,25 +12,11 @@
   import Button from "../buttons/Button.svelte";
   import ActionButton from "../buttons/ActionButton.svelte";
   import CurrentCovers from "./CurrentCovers.svelte";
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   export let book: Book;
   export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
 
-  type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
-  type UploadResultsType =
-    | {
-        success: false;
-        status: "invalid-size" | "error";
-      }
-    | {
-        success: true;
-        mobile: IndividualCover;
-        small: IndividualCover;
-        medium: IndividualCover;
-      };
-
-  let coverProcessingResult: UploadResultsType | null = null;
+  let uploadResults: CoverUploadResults | null = null;
 
   let useNewMobile = false;
   let useNewSmall = false;
@@ -38,11 +27,11 @@
   const setUseNewMedium = (val: any) => (useNewMedium = val);
 
   const onCoverError = () => {
-    coverProcessingResult = { success: false, status: "error" };
+    uploadResults = { success: false, status: "error" };
   };
 
-  const onCoverResults = (obj: UploadResultsType) => {
-    coverProcessingResult = obj;
+  const onCoverResults = (obj: CoverUploadResults) => {
+    uploadResults = obj;
     if (obj.success) {
       useNewMobile = obj.mobile?.STATUS === "success";
       useNewSmall = obj.small?.STATUS === "success";
@@ -54,14 +43,14 @@
     }
   };
 
-  $: mobileImage = useNewMobile && coverProcessingResult?.success ? coverProcessingResult.mobile.image?.url : null;
-  $: mobileImagePreview = useNewMobile && coverProcessingResult?.success ? coverProcessingResult.mobile.image?.preview : null;
+  $: mobileImage = useNewMobile && uploadResults?.success ? uploadResults.mobile.image?.url : null;
+  $: mobileImagePreview = useNewMobile && uploadResults?.success ? uploadResults.mobile.image?.preview : null;
 
-  $: smallImage = useNewSmall && coverProcessingResult?.success ? coverProcessingResult.small.image?.url : null;
-  $: smallImagePreview = useNewSmall && coverProcessingResult?.success ? coverProcessingResult.small.image?.preview : null;
+  $: smallImage = useNewSmall && uploadResults?.success ? uploadResults.small.image?.url : null;
+  $: smallImagePreview = useNewSmall && uploadResults?.success ? uploadResults.small.image?.preview : null;
 
-  $: mediumImage = useNewMedium && coverProcessingResult?.success ? coverProcessingResult.medium.image?.url : null;
-  $: mediumImagePreview = useNewMedium && coverProcessingResult?.success ? coverProcessingResult.medium.image?.preview : null;
+  $: mediumImage = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.url : null;
+  $: mediumImagePreview = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.preview : null;
 
   function updateLocalBook() {}
 
@@ -74,13 +63,11 @@
     return async ({ result }: any) => {
       onSave(_id, result.data.updates);
       saving = false;
-      coverProcessingResult = null;
+      uploadResults = null;
     };
   }
 
-  $: ({ success, status, mobile, small, medium } = coverProcessingResult || ({} as any));
-
-  $: saveEligible = coverProcessingResult?.success && (useNewMobile || useNewSmall || useNewMedium);
+  $: saveEligible = uploadResults?.success && (useNewMobile || useNewSmall || useNewMedium);
 
   $: isNew = !book?._id;
 </script>
@@ -91,20 +78,8 @@
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
-  {#if coverProcessingResult}
-    <UploadResults
-      {success}
-      {status}
-      {mobile}
-      {small}
-      {medium}
-      {useNewMobile}
-      {setUseNewMobile}
-      {useNewSmall}
-      {setUseNewSmall}
-      {useNewMedium}
-      {setUseNewMedium}
-    />
+  {#if uploadResults}
+    <UploadResults {uploadResults} {useNewMobile} {setUseNewMobile} {useNewSmall} {setUseNewSmall} {useNewMedium} {setUseNewMedium} />
   {/if}
 
   {#if saveEligible && isNew}

@@ -28,7 +28,6 @@ export async function POST({ cookies, locals, request }: any) {
     });
     const command = new InvokeCommand({
       FunctionName: "book-covers-v2-dev-uploadFromUrl",
-
       Payload: fromUtf8(JSON.stringify({ url, userId }))
     });
     const response = await client.send(command);

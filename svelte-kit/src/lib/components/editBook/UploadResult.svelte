@@ -1,16 +1,18 @@
 <script lang="ts">
   import Toggle from "svelte-toggle";
 
-  import BookCover from "../ui/BookCover.svelte";
+  import type { IndividualCoverResult } from "$lambda/types";
 
+  import BookCover from "../ui/BookCover.svelte";
   import Stack from "../layout/Stack.svelte";
 
-  export let STATUS: "success" | "invalid-size" | "error";
-  export let image: { url: string; preview: string } | null = null;
+  export let packet: IndividualCoverResult | null;
   export let size: "mobile" | "small" | "medium";
   export let useNewImage: boolean;
   export let setUseNewImage: (val: boolean) => void;
 
+  $: STATUS = packet ? packet.STATUS : null;
+  $: image = packet ? packet.image : null;
   $: success = STATUS === "success";
 </script>
 
