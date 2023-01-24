@@ -50,7 +50,7 @@ function getHeightSpring() {
   return { sync, heightSpring };
 }
 
-export default function slideAnimate(el: any, { open, fade, stiffDown = false }: any) {
+export function slideAnimate(el: any, { open, fade, stiffDown = false }: any) {
   el.parentNode.style.overflow = "hidden";
 
   let currentHeight: any = null;

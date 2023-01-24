@@ -37,7 +37,7 @@ export type BookSubjectStack = { subjects: string[]; count: number };
 export type Book = {
   _id: string;
   title: string;
-  pages: number;
+  pages?: number;
   isbn: string;
   publisher: string;
   publicationDate: string;
