@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
+
   import type { Book } from "$data/types";
 
   import ManageBookCover from "./ManageBookCover.svelte";
@@ -8,7 +10,6 @@
   import ActionButton from "../buttons/ActionButton.svelte";
   import CurrentCovers from "./CurrentCovers.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import { enhance } from "$app/forms";
 
   export let book: Book;
   export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
@@ -17,12 +18,12 @@
   type UploadResultsType = {
     success: boolean;
     status?: "success" | "invalid-size" | "error";
-    mobile: IndividualCover;
-    small: IndividualCover;
-    medium: IndividualCover;
+    mobile?: IndividualCover;
+    small?: IndividualCover;
+    medium?: IndividualCover;
   };
 
-  let coverProcessingResult: any = null;
+  let coverProcessingResult: UploadResultsType | null = null;
 
   let useNewMobile = false;
   let useNewSmall = false;
@@ -32,20 +33,16 @@
   const setUseNewSmall = (val: any) => (useNewSmall = val);
   const setUseNewMedium = (val: any) => (useNewMedium = val);
 
-  let coverProcessingError = false;
   const onCoverError = () => {
-    coverProcessingError = true;
-    coverProcessingResult = null;
+    coverProcessingResult = { success: false, status: "error" };
   };
-  const clearCoverError = () => (coverProcessingError = false);
 
   const onCoverResults = (obj: UploadResultsType) => {
-    clearCoverError();
     coverProcessingResult = obj;
     if (obj.success) {
-      useNewMobile = obj.mobile.STATUS === "success";
-      useNewSmall = obj.small.STATUS === "success";
-      useNewMedium = obj.medium.STATUS === "success";
+      useNewMobile = obj.mobile?.STATUS === "success";
+      useNewSmall = obj.small?.STATUS === "success";
+      useNewMedium = obj.medium?.STATUS === "success";
     } else {
       useNewMobile = false;
       useNewSmall = false;
@@ -53,14 +50,14 @@
     }
   };
 
-  $: mobileImage = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile.image.url : null;
-  $: mobileImagePreview = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile.image.preview : null;
+  $: mobileImage = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile?.image?.url : null;
+  $: mobileImagePreview = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile?.image?.preview : null;
 
-  $: smallImage = useNewSmall && coverProcessingResult ? coverProcessingResult.small.image.url : null;
-  $: smallImagePreview = useNewSmall && coverProcessingResult ? coverProcessingResult.small.image.preview : null;
+  $: smallImage = useNewSmall && coverProcessingResult ? coverProcessingResult.small?.image?.url : null;
+  $: smallImagePreview = useNewSmall && coverProcessingResult ? coverProcessingResult?.small?.image?.preview : null;
 
-  $: mediumImage = useNewMedium && coverProcessingResult ? coverProcessingResult.medium.image.url : null;
-  $: mediumImagePreview = useNewMedium && coverProcessingResult ? coverProcessingResult.medium.image.preview : null;
+  $: mediumImage = useNewMedium && coverProcessingResult ? coverProcessingResult.medium?.image?.url : null;
+  $: mediumImagePreview = useNewMedium && coverProcessingResult ? coverProcessingResult.medium?.image?.preview : null;
 
   function updateLocalBook() {}
 
@@ -89,10 +86,6 @@
   <hr />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
-
-  {#if coverProcessingError}
-    <div class="alert alert-danger">Error processing this cover</div>
-  {/if}
 
   {#if coverProcessingResult}
     <UploadResults

@@ -23,12 +23,20 @@
   const doRemoteSave = () => {
     uploading = true;
 
-    ajaxUtil.post("/api/cover-set-url", { url: remoteUrl }, resp => {
-      if (!resp.error) {
-        onResults(resp);
+    ajaxUtil.post(
+      "/api/cover-set-url",
+      { url: remoteUrl },
+      resp => {
+        if (!resp.error) {
+          onResults(resp);
+        }
+        uploading = false;
+      },
+      () => {
+        onError();
+        uploading = false;
       }
-      uploading = false;
-    });
+    );
   };
 
   const onDrop = (evt: any) => {
@@ -44,12 +52,20 @@
 
     uploading = true;
 
-    ajaxUtil.post("/api/cover-upload", requestData, resp => {
-      if (!resp.error) {
-        onResults(resp);
+    ajaxUtil.post(
+      "/api/cover-upload",
+      requestData,
+      resp => {
+        if (!resp.error) {
+          onResults(resp);
+        }
+        uploading = false;
+      },
+      () => {
+        onError();
         uploading = false;
       }
-    });
+    );
   };
 </script>
 
