@@ -18,6 +18,10 @@
 
   let uploadResults: CoverUploadResults | null = null;
 
+  export const reset = () => {
+    uploadResults = null;
+  };
+
   let useNewMobile = false;
   let useNewSmall = false;
   let useNewMedium = false;

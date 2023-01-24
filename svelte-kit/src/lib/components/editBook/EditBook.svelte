@@ -6,7 +6,6 @@
   import EditBookCovers from "./EditBookCovers.svelte";
 
   import EditBookInfo from "./EditBookInfo.svelte";
-  //import ManageBookCover from "./ManageBookCover.svelte";
 
   export let book: any;
   export let cancel: any;
@@ -26,9 +25,12 @@
     updateLocalBook(updates);
   };
 
+  let resetCovers: () => void;
+
   let tabsInst: any;
   export const reset = () => {
     tabsInst?.setTab("basic");
+    resetCovers?.();
   };
 </script>
 
@@ -45,7 +47,7 @@
     </TabContent>
     <TabContent tabName="covers">
       {#if book}
-        <EditBookCovers {book} onSave={updateFunction} />
+        <EditBookCovers {book} bind:reset={resetCovers} onSave={updateFunction} />
       {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>
