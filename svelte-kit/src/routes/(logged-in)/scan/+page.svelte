@@ -9,7 +9,7 @@
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   //import ScanResults from "./ScanResults.svelte";
-  //import BookEntryItem from "./BookEntryItem.svelte";
+  import BookEntryItem from "./BookEntryItem.svelte";
 
   export let data: any;
 
@@ -92,12 +92,12 @@
 
       {#each Array.from({ length: 10 }) as _, idx}
         <div>
-          <!-- <BookEntryItem
+          <BookEntryItem
             on:focus={() => (focused = idx)}
             focused={idx == focused}
             selected={idx == selected}
             entryFinished={() => entryFinished(idx)}
-          /> -->
+          />
         </div>
       {/each}
     </div>
