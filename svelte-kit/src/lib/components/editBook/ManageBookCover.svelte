@@ -37,13 +37,24 @@
       return;
     }
     let requestData = new FormData();
-    requestData.append("fileUploaded", acceptedFiles[0]);
+    const file = acceptedFiles[0];
+    requestData.append("fileUploaded", file);
+    requestData.append("filename", file.path);
+
+    console.log(acceptedFiles[0]);
     //request.append("loginToken", loginToken);
     //request.append("userId", userId);
 
     //uploading = true;
 
-    fetch("/api/cover-upload", { method: "POST", body: requestData });
+    fetch("/api/cover-upload", { method: "POST", body: requestData })
+      .then(resp => resp.json())
+      .then(resp => {
+        if (!resp.error) {
+          onResults(resp);
+        }
+      });
+
     //ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, onResults, onError).then(() => (uploading = false));
   };
 
