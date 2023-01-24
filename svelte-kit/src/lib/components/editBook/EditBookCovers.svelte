@@ -8,6 +8,7 @@
   import ActionButton from "../buttons/ActionButton.svelte";
   import CurrentCovers from "./CurrentCovers.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
+  import { enhance } from "$app/forms";
 
   export let book: Book;
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
@@ -52,35 +53,28 @@
     }
   };
 
-  const runSave = () => {
-    let { _id } = book;
+  $: mobileImage = useNewMobile ? coverProcessingResult.mobile.image.url : null;
+  $: mobileImagePreview = useNewMobile ? coverProcessingResult.mobile.image.preview : null;
 
-    const updateObject: Partial<Book> = {};
+  $: smallImage = useNewSmall ? coverProcessingResult.small.image.url : null;
+  $: smallImagePreview = useNewSmall ? coverProcessingResult.small.image.preview : null;
 
-    if (useNewMobile) {
-      updateObject.mobileImage = coverProcessingResult.mobile.image.url;
-      updateObject.mobileImagePreview = coverProcessingResult.mobile.image.preview;
-    }
-    if (useNewSmall) {
-      updateObject.smallImage = coverProcessingResult.small.image.url;
-      updateObject.smallImagePreview = coverProcessingResult.small.image.preview;
-    }
-    if (useNewMedium) {
-      updateObject.mediumImage = coverProcessingResult.medium.image.url;
-      updateObject.mediumImagePreview = coverProcessingResult.medium.image.preview;
-    }
+  $: mediumImage = useNewMedium ? coverProcessingResult.medium.image.url : null;
+  $: mediumImagePreview = useNewMedium ? coverProcessingResult.medium.image.preview : null;
 
-    if (_id) {
-      onBookUpdated(_id, { fieldsSet: updateObject });
-      // return updateBookState.runMutation({ _id, book: updateObject }).then(() => {
-      //   coverProcessingResult = null;
-      //   updateBook(b => ({ ...b, ...updateObject }));
-      // });
-    } else {
-      // updateBook(b => ({ ...b, ...updateObject }));
-      // coverProcessingResult = null;
-    }
-  };
+  function updateLocalBook() {}
+
+  let saving = false;
+  function executeSave({ cancel, data }: any) {
+    const { _id } = book;
+
+    saving = true;
+
+    return async ({ result }: any) => {
+      onBookUpdated(_id, result.data.updates);
+      saving = false;
+    };
+  }
 
   $: ({ success, status, mobile, small, medium } = coverProcessingResult || ({} as any));
 
@@ -116,10 +110,20 @@
   {/if}
 
   {#if saveEligible && isNew}
-    <Button class="margin-top" preset="primary" onClick={runSave}>Set image info</Button>
+    <Button class="margin-top" preset="primary" onClick={updateLocalBook}>Set image info</Button>
   {/if}
 
   {#if saveEligible && !isNew}
-    <ActionButton class="margin-top" preset="primary" onClick={runSave} finishedText="Saved" text="Save" runningText="Saving" />
+    <form action="/books?/saveBookCovers" method="post" use:enhance={executeSave}>
+      <input type="hidden" name="_id" value={book._id} />
+      <input type="hidden" name="mobileImage" value={mobileImage} />
+      <input type="hidden" name="mobileImagePreview" value={mobileImagePreview} />
+      <input type="hidden" name="smallImage" value={smallImage} />
+      <input type="hidden" name="smallImagePreview" value={smallImagePreview} />
+      <input type="hidden" name="mediumImage" value={mediumImage} />
+      <input type="hidden" name="mediumImagePreview" value={mediumImagePreview} />
+
+      <ActionButton class="margin-top" preset="primary" isRunning={saving} finishedText="Saved" text="Save" runningText="Saving" />
+    </form>
   {/if}
 </div>

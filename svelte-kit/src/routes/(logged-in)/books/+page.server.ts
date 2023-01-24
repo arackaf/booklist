@@ -3,7 +3,7 @@ import type { Tag } from "$data/types";
 import { saveTag, deleteSingleTag } from "$data/tags";
 
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
-import { toJson } from "$lib/util/formDataHelpers";
+import { removeEmpty, toJson } from "$lib/util/formDataHelpers";
 import { updateUxState } from "$lib/util/uxState";
 
 type Book = {
@@ -35,6 +35,26 @@ export const actions = {
       arrays: ["authors", "tags", "subjects"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
+
+    await updateBook(session.userId, fields);
+
+    updateCacheCookie(cookies, BOOKS_CACHE);
+
+    return { success: true, updates: { fieldsSet: fields } };
+  },
+  async saveBookCovers({ request, cookies, locals }: any) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
+    const formData: URLSearchParams = await request.formData();
+
+    const fields: Partial<Book> = removeEmpty(
+      toJson(formData, {
+        strings: ["_id", "mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"]
+      })
+    );
 
     await updateBook(session.userId, fields);
 

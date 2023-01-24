@@ -39,3 +39,12 @@ export const toJson = (params: URLSearchParams, options: Options) => {
 
   return result;
 };
+
+export const removeEmpty = <T extends object>(obj: T): Partial<T> => {
+  return Object.entries(obj)
+    .filter(([, v]) => v)
+    .reduce((obj, [k, v]) => {
+      obj[k] = v;
+      return obj;
+    }, {} as any);
+};

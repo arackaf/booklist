@@ -188,10 +188,10 @@ export const booksSubjectsDump = async (userId: string) => {
     });
 };
 
-export const updateBook = async (userId: string, book: any) => {
-  const { _id, title, tags, subjects, authors } = book;
+export const updateBook = async (userId: string, book: Partial<Book>) => {
+  const { _id, ...fields } = book;
 
-  return updateById("books", userId, _id, { $set: { title, tags, subjects, authors } });
+  return updateById("books", userId, _id!, { $set: { ...fields } });
 };
 
 type BulkUpdate = {
