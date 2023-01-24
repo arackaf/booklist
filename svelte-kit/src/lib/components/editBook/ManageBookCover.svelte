@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { ajaxUtil } from "$lib/util/ajaxUtil";
+
   //import { appState } from "app/state/appState";
   import Dropzone from "svelte-file-dropzone/src/components/Dropzone.svelte";
   //import ajaxUtil from "util/ajaxUtil";
@@ -21,15 +23,12 @@
   const doRemoteSave = () => {
     uploading = true;
 
-    console.log("Hey");
-    fetch("/api/cover-set-url", { method: "POST", body: JSON.stringify({ url: remoteUrl }) })
-      .then(resp => resp.json())
-      .then(resp => {
-        if (!resp.error) {
-          onResults(resp);
-        }
-        uploading = false;
-      });
+    ajaxUtil.post("/api/cover-set-url", { url: remoteUrl }, resp => {
+      if (!resp.error) {
+        onResults(resp);
+      }
+      uploading = false;
+    });
   };
 
   const onDrop = (evt: any) => {
@@ -45,14 +44,12 @@
 
     uploading = true;
 
-    fetch("/api/cover-upload", { method: "POST", body: requestData })
-      .then(resp => resp.json())
-      .then(resp => {
-        if (!resp.error) {
-          onResults(resp);
-          uploading = false;
-        }
-      });
+    ajaxUtil.post("/api/cover-upload", requestData, resp => {
+      if (!resp.error) {
+        onResults(resp);
+        uploading = false;
+      }
+    });
   };
 </script>
 
