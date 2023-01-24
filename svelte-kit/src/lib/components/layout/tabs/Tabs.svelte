@@ -9,7 +9,7 @@
 
   let currentTab = localStorageManager.get(localStorageName) || defaultTab;
 
-  const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
+  export const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
   let tabState = writable({ localStorageName, currentTab, setTab });
 
   setContext("tabs-state", tabState);

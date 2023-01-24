@@ -12,8 +12,15 @@
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
   let closeModal: any;
+  let resetBookEditTabs: () => null;
+
+  $: {
+    if (isOpen) {
+      resetBookEditTabs();
+    }
+  }
 </script>
 
 <Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false} bind:closeModal>
-  <EditBook {book} {onBookUpdated} {subjects} {tags} cancel={closeModal} />
+  <EditBook bind:reset={resetBookEditTabs} {book} {onBookUpdated} {subjects} {tags} cancel={closeModal} />
 </Modal>

@@ -15,9 +15,14 @@
 
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
   const updateBook = (fn: any) => (book = fn(book));
+
+  let tabsInst: any;
+  export const reset = () => {
+    tabsInst?.setTab("basic");
+  };
 </script>
 
-<Tabs defaultTab="basic">
+<Tabs bind:this={tabsInst} defaultTab="basic">
   <TabHeaders>
     <TabHeader tabName="basic" text="Book info" />
     <TabHeader tabName="covers" text="Covers" />
