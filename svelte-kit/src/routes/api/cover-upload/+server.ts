@@ -62,6 +62,17 @@ export async function POST({ cookies, locals, request }: any) {
     });
     const response = await client.send(command);
 
+    await s3
+      .send(
+        new DeleteObjectCommand({
+          Bucket: "my-library-cover-uploads",
+          Key: uploadKey
+        })
+      )
+      .catch(err => {
+        console.log({ err });
+      });
+
     if (response.Payload) {
       const respJson = JSON.parse(toUtf8(response.Payload));
 
