@@ -5,9 +5,6 @@ provider:
   runtime: nodejs12.x
   lambdaHashingVersion: 20201221
   timeout: 30
-  apiGateway:
-    binaryMediaTypes:
-      - "multipart/form-data"
 
   # you can overwrite defaults here
   stage: dev
