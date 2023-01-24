@@ -11,7 +11,9 @@
 
   let uploading = false;
 
-  //$: ({ loginToken, userId } = $appState);
+  let dragging = false;
+  $: dropAddedStyles = uploading ? "border-color: var(--neutral-6); cursor: wait;" : dragging ? "border-color: var(--primary-8);" : "";
+
   $: ({ pendingImg, uploadError } = uploadState);
 
   let remoteUrl = "";
@@ -41,25 +43,17 @@
     requestData.append("fileUploaded", file);
     requestData.append("filename", file.path);
 
-    console.log(acceptedFiles[0]);
-    //request.append("loginToken", loginToken);
-    //request.append("userId", userId);
-
-    //uploading = true;
+    uploading = true;
 
     fetch("/api/cover-upload", { method: "POST", body: requestData })
       .then(resp => resp.json())
       .then(resp => {
         if (!resp.error) {
           onResults(resp);
+          uploading = false;
         }
       });
-
-    //ajaxUtil.postWithFilesCors(process.env.UPLOAD_BOOK_COVER, request, onResults, onError).then(() => (uploading = false));
   };
-
-  let dragging = false;
-  $: dropAddedStyles = uploading ? "border-color: var(--neutral-6); cursor: wait;" : dragging ? "border-color: var(--primary-8);" : "";
 </script>
 
 <FlowItems pushLast={true}>
