@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { Subject, Tag } from "$data/types";
+  import type { Book, Subject, Tag } from "$data/types";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
   import Modal from "../ui/Modal.svelte";
   import EditBook from "./EditBook.svelte";
 
@@ -8,7 +9,7 @@
   export let onHide: any;
   export let tags: Tag[];
   export let subjects: Subject[];
-  export let onBookUpdated: (_id: string, updates: any) => void;
+  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
   let closeModal: any;
 </script>

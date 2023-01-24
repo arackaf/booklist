@@ -1,5 +1,7 @@
 <script lang="ts">
-  import type { Subject, Tag } from "$data/types";
+  import type { Book, Subject, Tag } from "$data/types";
+
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
   import EditBookCovers from "./EditBookCovers.svelte";
 
@@ -11,7 +13,7 @@
   export let subjects: Subject[];
   export let tags: Tag[];
 
-  export let onBookUpdated: (_id: string, updates: any) => void;
+  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
   const updateBook = (fn: any) => (book = fn(book));
 </script>
 
@@ -28,7 +30,7 @@
     </TabContent>
     <TabContent tabName="covers">
       {#if book}
-        <EditBookCovers {book} {updateBook} />
+        <EditBookCovers {book} {onBookUpdated} />
       {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>

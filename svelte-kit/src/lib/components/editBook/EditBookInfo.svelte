@@ -1,7 +1,8 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
-  import type { Subject, Tag } from "$data/types";
+
+  import type { Book, Subject, Tag } from "$data/types";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import ActionButton from "../buttons/ActionButton.svelte";
   import Button from "../buttons/Button.svelte";
@@ -18,7 +19,7 @@
   export let tags: Tag[];
   export let subjects: Subject[];
 
-  export let onBookUpdated: (_id: string, updates: any) => void;
+  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
   let editingBook: any;
   $: bookChanged(book);

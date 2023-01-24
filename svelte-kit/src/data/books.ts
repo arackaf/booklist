@@ -15,8 +15,12 @@ const bookFields = [
   "publisher",
   "publicationDate",
   "isRead",
+  "mobileImage",
+  "mobileImagePreview",
   "smallImage",
-  "smallImagePreview"
+  "smallImagePreview",
+  "mediumImage",
+  "mediumImagePreview"
 ];
 
 const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) => {

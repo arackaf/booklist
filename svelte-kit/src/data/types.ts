@@ -46,8 +46,12 @@ export type Book = {
   authors: string[];
   tags: string[];
   subjects: string[];
+  mobileImage: string | null;
+  mobileImagePreview: string | PreviewPacket | null;
   smallImage: string | null;
   smallImagePreview: string | PreviewPacket | null;
+  mediumImage: string | null;
+  mediumImagePreview: string | PreviewPacket | null;
   dateAdded: string;
 };
 

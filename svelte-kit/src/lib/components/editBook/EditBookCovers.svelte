@@ -1,21 +1,16 @@
 <script lang="ts">
-  //import { BookMutationInput, MutationOf, Mutations } from "gql/graphql-typings";
-  //import UpdateBook from "gql/books/updateBook.graphql";
-
-  //import { mutation } from "micro-graphql-svelte";
+  import type { Book } from "$data/types";
 
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
-  //import { IBookRaw } from "modules/books/booksState";
+
   import Button from "../buttons/Button.svelte";
   import ActionButton from "../buttons/ActionButton.svelte";
-  //import CurrentCovers from "./CurrentCovers.svelte";
+  import CurrentCovers from "./CurrentCovers.svelte";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
-  export let book: any;
-  export let updateBook: (updater: (book: any) => any) => void;
-
-  //const { mutationState: updateMutationState } = mutation<MutationOf<Mutations["updateBook"]>>(UpdateBook);
-  //$: updateBookState = $updateMutationState;
+  export let book: Book;
+  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
   type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
   type UploadResultsType = {
@@ -60,10 +55,8 @@
   const runSave = () => {
     let { _id } = book;
 
-    const updateObject: any = {};
-    // Partial<
-    //   Pick<BookMutationInput, "mobileImage" | "mobileImagePreview" | "smallImage" | "smallImagePreview" | "mediumImage" | "mediumImagePreview">
-    // > = {};
+    const updateObject: Partial<Book> = {};
+
     if (useNewMobile) {
       updateObject.mobileImage = coverProcessingResult.mobile.image.url;
       updateObject.mobileImagePreview = coverProcessingResult.mobile.image.preview;
@@ -78,6 +71,7 @@
     }
 
     if (_id) {
+      onBookUpdated(_id, { fieldsSet: updateObject });
       // return updateBookState.runMutation({ _id, book: updateObject }).then(() => {
       //   coverProcessingResult = null;
       //   updateBook(b => ({ ...b, ...updateObject }));
@@ -96,7 +90,7 @@
 </script>
 
 <div>
-  <!-- <CurrentCovers {book} /> -->
+  <CurrentCovers {book} />
   <hr />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
