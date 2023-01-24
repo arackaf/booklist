@@ -31,7 +31,8 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "title"],
+      strings: ["_id", "title", "isbn", "publisher", "publicationDate"],
+      numbers: ["pages"],
       arrays: ["authors", "tags", "subjects"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);

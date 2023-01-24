@@ -87,28 +87,34 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-isbn">ISBN</label>
-          <input id="book-edit-isbn" class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" />
+          <input id="book-edit-isbn" name="isbn" class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-pages">Pages</label>
-          <input id="book-edit-pages" class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
+          <input id="book-edit-pages" name="pages" class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-publisher">Publisher</label>
-          <input id="book-edit-publisher" class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" />
+          <input id="book-edit-publisher" name="publisher" class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-published">Published</label>
-          <input id="book-edit-published" class="form-control" bind:value={editingBook.publicationDate} placeholder="Publication date" />
+          <input
+            id="book-edit-published"
+            name="publicationDate"
+            class="form-control"
+            bind:value={editingBook.publicationDate}
+            placeholder="Publication date"
+          />
         </div>
       </div>
 
