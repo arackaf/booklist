@@ -28,11 +28,16 @@ export const handler = async event => {
     ]);
   }
 
-  const success = allResults.filter(x => x).every(r => r.STATUS === "success");
+  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
+    return { success: false, status: allResults[0].STATUS };
+  } else if (allResults.every(r => r.STATUS !== "success")) {
+    return { success: false, status: "error" };
+  }
+
   const [mobile, small, medium] = allResults;
 
   return {
-    success,
+    success: true,
     mobile,
     small,
     medium

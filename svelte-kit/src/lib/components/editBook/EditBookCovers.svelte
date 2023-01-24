@@ -15,13 +15,17 @@
   export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
 
   type IndividualCover = { STATUS: "success" | "invalid-size" | "error"; image?: { url: string; preview: string } };
-  type UploadResultsType = {
-    success: boolean;
-    status?: "success" | "invalid-size" | "error";
-    mobile?: IndividualCover;
-    small?: IndividualCover;
-    medium?: IndividualCover;
-  };
+  type UploadResultsType =
+    | {
+        success: false;
+        status: "invalid-size" | "error";
+      }
+    | {
+        success: true;
+        mobile: IndividualCover;
+        small: IndividualCover;
+        medium: IndividualCover;
+      };
 
   let coverProcessingResult: UploadResultsType | null = null;
 
@@ -50,14 +54,14 @@
     }
   };
 
-  $: mobileImage = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile?.image?.url : null;
-  $: mobileImagePreview = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile?.image?.preview : null;
+  $: mobileImage = useNewMobile && coverProcessingResult?.success ? coverProcessingResult.mobile.image?.url : null;
+  $: mobileImagePreview = useNewMobile && coverProcessingResult?.success ? coverProcessingResult.mobile.image?.preview : null;
 
-  $: smallImage = useNewSmall && coverProcessingResult ? coverProcessingResult.small?.image?.url : null;
-  $: smallImagePreview = useNewSmall && coverProcessingResult ? coverProcessingResult?.small?.image?.preview : null;
+  $: smallImage = useNewSmall && coverProcessingResult?.success ? coverProcessingResult.small.image?.url : null;
+  $: smallImagePreview = useNewSmall && coverProcessingResult?.success ? coverProcessingResult.small.image?.preview : null;
 
-  $: mediumImage = useNewMedium && coverProcessingResult ? coverProcessingResult.medium?.image?.url : null;
-  $: mediumImagePreview = useNewMedium && coverProcessingResult ? coverProcessingResult.medium?.image?.preview : null;
+  $: mediumImage = useNewMedium && coverProcessingResult?.success ? coverProcessingResult.medium.image?.url : null;
+  $: mediumImagePreview = useNewMedium && coverProcessingResult?.success ? coverProcessingResult.medium.image?.preview : null;
 
   function updateLocalBook() {}
 
