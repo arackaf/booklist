@@ -28,6 +28,3 @@
     <UploadResult {...medium} useNewImage={useNewMedium} setUseNewImage={setUseNewMedium} size="medium" />
   </FlowItems>
 {/if}
-
-<!-- // return (
-// ); -->

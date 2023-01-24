@@ -17,10 +17,9 @@
   $: ({ uploadError } = uploadState);
 
   let remoteUrl = "";
-  let remoteImageSaving = false;
 
   const doRemoteSave = () => {
-    remoteImageSaving = true;
+    uploading = true;
 
     console.log("Hey");
     fetch("/api/cover-set-url", { method: "POST", body: JSON.stringify({ url: remoteUrl }) })
@@ -29,6 +28,7 @@
         if (!resp.error) {
           onResults(resp);
         }
+        uploading = false;
       });
   };
 
@@ -58,18 +58,21 @@
 
 <FlowItems pushLast={true}>
   <div style="flex: 1; position: relative;">
-    <Dropzone
-      accept={undefined}
-      disableDefaultStyles={true}
-      multiple={false}
-      on:drop={onDrop}
-      on:dragenter={() => (dragging = true)}
-      on:dragleave={() => (dragging = false)}
-      containerClasses="dropzone-container"
-      containerStyles={dropAddedStyles}
-    >
-      <div style="padding: 15px">Click or drag to upload</div>
-    </Dropzone>
+    {#key uploading ? 1 : 0}
+      <Dropzone
+        accept={undefined}
+        disabled={uploading}
+        disableDefaultStyles={true}
+        multiple={false}
+        on:drop={onDrop}
+        on:dragenter={() => (dragging = true)}
+        on:dragleave={() => (dragging = false)}
+        containerClasses="dropzone-container"
+        containerStyles={dropAddedStyles}
+      >
+        <div style="padding: 15px">Click or drag to upload</div>
+      </Dropzone>
+    {/key}
     {#if uploadError}
       <div style="display: inline-block; margin-top: 2px; margin-bottom: 2px" class="label label-danger">{uploadError}</div>
     {/if}
@@ -78,8 +81,8 @@
   <form on:submit|preventDefault={doRemoteSave}>
     <div style="flex: 1">
       <div class="btn-group">
-        <input bind:value={remoteUrl} style="min-width: 200px" class="form-control" placeholder="New Cover URL" tabIndex={-1} />
-        <button class="btn btn-default" disabled={!remoteUrl || remoteImageSaving}>
+        <input bind:value={remoteUrl} disabled={uploading} style="min-width: 200px" class="form-control" placeholder="New Cover URL" tabIndex={-1} />
+        <button class="btn btn-default" disabled={!remoteUrl || uploading}>
           <i class="far fa-cloud-upload-alt" />
         </button>
       </div>
