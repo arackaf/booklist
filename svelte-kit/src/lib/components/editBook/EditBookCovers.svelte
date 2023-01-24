@@ -53,14 +53,14 @@
     }
   };
 
-  $: mobileImage = useNewMobile ? coverProcessingResult.mobile.image.url : null;
-  $: mobileImagePreview = useNewMobile ? coverProcessingResult.mobile.image.preview : null;
+  $: mobileImage = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile.image.url : null;
+  $: mobileImagePreview = useNewMobile && coverProcessingResult ? coverProcessingResult.mobile.image.preview : null;
 
-  $: smallImage = useNewSmall ? coverProcessingResult.small.image.url : null;
-  $: smallImagePreview = useNewSmall ? coverProcessingResult.small.image.preview : null;
+  $: smallImage = useNewSmall && coverProcessingResult ? coverProcessingResult.small.image.url : null;
+  $: smallImagePreview = useNewSmall && coverProcessingResult ? coverProcessingResult.small.image.preview : null;
 
-  $: mediumImage = useNewMedium ? coverProcessingResult.medium.image.url : null;
-  $: mediumImagePreview = useNewMedium ? coverProcessingResult.medium.image.preview : null;
+  $: mediumImage = useNewMedium && coverProcessingResult ? coverProcessingResult.medium.image.url : null;
+  $: mediumImagePreview = useNewMedium && coverProcessingResult ? coverProcessingResult.medium.image.preview : null;
 
   function updateLocalBook() {}
 
@@ -73,6 +73,7 @@
     return async ({ result }: any) => {
       onSave(_id, result.data.updates);
       saving = false;
+      coverProcessingResult = null;
     };
   }
 
