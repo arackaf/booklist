@@ -39,6 +39,7 @@
     "@next-auth/dynamodb-adapter": "^1.0.5",
     "@popperjs/core": "^2.11.6",
     "@sveltejs/kit": "^1.1.0",
+    "@types/toastify-js": "^1.11.1",
     "aws-sdk": "^2.1295.0",
     "blueimp-md5": "2.3.0",
     "classnames": "^2.3.2",
@@ -57,6 +58,7 @@
     "svelte-file-dropzone": "^0.0.15",
     "svelte-helpers": "0.2.22",
     "svelte-toggle": "^3.1.0",
+    "toastify-js": "^1.11.1",
     "uuid": "7.0.3"
   }
 }

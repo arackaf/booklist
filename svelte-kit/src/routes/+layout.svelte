@@ -4,7 +4,12 @@
   import "$styles/site-styles.scss";
 
   import { onMount } from "svelte";
+  import { page } from "$app/stores";
   import type { PageData } from "./$types";
+
+  import Toastify from "toastify-js";
+  import "toastify-js/src/toastify.css";
+
   import { beforeNavigate, afterNavigate } from "$app/navigation";
 
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
@@ -54,12 +59,34 @@
     });
   }
 
+  function showBookToast(title: string, url: string) {
+    Toastify({
+      text: `<div><img alt="Book cover for recently scanned ${title}" src="${url}" ></div><span>${title}</span>`,
+      escapeMarkup: false,
+      duration: 5 * 1000,
+      gravity: "bottom",
+      close: true,
+      className: "toast-notification book-loaded"
+    }).showToast();
+  }
+
+  function startToastListen() {
+    window.addEventListener("ws-info", ({ detail }: any) => {
+      if (detail.type === "scanResults" && $page.url.pathname !== "/scan") {
+        for (const { item: book } of detail.packet.results.filter((result: any) => result.success)) {
+          showBookToast(book.title, book.smallImage);
+        }
+      }
+    });
+  }
+
   onMount(() => {
     if (loggedIn) {
       checkPendingCount();
     }
 
     startWebSocket();
+    startToastListen();
   });
 </script>
 
