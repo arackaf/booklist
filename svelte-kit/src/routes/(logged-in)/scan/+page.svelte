@@ -8,7 +8,7 @@
   import type { UpdatesTo } from "$lib/state/dataUpdates";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
-  //import ScanResults from "./ScanResults.svelte";
+  import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
 
   export let data: any;
@@ -101,7 +101,7 @@
         </div>
       {/each}
     </div>
-    <!-- <ScanResults /> -->
+    <ScanResults />
     <EditBookModal
       isOpen={enteringBook}
       book={editingBook}

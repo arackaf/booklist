@@ -62,7 +62,7 @@
       <span class="label label-success">
         <span style={labelScanStatusStyles}> All pending books saved </span>
         {#if toggleShow}
-          <button on:click={toggleIncomingQueue} class="margin-left-xs">
+          <button on:click={toggleIncomingQueue} class="raw-button margin-left-xs">
             <i style="color: white" class="far fa-white {toggleClass}" />
           </button>
         {/if}
@@ -73,8 +73,8 @@
   <div style="margin-top: 10px">
     <SlideAnimate open={showIncomingQueue} stiffDown={true}>
       <div class="alert alert-info alert-slim" style="margin-bottom: 15px">
-        Your entered and failed books will show up here, briefly, although everything is being logged. Eventually there'll be a dedicated place to see
-        what's been saved, and what failed to be found.
+        Your entered and failed books will show up here, briefly, although everything is being logged. The recent scans section in the main page has
+        everything.
       </div>
 
       <div style="margin-bottom: 0">
