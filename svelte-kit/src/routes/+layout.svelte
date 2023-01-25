@@ -1,19 +1,22 @@
 <script lang="ts">
+  import "./styles.scss";
+  import "$styles/fontawesome/css/all.min.css";
+  import "$styles/site-styles.scss";
+
+  import { onMount } from "svelte";
+  import type { PageData } from "./$types";
   import { beforeNavigate, afterNavigate } from "$app/navigation";
+
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import Loading from "$lib/components/ui/Loading.svelte";
 
-  import "$styles/fontawesome/css/all.min.css";
-  import "$styles/site-styles.scss";
-  import "./styles.scss";
-
-  import type { PageData } from "./$types";
   import { NUM_THEMES } from "$lib/util/constants";
+  import { checkPendingCount } from "$lib/util/scanUtils";
 
   export let data: PageData;
 
-  $: ({ showMobile, uxState } = data);
+  $: ({ showMobile, uxState, loggedIn } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -38,6 +41,12 @@
 
   afterNavigate(({ type }) => {
     navigating = false;
+  });
+
+  onMount(() => {
+    if (loggedIn) {
+      checkPendingCount();
+    }
   });
 </script>
 
