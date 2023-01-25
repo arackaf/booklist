@@ -21,7 +21,7 @@ class ScanWebSocketManage {
       handlerQueue.forEach(handler => handler(data));
     };
   }
-  addHandler(handler: () => void) {
+  addHandler(handler: (data: any) => void) {
     handlerQueue.push(handler);
   }
   send(packet: any) {

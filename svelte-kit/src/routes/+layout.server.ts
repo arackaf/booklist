@@ -22,6 +22,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
     uxState,
     isMobile,
     showMobile: isMobile && !uxState.desktopRequested,
-    loggedIn
+    loggedIn,
+    userId: session?.userId
   };
 }

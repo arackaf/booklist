@@ -50,14 +50,14 @@ export const sync = async event => {
 
     await db.update(
       getUpdatePacket(key, key, {
-        UpdateExpression: "SET userId = :userId, loginToken = :loginToken, gsiUserWebSocketLookupPk = :userId",
-        ExpressionAttributeValues: { ":userId": packet.userId, ":loginToken": packet.loginToken }
+        UpdateExpression: "SET userId = :userId, gsiUserWebSocketLookupPk = :userId",
+        ExpressionAttributeValues: { ":userId": packet.userId }
       })
     );
 
     await new Promise(res => {
       messenger.postToConnection(
-        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Hello, World TWO Baby " }) },
+        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Connected and listening ..." }) },
         (err, data) => {
           res({});
           console.log("CALLBACK", "ERROR", err, "DATA", data);

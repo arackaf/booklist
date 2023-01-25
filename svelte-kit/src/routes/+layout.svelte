@@ -12,11 +12,11 @@
   import Loading from "$lib/components/ui/Loading.svelte";
 
   import { NUM_THEMES } from "$lib/util/constants";
-  import { checkPendingCount } from "$lib/util/scanUtils";
+  import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
 
   export let data: PageData;
 
-  $: ({ showMobile, uxState, loggedIn } = data);
+  $: ({ showMobile, uxState, loggedIn, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -43,10 +43,23 @@
     navigating = false;
   });
 
+  function startWebSocket() {
+    const scanWebSocket = getScanWebSocket();
+    scanWebSocket.send({ action: "sync", userId });
+
+    scanWebSocket.addHandler((data: any) => {
+      let packet = JSON.parse(data);
+
+      dispatchScanDataUpdate(packet);
+    });
+  }
+
   onMount(() => {
     if (loggedIn) {
       checkPendingCount();
     }
+
+    startWebSocket();
   });
 </script>
 
