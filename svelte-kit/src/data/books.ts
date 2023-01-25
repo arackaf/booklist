@@ -82,8 +82,6 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     $match.$and = requiredOrs.map(orArray => ({ $or: orArray }));
   }
 
-  console.log({ tags });
-
   return queryBooks<{ resultsCount: [{ count: number }]; books: Book[] }>({
     pipeline: [
       $lookup ? { $lookup } : null,
@@ -105,8 +103,6 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
-
-      console.log({ totalBooks });
 
       const arrayFieldsToInit = ["authors", "subjects", "tags"] as (keyof Book)[];
       books.forEach(book => {
@@ -156,7 +152,6 @@ export const getBookDetails = async (id: string) => {
     ]
   })
     .then(books => {
-      console.log({ books });
       const httpEnd = +new Date();
       console.log("HTTP time books", httpEnd - httpStart);
 
