@@ -4,6 +4,7 @@
 
   export let open: boolean;
   export let fade: boolean = true;
+  export let stiffDown: boolean = false;
 
   let hydrated = false;
   onMount(() => {
@@ -12,7 +13,7 @@
 </script>
 
 <div>
-  <div use:slideAnimate={{ open, fade }} class:hide={!hydrated} {...$$props}>
+  <div use:slideAnimate={{ open, fade, stiffDown }} class:hide={!hydrated} {...$$props}>
     <slot />
   </div>
 </div>
