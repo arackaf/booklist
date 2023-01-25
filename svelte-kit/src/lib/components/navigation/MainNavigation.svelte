@@ -34,8 +34,10 @@
   let pendingCount = 0;
 
   function handleWsPendingCountUpdate(evt: any) {
-    if (typeof evt?.detail?.pendingCount === "number") {
-      pendingCount = evt.detail.pendingCount;
+    const detail = evt?.detail || {};
+
+    if (typeof detail.pendingCount === "number") {
+      pendingCount = detail.pendingCount;
     }
   }
 
