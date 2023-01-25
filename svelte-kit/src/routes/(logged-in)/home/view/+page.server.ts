@@ -11,7 +11,7 @@ export async function load({ locals }: any) {
   const books = booksSubjectsDump(session.userId);
 
   return {
-    subjects,
+    ...(await subjects),
     books
   };
 }

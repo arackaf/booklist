@@ -2,17 +2,17 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
 
-  import BarChart from "./barChart/chart/BarChart.svelte";
+  import type { BookSubjectStack, Hash, Subject } from "$data/types";
 
   import { syncWidth } from "$lib/util/animationHelpers";
-  import type { BookSubjectStack, Subject } from "$data/types";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
-  import { toHash } from "$lib/state/helpers";
+  import BarChart from "./barChart/chart/BarChart.svelte";
 
-  const subjects: Subject[] = $page.data.subjects;
-  const subjectHash = toHash(subjects);
+  $: subjects = $page.data.subjects as Subject[];
+  $: subjectHash = $page.data.subjectHash as Hash<Subject>;
+  $: stackedSubjects = stackAndGetTopLevelSubjects(subjects);
+
   const books: BookSubjectStack[] = $page.data.books;
-  const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const MAX_CHART_WIDTH = 1100;
   let chartRootEl: any;

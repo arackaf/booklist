@@ -13,7 +13,7 @@
 
   export let books: BookSubjectStack[];
   export let subjectHash: Hash<Subject>;
-  export let subjects: Subject[];
+  export let subjects: Subject[] = [];
 
   export let drilldown: any;
   export let header: any;
@@ -21,10 +21,7 @@
   export let width: any;
   export let height: any;
 
-  //let { publicUserId } = $appState;
-
-  const subjectIds = subjects.map(s => s._id);
-  //const { queryState } = query(barCharQuery, { initialSearch: { subjectIds, searchChildSubjects: true, publicUserId: "" } });
+  $: subjectIds = subjects.map(s => s._id);
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
 
