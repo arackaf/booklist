@@ -206,9 +206,9 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     const endTime = +new Date();
 
-    // always wait a good 5s before releasing the lock, to help ensure isbn-db rate limits are respected
-    await wait(5000);
-    console.log("---- Waiting .... ----");
+    const waitFor = 1000 - (endTime - startTime);
+    await wait(Math.max(waitFor, 0));
+    console.log("---- Waiting .... ----", waitFor);
 
     return { success: true };
   } catch (err) {
