@@ -24,7 +24,13 @@
     ready = true;
   });
 
-  let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
+  let chartPackets: { subjects: Subject[]; header: string }[] = [];
+
+  $: {
+    if (!chartPackets.length && Array.isArray(subjects)) {
+      chartPackets = [{ subjects: stackedSubjects, header: "All books" }];
+    }
+  }
 
   const getDrilldownChart = (index: number, subjects: any, header: any) => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
