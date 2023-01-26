@@ -76,6 +76,7 @@
     }, {});
 
     updateUnsavedBook(updates);
+    book = { ...book, ...updates };
     uploadResults = null;
   }
 
