@@ -40,25 +40,16 @@
   border-bottom: var(--default-border-width) solid var(--primary-9);
 }
 .tab-header {
-  padding: 5px 10px 5px 10px;
+  padding: 0;
 
-  &::after {
-    display: block;
-    content: attr(data-title);
-    font-weight: bold;
-    height: 1px;
-    color: transparent;
-    overflow: hidden;
-    visibility: hidden;
+  > button {
+    padding: 5px 10px 5px 10px;
+    margin: 0;
   }
 
   &.active {
     border-bottom: var(--default-border-width) solid var(--primary-9);
     background-color: var(--primary-10);
-
-    button {
-      font-weight: bold;
-    }
   }
   &.active button,
   &.disabled button {

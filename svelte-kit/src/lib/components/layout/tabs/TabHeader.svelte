@@ -5,11 +5,12 @@
 
   export let text = "";
   export let tabName = "";
-  export let spaceWith = "";
   export let disabled = false;
 
   const tabsState: any = getContext("tabs-state");
   $: ({ currentTab, setTab, localStorageName } = $tabsState);
+
+  $: active = tabName == currentTab;
 
   const onClick = () => {
     if (!disabled) {
@@ -21,10 +22,23 @@
   };
 </script>
 
-<div on:click={onClick} on:keypress={() => {}} data-title={text || spaceWith} class={cn("tab-header", { disabled, active: tabName == currentTab })}>
+<div class={cn("tab-header", { disabled, active })}>
   {#if text}
-    <button class="raw-button">{text}</button>
+    <button on:click={onClick} type="button" class="raw-button overlay-holder">
+      <span class:active>{text}</span>
+      <span class="placeholder">{text}</span>
+    </button>
   {:else}
     <slot />
   {/if}
 </div>
+
+<style>
+  span.active {
+    font-weight: bold;
+  }
+  span.placeholder {
+    visibility: hidden;
+    font-weight: bold;
+  }
+</style>
