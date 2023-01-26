@@ -1,0 +1,18 @@
+.recent-scans-module {
+  --message-width: 40ch;
+  .results {
+    display: grid;
+    grid-template-columns: 75px 1fr;
+    gap: 15px;
+
+    .alert {
+      min-width: var(--message-width);
+    }
+    button {
+      display: flex;
+      margin-top: 10px;
+      width: var(--message-width);
+      justify-content: center;
+    }
+  }
+}
