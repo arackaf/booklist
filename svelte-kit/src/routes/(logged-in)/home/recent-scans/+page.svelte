@@ -9,7 +9,6 @@
 
   $: ({ scans, nextPageKey } = data);
 
-  let anyResults = false;
   let loading: boolean;
 
   function loadNextScans() {
@@ -26,13 +25,8 @@
   }
 
   let noResultsMessage: string;
-  $: {
-    if ($scans.length && !anyResults) {
-      anyResults = true;
-    }
 
-    noResultsMessage = anyResults ? "No more recent scans" : "No recent scans";
-  }
+  $: noResultsMessage = $scans.length ? "No more recent scans" : "No recent scans";
 </script>
 
 <div class="recent-scans-module margin-top-med">
@@ -57,8 +51,10 @@
     </div>
   </div>
   {#if !$nextPageKey}
-    <div class:margin-top-med={anyResults}>
-      <hr />
+    <div>
+      {#if $scans.length}
+        <hr />
+      {/if}
       <div class="alert alert-info">{noResultsMessage}</div>
     </div>
   {/if}

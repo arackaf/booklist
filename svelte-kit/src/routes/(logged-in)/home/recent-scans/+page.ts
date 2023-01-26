@@ -6,7 +6,6 @@ export async function load({ url, fetch }: any) {
 
   const { scans, nextPageKey } = packet;
 
-  console.log({ scans });
   return {
     scans: writable(scans),
     nextPageKey: writable(nextPageKey)
