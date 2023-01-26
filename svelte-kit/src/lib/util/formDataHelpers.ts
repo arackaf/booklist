@@ -16,6 +16,7 @@ type Lookup = {
 type Options = {
   strings?: string[];
   numbers?: string[];
+  optionals?: string[];
   arrays?: string[];
 };
 
@@ -33,6 +34,13 @@ export const toJson = (params: URLSearchParams, options: Options) => {
       result[k] = parseInt(val) || null;
     }
   });
+  options.optionals?.forEach(k => {
+    const val = params.get(k);
+    if (val != null) {
+      result[k] = val;
+    }
+  });
+
   options.arrays?.forEach(k => {
     result[k] = params.getAll(k);
   });

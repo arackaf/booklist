@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Book, Subject, Tag } from "$data/types";
+  import type { Book, BookCoversEdits, Subject, Tag } from "$data/types";
 
   import type { UpdatesTo } from "$lib/state/dataUpdates";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
@@ -7,16 +7,21 @@
 
   import EditBookInfo from "./EditBookInfo.svelte";
 
-  export let book: any;
+  export let book: Book;
   export let cancel: any;
   export let subjects: Subject[];
   export let tags: Tag[];
 
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
-  const updateEditingBook = (updates: Partial<Book>) => {
-    book = { ...book, ...updates };
+  let localBookCovers: BookCoversEdits = {};
+  const updateLocalBookCovers = (updates: BookCoversEdits) => {
+    localBookCovers = { ...localBookCovers, ...updates };
   };
+
+  $: {
+    console.log("BOOK CHANGE INNER", book);
+  }
 
   const updateLocalBook = (updates: UpdatesTo<Book>) => {
     book = { ...book, ...updates.fieldsSet };
@@ -44,12 +49,12 @@
   <TabContents>
     <TabContent tabName="basic">
       {#if book}
-        <EditBookInfo {book} {cancel} {subjects} {tags} updateBook={updateEditingBook} onSave={updateFunction} />
+        <EditBookInfo {book} {cancel} {subjects} {tags} onSave={updateFunction} fieldAdditions={book?._id ? {} : localBookCovers} />
       {/if}
     </TabContent>
     <TabContent tabName="covers">
       {#if book}
-        <EditBookCovers {book} bind:reset={resetCovers} onSave={updateFunction} />
+        <EditBookCovers {book} bind:reset={resetCovers} updateUnsavedBook={updateLocalBookCovers} onSave={updateFunction} />
       {/if}
     </TabContent>
     <TabContent tabName="c">C Content</TabContent>

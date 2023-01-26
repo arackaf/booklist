@@ -12,20 +12,6 @@ type Book = {
   authors: string[];
 };
 
-const bookEditStringFields = [
-  "_id",
-  "title",
-  "isbn",
-  "publisher",
-  "publicationDate",
-  "mobileImage",
-  "mobileImagePreview",
-  "smallImage",
-  "smallImagePreview",
-  "mediumImage",
-  "mediumImagePreview"
-];
-
 export const actions = {
   async setBooksView({ request, cookies }: any) {
     const formData: URLSearchParams = await request.formData();
@@ -45,8 +31,9 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: bookEditStringFields,
+      strings: ["_id", "title", "isbn", "publisher", "publicationDate"],
       numbers: ["pages"],
+      optionals: ["mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"],
       arrays: ["authors", "tags", "subjects"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);

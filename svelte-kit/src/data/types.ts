@@ -55,6 +55,10 @@ export type Book = {
   dateAdded: string;
 };
 
+export type BookCoversEdits = Partial<
+  Pick<Book, "mobileImage" | "mobileImagePreview" | "smallImage" | "smallImagePreview" | "mediumImage" | "mediumImagePreview">
+>;
+
 export type BookDisplay = Book & {
   subjectObjects: any[];
   tagObjects: any[];

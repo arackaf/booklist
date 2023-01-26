@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
 
-  import type { Book } from "$data/types";
+  import type { Book, BookCoversEdits } from "$data/types";
   import type { CoverUploadResults } from "$lambda/types";
 
   import type { UpdatesTo } from "$lib/state/dataUpdates";
@@ -15,6 +15,8 @@
 
   export let book: Book;
   export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
+
+  export let updateUnsavedBook: (updates: BookCoversEdits) => void;
 
   let uploadResults: CoverUploadResults | null = null;
 
@@ -57,7 +59,7 @@
   $: mediumImagePreview = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.preview : null;
 
   function updateLocalBook() {
-    const updatesPrelim = {
+    const updatesPrelim: BookCoversEdits = {
       mobileImage,
       mobileImagePreview,
       smallImage,
@@ -65,15 +67,15 @@
       mediumImage,
       mediumImagePreview
     };
-    const updates = Object.entries(updatesPrelim).reduce((obj, [k, v]) => {
+    const updates: BookCoversEdits = Object.entries(updatesPrelim).reduce<BookCoversEdits>((obj, [k, v]) => {
       if (v) {
+        // @ts-ignore
         obj[k] = v;
       }
       return obj;
-    }, {} as any);
+    }, {});
 
-    onSave("", { fieldsSet: updates });
-
+    updateUnsavedBook(updates);
     uploadResults = null;
   }
 

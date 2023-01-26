@@ -21,7 +21,11 @@
 
   export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
 
-  export let updateBook: (updates: Partial<Book>) => void;
+  export let fieldAdditions: Partial<Book> = {};
+
+  const updateBook = (updates: Partial<Book>) => {
+    book = { ...book, ...updates };
+  };
 
   const addSubject = (subject: Subject) => updateBook({ subjects: book.subjects.concat(subject._id) });
   const removeSubject = (subject: any) => updateBook({ subjects: book.subjects.filter((_id: string) => _id != subject._id) });
@@ -63,6 +67,10 @@
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <fieldset disabled={saving}>
     <input type="hidden" name="_id" value={book._id ?? null} />
+    {#each Object.entries(fieldAdditions) as [k, v]}
+      <input type="hidden" name={k} value={v} />
+    {/each}
+
     <FlexRow>
       <div class="col-xs-6">
         <div class={"form-group"}>

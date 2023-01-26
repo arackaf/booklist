@@ -11,6 +11,10 @@
   export let subjects: Subject[];
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void = () => {};
 
+  $: {
+    console.log("BOOK CHANGE", book);
+  }
+
   let closeModal: any;
   let resetBookEditTabs: () => null;
 
