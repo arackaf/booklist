@@ -23,14 +23,10 @@
 </script>
 
 <div class={cn("tab-header", { disabled, active })}>
-  {#if text}
-    <button on:click={onClick} type="button" class="raw-button overlay-holder">
-      <span class:active>{text}</span>
-      <span class="placeholder">{text}</span>
-    </button>
-  {:else}
-    <slot />
-  {/if}
+  <button on:click={onClick} type="button" class="raw-button overlay-holder">
+    <span class:active><slot /></span>
+    <span class="placeholder"><slot /></span>
+  </button>
 </div>
 
 <style>

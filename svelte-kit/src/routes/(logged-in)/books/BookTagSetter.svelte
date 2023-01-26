@@ -75,8 +75,8 @@
   <form method="post" action="?/setBooksTags" use:enhance={save}>
     <Tabs defaultTab="tags">
       <TabHeaders>
-        <TabHeader tabName="tags" text="Choose tags" />
-        <TabHeader tabName="books" text="For books" />
+        <TabHeader tabName="tags">Choose tags</TabHeader>
+        <TabHeader tabName="books">For books</TabHeader>
       </TabHeaders>
       <TabContents>
         <TabContent tabName="tags">

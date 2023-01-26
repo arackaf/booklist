@@ -75,8 +75,8 @@
   <form method="post" action="?/setBooksSubjects" use:enhance={save}>
     <Tabs defaultTab="subjects">
       <TabHeaders>
-        <TabHeader tabName="subjects" text="Choose subjects" />
-        <TabHeader tabName="books" text="For books" />
+        <TabHeader tabName="subjects">Choose subjects</TabHeader>
+        <TabHeader tabName="books">For books</TabHeader>
       </TabHeaders>
       <TabContents>
         <TabContent tabName="subjects">

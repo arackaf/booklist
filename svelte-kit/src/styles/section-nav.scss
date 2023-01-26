@@ -13,16 +13,6 @@
 .section-nav-item {
   padding: 15px 15px 15px 15px;
 
-  &::after {
-    display: block;
-    content: attr(data-title);
-    font-weight: bold;
-    height: 1px;
-    color: transparent;
-    overflow: hidden;
-    visibility: hidden;
-  }
-
   a {
     text-decoration: none;
   }

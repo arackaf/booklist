@@ -53,8 +53,8 @@
   <input type="hidden" name="_id" value={book?._id ?? null} />
   <Tabs bind:this={tabsInst} defaultTab="basic">
     <TabHeaders>
-      <TabHeader tabName="basic" text="Book info" />
-      <TabHeader tabName="covers" text="Covers" />
+      <TabHeader tabName="basic">Book info</TabHeader>
+      <TabHeader tabName="covers">Covers</TabHeader>
     </TabHeaders>
     <TabContents>
       <TabContent tabName="basic">
