@@ -26,15 +26,44 @@ export async function handler() {
 
       const { mobileImage, mobileImagePreview, smallImage, smallImagePreview, mediumImage, mediumImagePreview } = book;
 
-      const biggestImage = mediumImage || smallImage || mobileImage;
-      let base64Preview = "";
+      let mobileBase64Preview = "";
+      let smallBase64Preview = "";
+      let mediumBase64Preview = "";
 
-      try {
-        if (biggestImage) {
-          const plaiceholderResult = await getPlaiceholder(biggestImage);
-          base64Preview = plaiceholderResult.base64 || "";
-        }
-      } catch (er) {}
+      const previewQueues: Promise<any>[] = [];
+
+      if (mobileImage) {
+        previewQueues.push(
+          (async () => {
+            try {
+              const plaiceholderResult = await getPlaiceholder(mobileImage);
+              mobileBase64Preview = plaiceholderResult.base64 || "";
+            } catch (er) {}
+          })()
+        );
+      }
+      if (smallImage) {
+        previewQueues.push(
+          (async () => {
+            try {
+              const plaiceholderResult = await getPlaiceholder(smallImage);
+              smallBase64Preview = plaiceholderResult.base64 || "";
+            } catch (er) {}
+          })()
+        );
+      }
+      if (mediumImage) {
+        previewQueues.push(
+          (async () => {
+            try {
+              const plaiceholderResult = await getPlaiceholder(mediumImage);
+              mediumBase64Preview = plaiceholderResult.base64 || "";
+            } catch (er) {}
+          })()
+        );
+      }
+
+      await Promise.all(previewQueues);
 
       console.log("Current img", smallImage);
       const idx = i++;
@@ -47,7 +76,7 @@ export async function handler() {
               try {
                 console.log("Updating mobile");
                 const blurhashValue = await getBlurhashPreview(mobileImage);
-                (blurhashValue as any).b64 = base64Preview;
+                (blurhashValue as any).b64 = mobileBase64Preview;
 
                 if (blurhashValue) {
                   console.log("Mobile downloaded. Blurhash value ===", blurhashValue);
@@ -67,7 +96,7 @@ export async function handler() {
               try {
                 console.log("Updating small");
                 const blurhashValue = await getBlurhashPreview(smallImage);
-                (blurhashValue as any).b64 = base64Preview;
+                (blurhashValue as any).b64 = smallBase64Preview;
 
                 if (blurhashValue) {
                   console.log("Small downloaded. Blurhash value ===", blurhashValue);
@@ -87,7 +116,7 @@ export async function handler() {
               try {
                 console.log("Updating medium");
                 const blurhashValue = await getBlurhashPreview(mediumImage);
-                (blurhashValue as any).b64 = base64Preview;
+                (blurhashValue as any).b64 = mediumBase64Preview;
 
                 if (blurhashValue) {
                   console.log("Medium downloaded. Blurhash value ===", blurhashValue);
