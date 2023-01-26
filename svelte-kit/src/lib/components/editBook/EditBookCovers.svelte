@@ -1,22 +1,13 @@
 <script lang="ts">
-  import { enhance } from "$app/forms";
-
-  import type { Book, BookCoversEdits } from "$data/types";
+  import type { Book } from "$data/types";
   import type { CoverUploadResults } from "$lambda/types";
-
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
 
-  import Button from "../buttons/Button.svelte";
-  import ActionButton from "../buttons/ActionButton.svelte";
   import CurrentCovers from "./CurrentCovers.svelte";
 
   export let book: Book;
-  export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
-
-  export let updateUnsavedBook: (updates: BookCoversEdits) => void;
 
   let uploadResults: CoverUploadResults | null = null;
 
@@ -57,45 +48,6 @@
 
   $: mediumImage = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.url : null;
   $: mediumImagePreview = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.preview : null;
-
-  function updateLocalBook() {
-    const updatesPrelim: BookCoversEdits = {
-      mobileImage,
-      mobileImagePreview,
-      smallImage,
-      smallImagePreview,
-      mediumImage,
-      mediumImagePreview
-    };
-    const updates: BookCoversEdits = Object.entries(updatesPrelim).reduce<BookCoversEdits>((obj, [k, v]) => {
-      if (v) {
-        // @ts-ignore
-        obj[k] = v;
-      }
-      return obj;
-    }, {});
-
-    updateUnsavedBook(updates);
-    book = { ...book, ...updates };
-    uploadResults = null;
-  }
-
-  let saving = false;
-  function executeSave() {
-    const { _id } = book;
-
-    saving = true;
-
-    return async ({ result }: any) => {
-      onSave(_id, result.data.updates);
-      saving = false;
-      uploadResults = null;
-    };
-  }
-
-  $: saveEligible = uploadResults?.success && (useNewMobile || useNewSmall || useNewMedium);
-
-  $: isNew = !book?._id;
 </script>
 
 <div>
@@ -108,21 +60,22 @@
     <UploadResults {uploadResults} {useNewMobile} {setUseNewMobile} {useNewSmall} {setUseNewSmall} {useNewMedium} {setUseNewMedium} />
   {/if}
 
-  {#if saveEligible && isNew}
-    <Button class="margin-top" preset="primary" onClick={updateLocalBook}>Set image info</Button>
+  {#if mobileImage}
+    <input type="hidden" name="mobileImage" value={mobileImage} />
   {/if}
-
-  {#if saveEligible && !isNew}
-    <form action="/books?/saveBookCovers" method="post" use:enhance={executeSave}>
-      <input type="hidden" name="_id" value={book._id} />
-      <input type="hidden" name="mobileImage" value={mobileImage} />
-      <input type="hidden" name="mobileImagePreview" value={mobileImagePreview} />
-      <input type="hidden" name="smallImage" value={smallImage} />
-      <input type="hidden" name="smallImagePreview" value={smallImagePreview} />
-      <input type="hidden" name="mediumImage" value={mediumImage} />
-      <input type="hidden" name="mediumImagePreview" value={mediumImagePreview} />
-
-      <ActionButton class="margin-top" preset="primary" isRunning={saving} finishedText="Saved" text="Save" runningText="Saving" />
-    </form>
+  {#if mobileImagePreview}
+    <input type="hidden" name="mobileImagePreview" value={mobileImagePreview} />
+  {/if}
+  {#if smallImage}
+    <input type="hidden" name="smallImage" value={smallImage} />
+  {/if}
+  {#if smallImagePreview}
+    <input type="hidden" name="smallImagePreview" value={smallImagePreview} />
+  {/if}
+  {#if mediumImage}
+    <input type="hidden" name="mediumImage" value={mediumImage} />
+  {/if}
+  {#if mediumImagePreview}
+    <input type="hidden" name="mediumImagePreview" value={mediumImagePreview} />
   {/if}
 </div>

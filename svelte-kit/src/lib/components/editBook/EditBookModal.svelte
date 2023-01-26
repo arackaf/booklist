@@ -1,8 +1,10 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import Modal from "../ui/Modal.svelte";
+
   import EditBook from "./EditBook.svelte";
+
+  import Modal from "../ui/Modal.svelte";
 
   export let book: any;
   export let isOpen = false;
@@ -22,5 +24,5 @@
 </script>
 
 <Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false} bind:closeModal>
-  <EditBook bind:reset={resetBookEditTabs} {book} {onBookUpdated} {subjects} {tags} cancel={closeModal} />
+  <EditBook bind:reset={resetBookEditTabs} {book} {onBookUpdated} onCancel={onHide} {subjects} {tags} />
 </Modal>

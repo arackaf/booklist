@@ -1,32 +1,44 @@
 <script lang="ts">
-  import type { Book, BookCoversEdits, Subject, Tag } from "$data/types";
+  import { enhance } from "$app/forms";
+  import type { Book, Subject, Tag } from "$data/types";
 
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
+  import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
+
   import EditBookCovers from "./EditBookCovers.svelte";
-
   import EditBookInfo from "./EditBookInfo.svelte";
 
+  import ActionButton from "../buttons/ActionButton.svelte";
+  import Button from "../buttons/Button.svelte";
+  import FlowItems from "../layout/FlowItems.svelte";
+  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
+
   export let book: Book;
-  export let cancel: any;
   export let subjects: Subject[];
   export let tags: Tag[];
 
+  export let onCancel: () => void;
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
-  let localBookCovers: BookCoversEdits = {};
-  const updateLocalBookCovers = (updates: BookCoversEdits) => {
-    localBookCovers = { ...localBookCovers, ...updates };
-  };
+  let basicInfoValid: () => boolean;
 
-  const updateLocalBook = (updates: UpdatesTo<Book>) => {
-    book = { ...book, ...updates.fieldsSet };
-  };
+  let saving = false;
+  function executeSave({ cancel, data }: any) {
+    if (!basicInfoValid()) {
+      return cancel();
+    }
 
-  $: updateFunction = (_id: string, updates: UpdatesTo<Book>) => {
-    onBookUpdated(_id, updates);
-    updateLocalBook(updates);
-  };
+    const _id = data.get("_id");
+
+    saving = true;
+    return async ({ result }: any) => {
+      const updates: UpdatesTo<Book> = result.data.updates;
+
+      saving = false;
+      onBookUpdated(_id, updates);
+
+      book = updateSingleObject(book, updates);
+    };
+  }
 
   let resetCovers: () => void;
 
@@ -37,22 +49,30 @@
   };
 </script>
 
-<Tabs bind:this={tabsInst} defaultTab="basic">
-  <TabHeaders>
-    <TabHeader tabName="basic" text="Book info" />
-    <TabHeader tabName="covers" text="Covers" />
-  </TabHeaders>
-  <TabContents>
-    <TabContent tabName="basic">
-      {#if book}
-        <EditBookInfo {book} {cancel} {subjects} {tags} onSave={updateFunction} fieldAdditions={book?._id ? {} : localBookCovers} />
-      {/if}
-    </TabContent>
-    <TabContent tabName="covers">
-      {#if book}
-        <EditBookCovers {book} bind:reset={resetCovers} updateUnsavedBook={updateLocalBookCovers} onSave={updateFunction} />
-      {/if}
-    </TabContent>
-    <TabContent tabName="c">C Content</TabContent>
-  </TabContents>
-</Tabs>
+<form method="post" action="/books?/saveBook" use:enhance={executeSave}>
+  <input type="hidden" name="_id" value={book?._id ?? null} />
+  <Tabs bind:this={tabsInst} defaultTab="basic">
+    <TabHeaders>
+      <TabHeader tabName="basic" text="Book info" />
+      <TabHeader tabName="covers" text="Covers" />
+    </TabHeaders>
+    <TabContents>
+      <TabContent tabName="basic">
+        {#if book}
+          <EditBookInfo bind:validate={basicInfoValid} {saving} {book} {subjects} {tags} />
+        {/if}
+      </TabContent>
+      <TabContent tabName="covers">
+        {#if book}
+          <EditBookCovers {book} bind:reset={resetCovers} />
+        {/if}
+      </TabContent>
+    </TabContents>
+  </Tabs>
+
+  <hr />
+  <FlowItems>
+    <ActionButton type="submit" style="min-width: 10ch" isRunning={saving} finishedText="Saved" text="Save" preset="primary" runningText="Saving" />
+    <Button disabled={saving} style="margin-left: auto;" type="button" onClick={onCancel}>Cancel</Button>
+  </FlowItems>
+</form>
