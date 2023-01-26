@@ -30,13 +30,14 @@
   export let dispatch: any;
   export let selectedBooksSet: any;
 
+  export let allSubjects: Subject[];
+  export let allTags: Tag[];
+
   const PAGE_SIZE = 20;
 
   const initialReducerState: any = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
   const searchStateReducer = (_oldState: any, payload: any) =>
     payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialReducerState;
-
-  //const { publicUserId } = $appState;
 
   const [reducerState, searchDispatch] = useReducer(searchStateReducer, initialReducerState);
 
@@ -46,13 +47,6 @@
 
   $: variables = { ...searchState };
   $: ({ page } = variables);
-
-  //const { queryState, sync } = query<QueryOf<Queries["allBooks"]>>(BooksQuery, { postProcess: resp => preloadBookImages(resp, false) });
-  // $: {
-  //   if (active) {
-  //     sync(variables);
-  //   }
-  // }
 
   let titleEl: HTMLInputElement;
   let searchChild = false;
@@ -117,12 +111,7 @@
 </script>
 
 <Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
-  <form
-    on:submit={evt => {
-      evt.preventDefault();
-      applyFilters();
-    }}
-  >
+  <form on:submit|preventDefault={applyFilters}>
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
@@ -152,17 +141,17 @@
       </div>
 
       <div class="col-xs-3">
-        <SelectAvailableTags currentlySelected={tags} onSelect={selectTag} />
+        <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
       </div>
       <div class="col-xs-9">
-        <DisplaySelectedTags currentlySelected={tags} onRemove={removeTag} />
+        <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
       </div>
 
       <div class="col-xs-3">
-        <SelectAvailableSubjects currentlySelected={subjects} onSelect={selectSubject} />
+        <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
       </div>
       <div class="col-xs-9">
-        <DisplaySelectedSubjects currentlySelected={subjects} onRemove={removeSubject} />
+        <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
       </div>
 
       <div class="col-xs-6">

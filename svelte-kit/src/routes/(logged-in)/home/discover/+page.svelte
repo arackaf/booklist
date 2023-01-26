@@ -10,7 +10,11 @@
   import useReducer from "$lib/state/useReducer";
   //import DisplayBook from "./DisplayBook.svelte";
   //import DisplayRecommendation from "./DisplayRecommendation.svelte";
-  //import SearchModal from "./SearchModal.svelte";
+  import SearchModal from "./SearchModal.svelte";
+
+  export let data: any;
+
+  $: ({ subjects: allSubjects, tags: allTags } = data);
 
   const initialState: any = {
     selectedBooks: [],
@@ -100,5 +104,5 @@
       {/if}
     </div>
   </FlexRow>
-  <!-- <SearchModal isOpen={searchModalOpen} onHide={closeModal} {dispatch} {selectedBooksSet} /> -->
+  <SearchModal isOpen={searchModalOpen} onHide={closeModal} {allSubjects} {allTags} {dispatch} {selectedBooksSet} />
 </div>
