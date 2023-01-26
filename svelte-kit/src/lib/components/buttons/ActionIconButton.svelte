@@ -12,7 +12,7 @@
   let className = "";
   export { className as class };
 
-  export let onClick: any;
+  export let onClick: any = () => {};
   export let preset = "";
   export let disabled = false;
 

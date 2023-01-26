@@ -25,6 +25,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const searchChildSubjects = url.searchParams.get("child-subjects") ? true : undefined;
   const noSubjects = url.searchParams.get("no-subjects") === "true";
 
+  console.log({ search, tags, subjects, searchChildSubjects, isRead });
+
   const packet: BookSearch = {
     publicUser,
     page,

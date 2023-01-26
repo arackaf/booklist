@@ -19,6 +19,7 @@
   //import SearchResults from "./SearchResults.svelte";
   import useReducer from "$lib/state/useReducer";
   import type { Book, Subject, Tag } from "$data/types";
+  import { enhance } from "$app/forms";
 
   // import { query } from "micro-graphql-svelte";
   // import { Queries, QueryOf } from "gql/graphql-typings";
@@ -83,7 +84,18 @@
   const removeSubject = (subject: Subject) => (subjects = subjects.filter(_id => _id != subject._id));
   const removeTag = (tag: Tag) => (tags = tags.filter(_id => _id != tag._id));
 
-  const applyFilters = () => {
+  function executeSearch({ cancel, data }: any) {
+    const title = data.get("title");
+
+    loading = true;
+    return async ({ result }: any) => {
+      //const books: Book[] = result.data.books;
+
+      loading = false;
+    };
+  }
+
+  const applyFilters = ({}) => {
     searchDispatch({
       title,
       isRead: isRead == "null" ? void 0 : isRead == "0" ? false : true,
@@ -111,12 +123,12 @@
 </script>
 
 <Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
-  <form on:submit|preventDefault={applyFilters}>
+  <form method="post" action="?/search" use:enhance={executeSearch}>
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
           <label>Title</label>
-          <input bind:this={titleEl} bind:value={title} placeholder="Search title" class="form-control" />
+          <input bind:this={titleEl} name="search" placeholder="Search title" class="form-control" />
         </div>
       </div>
 
@@ -125,15 +137,15 @@
           <label class="form-label">Is read?</label>
           <FlowItems class="radio">
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" bind:group={isRead} value="null" name="isRead" id="isReadE" />
+              <input type="radio" checked value="" name="is-read" id="isReadE" />
               <label for="isReadE">Either</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" bind:group={isRead} value="1" name="isRead" id="isReadY" />
+              <input type="radio" value="true" name="is-read" id="isReadY" />
               <label for="isReadY">Yes</label>
             </FlowItems>
             <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" bind:group={isRead} value="0" name="isRead" id="isReadN" />
+              <input type="radio" value="false" name="is-read" id="isReadN" />
               <label for="isReadN">No</label>
             </FlowItems>
           </FlowItems>
@@ -155,12 +167,12 @@
       </div>
 
       <div class="col-xs-6">
-        <div class="checkbox"><label> <input type="checkbox" bind:checked={searchChild} /> Also search child subjects </label></div>
+        <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
       </div>
 
       <div class="col-xs-12">
         <FlexRow>
-          <ActionIconButton class="btn btn-default" onClick={applyFilters} disabled={loading}>
+          <ActionIconButton class="btn btn-default" disabled={loading}>
             <i class:fa-spin={loading} class:fa-spinner={loading} class:fa-search={!loading} class="fal fa-fw" />
           </ActionIconButton>
 
