@@ -19,10 +19,6 @@
     localBookCovers = { ...localBookCovers, ...updates };
   };
 
-  $: {
-    console.log("BOOK CHANGE INNER", book);
-  }
-
   const updateLocalBook = (updates: UpdatesTo<Book>) => {
     book = { ...book, ...updates.fieldsSet };
   };
