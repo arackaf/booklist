@@ -56,7 +56,26 @@
   $: mediumImage = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.url : null;
   $: mediumImagePreview = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.preview : null;
 
-  function updateLocalBook() {}
+  function updateLocalBook() {
+    const updatesPrelim = {
+      mobileImage,
+      mobileImagePreview,
+      smallImage,
+      smallImagePreview,
+      mediumImage,
+      mediumImagePreview
+    };
+    const updates = Object.entries(updatesPrelim).reduce((obj, [k, v]) => {
+      if (v) {
+        obj[k] = v;
+      }
+      return obj;
+    }, {} as any);
+
+    onSave("", { fieldsSet: updates });
+
+    uploadResults = null;
+  }
 
   let saving = false;
   function executeSave() {

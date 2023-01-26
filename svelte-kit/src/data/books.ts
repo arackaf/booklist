@@ -1,4 +1,4 @@
-import { queryBooks, updateMultipleBooks, deleteBookById, updateById } from "./dbUtils";
+import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 import { BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
@@ -181,6 +181,10 @@ export const booksSubjectsDump = async (userId: string) => {
     .catch(err => {
       console.log({ err });
     });
+};
+
+export const insertBook = async (userId: string, book: Partial<Book>) => {
+  return insertObject("books", userId, book);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {

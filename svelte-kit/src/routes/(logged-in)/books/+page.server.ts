@@ -1,4 +1,4 @@
-import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook } from "$data/books";
+import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook, insertBook } from "$data/books";
 import type { Tag } from "$data/types";
 import { saveTag, deleteSingleTag } from "$data/tags";
 
@@ -11,6 +11,20 @@ type Book = {
   title: string;
   authors: string[];
 };
+
+const bookEditStringFields = [
+  "_id",
+  "title",
+  "isbn",
+  "publisher",
+  "publicationDate",
+  "mobileImage",
+  "mobileImagePreview",
+  "smallImage",
+  "smallImagePreview",
+  "mediumImage",
+  "mediumImagePreview"
+];
 
 export const actions = {
   async setBooksView({ request, cookies }: any) {
@@ -31,13 +45,17 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "title", "isbn", "publisher", "publicationDate"],
+      strings: bookEditStringFields,
       numbers: ["pages"],
       arrays: ["authors", "tags", "subjects"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
 
-    await updateBook(session.userId, fields);
+    if (fields._id) {
+      await updateBook(session.userId, fields);
+    } else {
+      await insertBook(session.userId, fields);
+    }
 
     updateCacheCookie(cookies, BOOKS_CACHE);
 

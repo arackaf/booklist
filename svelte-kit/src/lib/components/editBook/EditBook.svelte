@@ -14,14 +14,16 @@
 
   export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
 
+  const updateEditingBook = (updates: Partial<Book>) => {
+    book = { ...book, ...updates };
+  };
+
   const updateLocalBook = (updates: UpdatesTo<Book>) => {
     book = { ...book, ...updates.fieldsSet };
   };
 
   $: updateFunction = (_id: string, updates: UpdatesTo<Book>) => {
-    if (_id) {
-      onBookUpdated(_id, updates);
-    }
+    onBookUpdated(_id, updates);
     updateLocalBook(updates);
   };
 
@@ -42,7 +44,7 @@
   <TabContents>
     <TabContent tabName="basic">
       {#if book}
-        <EditBookInfo {book} {cancel} {subjects} {tags} onSave={updateFunction} />
+        <EditBookInfo {book} {cancel} {subjects} {tags} updateBook={updateEditingBook} onSave={updateFunction} />
       {/if}
     </TabContent>
     <TabContent tabName="covers">

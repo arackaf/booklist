@@ -33,7 +33,6 @@
   });
   let editingBook: Book | null = null;
 
-  let running = false;
   let enteringBook = false;
 
   const manuallyEnterBook = () => {
@@ -102,13 +101,6 @@
       {/each}
     </div>
     <ScanResults />
-    <EditBookModal
-      isOpen={enteringBook}
-      book={editingBook}
-      onBookUpdated={saveManualBook}
-      subjects={allSubjects}
-      {tags}
-      onHide={() => (enteringBook = false)}
-    />
+    <EditBookModal isOpen={enteringBook} book={editingBook} subjects={allSubjects} {tags} onHide={() => (enteringBook = false)} />
   </FlowItems>
 </section>

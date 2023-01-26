@@ -9,7 +9,7 @@
   export let onHide: any;
   export let tags: Tag[];
   export let subjects: Subject[];
-  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
+  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void = () => {};
 
   let closeModal: any;
   let resetBookEditTabs: () => null;

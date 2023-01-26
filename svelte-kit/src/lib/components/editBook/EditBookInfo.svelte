@@ -21,25 +21,20 @@
 
   export let onSave: (_id: string, updates: UpdatesTo<Book>) => void;
 
-  let editingBook: any;
-  $: bookChanged(book);
+  export let updateBook: (updates: Partial<Book>) => void;
 
-  function bookChanged(book: any) {
-    editingBook = { ...book };
-  }
+  const addSubject = (subject: Subject) => updateBook({ subjects: book.subjects.concat(subject._id) });
+  const removeSubject = (subject: any) => updateBook({ subjects: book.subjects.filter((_id: string) => _id != subject._id) });
 
-  const addSubject = (subject: Subject) => (editingBook.subjects = editingBook.subjects.concat(subject._id));
-  const removeSubject = (subject: any) => (editingBook.subjects = editingBook.subjects.filter((_id: string) => _id != subject._id));
-
-  const addTag = (tag: any) => (editingBook.tags = editingBook.tags.concat(tag._id));
-  const removeTag = (tag: any) => (editingBook.tags = editingBook.tags.filter((_id: string) => _id != tag._id));
+  const addTag = (tag: any) => updateBook({ tags: book.tags.concat(tag._id) });
+  const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((_id: string) => _id != tag._id) });
 
   let missingTitle = false;
 
   export let cancel: any;
 
   const addAuthor = (evt: any) => {
-    editingBook.authors = [...editingBook.authors, ""];
+    updateBook({ authors: [...book.authors, ""] });
   };
 
   let saving = false;
@@ -65,9 +60,9 @@
   }
 </script>
 
-<form method="post" action="?/saveBook" use:enhance={executeSave}>
+<form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <fieldset disabled={saving}>
-    <input type="hidden" name="_id" value={editingBook._id} />
+    <input type="hidden" name="_id" value={book._id ?? null} />
     <FlexRow>
       <div class="col-xs-6">
         <div class={"form-group"}>
@@ -77,7 +72,7 @@
             class="form-control"
             name="title"
             class:error={missingTitle}
-            bind:value={editingBook.title}
+            value={book.title}
             on:input={titleKeyDown}
             placeholder="Title (required)"
           />
@@ -87,44 +82,38 @@
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-isbn">ISBN</label>
-          <input id="book-edit-isbn" name="isbn" class="form-control" bind:value={editingBook.isbn} placeholder="ISBN" />
+          <input id="book-edit-isbn" name="isbn" class="form-control" value={book.isbn} placeholder="ISBN" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-pages">Pages</label>
-          <input id="book-edit-pages" name="pages" class="form-control" bind:value={editingBook.pages} type="number" placeholder="Number of pages" />
+          <input id="book-edit-pages" name="pages" class="form-control" value={book.pages} type="number" placeholder="Number of pages" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-publisher">Publisher</label>
-          <input id="book-edit-publisher" name="publisher" class="form-control" bind:value={editingBook.publisher} placeholder="Publisher" />
+          <input id="book-edit-publisher" name="publisher" class="form-control" value={book.publisher} placeholder="Publisher" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <div class="form-group">
           <label for="book-edit-published">Published</label>
-          <input
-            id="book-edit-published"
-            name="publicationDate"
-            class="form-control"
-            bind:value={editingBook.publicationDate}
-            placeholder="Publication date"
-          />
+          <input id="book-edit-published" name="publicationDate" class="form-control" value={book.publicationDate} placeholder="Publication date" />
         </div>
       </div>
 
       <div class="col-xs-12">
         <FlexRow>
           <div class="col-sm-3 col-xs-12">
-            <SelectAvailableTags {tags} currentlySelected={editingBook.tags} onSelect={addTag} />
+            <SelectAvailableTags {tags} currentlySelected={book.tags} onSelect={addTag} />
           </div>
           <div class="col-sm-9 col-xs-12">
-            <DisplaySelectedTags {tags} currentlySelected={editingBook.tags} onRemove={removeTag} />
+            <DisplaySelectedTags {tags} currentlySelected={book.tags} onRemove={removeTag} />
           </div>
         </FlexRow>
       </div>
@@ -132,21 +121,21 @@
       <div class="col-xs-12">
         <FlexRow>
           <div class="col-sm-3 col-xs-12">
-            <SelectAvailableSubjects {subjects} currentlySelected={editingBook.subjects} onSelect={addSubject} />
+            <SelectAvailableSubjects {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
           </div>
           <div class="col-sm-9 col-xs-12">
-            <DisplaySelectedSubjects {subjects} currentlySelected={editingBook.subjects} onRemove={removeSubject} />
+            <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
           </div>
         </FlexRow>
       </div>
 
-      {#each editingBook.authors || [] as author, index (index)}
+      {#each book.authors || [] as author, index (index)}
         <div class="col-xs-4">
           <div class="form-group">
             <label for={`book-edit-author-${index}`}>Author</label>
             <input
               id={`book-edit-author-${index}`}
-              bind:value={editingBook.authors[index]}
+              value={book.authors[index]}
               class="form-control"
               name="authors"
               placeholder={`Author ${index + 1}`}
