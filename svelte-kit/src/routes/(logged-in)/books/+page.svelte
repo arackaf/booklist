@@ -29,8 +29,7 @@
   import { page } from "$app/stores";
 
   import useReducer from "$lib/state/useReducer";
-  import { writable, type Writable } from "svelte/store";
-  import ModuleLoading from "$lib/components/navigation/ModuleLoading.svelte";
+  import type { Writable } from "svelte/store";
 
   import GridView from "./bookViews/GridView.svelte";
   // import BasicView from './bookViews/BasicView.svelte';
@@ -38,19 +37,13 @@
 
   import BookSearchModal from "./SearchModal.svelte";
   import BooksMenuBar from "./menuBar/MenuBar.svelte";
-  // import { searchBooks } from './booksState';
 
   import SubjectEditModal from "./SubjectEditModal.svelte";
   import TagEditModal from "./TagEditModal.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import BookSubjectSetter from "./BookSubjectSetter.svelte";
   import BookTagSetter from "./BookTagSetter.svelte";
-  // import ModuleLoading from 'app/components/navigation/ModuleLoading.svelte';
 
-  //TODO: TEMP
-  import { searchState } from "./state/searchState";
-  import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-  import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
   import type { Book } from "$data/types";
   import { selectedBooksLookup, selectionState } from "./state/selectionState";
