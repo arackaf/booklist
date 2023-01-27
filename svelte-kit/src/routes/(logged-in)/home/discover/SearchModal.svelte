@@ -20,6 +20,7 @@
   import useReducer from "$lib/state/useReducer";
   import type { Book, Subject, Tag } from "$data/types";
   import { enhance } from "$app/forms";
+  import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
   // import { query } from "micro-graphql-svelte";
   // import { Queries, QueryOf } from "gql/graphql-typings";
@@ -85,13 +86,35 @@
   const removeTag = (tag: Tag) => (tags = tags.filter(_id => _id != tag._id));
 
   let currentQuery = "";
+  let totalBooks = 0;
 
-  function executeSearch({ data }: { data: FormData }) {
-    loading = true;
-    return async ({ result }: any) => {
-      ({ books, currentQuery } = result.data);
-      loading = false;
-    };
+  async function executeSearch({ cancel, data, ...rest }: any) {
+    console.log({ rest });
+    cancel();
+    //loading = true;
+
+    let searchParams = new URLSearchParams([
+      ["page-size", "20"],
+      ["result-set", "compact"],
+      ["cache", getCurrentCookieValue(BOOKS_CACHE)],
+      ...["search", "is-read", "child-subjects"].map(k => [k, data.get(k)?.toString() ?? ""]),
+      ...["subjects", "tags"].flatMap(k => (data.getAll(k) ?? []).map((val: any) => [k, val.toString()]))
+    ]);
+
+    const search = searchParams.toString();
+
+    const result = await fetch(`/api/books?${search}`).then((resp: any) => resp.json());
+
+    currentQuery = search;
+    books = result.books;
+    totalBooks = result.totalBooks;
+
+    //const currentQuery = searchParams.toString();
+
+    // return async ({ result }: any) => {
+    //   ({ books, currentQuery } = result.data);
+    //   loading = false;
+    // };
   }
 
   let noAvailableBooks = false;
