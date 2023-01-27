@@ -1,11 +1,14 @@
 <script lang="ts">
   import { quadIn, quadOut } from "svelte/easing";
 
+  import type { Book } from "$data/types";
+
   import SearchResult from "./SearchResult.svelte";
 
   export let selectedBooksSet: Set<string>;
   export let books: any[];
   export let currentQuery: string;
+  export let selectBook: (book: Book) => void;
 
   const resultsIn: any = () => {
     return {
@@ -27,7 +30,7 @@
       {#key currentQuery}
         <ul in:resultsIn|local out:resultsOut|local>
           {#each books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
-            <SearchResult {book} />
+            <SearchResult {book} {selectBook} />
           {/each}
         </ul>
       {/key}

@@ -11,12 +11,13 @@
   const modalContext: any = getContext("svelte-helpers-modal");
 
   export let book: Book;
+  export let selectBook: (book: Book) => void;
   let adding = false;
 
-  const selectBook = () => {
+  const _selectBook = () => {
     adding = true;
     ++numberAnimating;
-    //dispatch(["selectBook", book]);
+    selectBook(book);
   };
 
   const slideOut: any = (node: HTMLElement) => {
@@ -48,7 +49,7 @@
           </div>
           <button
             disabled={adding}
-            on:click={selectBook}
+            on:click={_selectBook}
             style="cursor: pointer; margin-top: auto; align-self: flex-start"
             class="btn btn-primary btn-xs"
           >

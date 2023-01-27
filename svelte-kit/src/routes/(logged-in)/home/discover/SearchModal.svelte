@@ -29,7 +29,8 @@
 
   export let isOpen: boolean;
   export let onHide: () => void;
-  export let selectedBooksSet: any;
+  export let selectedBooksSet: Set<string>;
+  export let selectBook: (book: Book) => void;
 
   export let allSubjects: Subject[];
   export let allTags: Tag[];
@@ -202,7 +203,7 @@
             <hr />
           {/if}
         </div>
-        <SearchResults {books} {currentQuery} {selectedBooksSet} />
+        <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
       </div>
     </FlexRow>
   </form>

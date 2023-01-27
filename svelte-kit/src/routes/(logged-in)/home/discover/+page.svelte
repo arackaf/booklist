@@ -7,40 +7,27 @@
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  import useReducer from "$lib/state/useReducer";
-  //import DisplayBook from "./DisplayBook.svelte";
+  import DisplayBook from "./DisplayBook.svelte";
   //import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
+  import type { Book } from "$data/types";
 
   export let data: any;
 
   $: ({ subjects: allSubjects, tags: allTags } = data);
 
-  const initialState: any = {
-    selectedBooks: [],
-    recommendationsLoading: false,
-    recommendations: []
-  };
-  function reducer(state: any, [type, payload = null]: any) {
-    switch (type) {
-      case "selectBook":
-        return { ...state, selectedBooks: [...state.selectedBooks, payload] };
-      case "deSelectBook":
-        return { ...state, selectedBooks: state.selectedBooks.filter((b: any) => b != payload) };
-      case "startRecommendationsFetch":
-        return { ...state, recommendationsLoading: true };
-      case "setRecommendations":
-        return { ...state, recommendationsLoading: false, recommendations: payload };
-    }
-    return state;
-  }
+  let selectedBooks: Book[] = [];
+  let recommendationsLoading = false;
+  let recommendations: Book[] = [];
 
   let searchModalOpen = false;
-  type T = { selectedBooks: any[]; recommendations: any[]; recommendationsLoading: any };
-  let [recommendationState, dispatch] = useReducer<T>(reducer, initialState);
-  $: ({ selectedBooks, recommendations, recommendationsLoading } = $recommendationState);
 
-  //let { publicUserId } = $appState;
+  const selectBook = (book: Book) => (selectedBooks = selectedBooks.concat(book));
+  const unselectBook = (book: Book) => (selectedBooks = selectedBooks.filter(b => b !== book));
+
+  //type T = { selectedBooks: any[]; recommendations: any[]; recommendationsLoading: any };
+  //let [recommendationState, dispatch] = useReducer<T>(reducer, initialState);
+  //$: ({ selectedBooks, recommendations, recommendationsLoading } = $recommendationState);
 
   const closeModal = () => {
     searchModalOpen = false;
@@ -50,16 +37,12 @@
   $: selectedBooksSet = new Set(selectedBooks.map(b => b._id));
 
   const getRecommendations = () => {
-    //const { userId, loginToken } = getLoginStatus();
-
-    dispatch(["startRecommendationsFetch"]);
-    ajaxUtil
-      .post("TODO", { bookIds: [...selectedBooksSet] })
-      .then(res => {
-        //preloadRecommendationImages(res);
-        return res;
-      })
-      .then(resp => dispatch(["setRecommendations", resp.results]));
+    //dispatch(["startRecommendationsFetch"]);
+    ajaxUtil.post("TODO", { bookIds: [...selectedBooksSet] }).then(res => {
+      //preloadRecommendationImages(res);
+      return res;
+    });
+    //.then(resp => dispatch(["setRecommendations", resp.results]));
   };
 </script>
 
@@ -83,7 +66,7 @@
         <div>
           {#each selectedBooks as book (book._id)}
             <span />
-            <!-- <DisplayBook {book} {dispatch} /> -->
+            <DisplayBook {book} />
           {/each}
         </div>
       </Stack>
@@ -104,5 +87,5 @@
       {/if}
     </div>
   </FlexRow>
-  <SearchModal isOpen={searchModalOpen} onHide={closeModal} {allSubjects} {allTags} {dispatch} {selectedBooksSet} />
+  <SearchModal isOpen={searchModalOpen} onHide={closeModal} {allSubjects} {allTags} {selectedBooksSet} {selectBook} />
 </div>
