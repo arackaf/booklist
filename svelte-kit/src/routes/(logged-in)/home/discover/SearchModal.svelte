@@ -29,49 +29,41 @@
 
   export let isOpen: boolean;
   export let onHide: () => void;
-  export let dispatch: any;
   export let selectedBooksSet: any;
 
   export let allSubjects: Subject[];
   export let allTags: Tag[];
 
-  const PAGE_SIZE = 20;
-
-  const initialReducerState: any = { active: false, page: 1, pageSize: 50, sort: { title: 1 }, tags: [], subjects: [] };
-  const searchStateReducer = (_oldState: any, payload: any) =>
-    payload ? { active: true, page: 1, pageSize: PAGE_SIZE, ...payload } : initialReducerState;
-
-  const [reducerState, searchDispatch] = useReducer(searchStateReducer, initialReducerState);
-
-  let searchState: any;
-  let active: any;
-  $: ({ active, ...searchState } = $reducerState);
-
   let page = 1;
-  let totalPages = 0;
-  let titleEl: HTMLInputElement;
+  let pageBind = 1;
 
+  let totalPages = 0;
+  let active = false;
+
+  let books: Book[] = [];
   let subjects: string[] = [];
   let tags: string[] = [];
-
-  //$: ({ loaded, loading, data, error, currentQuery } = $queryState);
-
-  //$: books = data?.allBooks?.Books;
-  let books: Book[] = [];
+  let titleEl: HTMLInputElement;
 
   let loading = false;
-  $: noResults = active && books != null && !books?.length;
+  $: noResults = active && !books?.length;
 
-  const pageUp = () => searchDispatch({ page: page + 1 });
-  const pageDown = () => searchDispatch({ page: page - 1 });
-  const pageOne = () => searchDispatch({ page: 1 });
-  const pageLast = () => searchDispatch({ page: totalPages });
+  let searchFormEl: HTMLFormElement;
+
+  const pageUp = () => gotoPage(page + 1);
+  const pageDown = () => gotoPage(page - 1);
+  const pageOne = () => gotoPage(1);
+  const pageLast = () => gotoPage(totalPages);
+
+  const gotoPage = (pg: number) => {
+    pageBind = pg;
+    searchFormEl.requestSubmit();
+  };
 
   $: canPageUp = !loading && page < totalPages;
   $: canPageDown = !loading && page > 1;
 
-  //$: allBooks = data?.allBooks?.Books;
-  //$: noAvailableBooks = allBooks?.length && !allBooks.find(b => !selectedBooksSet.has(b._id));
+  $: noAvailableBooks = books.length && !books.find(b => !selectedBooksSet.has(b._id));
 
   const selectSubject = (subject: Subject) => (subjects = subjects.concat(subject._id));
   const selectTag = (tag: Tag) => (tags = tags.concat(tag._id));
@@ -82,12 +74,12 @@
   let totalBooks = 0;
 
   async function executeSearch({ cancel, data, ...rest }: any) {
-    console.log({ rest });
     cancel();
-    //loading = true;
 
+    loading = true;
     let searchParams = new URLSearchParams([
-      ["page-size", "20"],
+      ["page", pageBind],
+      ["page-size", "5"],
       ["result-set", "compact"],
       ["cache", getCurrentCookieValue(BOOKS_CACHE)],
       ...["search", "is-read", "child-subjects"].map(k => [k, data.get(k)?.toString() ?? ""]),
@@ -98,20 +90,12 @@
 
     const result = await fetch(`/api/books?${search}`).then((resp: any) => resp.json());
 
+    pageBind = 1;
     currentQuery = search;
     ({ page, totalPages, books, totalBooks } = result);
-
-    console.log({ page, totalPages });
-
-    //const currentQuery = searchParams.toString();
-
-    // return async ({ result }: any) => {
-    //   ({ books, currentQuery } = result.data);
-    //   loading = false;
-    // };
+    loading = false;
   }
 
-  let noAvailableBooks = false;
   const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
   const resultsMessageIn: any = () => {
     const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
@@ -129,8 +113,8 @@
 </script>
 
 <Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
-  <form method="post" action="?/search" use:enhance={executeSearch}>
-    <input type="hidden" name="page" value={page} />
+  <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
+    <input type="hidden" name="page" value={pageBind} />
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
