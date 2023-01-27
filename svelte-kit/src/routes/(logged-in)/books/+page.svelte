@@ -98,8 +98,6 @@
 
   $: books = $page.data.books as Writable<Book[]>;
 
-  $: allSubjects = $page.data.subjects;
-
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
 
@@ -167,9 +165,9 @@
             {#if bookViewToUse == BASIC_LIST_VIEW}
               <h1>MOBILE</h1>
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={$books} subjects={allSubjects} {tags} />
+              <GridView books={$books} {subjects} {tags} />
             {:else}
-              <CoversView books={$books} />
+              <CoversView books={$books} {subjects} {tags} />
             {/if}
 
             <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
@@ -180,16 +178,9 @@
           </div>
         {/if}
 
-        <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} {allSubjects} />
+        <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
 
-        <EditBookModal
-          isOpen={editBookModalOpen}
-          book={editingBook}
-          onBookUpdated={onBooksUpdated}
-          onHide={stopEditingBook}
-          subjects={allSubjects}
-          {tags}
-        />
+        <EditBookModal isOpen={editBookModalOpen} book={editingBook} onBookUpdated={onBooksUpdated} onHide={stopEditingBook} {subjects} {tags} />
 
         <BookSubjectSetter
           isOpen={booksSubjectsModalOpen}
