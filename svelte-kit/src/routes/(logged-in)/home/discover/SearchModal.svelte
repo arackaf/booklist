@@ -85,13 +85,13 @@
   const removeTag = (tag: Tag) => (tags = tags.filter(_id => _id != tag._id));
 
   function executeSearch({ cancel, data }: any) {
-    const title = data.get("title");
-
     loading = true;
     return async ({ result }: any) => {
       //const books: Book[] = result.data.books;
 
       loading = false;
+
+      console.log("result", result.data);
     };
   }
 

@@ -82,6 +82,8 @@ export type BookSearch = {
   searchChildSubjects: true | undefined;
   noSubjects: boolean;
   sort?: BookSortValue;
+  pageSize?: number;
+  resultSet?: string;
 };
 
 type EditorialReview = {

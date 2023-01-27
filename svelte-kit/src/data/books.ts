@@ -1,9 +1,9 @@
 import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
-import { BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+import { BOOKS_PAGE_SIZE as DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
-const bookFields = [
+const defaultBookFields = [
   "_id",
   "title",
   "pages",
@@ -23,20 +23,34 @@ const bookFields = [
   "mediumImagePreview"
 ];
 
-const bookProjections = bookFields.reduce<{ [k: string]: 1 }>((result, field) => {
-  result[field] = 1;
-  return result;
-}, {});
+const compactBookFields = ["_id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
+
+const getFieldProjection = (fields: string[]) =>
+  fields.reduce<{ [k: string]: 1 }>((result, field) => {
+    result[field] = 1;
+    return result;
+  }, {});
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
   const httpStart = +new Date();
 
-  const { publicUser, page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort } = searchPacket;
+  const { publicUser, page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
+
+  const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
+  const projection = getFieldProjection(fieldsToSelect);
+
   const $match: any = { userId };
   let $lookup: any = null;
 
   const requiredOrs = [] as any[];
+
+  let pageSize = searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE;
+  if (pageSize > 100) {
+    pageSize = DEFAULT_BOOKS_PAGE_SIZE;
+  }
+
+  const withSubjectsLookup = subjects.length && searchChildSubjects;
 
   if (search) {
     $match.title = { $regex: escapeRegexp(search), $options: "i" };
@@ -63,7 +77,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     if (subjects.length && !searchChildSubjects) {
       $match.subjects = { $in: subjects };
     }
-    if (subjects.length && searchChildSubjects) {
+    if (withSubjectsLookup) {
       $lookup = {
         from: "subjects",
         let: { subjectsArray: "$subjects" },
@@ -86,13 +100,13 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     pipeline: [
       $lookup ? { $lookup } : null,
       { $match },
-      { $project: { ...bookProjections, subjectObjects: 1 } },
+      { $project: { ...projection, ...(withSubjectsLookup ? { subjectObjects: 1 } : {}) } },
       { $addFields: { dateAdded: { $toDate: "$_id" } } },
       { $sort: sort ?? { _id: -1 } },
       {
         $facet: {
           resultsCount: [{ $count: "count" }],
-          books: [{ $skip: (page - 1) * BOOKS_PAGE_SIZE }, { $limit: BOOKS_PAGE_SIZE }]
+          books: [{ $skip: (page - 1) * pageSize }, { $limit: pageSize }]
         }
       }
     ].filter(x => x)

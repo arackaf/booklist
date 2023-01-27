@@ -26,7 +26,7 @@
       case "selectBook":
         return { ...state, selectedBooks: [...state.selectedBooks, payload] };
       case "deSelectBook":
-        return { ...state, selectedBooks: state.selectedBooks.filter(b => b != payload) };
+        return { ...state, selectedBooks: state.selectedBooks.filter((b: any) => b != payload) };
       case "startRecommendationsFetch":
         return { ...state, recommendationsLoading: true };
       case "setRecommendations":

@@ -15,6 +15,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
 
   const publicUser = url.searchParams.get("userId") || "";
   const page = parseInt(url.searchParams.get("page")!) || 1;
+  const pageSize = parseInt(url.searchParams.get("page-size") ?? "", 10) || undefined;
   const search = url.searchParams.get("search") || "";
   const publisher = url.searchParams.get("publisher") || "";
   const author = url.searchParams.get("author") || "";
@@ -24,12 +25,14 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const subjects = url.searchParams.getAll("subjects");
   const searchChildSubjects = url.searchParams.get("child-subjects") ? true : undefined;
   const noSubjects = url.searchParams.get("no-subjects") === "true";
+  const resultSet = url.searchParams.get("result-set") || "";
 
-  console.log({ search, tags, subjects, searchChildSubjects, isRead });
+  console.log({ search, tags, subjects, searchChildSubjects, isRead, resultSet, pageSize });
 
   const packet: BookSearch = {
     publicUser,
     page,
+    pageSize,
     author,
     search,
     publisher,
@@ -37,7 +40,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     tags,
     subjects,
     searchChildSubjects,
-    noSubjects
+    noSubjects,
+    resultSet
   };
 
   if (sortString) {
