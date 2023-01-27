@@ -4,23 +4,10 @@ export const actions = {
 
     let searchParams = new URLSearchParams([
       ["page-size", "20"],
-      ["result-set", "compact"]
+      ["result-set", "compact"],
+      ...["search", "is-read", "child-subjects"].map(k => [k, formData.get(k)?.toString() ?? ""]),
+      ...["subjects", "tags"].flatMap(k => (formData.getAll(k) ?? []).map(val => [k, val.toString()]))
     ]);
-
-    ["search", "is-read", "child-subjects"].forEach(k => {
-      const formVal = formData.get(k);
-      if (formVal) {
-        searchParams.set(k, formVal.toString());
-      }
-    });
-
-    ["subjects", "tags"].forEach(k => {
-      const formVal = formData.getAll(k) || [];
-      console.log("entry", k, { formVal });
-      for (const id of formVal) {
-        searchParams.append(k, id.toString());
-      }
-    });
 
     const currentQuery = searchParams.toString();
     const result = await fetch(`/api/books?${searchParams.toString()}`).then((resp: any) => resp.json());
