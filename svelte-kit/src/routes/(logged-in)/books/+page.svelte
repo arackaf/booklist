@@ -34,7 +34,7 @@
 
   import GridView from "./bookViews/GridView.svelte";
   // import BasicView from './bookViews/BasicView.svelte';
-  // import CoversView from './bookViews/CoversView.svelte';
+  import CoversView from "./bookViews/CoversView.svelte";
 
   import BookSearchModal from "./SearchModal.svelte";
   import BooksMenuBar from "./menuBar/MenuBar.svelte";
@@ -60,11 +60,11 @@
 
   export let data: PageData;
 
-  $: ({ colors, subjects, bookView, tags, showMobile } = data);
+  $: ({ colors, subjects, defaultBookView, tags, showMobile } = data);
   let bookViewOverride: string | null = null;
   const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
 
-  $: bookViewToUse = bookViewOverride || bookView;
+  $: bookViewToUse = bookViewOverride || defaultBookView;
 
   onMount(() => {
     const div = document.createElement("div");
@@ -169,7 +169,7 @@
             {:else if bookViewToUse === GRID_VIEW}
               <GridView books={$books} subjects={allSubjects} {tags} />
             {:else}
-              <h1>COVERS</h1>
+              <CoversView books={$books} />
             {/if}
 
             <!-- {:else if $uiView.view == BASIC_LIST_VIEW}

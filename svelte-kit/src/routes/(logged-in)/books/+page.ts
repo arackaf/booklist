@@ -14,10 +14,10 @@ export async function load({ url, parent, fetch, depends }: any) {
 
   const { uxState, showMobile } = parentData;
 
-  const bookView = uxState.bkVw ?? (showMobile ? BASIC_LIST_VIEW : GRID_VIEW);
+  const defaultBookView = uxState.bkVw ?? (showMobile ? BASIC_LIST_VIEW : GRID_VIEW);
 
   return {
-    bookView,
+    defaultBookView,
     totalBooks: writable(totalBooks),
     books: writable(books),
     page,
