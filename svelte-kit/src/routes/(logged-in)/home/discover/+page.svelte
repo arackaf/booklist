@@ -66,7 +66,7 @@
         <div>
           {#each selectedBooks as book (book._id)}
             <span />
-            <DisplayBook {book} />
+            <DisplayBook {book} {unselectBook} />
           {/each}
         </div>
       </Stack>

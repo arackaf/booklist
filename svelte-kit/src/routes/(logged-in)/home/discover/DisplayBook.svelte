@@ -9,6 +9,7 @@
   import type { Book } from "$data/types";
 
   export let book: Book;
+  export let unselectBook: (book: Book) => void;
 
   const SLIDE_IN_SPRING = { stiffness: 0.1, damping: 0.4 };
 
@@ -26,14 +27,12 @@
       css: (t: number) => `opacity: ${quadIn(t)}; height: ${t * height}px; transform: translateX(${quadIn(1 - t) * 90}%)`
     };
   };
-
-  let ref;
 </script>
 
 <div style="overflow: hidden">
-  <div bind:this={ref} in:slideIn|local out:slideOut|local>
+  <div in:slideIn|local out:slideOut|local>
     <FlowItems>
-      <div><button on:click={() => {}} style="cursor: pointer" class="btn btn-xs btn-danger"> Remove </button></div>
+      <div><button on:click={() => unselectBook(book)} style="cursor: pointer" class="btn btn-xs btn-danger"> Remove </button></div>
       <div style="min-width: 70px">
         <BookCover size="small" preview={book.smallImagePreview} url={book.smallImage} />
       </div>
