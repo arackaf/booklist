@@ -22,8 +22,12 @@ export const actions = {
       }
     });
 
-    console.log("SEARCH", searchParams.toString());
+    const currentQuery = searchParams.toString();
+    const result = await fetch(`/api/books?${searchParams.toString()}`).then((resp: any) => resp.json());
 
-    return fetch(`/api/books?${searchParams.toString()}`).then((resp: any) => resp.json());
+    return {
+      ...result,
+      currentQuery
+    };
   }
 };

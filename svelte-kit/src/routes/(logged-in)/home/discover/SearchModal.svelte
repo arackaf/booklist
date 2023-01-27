@@ -16,7 +16,7 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
 
-  //import SearchResults from "./SearchResults.svelte";
+  import SearchResults from "./SearchResults.svelte";
   import useReducer from "$lib/state/useReducer";
   import type { Book, Subject, Tag } from "$data/types";
   import { enhance } from "$app/forms";
@@ -84,26 +84,15 @@
   const removeSubject = (subject: Subject) => (subjects = subjects.filter(_id => _id != subject._id));
   const removeTag = (tag: Tag) => (tags = tags.filter(_id => _id != tag._id));
 
-  function executeSearch({ cancel, data }: any) {
+  let currentQuery = "";
+
+  function executeSearch({ data }: { data: FormData }) {
     loading = true;
     return async ({ result }: any) => {
-      //const books: Book[] = result.data.books;
-
+      ({ books, currentQuery } = result.data);
       loading = false;
-
-      console.log("result", result.data);
     };
   }
-
-  const applyFilters = ({}) => {
-    searchDispatch({
-      title,
-      isRead: isRead == "null" ? void 0 : isRead == "0" ? false : true,
-      subjects: subjects.length ? subjects : null,
-      tags: tags.length ? tags : null,
-      searchChildSubjects: searchChild
-    });
-  };
 
   let noAvailableBooks = false;
   const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
@@ -203,7 +192,7 @@
             <hr />
           {/if}
         </div>
-        <!-- <SearchResults {dispatch} {books} {currentQuery} {selectedBooksSet} /> -->
+        <SearchResults {books} {currentQuery} {selectedBooksSet} />
       </div>
     </FlexRow>
   </form>
