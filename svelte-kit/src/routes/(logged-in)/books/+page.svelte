@@ -67,13 +67,6 @@
   $: bookViewToUse = bookViewOverride || defaultBookView;
 
   onMount(() => {
-    const div = document.createElement("div");
-    document.body.appendChild(div);
-
-    setTimeout(() => {
-      div.appendChild(document.createElement("div"));
-    }, 2000);
-
     selectionState.clear();
   });
 
@@ -84,17 +77,6 @@
 
     return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {} as any);
   };
-
-  const booksState = writable({
-    books: [],
-    booksLoaded: false,
-    totalPages: 0,
-    resultsCount: 0,
-    currentQuery: "",
-    reload: () => {},
-    booksLoading: false
-  });
-  $: ({ /*books,*/ booksLoaded, totalPages, resultsCount, currentQuery, reload, booksLoading } = $booksState);
 
   $: books = $page.data.books as Writable<Book[]>;
 
@@ -145,10 +127,6 @@
     editBookModalOpen = false;
   };
 </script>
-
-{#if booksLoading}
-  <ModuleLoading />
-{/if}
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
