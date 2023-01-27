@@ -8,7 +8,7 @@
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
   import DisplayBook from "./DisplayBook.svelte";
-  //import DisplayRecommendation from "./DisplayRecommendation.svelte";
+  import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
   import type { Book } from "$data/types";
 
@@ -25,10 +25,6 @@
   const selectBook = (book: Book) => (selectedBooks = selectedBooks.concat(book));
   const unselectBook = (book: Book) => (selectedBooks = selectedBooks.filter(b => b !== book));
 
-  //type T = { selectedBooks: any[]; recommendations: any[]; recommendationsLoading: any };
-  //let [recommendationState, dispatch] = useReducer<T>(reducer, initialState);
-  //$: ({ selectedBooks, recommendations, recommendationsLoading } = $recommendationState);
-
   const closeModal = () => {
     searchModalOpen = false;
   };
@@ -36,15 +32,12 @@
 
   $: selectedBooksSet = new Set(selectedBooks.map(b => b._id));
 
-  const getRecommendations = () => {
-    //dispatch(["startRecommendationsFetch"]);
-    ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] }).then(res => {
-      //preloadRecommendationImages(res);
+  const getRecommendations = async () => {
+    recommendationsLoading = true;
 
-      console.log({ res });
-      return res;
-    });
-    //.then(resp => dispatch(["setRecommendations", resp.results]));
+    const result = await ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] });
+    recommendations = result.results ?? [];
+    recommendationsLoading = false;
   };
 </script>
 
@@ -67,7 +60,6 @@
 
         <div>
           {#each selectedBooks as book (book._id)}
-            <span />
             <DisplayBook {book} {unselectBook} />
           {/each}
         </div>
@@ -80,8 +72,7 @@
           <table class="table table-condensed table-striped">
             <tbody>
               {#each recommendations as book (book._id)}
-                <span />
-                <!-- <DisplayRecommendation {book} /> -->
+                <DisplayRecommendation {book} />
               {/each}
             </tbody>
           </table>
