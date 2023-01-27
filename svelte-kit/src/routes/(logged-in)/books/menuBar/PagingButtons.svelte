@@ -2,30 +2,12 @@
   import { page as pageStore } from "$app/stores";
   import { changeFilter } from "../state/searchState";
 
-  //import { appState } from "app/state/appState";
-  //import { currentSearch } from "../booksSearchState";
-  //import { pageOne, setPage } from "../setBookFilters";
-
   $: ({ page, totalPages } = $pageStore.data);
-
-  //let totalPages: number = 1;
-  //let resultsCount: number = 50;
-
-  //const page = 1;
-
-  const setPage = (page: number) => {};
-  const pageOne = () => {};
-
-  //$: ({ page, pageSize } = $currentSearch);
 
   $: canPageUp = page < totalPages;
   $: canPageDown = page > 1;
   $: canPageOne = page > 1;
   $: canPageLast = page < totalPages;
-
-  let pageUp = () => setPage(+page + 1);
-  let pageDown = () => setPage(+page - 1);
-  let pageLast = () => setPage(totalPages);
 </script>
 
 <div style="display: flex; margin-right: 5px; align-items: center">
