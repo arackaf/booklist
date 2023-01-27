@@ -8,7 +8,6 @@
       <div class="panel-body" style="position: relative">
         <SectionNav>
           <SectionNavItem href="/settings/sharing">Public sharing</SectionNavItem>
-          <SectionNavItem href="/settings/password">Password reset</SectionNavItem>
           <SectionNavItem href="/settings/theme">Theme</SectionNavItem>
           <SectionNavItem href="/settings/account-sync">Sync old login</SectionNavItem>
         </SectionNav>

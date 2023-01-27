@@ -5,11 +5,6 @@
   import NavBarItem from "./NavBarItem.svelte";
   import ModuleLink from "./ModuleLink.svelte";
 
-  //import ajaxUtil from 'util/ajaxUtil';
-
-  //import { appState } from 'app/state/appState';
-  //import { isAdmin } from 'util/loginStatus';
-
   import BookSvg from "./BookSvg.svelte";
 
   import "$styles/navbar.scss";
@@ -22,9 +17,6 @@
 
   //let isAdminUser = isAdmin();
   let isAdminUser = false;
-
-  //$: isLoginModule = currentModule == 'authenticate';
-  let isLoginModule = false;
 
   //$: isPublic = $appState.isPublic;
   let isPublic = false;
@@ -91,12 +83,6 @@
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
       {/if}
-      {#if loggedIn || isPublic}
-        <NavBarItem href="/intro"
-          ><span class="hidden-xs">Intro</span>
-          <i class="visible-xs fal fa-fw fa-cogs" />
-        </NavBarItem>
-      {/if}
       {#if loggedIn && isAdminUser}
         <NavBarItem href="/admin">
           <span class="hidden-xs">Admin</span>
@@ -105,7 +91,7 @@
       {/if}
     </ul>
     <ul class="nav-items-right">
-      {#if !loggedIn && !isLoginModule}
+      {#if !loggedIn}
         <NavBarItem
           onClick={() =>
             signIn("google", {
