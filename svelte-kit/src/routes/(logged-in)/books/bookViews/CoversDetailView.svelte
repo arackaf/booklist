@@ -10,11 +10,13 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
 
-  export let book: Book;
+  export let viewingBook: Book;
   export let subjects: Subject[];
   export let tags: Tag[];
   export let isOpen = false;
   export let onHide: () => void;
+
+  $: book = viewingBook || ({} as Book);
 
   let closeModal: () => void;
 

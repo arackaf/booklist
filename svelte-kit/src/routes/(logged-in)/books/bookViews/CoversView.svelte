@@ -7,16 +7,16 @@
   export let subjects: Subject[];
   export let tags: Tag[];
 
+  let previewing: boolean = false;
   let bookPreviewing: Book | null = null;
 
   const previewBook = (book: Book) => {
+    previewing = true;
     bookPreviewing = book;
   };
 </script>
 
-{#if bookPreviewing}
-  <CoversDetailView isOpen={!!bookPreviewing} onHide={() => (bookPreviewing = null)} book={bookPreviewing} {subjects} {tags} />
-{/if}
+<CoversDetailView isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} />
 
 <div>
   <div>
