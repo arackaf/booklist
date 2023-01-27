@@ -47,13 +47,10 @@
   let active: any;
   $: ({ active, ...searchState } = $reducerState);
 
-  $: variables = { ...searchState };
-  $: ({ page } = variables);
-
+  let page = 1;
+  let totalPages = 0;
   let titleEl: HTMLInputElement;
-  let searchChild = false;
-  let isRead = "null";
-  let title = "";
+
   let subjects: string[] = [];
   let tags: string[] = [];
 
@@ -61,13 +58,9 @@
 
   //$: books = data?.allBooks?.Books;
   let books: Book[] = [];
-  let resultCount: number = 0;
 
   let loading = false;
   $: noResults = active && books != null && !books?.length;
-
-  //$: resultCount = data?.allBooks?.Meta?.count ?? 0;
-  $: totalPages = Math.ceil(resultCount / PAGE_SIZE);
 
   const pageUp = () => searchDispatch({ page: page + 1 });
   const pageDown = () => searchDispatch({ page: page - 1 });
@@ -106,8 +99,9 @@
     const result = await fetch(`/api/books?${search}`).then((resp: any) => resp.json());
 
     currentQuery = search;
-    books = result.books;
-    totalBooks = result.totalBooks;
+    ({ page, totalPages, books, totalBooks } = result);
+
+    console.log({ page, totalPages });
 
     //const currentQuery = searchParams.toString();
 
@@ -136,6 +130,7 @@
 
 <Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form method="post" action="?/search" use:enhance={executeSearch}>
+    <input type="hidden" name="page" value={page} />
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
@@ -204,13 +199,21 @@
 
       <div class="col-xs-12">
         <div>
-          {#if resultCount}
+          {#if totalBooks}
             <FlowItems tightest={true} containerStyle="align-items: center; font-size: 14px">
-              <button on:click={pageOne} disabled={!canPageDown} class="btn btn-default"> <i class="fal fa-angle-double-left" /> </button>
-              <button on:click={pageDown} disabled={!canPageDown} class="btn btn-default"> <i class="fal fa-angle-left" /> </button>
+              <button type="button" on:click={pageOne} disabled={!canPageDown} class="btn btn-default">
+                <i class="fal fa-angle-double-left" />
+              </button>
+              <button type="button" on:click={pageDown} disabled={!canPageDown} class="btn btn-default">
+                <i class="fal fa-angle-left" />
+              </button>
               <span style="padding-left: 3px; padding-right: 3px"> {page} of {totalPages} </span>
-              <button on:click={pageUp} disabled={!canPageUp} class="btn btn-default"> <i class="fal fa-angle-right" /> </button>
-              <button on:click={pageLast} disabled={!canPageUp} class="btn btn-default"> <i class="fal fa-angle-double-right" /> </button>
+              <button type="button" on:click={pageUp} disabled={!canPageUp} class="btn btn-default">
+                <i class="fal fa-angle-right" />
+              </button>
+              <button type="button" on:click={pageLast} disabled={!canPageUp} class="btn btn-default">
+                <i class="fal fa-angle-double-right" />
+              </button>
             </FlowItems>
             <hr />
           {/if}
