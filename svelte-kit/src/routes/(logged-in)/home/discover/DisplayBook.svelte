@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { quadIn, quadOut } from "svelte/easing";
   // @ts-ignore
   import { springIn } from "svelte-helpers/spring-transitions";

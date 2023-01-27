@@ -1,10 +1,12 @@
 <script lang="ts">
-  import { quadIn, quadOut, quintIn, quintOut } from "svelte/easing";
+  import { quadIn, quintOut } from "svelte/easing";
 
   // @ts-ignore
   import { springIn } from "svelte-helpers/spring-transitions";
 
-  // import BooksQuery from "gql/home/searchBooks.graphql";
+  import { enhance } from "$app/forms";
+
+  import type { Book, Subject, Tag } from "$data/types";
 
   import Modal from "$lib/components/ui/Modal.svelte";
   import ActionIconButton from "$lib/components/buttons/ActionIconButton.svelte";
@@ -15,17 +17,9 @@
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-
-  import SearchResults from "./SearchResults.svelte";
-  import useReducer from "$lib/state/useReducer";
-  import type { Book, Subject, Tag } from "$data/types";
-  import { enhance } from "$app/forms";
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
-  // import { query } from "micro-graphql-svelte";
-  // import { Queries, QueryOf } from "gql/graphql-typings";
-  // import { appState } from "app/state/appState";
-  // import { preloadBookImages } from "util/imagePreload";
+  import SearchResults from "./SearchResults.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
