@@ -9,6 +9,7 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+  import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
 
   export let viewingBook: Book | null;
   export let subjects: Subject[];
@@ -24,11 +25,16 @@
   const { onBooksUpdated } = booksModuleContext;
 
   let editing = false;
+
+  const syncUpdates = (_id: string, updates: UpdatesTo<Book>) => {
+    book = updateSingleObject(book, updates);
+    onBooksUpdated(_id, updates);
+  };
 </script>
 
 <Modal {isOpen} {onHide} standardFooter={false} bind:closeModal headerCaption={book.title} noClose={true} smallerHeader={true}>
   {#if editing}
-    <EditBook {book} {subjects} {tags} onBookUpdated={onBooksUpdated} onCancel={() => (editing = false)} />
+    <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} />
   {:else}
     <div style="display: flex; align-items: top">
       <div>

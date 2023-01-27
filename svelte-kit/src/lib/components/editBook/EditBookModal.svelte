@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
+  import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
 
   import EditBook from "./EditBook.svelte";
 
@@ -21,8 +21,13 @@
       resetBookEditTabs();
     }
   }
+
+  const syncUpdates = (_id: string, updates: UpdatesTo<Book>) => {
+    book = updateSingleObject(book, updates);
+    onBookUpdated(_id, updates);
+  };
 </script>
 
 <Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false} bind:closeModal>
-  <EditBook bind:reset={resetBookEditTabs} {book} {onBookUpdated} onCancel={onHide} {subjects} {tags} />
+  <EditBook bind:reset={resetBookEditTabs} {book} {syncUpdates} onCancel={onHide} {subjects} {tags} />
 </Modal>

@@ -1,1 +1,1 @@
-export const BOOKS_PAGE_SIZE = 50;
+export const DEFAULT_BOOKS_PAGE_SIZE = 50;

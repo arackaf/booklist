@@ -2,7 +2,7 @@
   import { enhance } from "$app/forms";
   import type { Book, Subject, Tag } from "$data/types";
 
-  import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import EditBookCovers from "./EditBookCovers.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
@@ -17,7 +17,7 @@
   export let tags: Tag[];
 
   export let onCancel: () => void;
-  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void;
+  export let syncUpdates: (_id: string, updates: UpdatesTo<Book>) => void;
 
   let basicInfoValid: () => boolean;
 
@@ -34,9 +34,7 @@
       const updates: UpdatesTo<Book> = result.data.updates;
 
       saving = false;
-      onBookUpdated(_id, updates);
-
-      book = updateSingleObject(book, updates);
+      syncUpdates(_id, updates);
     };
   }
 
