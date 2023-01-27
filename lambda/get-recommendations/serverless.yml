@@ -1,0 +1,28 @@
+service: get-recommendations
+
+frameworkVersion: "2"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  environment:
+    stage: ${self:provider.stage}
+    STAGE: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+
+functions:
+  getRecommendations:
+    timeout: 10
+    handler: handler.getRecommendations
+
+plugins:
+  - serverless-esbuild
