@@ -1,17 +1,12 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
-  import { BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
-  import { changeFilter, searchState } from "../state/searchState";
+  import { changeFilter } from "../state/searchState";
 
   //import { appState } from "app/state/appState";
   //import { currentSearch } from "../booksSearchState";
   //import { pageOne, setPage } from "../setBookFilters";
 
-  $: ({ page } = $searchState);
-  $: ({ totalBooks } = $pageStore.data);
-  $: resultsCount = $totalBooks;
-
-  $: totalPages = Math.ceil(resultsCount / BOOKS_PAGE_SIZE);
+  $: ({ page, totalPages } = $pageStore.data);
 
   //let totalPages: number = 1;
   //let resultsCount: number = 50;

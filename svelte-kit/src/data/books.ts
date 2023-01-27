@@ -1,7 +1,7 @@
 import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
-import { BOOKS_PAGE_SIZE as DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
 const defaultBookFields = [
   "_id",
@@ -129,7 +129,10 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
         const date = new Date(book.dateAdded);
         book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
       });
-      return { books, totalBooks };
+
+      const totalPages = Math.ceil(totalBooks / pageSize);
+
+      return { books, totalBooks, page, totalPages };
     })
     .catch(err => {
       console.log({ err });
