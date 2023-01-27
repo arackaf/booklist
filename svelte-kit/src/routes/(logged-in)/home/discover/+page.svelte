@@ -38,8 +38,10 @@
 
   const getRecommendations = () => {
     //dispatch(["startRecommendationsFetch"]);
-    ajaxUtil.post("TODO", { bookIds: [...selectedBooksSet] }).then(res => {
+    ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] }).then(res => {
       //preloadRecommendationImages(res);
+
+      console.log({ res });
       return res;
     });
     //.then(resp => dispatch(["setRecommendations", resp.results]));
@@ -56,7 +58,7 @@
           <button class="btn btn-default" on:click={openModal}> <i class="fal fa-search" /> Search your books </button>
 
           {#if selectedBooks.length}
-            <button on:click={() => getRecommendations()} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">
+            <button on:click={getRecommendations} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">
               {#if recommendationsLoading}<i class="far fa-fw fa-spin fa-spinner" />{/if}
               Get Recommendations
             </button>

@@ -3,15 +3,17 @@ import { json } from "@sveltejs/kit";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8-node";
 
-import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, GET_RECOMMENDATIONS_LAMBDA } from "$env/static/private";
 
-export async function POST({ locals }: any) {
+export async function POST({ locals, request }: any) {
   const session = await locals.getSession();
   if (!session) {
     return { success: false };
   }
-
   const { userId } = session;
+
+  const reqBody = await request.json();
+  const { bookIds } = reqBody;
 
   try {
     const client = new LambdaClient({
@@ -22,8 +24,8 @@ export async function POST({ locals }: any) {
       }
     });
     const command = new InvokeCommand({
-      FunctionName: "book-scan-v2-dev-checkScanStatus",
-      Payload: fromUtf8(JSON.stringify({ userId }))
+      FunctionName: GET_RECOMMENDATIONS_LAMBDA,
+      Payload: fromUtf8(JSON.stringify({ userId, bookIds }))
     });
     const response = await client.send(command);
 
