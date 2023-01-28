@@ -8,7 +8,7 @@
 
   export let user: DynamoUser;
 
-  let { publicBooksHeader, publicName, isPublic, userId } = user;
+  let { isPublic, publicName, publicBooksHeader, userId } = user;
 
   let local_isPublic: boolean;
   let local_publicName: string;
@@ -32,13 +32,13 @@
   const update = ({ data, cancel, update }: any) => {
     console.log({ local_isPublic, local_publicName, local_publicBooksHeader });
 
-    if (!local_publicName) {
+    if (local_isPublic && !local_publicName) {
       error = true;
       return cancel();
     }
   };
 
-  $: publicLink = isPublic ? `${window.location.protocol}//${window.location.host}/view?userId=${userId}` : "";
+  $: publicLink = typeof window === "object" && isPublic ? `${window.location.protocol}//${window.location.host}/view?userId=${userId}` : "";
 </script>
 
 <form method="post" action="?/updateSettings" use:enhance={update}>

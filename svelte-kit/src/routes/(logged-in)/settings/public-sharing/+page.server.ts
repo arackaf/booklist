@@ -1,4 +1,5 @@
-import { createUser, getUser } from "$data/user";
+import { createUser, getUser, updateUser } from "$data/user";
+import { toJson } from "$lib/util/formDataHelpers";
 
 export const load = async ({ locals }: any) => {
   const session = await locals.getSession();
@@ -22,6 +23,33 @@ export const load = async ({ locals }: any) => {
   };
 };
 
+type UserSettingsPacket = {
+  isPublic: string;
+  publicName: string;
+  publicBooksHeader: string;
+};
+
 export const actions = {
-  async updateSettings({ request, locals }: any) {}
+  async updateSettings({ request, locals }: any) {
+    const session = await locals.getSession();
+    const { userId } = session;
+
+    if (!userId) {
+      return {};
+    }
+
+    const formData: FormData = await request.formData();
+
+    const values = toJson(formData as any, {
+      strings: ["isPublic", "publicName", "publicBooksHeader"]
+    }) as UserSettingsPacket;
+
+    console.log({ values });
+
+    const isPublic = !!values.isPublic;
+    const publicName = !isPublic ? "" : values.publicName;
+    const publicBooksHeader = !isPublic ? "" : values.publicBooksHeader;
+
+    await updateUser(userId, isPublic, publicName, publicBooksHeader);
+  }
 };

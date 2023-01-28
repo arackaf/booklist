@@ -1,4 +1,4 @@
-import { db, getGetPacket, getPutPacket } from "./dynamoHelpers";
+import { db, getGetPacket, getPutPacket, getUpdatePacket } from "./dynamoHelpers";
 
 const getUserKey = (userId: string) => `UserId#${userId}`;
 
@@ -28,4 +28,15 @@ export async function createUser(userId: string) {
   };
 
   db.put(getPutPacket(userObject));
+}
+
+export async function updateUser(userId: string, isPublic: boolean, publicName: string, publicBooksHeader: string) {
+  const userKey = getUserKey(userId);
+
+  await db.update(
+    getUpdatePacket(userKey, userKey, {
+      UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
+      ExpressionAttributeValues: { ":isPublic": isPublic, ":publicName": publicName, ":publicBooksHeader": publicBooksHeader }
+    })
+  );
 }
