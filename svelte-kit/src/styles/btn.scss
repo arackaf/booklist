@@ -34,11 +34,6 @@
     &:is(button):active:not([disabled]) {
       background-color: var(--primary-5);
     }
-
-    &.btn-round-icon,
-    &.btn-square-icon {
-      border: 0;
-    }
   }
 
   &.btn-info {
@@ -118,15 +113,11 @@
     padding: 2px 5px;
   }
 
-  &.btn-round-icon,
   &.btn-square-icon {
     text-align: center;
     display: inline-block;
     padding: 4px;
     font-size: 9px;
-  }
-  &.btn-round-icon {
-    border-radius: 50%;
   }
 }
 

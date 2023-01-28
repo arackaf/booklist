@@ -6,18 +6,30 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
 
+  import { page } from "$app/stores";
+  import { runDelete } from "$lib/state/dataUpdates";
+  import { enhance } from "$app/forms";
+
   export let book: Book;
   export let isPublic: boolean;
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { editBook, deleteBook } = booksModuleContext;
+  const { editBook } = booksModuleContext;
 
   let pendingDelete = false;
-
   let deleting = false;
-  const doDelete = () => {
+
+  const deleteBook = () => {
     deleting = true;
-    deleteBook({ _id: book._id });
+
+    return async ({ result }: any) => {
+      deleting = false;
+      pendingDelete = false;
+
+      if (result.data.success) {
+        runDelete($page.data.books, book._id);
+      }
+    };
   };
 </script>
 
@@ -30,20 +42,23 @@
       <div style="display: flex; flex-direction: column; height: 100%">
         <div class="listGroupItemHeading bookTitle">{book.title}</div>
         <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(", ") : ""}</span>
-        <FlowItems style="margin-top: auto">
+        <FlowItems style="margin-top: auto;" class="padding-top-xs">
           {#if !isPublic}
-            <button class="btn btn-xs btn-light btn-square-icon" on:click={() => editBook(book)}><i class="fal fa-fw fa-pencil-alt" /></button>
-            <button class="btn btn-xs btn-light btn-square-icon margin-left" on:click={() => (pendingDelete = true)}>
+            <button class="btn btn-xxs btn-light btn-square-icon" on:click={() => editBook(book)}><i class="fal fa-fw fa-pencil-alt" /></button>
+            <button class="btn btn-xxs btn-light btn-square-icon margin-left" on:click={() => (pendingDelete = true)}>
               <i class="far fa-fw fa-trash" />
             </button>
           {/if}
           {#if pendingDelete}
-            <ActionButton text="Confirm Delete" runningText="Deleting" onClick={doDelete} class="margin-left btn btn-xxs btn-danger">
-              Confirm Delete
-            </ActionButton>
+            <form method="POST" action="?/deleteBook" use:enhance={deleteBook} style="display: flex;">
+              <input type="hidden" name="_id" value={book._id} />
+              <ActionButton isRunning={deleting} text="Confirm Delete" runningText="Deleting" class="margin-left btn btn-xxs btn-danger no-border">
+                Confirm Delete
+              </ActionButton>
+            </form>
           {/if}
           {#if pendingDelete}
-            <button on:click={() => (pendingDelete = false)} disabled={deleting} class="margin-left btn btn-xxs"> Cancel </button>
+            <button on:click={() => (pendingDelete = false)} disabled={deleting} class="margin-left btn btn-xxs no-border"> Cancel </button>
           {/if}
         </FlowItems>
       </div>
