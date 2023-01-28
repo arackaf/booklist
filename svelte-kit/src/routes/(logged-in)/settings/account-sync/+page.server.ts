@@ -13,7 +13,6 @@ export const actions = {
         strings: ["email", "password"]
       }) as { email: string; password: string };
 
-      console.log({ fields });
       const { email, password } = fields;
 
       const result = await lookupUser(email, password);

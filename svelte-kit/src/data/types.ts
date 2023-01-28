@@ -111,3 +111,12 @@ export type Color = {
 };
 
 export type UnwrapReadable<T> = T extends Readable<infer U> ? U : never;
+
+export type DynamoUser = {
+  pk: string;
+  sk: string;
+  userId: string;
+  isPublic: boolean;
+  publicName: string;
+  publicBooksHeader: string;
+};
