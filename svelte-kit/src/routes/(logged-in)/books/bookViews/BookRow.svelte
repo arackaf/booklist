@@ -38,8 +38,6 @@
   let detailsLoading: boolean;
 
   let pendingDelete = false;
-  const noop = () => {};
-
   let deleting = false;
 
   const deleteBook = () => {
@@ -61,9 +59,9 @@
 <tr>
   {#if !isPublic}
     <td>
-      <span class="cursor-pointer" style="font-size: 12pt" on:click={() => selectionState.toggle(_id)} on:keypress={noop}>
+      <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(_id)}>
         <i class={"fal " + (!!$selectedBooksLookup[_id] ? "fa-check-square" : "fa-square")} />
-      </span>
+      </button>
     </td>
   {/if}
   <td>
@@ -107,7 +105,7 @@
           <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => editBook(book)}>
             <i class="fal fa-pencil-alt fa-fw" />
           </button>
-          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (pendingDelete = true)} on:keypress={noop}>
+          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (pendingDelete = true)}>
             <i class={`fal fa-trash-alt fa-fw`} />
           </button>
         {/if}
