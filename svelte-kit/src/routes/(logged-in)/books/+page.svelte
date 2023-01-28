@@ -26,7 +26,7 @@
 
   export let data: PageData;
 
-  $: ({ colors, subjects, defaultBookView, tags, showMobile } = data);
+  $: ({ colors, subjects, defaultBookView, tags } = data);
   let bookViewOverride: string | null = null;
   const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
 
@@ -35,14 +35,6 @@
   onMount(() => {
     selectionState.clear();
   });
-
-  const prepBookForSaving = (book: any) => {
-    let propsToUpdate = ["title", "isbn", "smallImage", "pages", "publisher", "publicationDate", "authors", "subjects", "tags"];
-    let pages = parseInt(book.pages, 10);
-    book.pages = isNaN(pages) ? void 0 : pages;
-
-    return propsToUpdate.reduce((obj, prop) => ((obj[prop] = book[prop]), obj), {} as any);
-  };
 
   $: books = $page.data.books as Writable<Book[]>;
 
