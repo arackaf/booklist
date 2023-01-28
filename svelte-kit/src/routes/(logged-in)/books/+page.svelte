@@ -5,7 +5,7 @@
   import type { Writable } from "svelte/store";
 
   import GridView from "./bookViews/GridView.svelte";
-  // import BasicView from './bookViews/BasicView.svelte';
+  import BasicView from "./bookViews/BasicView.svelte";
   import CoversView from "./bookViews/CoversView.svelte";
 
   import BookSearchModal from "./SearchModal.svelte";
@@ -95,18 +95,12 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <h1>MOBILE</h1>
+              <BasicView books={$books} />
             {:else if bookViewToUse === GRID_VIEW}
               <GridView books={$books} {subjects} {tags} />
             {:else}
               <CoversView books={$books} {subjects} {tags} />
             {/if}
-
-            <!-- {:else if $uiView.view == BASIC_LIST_VIEW}
-								<BasicView {booksState} />
-							{:else if $uiView.view == COVERS_LIST}
-								<CoversView {booksState} />
-							{/if} -->
           </div>
         {/if}
 
