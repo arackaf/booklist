@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
@@ -29,13 +30,17 @@
     }
   }
 
-  const update = ({ data, cancel, update }: any) => {
-    console.log({ local_isPublic, local_publicName, local_publicBooksHeader });
-
+  const update = ({ data, cancel }: any) => {
     if (local_isPublic && !local_publicName) {
       error = true;
       return cancel();
     }
+
+    saving = true;
+    return async () => {
+      saving = false;
+      invalidate("user-settings");
+    };
   };
 
   $: publicLink = typeof window === "object" && isPublic ? `${window.location.protocol}//${window.location.host}/view?userId=${userId}` : "";

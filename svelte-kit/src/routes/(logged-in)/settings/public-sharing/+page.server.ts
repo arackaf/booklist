@@ -1,9 +1,11 @@
 import { createUser, getUser, updateUser } from "$data/user";
 import { toJson } from "$lib/util/formDataHelpers";
 
-export const load = async ({ locals }: any) => {
+export const load = async ({ locals, depends }: any) => {
   const session = await locals.getSession();
   const { userId } = session;
+
+  depends("user-settings");
 
   if (!userId) {
     return {};
@@ -15,8 +17,6 @@ export const load = async ({ locals }: any) => {
     await createUser(userId);
   }
   user = await getUser(userId);
-
-  console.log({ user });
 
   return {
     user
@@ -43,8 +43,6 @@ export const actions = {
     const values = toJson(formData as any, {
       strings: ["isPublic", "publicName", "publicBooksHeader"]
     }) as UserSettingsPacket;
-
-    console.log({ values });
 
     const isPublic = !!values.isPublic;
     const publicName = !isPublic ? "" : values.publicName;
