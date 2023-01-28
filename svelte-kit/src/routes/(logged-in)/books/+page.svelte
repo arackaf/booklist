@@ -1,34 +1,7 @@
-<script context="module" lang="ts">
-  const initialBooksState = { selectedBooks: {}, savingReadForBooks: {}, pendingDelete: {}, deleting: {} };
-  const keysToHash = (_ids: string[], value: boolean) => (Array.isArray(_ids) ? _ids : [_ids]).reduce((o: any, _id) => ((o[_id] = value), o), {});
-
-  function booksUiStateReducer(state: any, [action, payload = null]: [string, any]) {
-    switch (action) {
-      case "select":
-        return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, true) } };
-      case "de-select":
-        return { ...state, selectedBooks: { ...state.selectedBooks, ...keysToHash(payload, false) } };
-      case "toggle-select":
-        return { ...state, selectedBooks: { ...state.selectedBooks, [payload]: !state.selectedBooks[payload] } };
-      case "start-delete":
-        return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, true) } };
-      case "cancel-delete":
-        return { ...state, pendingDelete: { ...state.pendingDelete, ...keysToHash(payload, false) } };
-      case "delete":
-        return { ...state, deleting: { ...state.deleting, [payload]: true } };
-      case "reset":
-        return { ...initialBooksState };
-      default:
-        throw "Invalid key";
-    }
-  }
-</script>
-
 <script lang="ts">
   import { onMount, setContext } from "svelte";
   import { page } from "$app/stores";
 
-  import useReducer from "$lib/state/useReducer";
   import type { Writable } from "svelte/store";
 
   import GridView from "./bookViews/GridView.svelte";
@@ -82,8 +55,6 @@
   let editTagsModalOpen = false;
   let editTags = () => (editTagsModalOpen = true);
 
-  const [booksUiState, dispatchBooksUiState] = useReducer(booksUiStateReducer, initialBooksState);
-
   let editBookModalOpen = false;
   let editingBook: any = null;
   const editBook = (book: any) => {
@@ -106,8 +77,6 @@
     openFilterModal,
     editSubjects,
     editTags,
-    booksUiState,
-    dispatchBooksUiState,
     editBook,
     editBooksSubjects,
     editBooksTags,
