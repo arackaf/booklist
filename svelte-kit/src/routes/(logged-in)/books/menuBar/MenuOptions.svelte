@@ -8,6 +8,7 @@
   import { endSaving, startSaving } from "../state/booksReadSavingState";
 
   import { selectedBooksLookup } from "../state/selectionState";
+  export let isPublic: boolean;
   export let closeMobileMenu: () => void = () => {};
 
   let bulkReadSaving: boolean;
@@ -30,8 +31,6 @@
     overrideBookView(data.get("view"));
     return async () => {};
   };
-
-  const isPublic = false;
 
   const booksModuleContext: any = getContext("books-module-context");
   const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, overrideBookView } = booksModuleContext;

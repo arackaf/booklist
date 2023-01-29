@@ -12,7 +12,7 @@
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
 
-  $: ({ isPublic } = $page.data);
+  $: ({ isPublic, publicName } = $page.data);
 
   let quickSearchEl: any = {};
 
@@ -34,7 +34,7 @@
 <div class="books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {closeMobileMenu} />
+      <MenuOptions {isPublic} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
@@ -70,7 +70,7 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions />
+          <MenuOptions {isPublic} />
         </div>
       </div>
 

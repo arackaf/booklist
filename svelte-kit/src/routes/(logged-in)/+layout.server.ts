@@ -25,8 +25,6 @@ export async function load({ cookies, locals, depends, isDataRequest, url }: any
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
 
-    publicUser?.publicName;
-    publicUser?.publicBooksHeader;
     if (!publicUser || !publicUser.isPublic) {
       activeUserId = "";
     } else {
