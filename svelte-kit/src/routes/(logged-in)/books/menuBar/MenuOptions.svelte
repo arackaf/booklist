@@ -10,6 +10,7 @@
   import { selectedBooksLookup } from "../state/selectionState";
   export let isPublic: boolean;
   export let closeMobileMenu: () => void = () => {};
+  export let bookViewToUse: string;
 
   let bulkReadSaving: boolean;
   let bulkUnReadSaving: boolean;
@@ -92,21 +93,21 @@
   <hr />
   <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
     <input type="hidden" name="view" value={GRID_VIEW} />
-    <button class={"btn btn-default " + ($uiView.pendingView == GRID_VIEW ? "active" : "")}>
+    <button class="btn btn-default" class:active={bookViewToUse == GRID_VIEW}>
       <span>Main View</span>
       <i class="fal fa-fw fa-table" />
     </button>
   </form>
   <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
     <input type="hidden" name="view" value={COVERS_LIST} />
-    <button class={"btn btn-default " + ($uiView.pendingView == COVERS_LIST ? "active" : "")}>
+    <button class="btn btn-default" class:active={bookViewToUse == COVERS_LIST}>
       <span>Covers View</span>
       <i class="fas fa-fw fa-th" />
     </button>
   </form>
   <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
     <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-    <button class={"btn btn-default last-child " + ($uiView.pendingView == BASIC_LIST_VIEW ? "active" : "")}>
+    <button class="btn btn-default last-child" class:active={bookViewToUse == BASIC_LIST_VIEW}>
       <span>Mobile View</span>
       <i class="fal fa-fw fa-list" />
     </button>

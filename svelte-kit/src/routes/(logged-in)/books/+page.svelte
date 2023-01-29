@@ -84,7 +84,7 @@
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <MenuBar {isPublic} />
+    <MenuBar {isPublic} {bookViewToUse} />
 
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">

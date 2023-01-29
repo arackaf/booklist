@@ -12,6 +12,7 @@
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
 
   export let isPublic: boolean;
+  export let bookViewToUse: string;
 
   let quickSearchEl: any = {};
 
@@ -69,7 +70,7 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions {isPublic} />
+          <MenuOptions {isPublic} {bookViewToUse} />
         </div>
       </div>
 
