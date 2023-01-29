@@ -59,10 +59,16 @@ const auth = SvelteKitAuth({
     },
     async jwt({ token, account }) {
       token.userId ??= account?.syncdId || account?.providerAccountId;
+      if (account?.syncdId) {
+        token.legacySync = true;
+      }
       return token;
     },
     async session({ session, user, token }) {
       (session as any).userId = token.userId;
+      if ((token as any).legacySync) {
+        (session as any).legacySync = true;
+      }
       return session;
     }
   }

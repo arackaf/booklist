@@ -39,8 +39,12 @@
   <!-- <SectionLoading style="margin-top: {chartIndex === 0 ? 150 : 20}px;" /> -->
 {:else if !graphData.length}
   {#if chartIndex == 0}
-    <div class="alert alert-warning inline-flex" style="margin-bottom: 75px">
+    <div class="alert alert-warning">
       It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
+    </div>
+    <div class="alert alert-warning" style="margin-top: 20px; margin-bottom: 75px">
+      If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
+      <a href="/settings/account-sync">here</a>
     </div>
   {:else}
     <div class="alert alert-warning" style="margin: 0 auto 75px auto">
