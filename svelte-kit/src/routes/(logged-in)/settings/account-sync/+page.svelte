@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { signOut } from "@auth/sveltekit/client";
+
   import { enhance } from "$app/forms";
 
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
@@ -20,11 +22,12 @@
 
     return async ({ result }: any) => {
       running = false;
-      if (result.success) {
+      if (result.data.success) {
         success = true;
+        setTimeout(() => signOut(), 5000);
+      } else {
+        notFound = true;
       }
-
-      console.log({ result });
     };
   };
 </script>
@@ -52,27 +55,13 @@
             <label for="password">New password</label>
             <input name="password" type="password" class="form-control" id="password" />
           </div>
-          <ActionButton
-            isRunning={running}
-            style="align-self: flex-start; min-width: 10ch;"
-            text="Sync"
-            runningText="Syncing"
-            finishedText="Done"
-            preset="primary"
-          />
+          <ActionButton isRunning={running} style="align-self: flex-start; min-width: 10ch;" text="Sync" runningText="Syncing" preset="primary" />
         {/if}
 
         {#if notFound}
           <div>
             <br />
-            <div class="alert alert-danger">Passwords must match</div>
-          </div>
-        {/if}
-
-        {#if success}
-          <div>
-            <br />
-            <div class="alert alert-success">Your password has been updated</div>
+            <div class="alert alert-danger">Could not find an account with that email and password</div>
           </div>
         {/if}
       </Stack>

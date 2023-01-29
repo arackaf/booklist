@@ -1,5 +1,3 @@
-import { signIn, signOut } from "@auth/sveltekit/client";
-
 import { lookupUser, syncUser } from "$data/legacyUser";
 
 import { toJson } from "$lib/util/formDataHelpers";
@@ -36,8 +34,6 @@ export const actions = {
       if (result.id) {
         await syncUser(userId, result.id);
       }
-
-      setTimeout(() => signOut(), 5000);
 
       return { success: true, result };
     } catch (er) {
