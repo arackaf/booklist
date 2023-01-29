@@ -11,7 +11,7 @@ export const allSubjects = async (userId: string) => {
   }).then(subjects => {
     const httpEnd = +new Date();
 
-    console.log("Http time subjects", httpEnd - httpStart);
+    console.log("HTTP subjects time", httpEnd - httpStart);
 
     const subjectHash = toHash(subjects);
 

@@ -121,7 +121,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       const totalBooks = resultsCount?.[0]?.count ?? 0;
 
       const httpEnd = +new Date();
-      console.log("HTTP time books", httpEnd - httpStart);
+      console.log("HTTP books time", httpEnd - httpStart);
 
       const arrayFieldsToInit = ["authors", "subjects", "tags"] as (keyof Book)[];
       books.forEach(book => {
