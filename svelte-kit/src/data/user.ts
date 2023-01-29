@@ -1,12 +1,13 @@
 import { db, getGetPacket, getPutPacket, getUpdatePacket } from "./dynamoHelpers";
+import type { DynamoUser } from "./types";
 
 const getUserKey = (userId: string) => `UserId#${userId}`;
 
-export async function getUser(userId: string) {
+export async function getUser(userId: string): Promise<DynamoUser | null> {
   const userKey = getUserKey(userId);
 
   try {
-    let userFound = await db.get(getGetPacket(userKey, userKey));
+    let userFound: DynamoUser | null = (await db.get(getGetPacket(userKey, userKey))) as DynamoUser;
 
     return userFound ?? null;
   } catch (loginErr) {

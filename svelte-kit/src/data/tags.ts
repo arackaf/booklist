@@ -1,9 +1,12 @@
 import { toHash } from "$lib/state/helpers";
 import { deleteById, insertObject, queryTags, updateById } from "./dbUtils";
-import type { TagEditFields } from "./types";
+import type { DynamoUser, TagEditFields } from "./types";
 
 export const allTags = async (userId: string = "") => {
-  userId = userId || "";
+  if (!userId) {
+    return { tags: [], tagHash: {} };
+  }
+
   const httpStart = +new Date();
 
   return queryTags({
