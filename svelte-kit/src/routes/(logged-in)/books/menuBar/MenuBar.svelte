@@ -1,6 +1,7 @@
 <script lang="ts">
   import "./menu-bar-styles.scss";
 
+  import { page } from "$app/stores";
   import { sanitize } from "$lib/util/formDataHelpers";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
 
@@ -9,6 +10,9 @@
   import MenuOptions from "./MenuOptions.svelte";
   import { searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
+  import PublicBooksHeader from "./PublicBooksHeader.svelte";
+
+  $: ({ isPublic } = $page.data);
 
   let quickSearchEl: any = {};
 
@@ -43,6 +47,9 @@
       >
         <i class="far fa-bars" />
       </button>
+      {#if isPublic}
+        <PublicBooksHeader />
+      {/if}
       <PagingButtons />
       <div style="margin-right: 5px">
         <div class="menu-bar-desktop btn-group">

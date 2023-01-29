@@ -9,7 +9,7 @@
   import CoversView from "./bookViews/CoversView.svelte";
 
   import BookSearchModal from "./SearchModal.svelte";
-  import BooksMenuBar from "./menuBar/MenuBar.svelte";
+  import MenuBar from "./menuBar/MenuBar.svelte";
 
   import SubjectEditModal from "./SubjectEditModal.svelte";
   import TagEditModal from "./TagEditModal.svelte";
@@ -84,7 +84,7 @@
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <BooksMenuBar />
+    <MenuBar />
 
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">

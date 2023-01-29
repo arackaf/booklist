@@ -10,7 +10,10 @@ export async function load({ cookies, locals, depends, isDataRequest, url }: any
   const initialRequest = !isDataRequest;
 
   const publicUserId = url.searchParams.get("user");
+  let isPublic = false;
   let publicUser: DynamoUser | null = null;
+  let publicName: string | null = null;
+  let publicBooksHeader: string | null = null;
 
   const session = await locals.getSession();
 
@@ -22,10 +25,15 @@ export async function load({ cookies, locals, depends, isDataRequest, url }: any
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
 
+    publicUser?.publicName;
+    publicUser?.publicBooksHeader;
     if (!publicUser || !publicUser.isPublic) {
       activeUserId = "";
     } else {
+      isPublic = true;
       activeUserId = publicUserId;
+      publicName = publicUser.publicName;
+      publicBooksHeader = publicUser.publicBooksHeader;
     }
   }
 
@@ -41,7 +49,9 @@ export async function load({ cookies, locals, depends, isDataRequest, url }: any
   const subjects = allSubjects(activeUserId);
 
   return {
-    activeUserId,
+    isPublic,
+    publicName,
+    publicBooksHeader,
     booksCache,
     ...(await subjects),
     ...(await tags)
