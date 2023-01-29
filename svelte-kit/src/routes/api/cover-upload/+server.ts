@@ -7,7 +7,7 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client
 
 import { json } from "@sveltejs/kit";
 
-import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, UPLOAD_FROM_URL_LAMBDA } from "$env/static/private";
 
 export async function POST({ cookies, locals, request }: any) {
   const session = await locals.getSession();
@@ -57,7 +57,7 @@ export async function POST({ cookies, locals, request }: any) {
     const url = `https://s3.amazonaws.com/my-library-cover-uploads/${uploadKey}`;
 
     const command = new InvokeCommand({
-      FunctionName: "book-covers-v2-dev-uploadFromUrl",
+      FunctionName: UPLOAD_FROM_URL_LAMBDA,
       Payload: fromUtf8(JSON.stringify({ url, userId: session.userId }))
     });
     const response = await client.send(command);
