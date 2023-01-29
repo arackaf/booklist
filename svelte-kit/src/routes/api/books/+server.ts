@@ -2,6 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import { searchBooks } from "$data/books";
 import type { BookSearch } from "$data/types";
+import { getUser } from "$data/user";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
   const session = await locals.getSession();
@@ -9,11 +10,12 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     return json({});
   }
 
+  let userId = session.userId;
   setHeaders({
     "cache-control": "max-age=60"
   });
 
-  const publicUser = url.searchParams.get("userId") || "";
+  const publicUser = url.searchParams.get("user") || "";
   const page = parseInt(url.searchParams.get("page")!) || 1;
   const pageSize = parseInt(url.searchParams.get("page-size") ?? "", 10) || undefined;
   const search = url.searchParams.get("search") || "";
@@ -27,7 +29,14 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const noSubjects = url.searchParams.get("no-subjects") === "true";
   const resultSet = url.searchParams.get("result-set") || "";
 
-  console.log({ search, tags, subjects, searchChildSubjects, isRead, resultSet, pageSize });
+  if (publicUser) {
+    const userObject = await getUser(publicUser);
+    if (!userObject?.isPublic) {
+      userId = "";
+    } else {
+      userId = publicUser;
+    }
+  }
 
   const packet: BookSearch = {
     publicUser,
@@ -51,7 +60,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     };
   }
 
-  const books = await searchBooks(session.userId, packet);
+  const books = await searchBooks(userId, packet);
 
   return json(books);
 }

@@ -33,9 +33,14 @@ const getFieldProjection = (fields: string[]) =>
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
+
+  if (!userId) {
+    return { books: [], totalBooks: 0, page: 0, totalPages: 0 };
+  }
+
   const httpStart = +new Date();
 
-  const { publicUser, page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
+  const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
 
   const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
   const projection = getFieldProjection(fieldsToSelect);
