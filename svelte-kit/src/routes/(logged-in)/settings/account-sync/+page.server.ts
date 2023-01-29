@@ -1,5 +1,17 @@
+import { signIn, signOut } from "@auth/sveltekit/client";
+
 import { lookupUser, syncUser } from "$data/legacyUser";
+
 import { toJson } from "$lib/util/formDataHelpers";
+
+export const load = async ({ locals }: any) => {
+  const session = await locals.getSession();
+  const { legacySync } = session;
+
+  return {
+    legacySync
+  };
+};
 
 export const actions = {
   async attemptSync({ request, locals }: any) {
@@ -24,6 +36,8 @@ export const actions = {
       if (result.id) {
         await syncUser(userId, result.id);
       }
+
+      setTimeout(() => signOut(), 5000);
 
       return { success: true, result };
     } catch (er) {
