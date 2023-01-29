@@ -43,7 +43,7 @@
     };
   };
 
-  $: publicLink = typeof window === "object" && isPublic ? `${window.location.protocol}//${window.location.host}/view?userId=${userId}` : "";
+  $: publicLink = typeof window === "object" && isPublic ? `${window.location.protocol}//${window.location.host}/books?user=${userId}` : "";
 </script>
 
 <form method="post" action="?/updateSettings" use:enhance={update}>

@@ -1,5 +1,4 @@
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
-import { DESKTOP_REQUESTED_COOKIE } from "$lib/util/constants";
 import { getUxState } from "$lib/util/uxState";
 
 export async function load({ locals, isDataRequest, request, cookies, depends }: any) {

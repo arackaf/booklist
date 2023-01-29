@@ -6,11 +6,8 @@ import { getUser } from "$data/user";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
   const session = await locals.getSession();
-  if (!session) {
-    return json({});
-  }
+  let userId = session?.userId;
 
-  let userId = session.userId;
   setHeaders({
     "cache-control": "max-age=60"
   });

@@ -18,11 +18,14 @@ export async function load({ cookies, locals, depends, isDataRequest, url }: any
     throw redirect(302, "/");
   }
 
-  let activeUserId = session.userId;
+  let activeUserId = session?.userId;
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
+
     if (!publicUser || !publicUser.isPublic) {
       activeUserId = "";
+    } else {
+      activeUserId = publicUserId;
     }
   }
 
