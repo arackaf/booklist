@@ -1,6 +1,6 @@
 import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 import { writable } from "svelte/store";
-import { BASIC_LIST_VIEW, GRID_VIEW } from "./books/bookViews/constants";
+import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
 export async function load({ url, parent, fetch, depends }: any) {
   depends("reload-books");

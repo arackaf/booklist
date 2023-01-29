@@ -21,7 +21,7 @@
   import type { Book } from "$data/types";
   import { selectedBooksLookup, selectionState } from "./state/selectionState";
 
-  import type { PageData } from "./$types";
+  import type { PageData } from "./books/$types";
   import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
   export let data: PageData;
