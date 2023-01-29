@@ -1,7 +1,6 @@
 <script lang="ts">
   import "./menu-bar-styles.scss";
 
-  import { page } from "$app/stores";
   import { sanitize } from "$lib/util/formDataHelpers";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
 
@@ -12,7 +11,7 @@
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
 
-  $: ({ isPublic, publicName } = $page.data);
+  export let isPublic: boolean;
 
   let quickSearchEl: any = {};
 

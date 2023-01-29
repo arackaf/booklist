@@ -1,11 +1,12 @@
 <script lang="ts">
-  import CoversDetailView from "./CoversDetailView.svelte";
+  import BookDetailsModal from "./BookDetailsModal.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import type { Book, Subject, Tag } from "$data/types";
 
   export let books: Book[];
   export let subjects: Subject[];
   export let tags: Tag[];
+  export let isPublic: boolean;
 
   let previewing: boolean = false;
   let bookPreviewing: Book | null = null;
@@ -16,7 +17,7 @@
   };
 </script>
 
-<CoversDetailView isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} />
+<BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
 <div>
   <div>

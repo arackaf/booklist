@@ -26,7 +26,7 @@
 
   export let data: PageData;
 
-  $: ({ colors, subjects, defaultBookView, tags } = data);
+  $: ({ isPublic, colors, subjects, defaultBookView, tags } = data);
   let bookViewOverride: string | null = null;
   const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
 
@@ -84,7 +84,7 @@
 
 <section class="full flush-bottom">
   <div style="background-color: white;">
-    <MenuBar />
+    <MenuBar {isPublic} />
 
     <div>
       <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
@@ -95,11 +95,11 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <BasicView books={$books} />
+              <BasicView books={$books} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={$books} {subjects} {tags} />
+              <GridView books={$books} {subjects} {tags} {isPublic} />
             {:else}
-              <CoversView books={$books} {subjects} {tags} />
+              <CoversView books={$books} {subjects} {tags} {isPublic} />
             {/if}
           </div>
         {/if}

@@ -16,6 +16,7 @@
   export let tags: Tag[];
   export let isOpen = false;
   export let onHide: () => void;
+  export let isPublic: boolean;
 
   $: book = viewingBook || ({} as Book);
 
@@ -81,9 +82,11 @@
           </FlowItems>
         {/if}
 
-        <div style="margin-top: auto">
-          <button class="btn btn-xs" on:click={() => (editing = true)}>Edit book <i class="fal fa-pencil-alt" /></button>
-        </div>
+        {#if !isPublic}
+          <div style="margin-top: auto">
+            <button class="btn btn-xs" on:click={() => (editing = true)}>Edit book <i class="fal fa-pencil-alt" /></button>
+          </div>
+        {/if}
       </Stack>
     </div>
   {/if}

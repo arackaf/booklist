@@ -1,12 +1,11 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import type { Book } from "$data/types";
-  import type { Readable } from "svelte/store";
 
   import BasicViewItem from "./BasicViewItem.svelte";
 
+  export let isPublic: boolean;
   export let books: Book[];
-
-  let isPublic = false;
 </script>
 
 <div>

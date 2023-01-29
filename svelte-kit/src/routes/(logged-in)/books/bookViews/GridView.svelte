@@ -4,8 +4,7 @@
   import { changeFilter, searchState } from "../state/searchState";
   import { selectedBooks, selectionState } from "../state/selectionState";
 
-  const isPublic = false;
-
+  export let isPublic: boolean;
   export let books: Book[];
   export let subjects: Subject[];
   export let tags: Tag[];
