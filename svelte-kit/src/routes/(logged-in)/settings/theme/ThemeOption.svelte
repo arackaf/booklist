@@ -12,7 +12,7 @@
 
   function setTheme() {
     return async () => {
-      invalidate("app-root");
+      invalidate("app:root");
     };
   }
 </script>

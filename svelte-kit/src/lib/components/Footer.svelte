@@ -4,12 +4,12 @@
 
   const requestDesktop = () => {
     fetch("/api/device-override/view-desktop").then(() => {
-      invalidate("app-root");
+      invalidate("app:root");
     });
   };
   const requestMobile = () => {
     fetch("/api/device-override/view-mobile").then(() => {
-      invalidate("app-root");
+      invalidate("app:root");
     });
   };
 
