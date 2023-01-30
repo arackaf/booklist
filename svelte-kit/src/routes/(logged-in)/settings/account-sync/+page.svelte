@@ -7,6 +7,7 @@
   import FlexRow from "$lib/components/layout/FlexRow.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import type { PageData } from "./$types";
+  import { invalidateAll } from "$app/navigation";
 
   export let data: PageData;
 
@@ -24,7 +25,7 @@
       running = false;
       if (result.data.success) {
         success = true;
-        setTimeout(() => signOut(), 5000);
+        setTimeout(() => signOut().then(() => invalidateAll()), 5000);
       } else {
         notFound = true;
       }

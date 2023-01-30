@@ -10,6 +10,7 @@
   import "$styles/navbar.scss";
   import "./mobile-menu.scss";
   import { onMount } from "svelte";
+  import { invalidateAll } from "$app/navigation";
 
   $: ({ loggedIn } = $page.data);
 
@@ -105,7 +106,7 @@
     </ul>
     {#if loggedIn}
       <ul class="nav-items-right">
-        <NavBarItem onClick={signOut}>
+        <NavBarItem onClick={() => signOut().then(() => invalidateAll())}>
           <span class="hidden-xs">Logout</span>
           <i class="visible-xs fal fa-fw fa-sign-out" />
         </NavBarItem>
