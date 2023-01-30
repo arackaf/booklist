@@ -44,8 +44,6 @@ export async function load({ cookies, locals, depends, isDataRequest, url, reque
     updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
   }
 
-  depends("reload-root-data");
-
   const tags = allTags(activeUserId);
   const subjects = allSubjects(activeUserId);
 
