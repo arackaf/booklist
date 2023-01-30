@@ -3,11 +3,11 @@ import type { DynamoUser } from "./types";
 
 const getUserKey = (userId: string) => `UserId#${userId}`;
 
-export async function getUser(userId: string): Promise<DynamoUser | null> {
+export async function getUser(userId: string, consistentRead: boolean = false): Promise<DynamoUser | null> {
   const userKey = getUserKey(userId);
 
   try {
-    let userFound: DynamoUser | null = (await db.get(getGetPacket(userKey, userKey))) as DynamoUser;
+    let userFound: DynamoUser | null = (await db.get(getGetPacket(userKey, userKey, { ConsistentRead: consistentRead }))) as DynamoUser;
 
     return userFound ?? null;
   } catch (loginErr) {
