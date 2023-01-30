@@ -78,7 +78,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem href="/settings"
+        <NavBarItem href="/settings/theme"
           ><span class="hidden-xs">Settings</span>
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
