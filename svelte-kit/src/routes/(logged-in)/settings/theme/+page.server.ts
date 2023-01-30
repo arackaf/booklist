@@ -1,4 +1,3 @@
-import { ONE_YEAR_SECONDS, THEME_COOKIE, WHITE_BG_COOKIE } from "$lib/util/constants";
 import { updateUxState } from "$lib/util/uxState";
 
 export const actions = {
