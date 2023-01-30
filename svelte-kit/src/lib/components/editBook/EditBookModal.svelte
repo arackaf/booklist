@@ -11,7 +11,8 @@
   export let onHide: any;
   export let tags: Tag[];
   export let subjects: Subject[];
-  export let onBookUpdated: (_id: string, updates: UpdatesTo<Book>) => void = () => {};
+  export let onSave: (_id: string, updates: UpdatesTo<Book>) => void = () => {};
+  export let closeOnSave: boolean;
 
   let closeModal: any;
   let resetBookEditTabs: () => null;
@@ -24,7 +25,10 @@
 
   const syncUpdates = (_id: string, updates: UpdatesTo<Book>) => {
     book = updateSingleObject(book, updates);
-    onBookUpdated(_id, updates);
+    onSave(_id, updates);
+    if (closeOnSave) {
+      onHide();
+    }
   };
 </script>
 

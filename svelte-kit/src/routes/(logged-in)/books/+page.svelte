@@ -110,7 +110,15 @@
 
         <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
 
-        <EditBookModal isOpen={editBookModalOpen} book={editingBook} onBookUpdated={onBooksUpdated} onHide={stopEditingBook} {subjects} {tags} />
+        <EditBookModal
+          isOpen={editBookModalOpen}
+          book={editingBook}
+          onSave={onBooksUpdated}
+          closeOnSave={true}
+          onHide={stopEditingBook}
+          {subjects}
+          {tags}
+        />
 
         <BookSubjectSetter
           isOpen={booksSubjectsModalOpen}

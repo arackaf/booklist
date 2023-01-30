@@ -30,6 +30,7 @@
   const syncUpdates = (_id: string, updates: UpdatesTo<Book>) => {
     book = updateSingleObject(book, updates);
     onBooksUpdated(_id, updates);
+    editing = false;
   };
 </script>
 

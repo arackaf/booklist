@@ -54,8 +54,8 @@
         modifyingBooks.map(b => b._id),
         updates
       );
-      onHide();
       saving = false;
+      onHide();
     };
   };
 

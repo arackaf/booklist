@@ -53,8 +53,8 @@
         modifyingBooks.map(b => b._id),
         updates
       );
-      onHide();
       saving = false;
+      onHide();
     };
   };
   const addingSubjectSet = (adding: boolean, { _id }: Subject) =>
