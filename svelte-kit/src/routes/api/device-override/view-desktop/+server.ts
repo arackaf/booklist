@@ -1,8 +1,8 @@
 import { json } from "@sveltejs/kit";
-import { DESKTOP_REQUESTED_COOKIE, ONE_YEAR_SECONDS } from "$lib/util/constants";
+import { updateUxState } from "$lib/util/uxState";
 
 export async function GET({ cookies }: any) {
-  cookies.set(DESKTOP_REQUESTED_COOKIE, "1", { path: "/", maxAge: ONE_YEAR_SECONDS });
+  updateUxState(cookies, { desktopRequested: "1" });
 
   return json({});
 }

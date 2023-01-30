@@ -20,7 +20,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   return {
     uxState,
     isMobile,
-    showMobile: isMobile && !uxState.desktopRequested,
+    showMobile: isMobile && uxState.desktopRequested !== "1",
     loggedIn,
     userId: session?.userId
   };

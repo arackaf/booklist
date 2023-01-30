@@ -16,8 +16,8 @@
   $: ({ isMobile, uxState } = $page.data);
   $: ({ desktopRequested } = uxState);
 
-  $: showChooseDesktop = isMobile && !desktopRequested;
-  $: showSwitchBackMobile = isMobile && desktopRequested;
+  $: showChooseDesktop = isMobile && desktopRequested !== "1";
+  $: showSwitchBackMobile = isMobile && desktopRequested === "1";
 </script>
 
 <footer>
