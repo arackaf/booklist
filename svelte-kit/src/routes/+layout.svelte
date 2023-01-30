@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "./styles.scss";
   import "$styles/fontawesome/css/all.min.css";
   import "$styles/site-styles.scss";
 
