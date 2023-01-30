@@ -40,13 +40,6 @@
     enteringBook = true;
   };
 
-  const saveManualBook = (_id: string, updates: UpdatesTo<Book>) => {
-    const fields = updates.fieldsSet!;
-    let pages = parseInt(fields.pages + "", 10);
-    fields.pages = isNaN(pages) ? void 0 : pages;
-    //return runMutation({ book }).then(() => manuallyEnterBook());
-  };
-
   let showScanInstructions = false;
 
   let focused = 0;
@@ -101,6 +94,13 @@
       {/each}
     </div>
     <ScanResults />
-    <EditBookModal isOpen={enteringBook} book={editingBook} subjects={allSubjects} {tags} onHide={() => (enteringBook = false)} />
+    <EditBookModal
+      isOpen={enteringBook}
+      book={editingBook}
+      subjects={allSubjects}
+      {tags}
+      onSave={() => (editingBook = defaultEmptyBook())}
+      onHide={() => (enteringBook = false)}
+    />
   </FlowItems>
 </section>
