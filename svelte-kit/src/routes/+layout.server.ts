@@ -5,7 +5,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   depends("app-root");
 
   const userAgent = request.headers.get("User-Agent");
-  const isMobile = true || /mobile/i.test(userAgent);
+  const isMobile = /mobile/i.test(userAgent);
 
   const uxState = getUxState(cookies);
 
