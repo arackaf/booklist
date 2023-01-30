@@ -11,10 +11,15 @@
   margin: calc(-1 * var(--main-spacing-top)) 0 0;
 }
 .section-nav-item {
-  padding: 15px 15px 15px 15px;
+  display: flex;
+  padding: 0;
 
   a {
     text-decoration: none;
+  }
+  a,
+  span {
+    padding: 15px;
   }
 
   &.active {
