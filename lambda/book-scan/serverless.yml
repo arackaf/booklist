@@ -88,15 +88,6 @@ functions:
           method: post
           cors: true
 
-  streamHandler:
-    timeout: 120
-    handler: handlers/dynamoStream.handler
-    events:
-      - stream:
-          type: dynamodb
-          arn:
-            Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
-
 custom:
   esbuild:
     packager: yarn

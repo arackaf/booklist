@@ -29,14 +29,6 @@ functions:
     handler: handler.updateSimilarBooks
     events:
       - schedule: rate(1 minute)
-  getRecommendations:
-    timeout: 10
-    handler: handler.getRecommendations
-    events:
-      - http:
-          path: /get-recommendations
-          method: post
-          cors: true
 
 package:
   individually: true
