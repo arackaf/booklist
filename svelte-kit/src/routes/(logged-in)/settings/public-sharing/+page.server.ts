@@ -16,7 +16,7 @@ export const load = async ({ locals, depends }: any) => {
   if (!user) {
     await createUser(userId);
   }
-  user = await getUser(userId);
+  user = await getUser(userId, true);
 
   return {
     user
