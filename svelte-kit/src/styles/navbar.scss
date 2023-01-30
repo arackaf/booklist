@@ -10,7 +10,8 @@
     height: 50px;
     font-size: 16px;
 
-    a {
+    a,
+    button {
       color: var(--primary-10);
 
       i.visible-xs {
@@ -20,12 +21,14 @@
 
     li {
       &.disabled,
-      &.disabled a {
+      &.disabled a,
+      &.disabled button {
         color: var(--primary-7);
         cursor: not-allowed;
       }
 
-      a {
+      a,
+      button {
         padding-left: 15px;
         padding-right: 15px;
 
@@ -39,7 +42,8 @@
     .active {
       background-color: var(--primary-7);
 
-      a {
+      a,
+      button {
         cursor: default;
       }
     }
@@ -51,7 +55,8 @@
     @media (max-width: 500px) {
       padding-left: 0;
 
-      li a {
+      li a,
+      li button {
         padding-left: 10px;
         padding-right: 10px;
       }
@@ -61,7 +66,8 @@
       padding-left: 0;
       min-height: 20px;
 
-      li a {
+      li a,
+      li button {
         padding-left: 8px;
         padding-right: 8px;
 

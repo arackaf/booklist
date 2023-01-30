@@ -15,6 +15,12 @@
   };
 </script>
 
-<a on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
-  <slot />
-</a>
+{#if href}
+  <a on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
+    <slot />
+  </a>
+{:else}
+  <button class="raw-button" on:click={linkClicked} {style} aria-label={label}>
+    <slot />
+  </button>
+{/if}
