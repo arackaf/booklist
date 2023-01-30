@@ -1,3 +1,7 @@
+<script lang="ts">
+  import { signIn, signOut } from "@auth/sveltekit/client";
+</script>
+
 <section>
   <div style="margin-left: auto; margin-right: auto; max-width: 1200px">
     <div>
@@ -22,7 +26,14 @@
             <a target="_blank" rel="noreferrer" href="https://github.com/arackaf/booklist"> here </a>
             <br />
             <br />
-            <a style="text-decoration: none" class="btn btn-primary" href="/login"> Login or create an account </a>
+            <button
+              style="text-decoration: none"
+              class="btn btn-primary"
+              on:click={() =>
+                signIn("google", {
+                  callbackUrl: "/books"
+                })}>Login or create an account</button
+            >
           </div>
         </div>
       </div>
