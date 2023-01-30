@@ -39,7 +39,7 @@
     saving = true;
     return async () => {
       saving = false;
-      invalidate("user-settings");
+      invalidate("user:settings");
     };
   };
 

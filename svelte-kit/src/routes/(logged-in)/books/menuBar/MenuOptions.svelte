@@ -22,7 +22,7 @@
     reloading = true;
 
     return async () => {
-      invalidate("reload-books").then(() => {
+      invalidate("reload:books").then(() => {
         reloading = false;
       });
     };

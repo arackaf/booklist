@@ -5,7 +5,7 @@ export const load = async ({ locals, depends }: any) => {
   const session = await locals.getSession();
   const { userId } = session;
 
-  depends("user-settings");
+  depends("user:settings");
 
   if (!userId) {
     return {};

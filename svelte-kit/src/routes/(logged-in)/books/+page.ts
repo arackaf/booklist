@@ -3,7 +3,7 @@ import { writable } from "svelte/store";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
 export async function load({ url, parent, fetch, depends }: any) {
-  depends("reload-books");
+  depends("reload:books");
 
   const parentData = await parent();
 
