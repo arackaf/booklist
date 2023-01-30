@@ -6,10 +6,13 @@ import { allTags } from "$data/tags";
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { getUser } from "$data/user";
 
-export async function load({ cookies, locals, depends, isDataRequest, url }: any) {
+export async function load({ cookies, locals, depends, isDataRequest, url, request }: any) {
   const initialRequest = !isDataRequest;
 
-  const publicUserId = url.searchParams.get("user");
+  // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
+  const requestUrl = new URL(request.url);
+
+  const publicUserId = requestUrl.searchParams.get("user");
   let isPublic = false;
   let publicUser: DynamoUser | null = null;
   let publicName: string | null = null;
