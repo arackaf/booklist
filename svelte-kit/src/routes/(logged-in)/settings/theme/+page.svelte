@@ -1,13 +1,14 @@
 <script lang="ts">
   import "./theme-chooser.scss";
+
+  import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
   import type { PageData } from "./$types";
 
   import { NUM_THEMES } from "$lib/util/constants";
 
   import DemoStyles from "./DemoStyles.svelte";
   import ThemeOption from "./ThemeOption.svelte";
-  import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   const themeNames = Array.from({ length: NUM_THEMES }, (v, i) => `scheme${i + 1}`);
 
