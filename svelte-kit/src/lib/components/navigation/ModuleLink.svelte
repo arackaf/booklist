@@ -3,6 +3,7 @@
   export let style = "";
   export let disabled = false;
   export let onClick: (() => void) | null = null;
+  export let label: string = "";
 
   const linkClicked = (evt: any) => {
     if (!onClick) {
@@ -14,6 +15,6 @@
   };
 </script>
 
-<a on:click={linkClicked} href={disabled ? null : href} {style}>
+<a on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
   <slot />
 </a>

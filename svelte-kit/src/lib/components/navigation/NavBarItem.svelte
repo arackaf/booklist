@@ -8,6 +8,7 @@
   let className = "";
   export { className as class };
   export let onClick: (() => void) | null = null;
+  export let label: string = "";
 
   $: currentModule = $page.route.id;
   $: active = href && currentModule?.indexOf(href) !== -1;
@@ -16,7 +17,7 @@
 </script>
 
 <li class={spreadClassNames(className || "", !!disabled ? "disabled" : "", active ? "active" : "")}>
-  <ModuleLink {onClick} {style} {href}>
+  <ModuleLink {onClick} {style} {href} {label}>
     <slot />
   </ModuleLink>
 </li>

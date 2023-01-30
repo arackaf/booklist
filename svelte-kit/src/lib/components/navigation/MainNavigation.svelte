@@ -49,11 +49,11 @@
     </div>
 
     <ul class="nav-items">
-      <NavBarItem class="visible-xs" disabled={isPublic} href="/home" style="margin-top: '2px';">
+      <NavBarItem class="visible-xs" disabled={isPublic} href="/home" style="margin-top: '2px';" label={"Home"}>
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
       {#if loggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="/scan" style="position: relative;">
+        <NavBarItem disabled={isPublic} href="/scan" style="position: relative;" label={"Scan books"}>
           <span class="hidden-xs">Book entry</span>
           <i class="visible-xs fal fa-fw fa-scanner" />
           {#if pendingCount}
@@ -67,25 +67,25 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem href={isPublic ? "/view" : "/books"}
-          ><span class="hidden-xs">Books</span>
+        <NavBarItem href={"/books"} label={"View books"}>
+          <span class="hidden-xs">Books</span>
           <i class="visible-xs fal fa-fw fa-books" />
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="/subjects">
+        <NavBarItem disabled={isPublic} href="/subjects" label={"Manage subjects"}>
           <span class="hidden-xs">Subjects</span>
           <i class="visible-xs fal fa-fw fa-sitemap" />
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem href="/settings/theme"
-          ><span class="hidden-xs">Settings</span>
+        <NavBarItem href="/settings/theme" label={"Settings"}>
+          <span class="hidden-xs">Settings</span>
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
       {/if}
       {#if loggedIn && isAdminUser}
-        <NavBarItem href="/admin">
+        <NavBarItem href="/admin" label={"Admin"}>
           <span class="hidden-xs">Admin</span>
           <i class="visible-xs fal fa-fw fa-users-cog" />
         </NavBarItem>
@@ -98,6 +98,7 @@
             signIn("google", {
               callbackUrl: "/books"
             })}
+          label={"Login"}
         >
           <span class="hidden-xs">Login</span>
           <i class="visible-xs fal fa-fw fa-sign-in" />
@@ -106,7 +107,7 @@
     </ul>
     {#if loggedIn}
       <ul class="nav-items-right">
-        <NavBarItem onClick={() => signOut().then(() => invalidateAll())}>
+        <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
           <span class="hidden-xs">Logout</span>
           <i class="visible-xs fal fa-fw fa-sign-out" />
         </NavBarItem>
