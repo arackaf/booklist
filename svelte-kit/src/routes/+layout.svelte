@@ -86,6 +86,10 @@
 
     startWebSocket();
     startToastListen();
+
+    if ("serviceWorker" in navigator && !/localhost/.test(window.location.href)) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
   });
 </script>
 
