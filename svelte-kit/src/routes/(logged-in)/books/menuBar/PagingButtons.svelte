@@ -8,12 +8,20 @@
   $: canPageDown = page > 1;
   $: canPageOne = page > 1;
   $: canPageLast = page < totalPages;
+
+  $: pageDownHref = $changeFilter.pageTo(page - 1, totalPages);
+  $: pageUpHref = $changeFilter.pageTo(page + 1, totalPages);
+  $: pageLastHref = $changeFilter.pageTo(totalPages, totalPages);
 </script>
 
 <div style="display: flex; margin-right: 5px; align-items: center">
   <div class="btn-group">
-    <a href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge"><i class="fal fa-angle-double-left" /></a>
-    <a href={$changeFilter.pageTo(page - 1, totalPages)} class:disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
+    <a href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge">
+      <span class="sr">Go to page 1</span>
+      <i class="fal fa-angle-double-left" />
+    </a>
+    <a href={pageDownHref} class:disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
+      <span class="sr">Go a page down</span>
       <i class="fal fa-angle-left" />
     </a>
   </div>
@@ -32,10 +40,12 @@
   </div>
 
   <div class="btn-group">
-    <a href={$changeFilter.pageTo(page + 1, totalPages)} class:disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px">
+    <a href={pageUpHref} class:disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px">
+      <span class="sr">Go a page up</span>
       <i class="fal fa-angle-right" />
     </a>
-    <a href={$changeFilter.pageTo(totalPages, totalPages)} class:disabled={!canPageLast} class="btn btn-default page-edge">
+    <a href={pageLastHref} class:disabled={!canPageLast} class="btn btn-default page-edge">
+      <span class="sr">Go to last page</span>
       <i class="fal fa-angle-double-right" />
     </a>
   </div>

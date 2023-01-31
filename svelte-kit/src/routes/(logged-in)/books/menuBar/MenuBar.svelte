@@ -43,6 +43,7 @@
       <button
         style="font-size: 1.4rem; align-self: center"
         class="mobile-menu-button margin-right raw-button icon-button"
+        aria-label="Mobile menu toggle"
         on:click={() => (mobileMenuOpen = true)}
       >
         <i class="far fa-bars" />
