@@ -12,8 +12,8 @@
     "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "1.0.0",
-    "@sveltejs/adapter-vercel": "1.0.2",
+    "@sveltejs/adapter-auto": "^1.0.2",
+    "@sveltejs/adapter-vercel": "^1.0.6",
     "@types/blueimp-md5": "^2.18.0",
     "@types/d3-array": "^3.0.3",
     "@types/d3-scale": "^4.0.2",
