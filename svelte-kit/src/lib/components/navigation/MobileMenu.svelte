@@ -27,7 +27,7 @@
   <div class="mobile-menu-content">
     <div>
       <div class="header">
-        <button class="raw-button icon-button" on:click={onClose}>
+        <button class="raw-button icon-button" aria-label="Close mobile menu" on:click={onClose}>
           <i class="far fa-times" />
         </button>
         <h3>{title}</h3>
