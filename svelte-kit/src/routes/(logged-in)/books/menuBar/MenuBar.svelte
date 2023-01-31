@@ -34,7 +34,7 @@
 <div class="books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {isPublic} {closeMobileMenu} />
+      <MenuOptions {bookViewToUse} {isPublic} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
