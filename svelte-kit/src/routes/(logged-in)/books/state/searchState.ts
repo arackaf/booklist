@@ -73,6 +73,9 @@ export const changeFilter = derived(page, $page => {
   const page = parseInt(url.searchParams.get("page")!) || 1;
 
   function pageTo(val: number, totalPages?: number) {
+    if (val === 1 && page === 1) {
+      return null;
+    }
     if (val === 1) {
       return urlWithoutFilter(url, "page");
     }

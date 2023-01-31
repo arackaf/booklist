@@ -16,14 +16,20 @@
 
 <div style="display: flex; margin-right: 5px; align-items: center">
   <div class="btn-group">
-    <a href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge">
+    <svelte:element this={canPageOne ? "a" : "span"} href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge">
       <span class="sr">Go to page 1</span>
       <i class="fal fa-angle-double-left" />
-    </a>
-    <a href={pageDownHref} class:disabled={!canPageDown} class="btn btn-default page" style="margin-right: 5px">
+    </svelte:element>
+    <svelte:element
+      this={canPageDown ? "a" : "span"}
+      href={pageDownHref}
+      class:disabled={!canPageDown}
+      class="btn btn-default page"
+      style="margin-right: 5px"
+    >
       <span class="sr">Go a page down</span>
       <i class="fal fa-angle-left" />
-    </a>
+    </svelte:element>
   </div>
 
   <div class="results-holder overlay-holder">
@@ -40,13 +46,19 @@
   </div>
 
   <div class="btn-group">
-    <a href={pageUpHref} class:disabled={!canPageUp} class="btn btn-default page" style="margin-left: 5px">
+    <svelte:element
+      this={canPageUp ? "a" : "span"}
+      href={pageUpHref}
+      class:disabled={!canPageUp}
+      class="btn btn-default page"
+      style="margin-left: 5px"
+    >
       <span class="sr">Go a page up</span>
       <i class="fal fa-angle-right" />
-    </a>
-    <a href={pageLastHref} class:disabled={!canPageLast} class="btn btn-default page-edge">
+    </svelte:element>
+    <svelte:element this={canPageLast ? "a" : "span"} href={pageLastHref} class:disabled={!canPageLast} class="btn btn-default page-edge">
       <span class="sr">Go to last page</span>
       <i class="fal fa-angle-double-right" />
-    </a>
+    </svelte:element>
   </div>
 </div>
