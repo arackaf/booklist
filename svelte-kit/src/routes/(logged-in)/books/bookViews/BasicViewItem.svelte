@@ -36,7 +36,7 @@
 <div class="listGroupItem">
   <div style="display: flex">
     <div style="margin-right: 5px; min-width: 55px">
-      <BookCover size="mobile" url={book.mobileImage} preview={book.mobileImagePreview} />
+      <BookCover size="mobile" url={book.mobileImage} optimizedUrl={book.mediumImage} preview={book.mobileImagePreview} />
     </div>
     <div style="overflow: hidden">
       <div style="display: flex; flex-direction: column; height: 100%">
