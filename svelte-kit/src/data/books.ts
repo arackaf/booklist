@@ -175,7 +175,7 @@ export const getBookDetails = async (id: string) => {
   })
     .then(books => {
       const httpEnd = +new Date();
-      console.log("HTTP time books", httpEnd - httpStart);
+      console.log("HTTP books time", httpEnd - httpStart);
 
       return books[0];
     })
@@ -196,7 +196,7 @@ export const booksSubjectsDump = async (userId: string) => {
   })
     .then(records => {
       const httpEnd = +new Date();
-      console.log("HTTP time books", httpEnd - httpStart);
+      console.log("HTTP books time", httpEnd - httpStart);
 
       return records;
     })
