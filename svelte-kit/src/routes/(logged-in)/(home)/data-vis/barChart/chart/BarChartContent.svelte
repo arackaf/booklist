@@ -16,6 +16,8 @@
   export let drilldown: any;
   export let chartIndex: any;
 
+  const MAX_SVG_WIDTH = 600;
+
   onMount(() => {
     mounted = true;
   });
@@ -33,7 +35,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(600, showingData.length * 110 + 60);
+  $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -47,8 +49,6 @@
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   let offsetYInitial = margin.bottom - height;
   $: offsetY = offsetYInitial;
-
-  $: totalSvgWidth = adjustedWidth;
 
   let mounted = false;
 
@@ -81,7 +81,7 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" {height} viewBox="0 0 600 600">
+    <svg width="100%" {height} viewBox="0 0 {MAX_SVG_WIDTH} {MAX_SVG_WIDTH}">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -91,7 +91,7 @@
             width={scaleX.bandwidth()}
             index={i}
             height={dataScale(d.count)}
-            {totalSvgWidth}
+            totalSvgWidth={adjustedWidth}
             {drilldown}
             {removeBar}
           />
