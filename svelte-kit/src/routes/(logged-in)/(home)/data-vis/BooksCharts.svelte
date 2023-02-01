@@ -8,9 +8,9 @@
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
   import BarChart from "./barChart/chart/BarChart.svelte";
 
-  $: subjects = $page.data.subjects as Subject[];
-  $: subjectHash = $page.data.subjectHash as Hash<Subject>;
-  $: stackedSubjects = stackAndGetTopLevelSubjects(subjects);
+  const subjects: Subject[] = $page.data.subjects;
+  const subjectHash: Hash<Subject> = $page.data.subjectHash;
+  const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const books: BookSubjectStack[] = $page.data.books;
 
@@ -24,13 +24,7 @@
     ready = true;
   });
 
-  let chartPackets: { subjects: Subject[]; header: string }[] = [];
-
-  $: {
-    if (!chartPackets.length && Array.isArray(subjects)) {
-      chartPackets = [{ subjects: stackedSubjects, header: "All books" }];
-    }
-  }
+  let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
 
   const getDrilldownChart = (index: number, subjects: any, header: any) => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
