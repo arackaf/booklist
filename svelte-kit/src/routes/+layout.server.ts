@@ -27,7 +27,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
     isMobile,
     showMobile: isMobile && uxState.desktopRequested !== "1",
     loggedIn,
-    publicUserId,
+    hasPublicUserId: !!publicUserId,
     userId: session?.userId
   };
 }

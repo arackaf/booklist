@@ -20,7 +20,7 @@
 
   export let data: any;
 
-  $: ({ showMobile, uxState, loggedIn, publicUserId, userId } = data);
+  $: ({ showMobile, uxState, loggedIn, hasPublicUserId, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -38,11 +38,11 @@
   }
 
   $: currentPath = $page.url.pathname;
-  $: publicUser = !loggedIn && publicUserId;
 
-  const publicModules = new Set(["/", "/discover", "/books", "settings/theme"]);
+  const publicModules = new Set(["/", "/discover", "/books", "/settings/theme"]);
+  $: console.log({ data });
 
-  $: showContent = loggedIn || (publicUser && publicModules.has(currentPath));
+  $: showContent = loggedIn || (hasPublicUserId && publicModules.has(currentPath));
 
   let navigating = false;
 

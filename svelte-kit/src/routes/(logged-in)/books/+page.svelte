@@ -26,7 +26,7 @@
 
   export let data: PageData;
 
-  $: ({ isPublic, colors, subjects, defaultBookView, tags } = data);
+  $: ({ isPublic, colors, subjects, defaultBookView, tags, hasPublicUserId } = data);
   let bookViewOverride: string | null = null;
   const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
 
@@ -91,10 +91,12 @@
         {#if !$books.length}
           <div>
             <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
-            <div class="alert alert-warning" style="margin-top: 20px">
-              If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
-              <a href="/settings/account-sync">here</a>
-            </div>
+            {#if !hasPublicUserId}
+              <div class="alert alert-warning" style="margin-top: 20px">
+                If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
+                <a href="/settings/account-sync">here</a>
+              </div>
+            {/if}
           </div>
         {:else}
           <div>
