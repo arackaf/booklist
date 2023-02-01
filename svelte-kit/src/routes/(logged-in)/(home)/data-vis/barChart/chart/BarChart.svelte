@@ -20,7 +20,7 @@
 
   $: hasPublicUserId = $page.data.hasPublicUserId;
 
-  const margin = { top: 30, right: 20, bottom: 180, left: 20 };
+  const margin = { top: 30, bottom: 180 };
 </script>
 
 <!-- 

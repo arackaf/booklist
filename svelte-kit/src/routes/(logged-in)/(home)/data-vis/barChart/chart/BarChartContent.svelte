@@ -10,7 +10,7 @@
   import Bar from "../bars/Bar.svelte";
 
   export let height: any;
-  export let margin: any;
+  export let margin: { top: number; bottom: number };
   export let header: any;
   export let graphData: any[];
   export let drilldown: any;
