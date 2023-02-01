@@ -20,6 +20,8 @@
 
   export let data: any;
 
+  const publicModules = new Set(["/", "/discover", "/books", "/settings/theme"]);
+
   $: ({ showMobile, uxState, loggedIn, hasPublicUserId, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
@@ -38,14 +40,9 @@
   }
 
   $: currentPath = $page.url.pathname;
-
-  const publicModules = new Set(["/", "/discover", "/books", "/settings/theme"]);
-  $: console.log({ data });
-
   $: showContent = loggedIn || (hasPublicUserId && publicModules.has(currentPath));
 
   let navigating = false;
-
   beforeNavigate(({ type }) => {
     navigating = true;
   });
