@@ -21,11 +21,9 @@
   const barSpring = spring(initialValues, { stiffness: 0.1, damping: 0.4 });
 
   $: {
-    barSpring
-      .update(state => ({ ...state, height, x }), { hard: noInitialAnimation && !initialRenderFinished })
-      .then(() => {
-        initialRenderFinished = true;
-      });
+    barSpring.set({ height, x }, { hard: noInitialAnimation && !initialRenderFinished }).then(() => {
+      initialRenderFinished = true;
+    });
   }
 
   onMount(() => {

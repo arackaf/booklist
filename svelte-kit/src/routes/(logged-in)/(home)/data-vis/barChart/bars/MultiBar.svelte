@@ -52,11 +52,9 @@
 
   $: {
     itemsClamped = {};
-    barSpring
-      .update(state => ({ ...state, height, x }), { hard: noInitialAnimation && !initialRenderFinished })
-      .then(() => {
-        initialRenderFinished = true;
-      });
+    barSpring.set({ height, x }, { hard: noInitialAnimation && !initialRenderFinished }).then(() => {
+      initialRenderFinished = true;
+    });
   }
 </script>
 
