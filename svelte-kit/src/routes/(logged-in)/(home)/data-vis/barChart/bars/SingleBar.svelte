@@ -22,7 +22,7 @@
 
   $: {
     barSpring
-      .update(state => ({ ...state, initialValues }), { hard: noInitialAnimation && !initialRenderFinished })
+      .update(state => ({ ...state, height, x }), { hard: noInitialAnimation && !initialRenderFinished })
       .then(() => {
         initialRenderFinished = true;
       });
