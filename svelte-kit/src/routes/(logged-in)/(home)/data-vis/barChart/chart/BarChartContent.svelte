@@ -1,5 +1,6 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
+  import { writable } from "svelte/store";
   import { scaleLinear } from "d3-scale";
   import { scaleBand } from "d3-scale";
   import { max } from "d3-array";
@@ -30,6 +31,12 @@
     });
 
   $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
+
+  const initialChartWidth = writable(0);
+  $: {
+    let currentAdjustedWidth = adjustedWidth;
+    initialChartWidth.update(current => (current ? current : currentAdjustedWidth));
+  }
 
   $: leftOffsetAdjust = (MAX_SVG_WIDTH - adjustedWidth) / 2;
 
@@ -83,7 +90,7 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" {height} viewBox="0 0 {MAX_SVG_WIDTH} {MAX_SVG_WIDTH}">
+    <svg width="100%" {height} viewBox="0 0 {$initialChartWidth} {MAX_SVG_WIDTH}">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
