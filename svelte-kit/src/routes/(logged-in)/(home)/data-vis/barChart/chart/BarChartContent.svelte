@@ -1,25 +1,20 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-
   import { scaleLinear } from "d3-scale";
   import { scaleBand } from "d3-scale";
   import { max } from "d3-array";
 
   import Axis from "../axis/Axis.svelte";
-  import { onMount } from "svelte";
   import Bar from "../bars/Bar.svelte";
 
-  export let width: any;
   export let height: any;
-  export let margin: any;
+  export let margin: { top: number; bottom: number };
   export let header: any;
   export let graphData: any[];
   export let drilldown: any;
   export let chartIndex: any;
 
-  onMount(() => {
-    mounted = true;
-  });
+  const MAX_SVG_WIDTH = 600;
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -34,7 +29,9 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(width, showingData.length * 110 + 60) - margin.left - margin.right;
+  $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
+
+  $: leftOffsetAdjust = (MAX_SVG_WIDTH - adjustedWidth) / 2;
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -49,14 +46,18 @@
   let offsetYInitial = margin.bottom - height;
   $: offsetY = offsetYInitial;
 
-  $: totalSvgWidth = adjustedWidth + margin.left + margin.right;
+  $: graphTransform = { x: 0, y: offsetY };
 
-  let mounted = false;
+  let initialGraphTransformSet = false;
+  const graphTransformSpring = spring({ leftOffsetAdjust: isNaN(leftOffsetAdjust) ? -10 : 0 }, { stiffness: 0.1, damping: 0.4 });
+  $: {
+    graphTransformSpring.set({ leftOffsetAdjust }, { hard: !initialGraphTransformSet });
+    if (!isNaN(leftOffsetAdjust)) {
+      initialGraphTransformSet = true;
+    }
+  }
 
-  let graphTransformSpring = spring({ x: margin.left, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
-  $: graphTransformSpring.set({ x: margin.left, y: offsetY }, { hard: !mounted });
-
-  $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
+  $: transform = `scale(1, -1) translate(${$graphTransformSpring.leftOffsetAdjust + graphTransform.x}, ${graphTransform.y})`;
 
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
@@ -65,7 +66,7 @@
 </script>
 
 <div use:scrollInitial>
-  <div style="height: {height}px">
+  <div class="chart-container">
     <div>
       <h4 style="display: inline">{header}</h4>
       {#if excludedCount}
@@ -82,7 +83,7 @@
         </span>
       {/if}
     </div>
-    <svg width={totalSvgWidth} {height}>
+    <svg width="100%" {height} viewBox="0 0 {MAX_SVG_WIDTH} {MAX_SVG_WIDTH}">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -92,20 +93,21 @@
             width={scaleX.bandwidth()}
             index={i}
             height={dataScale(d.count)}
-            {totalSvgWidth}
+            totalSvgWidth={adjustedWidth}
             {drilldown}
             {removeBar}
+            noInitialAnimation={chartIndex === 0}
           />
         {/each}
       </g>
 
       <Axis
-        masterTransformX={margin.left}
+        masterTransformX={0}
         masterTransformY={-1 * margin.bottom}
         data={showingData}
         {scaleX}
         graphWidth={adjustedWidth}
-        transform={`translate(0, ${height})`}
+        transform="translate({$graphTransformSpring.leftOffsetAdjust}, {height})"
       />
     </svg>
   </div>
@@ -113,9 +115,14 @@
 </div>
 
 <style>
+  .chart-container {
+    height: 600px;
+    max-width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   svg {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
   }
 </style>

@@ -12,7 +12,6 @@
   export let drilldown: any;
   export let header: any;
   export let chartIndex: any;
-  export let width: any;
   export let height: any;
 
   $: subjectIds = subjects.map(s => s._id);
@@ -21,7 +20,7 @@
 
   $: hasPublicUserId = $page.data.hasPublicUserId;
 
-  const margin = { top: 30, right: 20, bottom: 180, left: 20 };
+  const margin = { top: 30, bottom: 180 };
 </script>
 
 <!-- 
@@ -50,5 +49,5 @@
     </div>
   {/if}
 {:else}
-  <BarChartContent {width} {height} {margin} {header} {graphData} {drilldown} {chartIndex} />
+  <BarChartContent {height} {margin} {header} {graphData} {drilldown} {chartIndex} />
 {/if}

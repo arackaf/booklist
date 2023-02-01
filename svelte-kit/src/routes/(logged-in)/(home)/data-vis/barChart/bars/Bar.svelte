@@ -13,13 +13,15 @@
   export let barCount: number;
   export let removeBar: (id: string) => void;
 
+  export let noInitialAnimation: boolean;
+
   $: position = (height < 150 ? "top" : index < barCount / 2 ? "left" : "right") as Position;
 </script>
 
 {#if data.entries.length == 1}
-  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {drilldown} {position} {removeBar} />
+  <SingleBar color={data.entries[0].color} {data} {height} {width} {x} {totalSvgWidth} {drilldown} {position} {removeBar} {noInitialAnimation} />
 {:else}
-  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {position} {drilldown} {removeBar} />
+  <MultiBar {data} {height} {width} {x} {totalSvgWidth} {position} {drilldown} {removeBar} {noInitialAnimation} />
 {/if}
 
 <style>

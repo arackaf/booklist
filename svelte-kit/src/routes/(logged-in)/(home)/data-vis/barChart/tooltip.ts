@@ -88,7 +88,15 @@ export const tooltip = (node: any, props: PopperOptions) => {
     const popperPlacement: Placement = placementMap[position];
     const popper = createPopper(node, div, {
       placement: popperPlacement,
-      strategy: "absolute"
+      strategy: "absolute",
+      modifiers: [
+        // To have right tooltips show just inside the left boubdary, we position on the left, and transform 100% to slide it over.
+        // Flip prevents the tooltip from moving when popper (not knowing about the transform) thinks it's out of room.
+        {
+          name: "flip",
+          enabled: false
+        }
+      ]
     });
 
     div.classList.add("show");
