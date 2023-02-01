@@ -43,15 +43,10 @@
   $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
-  let offsetYInitial = margin.bottom - height;
-  $: offsetY = offsetYInitial;
-
-  $: graphTransform = { x: 0, y: offsetY };
+  const offsetY = margin.bottom - height;
 
   const viewBoxSpring = spring(null as any, { stiffness: 0.1, damping: 0.4 });
   $: viewBoxSpring.set(adjustedWidth);
-
-  $: transform = `scale(1, -1) translate(${graphTransform.x}, ${graphTransform.y})`;
 
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
@@ -77,8 +72,8 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" {height} viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
-      <g {transform}>
+    <svg width="100%" style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
+      <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
             barCount={nonExcludedGroups.length}
