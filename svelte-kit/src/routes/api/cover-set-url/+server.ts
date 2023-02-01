@@ -16,8 +16,6 @@ export async function POST({ cookies, locals, request }: any) {
   const { url } = reqBody;
   const { userId } = session;
 
-  console.log({ url: reqBody.url });
-
   try {
     const client = new LambdaClient({
       region: "us-east-1",
