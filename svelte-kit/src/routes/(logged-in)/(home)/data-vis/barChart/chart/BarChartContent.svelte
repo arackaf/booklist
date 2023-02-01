@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { spring } from "svelte/motion";
   import { scaleLinear } from "d3-scale";
   import { scaleBand } from "d3-scale";
   import { max } from "d3-array";
@@ -47,7 +48,16 @@
 
   $: graphTransform = { x: 0, y: offsetY };
 
-  $: transform = `scale(1, -1) translate(${leftOffsetAdjust + graphTransform.x}, ${graphTransform.y})`;
+  let initialGraphTransformSet = false;
+  const graphTransformSpring = spring({ leftOffsetAdjust: isNaN(leftOffsetAdjust) ? -10 : 0 }, { stiffness: 0.1, damping: 0.4 });
+  $: {
+    graphTransformSpring.set({ leftOffsetAdjust }, { hard: !initialGraphTransformSet });
+    if (!isNaN(leftOffsetAdjust)) {
+      initialGraphTransformSet = true;
+    }
+  }
+
+  $: transform = `scale(1, -1) translate(${$graphTransformSpring.leftOffsetAdjust + graphTransform.x}, ${graphTransform.y})`;
 
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
@@ -97,7 +107,7 @@
         data={showingData}
         {scaleX}
         graphWidth={adjustedWidth}
-        transform="translate({leftOffsetAdjust}, {height})"
+        transform="translate({$graphTransformSpring.leftOffsetAdjust}, {height})"
       />
     </svg>
   </div>
