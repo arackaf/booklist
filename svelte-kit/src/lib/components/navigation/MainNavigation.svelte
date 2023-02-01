@@ -14,7 +14,7 @@
 
   $: ({ loggedIn } = $page.data);
 
-  $: currentModule = $page.route.id;
+  $: currentModule = $page.url.pathname;
 
   //let isAdminUser = isAdmin();
   let isAdminUser = false;
@@ -22,7 +22,8 @@
   //$: isPublic = $appState.isPublic;
   let isPublic = false;
 
-  $: isHome = currentModule?.indexOf("/home") !== -1;
+  const homeModules = new Set(["/", "/discover", "/recent-scans"]);
+  $: isHome = homeModules.has(currentModule);
 
   let pendingCount = 0;
 
@@ -42,14 +43,14 @@
 <header class="master-nav">
   <nav class="nav">
     <div class={`nav-header hidden-xs ${isHome && loggedIn ? "active" : ""}`}>
-      <ModuleLink href="/home">
+      <ModuleLink href="/">
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
     </div>
 
     <ul class="nav-items">
-      <NavBarItem class="visible-xs" disabled={isPublic} href="/home" style="margin-top: '2px';" label={"Home"}>
+      <NavBarItem class="visible-xs" disabled={isPublic} href="/" style="margin-top: '2px';" label={"Home"}>
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
       {#if loggedIn || isPublic}
