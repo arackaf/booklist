@@ -33,14 +33,6 @@
 
   $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
 
-  const initialChartWidth = writable(0);
-  $: {
-    let currentAdjustedWidth = adjustedWidth;
-    initialChartWidth.update(current => (current ? current : currentAdjustedWidth));
-  }
-
-  $: leftOffsetAdjust = ($initialChartWidth - adjustedWidth) / 2;
-
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
   $: chartHeight = height - margin.top - margin.bottom;
@@ -56,23 +48,15 @@
 
   $: graphTransform = { x: 0, y: offsetY };
 
-  let initialGraphTransformSet = false;
-  const graphTransformSpring = spring({ leftOffsetAdjust: isNaN(leftOffsetAdjust) ? -10 : 0 }, { stiffness: 0.1, damping: 0.4 });
-  $: {
-    graphTransformSpring.set({ leftOffsetAdjust }, { hard: !initialGraphTransformSet });
-    if (!isNaN(leftOffsetAdjust)) {
-      initialGraphTransformSet = true;
-    }
-  }
+  const viewBoxSpring = spring(null as any, { stiffness: 0.1, damping: 0.4 });
+  $: viewBoxSpring.set(adjustedWidth);
 
-  $: transform = `scale(1, -1) translate(${$graphTransformSpring.leftOffsetAdjust + graphTransform.x}, ${graphTransform.y})`;
+  $: transform = `scale(1, -1) translate(${graphTransform.x}, ${graphTransform.y})`;
 
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
 
   $: nonExcludedGroups = showingData.filter(d => !excluding[d.groupId]);
-
-  $: console.log({ adjustedWidth, initialChartWidth: $initialChartWidth });
 </script>
 
 <div use:scrollInitial>
@@ -93,7 +77,7 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" {height} viewBox="0 0 {$initialChartWidth} {MAX_SVG_HEIGHT}">
+    <svg width="100%" {height} viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -117,7 +101,7 @@
         data={showingData}
         {scaleX}
         graphWidth={adjustedWidth}
-        transform="translate({$graphTransformSpring.leftOffsetAdjust}, {height})"
+        transform="translate(0, {height})"
       />
     </svg>
   </div>
