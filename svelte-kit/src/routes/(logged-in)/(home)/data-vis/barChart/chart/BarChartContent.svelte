@@ -14,8 +14,7 @@
   export let drilldown: any;
   export let chartIndex: any;
 
-  const MAX_SVG_WIDTH = 1200;
-  const SVG_HEIGHT = 600;
+  const MAX_SVG_WIDTH = 600;
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -50,12 +49,12 @@
   $: graphTransform = { x: 0, y: offsetY };
 
   let initialGraphTransformSet = false;
-  const graphTransformSpring = spring({ leftOffsetAdjust: 0 /*isNaN(leftOffsetAdjust) ? -10 : 0*/ }, { stiffness: 0.1, damping: 0.4 });
+  const graphTransformSpring = spring({ leftOffsetAdjust: isNaN(leftOffsetAdjust) ? -10 : 0 }, { stiffness: 0.1, damping: 0.4 });
   $: {
-    // graphTransformSpring.set({ leftOffsetAdjust }, { hard: !initialGraphTransformSet });
-    // if (!isNaN(leftOffsetAdjust)) {
-    //   initialGraphTransformSet = true;
-    // }
+    graphTransformSpring.set({ leftOffsetAdjust }, { hard: !initialGraphTransformSet });
+    if (!isNaN(leftOffsetAdjust)) {
+      initialGraphTransformSet = true;
+    }
   }
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.leftOffsetAdjust + graphTransform.x}, ${graphTransform.y})`;
@@ -67,7 +66,7 @@
 </script>
 
 <div use:scrollInitial>
-  <div class="chart-container" style="max-width: {MAX_SVG_WIDTH}px;">
+  <div class="chart-container">
     <div>
       <h4 style="display: inline">{header}</h4>
       {#if excludedCount}
@@ -84,7 +83,7 @@
         </span>
       {/if}
     </div>
-    <svg {height} viewBox="0 0 {adjustedWidth} {SVG_HEIGHT}">
+    <svg width="100%" {height} viewBox="0 0 {MAX_SVG_WIDTH} {MAX_SVG_WIDTH}">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -116,18 +115,14 @@
 </div>
 
 <style>
-
   .chart-container {
     height: 600px;
+    max-width: 600px;
     margin-right: auto;
     margin-left: auto;
   }
 
   svg {
-    width: 100%;
     display: block;
-    --foo-bar: calc(1200px - 100%);
-    --foo-baz: calc(100%);
-    --foo-bae: 1200px;
   }
 </style>
