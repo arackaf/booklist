@@ -1,4 +1,4 @@
-export async function load({ locals, fetch, data }: any) {
+export async function load({ fetch, data }: any) {
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
   return {

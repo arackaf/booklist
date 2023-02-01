@@ -2,7 +2,11 @@ import type { Subject } from "./types";
 import { getSubject, querySubjects, runMultiUpdate, deleteById, type SubjectEditFields, insertObject, runRequest } from "./dbUtils";
 import { toHash } from "$lib/state/helpers";
 
-export const allSubjects = async (userId: string) => {
+export const allSubjects = async (userId: string = "") => {
+  if (!userId) {
+    return { subjects: [], subjectHash: {} };
+  }
+
   userId = userId || "";
   const httpStart = +new Date();
 
