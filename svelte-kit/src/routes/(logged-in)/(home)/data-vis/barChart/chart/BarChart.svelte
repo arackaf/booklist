@@ -12,7 +12,6 @@
   export let drilldown: any;
   export let header: any;
   export let chartIndex: any;
-  export let width: any;
   export let height: any;
 
   $: subjectIds = subjects.map(s => s._id);
@@ -50,5 +49,5 @@
     </div>
   {/if}
 {:else}
-  <BarChartContent {width} {height} {margin} {header} {graphData} {drilldown} {chartIndex} />
+  <BarChartContent {height} {margin} {header} {graphData} {drilldown} {chartIndex} />
 {/if}

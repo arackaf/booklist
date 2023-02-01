@@ -9,7 +9,6 @@
   import { onMount } from "svelte";
   import Bar from "../bars/Bar.svelte";
 
-  export let width: any;
   export let height: any;
   export let margin: any;
   export let header: any;
@@ -34,7 +33,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(width, showingData.length * 110 + 60) - margin.left - margin.right;
+  $: adjustedWidth = Math.min(600, showingData.length * 110 + 60) - margin.left - margin.right;
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -65,7 +64,7 @@
 </script>
 
 <div use:scrollInitial>
-  <div style="height: {height}px">
+  <div class="chart-container">
     <div>
       <h4 style="display: inline">{header}</h4>
       {#if excludedCount}
@@ -82,7 +81,7 @@
         </span>
       {/if}
     </div>
-    <svg width={totalSvgWidth} {height}>
+    <svg width="100%" {height} viewBox="0 0 600 600">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -113,9 +112,14 @@
 </div>
 
 <style>
+  .chart-container {
+    height: 600px;
+    max-width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
   svg {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
   }
 </style>

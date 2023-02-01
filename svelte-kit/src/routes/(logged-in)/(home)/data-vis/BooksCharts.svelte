@@ -14,13 +14,9 @@
 
   const books: BookSubjectStack[] = $page.data.books;
 
-  const MAX_CHART_WIDTH = 1100;
-  let chartRootEl: any;
-  let chartWidth;
   let ready = false;
 
   onMount(() => {
-    chartWidth = syncWidth(chartRootEl);
     ready = true;
   });
 
@@ -31,7 +27,7 @@
   };
 </script>
 
-<div bind:this={chartRootEl}>
+<div>
   {#if ready}
     {#each chartPackets as packet, i (packet.header)}
       <BarChart
@@ -41,7 +37,6 @@
         header={packet.header}
         {books}
         chartIndex={i}
-        width={$chartWidth}
         height={600}
       />
     {/each}
