@@ -37,6 +37,8 @@
 
   $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
 
+  $: leftOffsetAdjust = (MAX_SVG_WIDTH - adjustedWidth) / 2;
+
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
   $: chartHeight = height - margin.top - margin.bottom;
@@ -55,7 +57,7 @@
   let graphTransformSpring = spring({ x: 0, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
   $: graphTransformSpring.set({ x: 0, y: offsetY }, { hard: !mounted });
 
-  $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
+  $: transform = `scale(1, -1) translate(${leftOffsetAdjust + $graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
@@ -104,7 +106,7 @@
         data={showingData}
         {scaleX}
         graphWidth={adjustedWidth}
-        transform={`translate(0, ${height})`}
+        transform="translate({leftOffsetAdjust}, {height})"
       />
     </svg>
   </div>
