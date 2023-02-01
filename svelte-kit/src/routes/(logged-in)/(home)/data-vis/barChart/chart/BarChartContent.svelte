@@ -33,7 +33,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(600, showingData.length * 110 + 60) - margin.left - margin.right;
+  $: adjustedWidth = Math.min(600, showingData.length * 110 + 60);
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -48,12 +48,12 @@
   let offsetYInitial = margin.bottom - height;
   $: offsetY = offsetYInitial;
 
-  $: totalSvgWidth = adjustedWidth + margin.left + margin.right;
+  $: totalSvgWidth = adjustedWidth;
 
   let mounted = false;
 
-  let graphTransformSpring = spring({ x: margin.left, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
-  $: graphTransformSpring.set({ x: margin.left, y: offsetY }, { hard: !mounted });
+  let graphTransformSpring = spring({ x: 0, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
+  $: graphTransformSpring.set({ x: 0, y: offsetY }, { hard: !mounted });
 
   $: transform = `scale(1, -1) translate(${$graphTransformSpring.x}, ${$graphTransformSpring.y})`;
 
@@ -99,7 +99,7 @@
       </g>
 
       <Axis
-        masterTransformX={margin.left}
+        masterTransformX={0}
         masterTransformY={-1 * margin.bottom}
         data={showingData}
         {scaleX}
