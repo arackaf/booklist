@@ -9,6 +9,11 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
 
   const uxState = getUxState(cookies);
 
+  // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
+  const requestUrl = new URL(request.url);
+
+  const publicUserId = requestUrl.searchParams.get("user");
+
   const initialRequest = !isDataRequest;
   if (initialRequest) {
     updateCacheCookie(cookies, BOOKS_CACHE);
@@ -22,6 +27,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
     isMobile,
     showMobile: isMobile && uxState.desktopRequested !== "1",
     loggedIn,
+    publicUserId,
     userId: session?.userId
   };
 }

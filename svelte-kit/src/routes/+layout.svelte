@@ -23,6 +23,8 @@
   $: ({ showMobile, uxState, loggedIn, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
+  $: console.log({ page: $page.url.pathname });
+
   $: {
     if (typeof document === "object") {
       document.body.classList.remove("white-bg");

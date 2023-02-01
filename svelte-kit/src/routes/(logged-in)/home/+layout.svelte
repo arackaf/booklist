@@ -7,7 +7,7 @@
     <div>
       <div class="panel-body" style="position: relative">
         <SectionNav>
-          <SectionNavItem href="/home/explore"><span><i class="far fa-chart-bar margin-right-sm" />Explore</span></SectionNavItem>
+          <SectionNavItem href="/home"><span><i class="far fa-chart-bar margin-right-sm" />Explore</span></SectionNavItem>
           <SectionNavItem href="/home/discover">Discover</SectionNavItem>
           <SectionNavItem href="/home/recent-scans">Recent Scans</SectionNavItem>
         </SectionNav>
