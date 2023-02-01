@@ -4,7 +4,6 @@
 
   import { onMount } from "svelte";
   import { page } from "$app/stores";
-  import type { PageData } from "./$types";
 
   import Toastify from "toastify-js";
   import "toastify-js/src/toastify.css";
@@ -17,10 +16,11 @@
 
   import { NUM_THEMES } from "$lib/util/constants";
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
+  import PublicLandingPage from "./PublicLandingPage.svelte";
 
-  export let data: PageData;
+  export let data: any;
 
-  $: ({ showMobile, uxState, loggedIn, userId } = data);
+  $: ({ showMobile, uxState, loggedIn, publicUserId, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -36,6 +36,13 @@
       document.body.classList.add(theme);
     }
   }
+
+  $: currentPath = $page.url.pathname;
+  $: publicUser = !loggedIn && publicUserId;
+
+  const publicModules = new Set(["/", "/discover", "/books", "settings/theme"]);
+
+  $: showContent = loggedIn || (publicUser && publicModules.has(currentPath));
 
   let navigating = false;
 
@@ -96,7 +103,12 @@
       {#if navigating}
         <Loading />
       {/if}
-      <slot />
+
+      {#if showContent}
+        <slot />
+      {:else}
+        <PublicLandingPage />
+      {/if}
 
       {#if showMobile}
         <Footer />
