@@ -54,10 +54,9 @@
 
   let mounted = false;
 
-  let graphTransformSpring = spring({ x: 0, y: offsetYInitial }, { stiffness: 0.1, damping: 0.4 });
-  $: graphTransformSpring.set({ x: 0, y: offsetY }, { hard: !mounted });
+  $: graphTransform = { x: 0, y: offsetY };
 
-  $: transform = `scale(1, -1) translate(${leftOffsetAdjust + $graphTransformSpring.x}, ${$graphTransformSpring.y})`;
+  $: transform = `scale(1, -1) translate(${leftOffsetAdjust + graphTransform.x}, ${graphTransform.y})`;
 
   const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
