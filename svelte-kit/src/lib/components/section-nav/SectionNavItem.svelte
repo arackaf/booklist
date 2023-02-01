@@ -3,7 +3,7 @@
 
   export let href: string;
 
-  $: active = new RegExp(`${href}\\b`).test($page.route.id!);
+  $: active = href === $page.url.pathname;
 </script>
 
 <div class="section-nav-item" class:active>
