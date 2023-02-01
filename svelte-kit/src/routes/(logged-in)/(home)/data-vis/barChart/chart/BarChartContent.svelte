@@ -15,7 +15,8 @@
   export let drilldown: any;
   export let chartIndex: any;
 
-  const MAX_SVG_WIDTH = 600;
+  const MAX_SVG_WIDTH = 1200;
+  const MAX_SVG_HEIGHT = 600;
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -38,7 +39,7 @@
     initialChartWidth.update(current => (current ? current : currentAdjustedWidth));
   }
 
-  $: leftOffsetAdjust = (MAX_SVG_WIDTH - adjustedWidth) / 2;
+  $: leftOffsetAdjust = ($initialChartWidth - adjustedWidth) / 2;
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -70,10 +71,12 @@
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
 
   $: nonExcludedGroups = showingData.filter(d => !excluding[d.groupId]);
+
+  $: console.log({ adjustedWidth, initialChartWidth: $initialChartWidth });
 </script>
 
 <div use:scrollInitial>
-  <div class="chart-container">
+  <div class="chart-container" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
       <h4 style="display: inline">{header}</h4>
       {#if excludedCount}
@@ -90,7 +93,7 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" {height} viewBox="0 0 {$initialChartWidth} {MAX_SVG_WIDTH}">
+    <svg width="100%" {height} viewBox="0 0 {$initialChartWidth} {MAX_SVG_HEIGHT}">
       <g {transform}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -124,7 +127,6 @@
 <style>
   .chart-container {
     height: 600px;
-    max-width: 600px;
     margin-right: auto;
     margin-left: auto;
   }
