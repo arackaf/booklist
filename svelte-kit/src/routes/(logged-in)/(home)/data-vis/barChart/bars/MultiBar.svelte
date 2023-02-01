@@ -11,6 +11,10 @@
   export let position: Position;
   export let removeBar: (id: string) => void;
 
+  export let noInitialAnimation: boolean;
+
+  let initialRenderFinished = false;
+
   let rootEl: any;
 
   $: _colors = data.entries.map((e: any) => e.color);
@@ -43,11 +47,16 @@
     });
   }
 
-  let barSpring = spring({ height: 0, x: totalSvgWidth }, { stiffness: 0.1, damping: 0.4 });
+  const initialValues = noInitialAnimation ? { height, x } : { height: 0, x: totalSvgWidth };
+  let barSpring = spring(initialValues, { stiffness: 0.1, damping: 0.4 });
 
   $: {
     itemsClamped = {};
-    barSpring.update(state => ({ ...state, height, x }));
+    barSpring
+      .update(state => ({ ...state, height, x }), { hard: noInitialAnimation && !initialRenderFinished })
+      .then(() => {
+        initialRenderFinished = true;
+      });
   }
 </script>
 

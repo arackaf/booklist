@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { spring } from "svelte/motion";
-
   import { scaleLinear } from "d3-scale";
   import { scaleBand } from "d3-scale";
   import { max } from "d3-array";
 
   import Axis from "../axis/Axis.svelte";
-  import { onMount } from "svelte";
   import Bar from "../bars/Bar.svelte";
 
   export let height: any;
@@ -17,10 +14,6 @@
   export let chartIndex: any;
 
   const MAX_SVG_WIDTH = 600;
-
-  onMount(() => {
-    mounted = true;
-  });
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -51,8 +44,6 @@
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   let offsetYInitial = margin.bottom - height;
   $: offsetY = offsetYInitial;
-
-  let mounted = false;
 
   $: graphTransform = { x: 0, y: offsetY };
 
@@ -95,6 +86,7 @@
             totalSvgWidth={adjustedWidth}
             {drilldown}
             {removeBar}
+            noInitialAnimation={chartIndex === 0}
           />
         {/each}
       </g>

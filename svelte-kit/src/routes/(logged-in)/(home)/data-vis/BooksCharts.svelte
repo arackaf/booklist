@@ -28,17 +28,15 @@
 </script>
 
 <div>
-  {#if ready}
-    {#each chartPackets as packet, i (packet.header)}
-      <BarChart
-        drilldown={getDrilldownChart.bind(null, i)}
-        subjects={packet.subjects}
-        {subjectHash}
-        header={packet.header}
-        {books}
-        chartIndex={i}
-        height={600}
-      />
-    {/each}
-  {/if}
+  {#each chartPackets as packet, i (packet.header)}
+    <BarChart
+      drilldown={getDrilldownChart.bind(null, i)}
+      subjects={packet.subjects}
+      {subjectHash}
+      header={packet.header}
+      {books}
+      chartIndex={i}
+      height={600}
+    />
+  {/each}
 </div>
