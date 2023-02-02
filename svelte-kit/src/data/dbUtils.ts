@@ -82,7 +82,6 @@ export function deleteById(collection: string, userId: string, _id: string) {
 }
 
 export function runRequest(action: string, collection: string, body: object) {
-  console.log("EXECUTING", `${MONGO_URL}/action/${action}`);
   return fetch(`${MONGO_URL}/action/${action}`, {
     method: "POST",
     headers: {
