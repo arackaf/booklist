@@ -29,7 +29,15 @@ const auth = SvelteKitAuth({
       }
 
       console.log({ "account.providerAccountId": account.providerAccountId });
+      setTimeout(() => {
+        console.log({ "account.providerAccountId": account.providerAccountId });
+      }, 3000);
       const userSync = await getUserSync(account.providerAccountId);
+
+      setTimeout(() => {
+        console.log("userSync", userSync);
+      }, 3000);
+
       if (userSync) {
         account.syncdId = userSync.sk;
       }
