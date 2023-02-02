@@ -7,7 +7,6 @@ const config = {
 
   kit: {
     adapter: adapter({
-      external: [],
       edge: true
     }),
     alias: {
