@@ -3,7 +3,7 @@ import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 
-import { GAMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
 export const TABLE_NAME = env.BOOKLIST_DYNAMO;
 
