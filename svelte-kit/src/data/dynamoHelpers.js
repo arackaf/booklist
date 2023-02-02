@@ -1,10 +1,9 @@
-import { env } from "$env/dynamic/private";
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 
-import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, BOOKLIST_DYNAMO } from "$env/static/private";
 
-export const TABLE_NAME = env.BOOKLIST_DYNAMO;
+export const TABLE_NAME = BOOKLIST_DYNAMO;
 
 export const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 export const getQueryPacket = (keyExpression, rest = {}) => ({
