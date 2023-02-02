@@ -1,7 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 
 import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
