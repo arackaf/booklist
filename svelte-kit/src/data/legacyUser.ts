@@ -47,6 +47,10 @@ export async function syncUser(newId: string, legacyId: string) {
 export async function getUserSync(userId: string) {
   const key = getUserAliasKey(userId);
 
+  setTimeout(() => {
+    console.log("Looking for key", key);
+  }, 3000);
+
   try {
     const syncEntry = await db.queryOne(
       getQueryPacket(` pk = :key `, {
@@ -58,6 +62,9 @@ export async function getUserSync(userId: string) {
     return syncEntry;
   } catch (er) {
     console.log("Error", er);
+    setTimeout(() => {
+      console.log("Error", er);
+    }, 3000);
     return null;
   }
 }
