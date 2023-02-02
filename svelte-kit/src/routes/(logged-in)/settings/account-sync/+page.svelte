@@ -38,7 +38,7 @@
     <div class="col-md-6 col-sm-12">
       <Stack>
         {#if legacySync}
-          <div class="alert alert-info">You'veX already sync'd your account</div>
+          <div class="alert alert-info">You'veXX already sync'd your account</div>
         {:else if success}
           <div class="alert alert-success">Your account is now sync'd. You'll be logged out in a few moments. Log back in to see your books.</div>
         {:else}
