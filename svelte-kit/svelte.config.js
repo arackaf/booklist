@@ -7,7 +7,7 @@ const config = {
 
   kit: {
     adapter: adapter({
-      //edge: true
+      edge: true
     }),
     alias: {
       $styles: "src/styles",
