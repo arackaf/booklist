@@ -18,7 +18,8 @@ const auth = SvelteKitAuth({
     strategy: "jwt"
   },
 
-  secret: NEXTAUTH_SECRET,
+  trustHost: true,
+  secret: "secret-xxx",
 
   callbacks: {
     async signIn({ account }) {
