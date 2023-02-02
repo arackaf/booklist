@@ -1,7 +1,7 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
-import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET } from "$env/static/private";
+import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, NEXTAUTH_SECRET } from "$env/static/private";
 
 import { getUserSync } from "$data/legacyUser";
 // force deploy
@@ -18,7 +18,7 @@ const auth = SvelteKitAuth({
     strategy: "jwt"
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: NEXTAUTH_SECRET,
 
   callbacks: {
     async signIn({ account }) {
