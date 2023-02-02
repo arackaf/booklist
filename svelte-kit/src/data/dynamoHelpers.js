@@ -1,6 +1,10 @@
-import AWS from "aws-sdk";
-
 import { env } from "$env/dynamic/private";
+import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
+
+import { GAMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+
 export const TABLE_NAME = env.BOOKLIST_DYNAMO;
 
 export const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
@@ -12,11 +16,20 @@ export const getQueryPacket = (keyExpression, rest = {}) => ({
 export const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 export const getUpdatePacket = (pk, sk, rest) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 
-const dynamo = new AWS.DynamoDB.DocumentClient({
-  region: "us-east-1",
+const dynamoConfig = {
   credentials: {
-    accessKeyId: env.AMAZON_ACCESS_KEY,
-    secretAccessKey: env.AMAZON_SECRET_KEY
+    accessKeyId: AMAZON_ACCESS_KEY,
+    secretAccessKey: AMAZON_SECRET_KEY
+  },
+
+  region: "us-east-1"
+};
+
+const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
+  marshallOptions: {
+    convertEmptyValues: true,
+    removeUndefinedValues: true,
+    convertClassInstanceToMap: true
   }
 });
 
