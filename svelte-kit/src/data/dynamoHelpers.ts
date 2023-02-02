@@ -1,5 +1,3 @@
-import AWS from "aws-sdk";
-
 import { BOOKLIST_DYNAMO, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
 type GetItemInput = AWS.DynamoDB.DocumentClient.GetItemInput;
