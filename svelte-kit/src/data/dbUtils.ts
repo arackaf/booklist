@@ -1,4 +1,4 @@
-import { env } from "$env/dynamic/private";
+import { MONGO_URL, MONGO_URL_API_KEY } from "$env/static/private";
 import type { Book, Subject, Tag } from "./types";
 
 type MongoMultiQueryResponse<T> = {
@@ -82,13 +82,13 @@ export function deleteById(collection: string, userId: string, _id: string) {
 }
 
 export function runRequest(action: string, collection: string, body: object) {
-  console.log("EXECUTING", `${env.MONGO_URL}/action/${action}`);
-  return fetch(`${env.MONGO_URL}/action/${action}`, {
+  console.log("EXECUTING", `${MONGO_URL}/action/${action}`);
+  return fetch(`${MONGO_URL}/action/${action}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Request-Headers": "*",
-      "api-key": env.MONGO_URL_API_KEY
+      "api-key": MONGO_URL_API_KEY
     },
     body: JSON.stringify({
       collection,
