@@ -1,4 +1,3 @@
-import path from "path";
 import uuid from "uuid";
 
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8-node";
@@ -8,6 +7,15 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client
 import { json } from "@sveltejs/kit";
 
 import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, UPLOAD_FROM_URL_LAMBDA } from "$env/static/private";
+
+function getExtension(name: string) {
+  const ext = name.lastIndexOf(".");
+
+  if (ext < 0) {
+    return "";
+  }
+  return name.slice(ext);
+}
 
 export async function POST({ cookies, locals, request }: any) {
   const session = await locals.getSession();
@@ -19,7 +27,7 @@ export async function POST({ cookies, locals, request }: any) {
   const file = reqBody.get("fileUploaded");
   const filename = reqBody.get("filename");
 
-  const extension = path.extname(filename) || ".jpg";
+  const extension = getExtension(filename) || ".jpg";
   const uploadKey = `upload-staging/${uuid.v4()}${extension}`;
 
   try {
