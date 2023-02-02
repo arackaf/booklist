@@ -23,20 +23,16 @@ const auth = SvelteKitAuth({
 
   callbacks: {
     async signIn({ account }) {
-      console.log("Sign in callback");
+      console.log("Sign in callback", { account });
       if (account == null) {
         return false;
       }
 
       console.log({ "account.providerAccountId": account.providerAccountId });
-      setTimeout(() => {
-        console.log({ "account.providerAccountId": account.providerAccountId });
-      }, 3000);
+
       const userSync = await getUserSync(account.providerAccountId);
 
-      setTimeout(() => {
-        console.log("userSync", userSync);
-      }, 3000);
+      console.log("userSync", userSync);
 
       if (userSync) {
         account.syncdId = userSync.sk;

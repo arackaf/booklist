@@ -50,7 +50,7 @@ export const db = {
   },
 
   async queryOne(packet) {
-    let res = await dynamo.query(packet).promise();
+    let res = await dynamo.query(packet);
 
     if (!res || !res.Items || !res.Items[0]) {
       return null;
