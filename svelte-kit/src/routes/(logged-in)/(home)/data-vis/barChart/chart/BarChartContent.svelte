@@ -52,6 +52,16 @@
   const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
 
   $: nonExcludedGroups = showingData.filter(d => !excluding[d.groupId]);
+
+  let sizeClass = "";
+  $: {
+    let size = $viewBoxSpring;
+
+    if (size < 400) sizeClass = "xsmall";
+    else if (size < 700) sizeClass = "small";
+    else if (size < 1000) sizeClass = "medium";
+    else sizeClass = "large";
+  }
 </script>
 
 <div use:scrollInitial>
@@ -72,7 +82,7 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
+    <svg width="100%" class={sizeClass} style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
         {#each nonExcludedGroups as d, i (d)}
           <Bar
@@ -112,5 +122,33 @@
 
   svg {
     display: block;
+    font-size: 12px;
+  }
+
+  @media (max-width: 1000px) {
+    svg.large {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    svg.medium {
+      font-size: 14px;
+    }
+    svg.large {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    svg.small {
+      font-size: 16px;
+    }
+    svg.medium {
+      font-size: 18px;
+    }
+    svg.large {
+      font-size: 20px;
+    }
   }
 </style>

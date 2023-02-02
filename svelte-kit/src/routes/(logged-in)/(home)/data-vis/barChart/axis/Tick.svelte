@@ -25,6 +25,6 @@
 
 <style>
   text {
-    font-size: 12px;
+    font-size: 1em;
   }
 </style>
