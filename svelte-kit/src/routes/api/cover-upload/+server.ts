@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 
-import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8-node";
+import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
