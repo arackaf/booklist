@@ -11,7 +11,11 @@
 <div>
   <FlexRow>
     <div class="col-md-6 col-sm-12" style="position: relative; min-height: 200px">
-      <EditPublicUserSettings {user} />
+      {#if user}
+        <EditPublicUserSettings {user} />
+      {:else}
+        <div class="alert alert-danger">An error occured</div>
+      {/if}
     </div>
   </FlexRow>
 </div>
