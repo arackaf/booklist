@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8-node";
+import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 
 import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, CHECK_SCAN_STATUS_LAMBDA } from "$env/static/private";
 
