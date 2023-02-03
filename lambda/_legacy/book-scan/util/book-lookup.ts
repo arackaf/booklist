@@ -3,16 +3,16 @@ import path from "path";
 import fetch from "node-fetch";
 import { v4 as uuid } from "uuid";
 
-import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import getSecrets from "../../util/getSecrets";
+import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../../util/dynamoHelpers";
+import getSecrets from "../../../util/getSecrets";
 import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
-import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
-import downloadFromUrl from "../../util/downloadFromUrl";
-import { getDbConnection } from "../../util/getDbConnection";
+import { getOpenLibraryCoverUri } from "../../../util/bookCoverHelpers";
+import downloadFromUrl from "../../../util/downloadFromUrl";
+import { getDbConnection } from "../../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
 
-import { handleCover } from "../../util/handleCover";
+import { handleCover } from "../../../util/handleCover";
 
 type BookLookupPacket = {
   pk: string;
@@ -113,9 +113,6 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
       {
         Delete: getDeletePacket({ pk: scanPacket.pk, sk: scanPacket.sk })
       },
-      // {
-      //   Update: {}
-      // },
       ...Object.entries(userUpdateMap).map(([userId, amount]) => {
         return {
           Update: getStatusCountUpdate(userId, amount)

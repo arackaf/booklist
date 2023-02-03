@@ -113,6 +113,9 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
       {
         Delete: getDeletePacket({ pk: scanPacket.pk, sk: scanPacket.sk })
       },
+      // {
+      //   Update: {}
+      // },
       ...Object.entries(userUpdateMap).map(([userId, amount]) => {
         return {
           Update: getStatusCountUpdate(userId, amount)

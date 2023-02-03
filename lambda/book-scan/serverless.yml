@@ -1,9 +1,9 @@
-service: book-scan
+service: book-scan-v2
+frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
+  runtime: nodejs18.x
   stage: dev
   environment:
     stage: ${self:provider.stage}
@@ -69,30 +69,15 @@ functions:
 
   checkScanStatus:
     handler: handlers/getPendingScanCount.handler
-    events:
-      - http:
-          path: getScanStatus
-          method: get
-          cors: true
-          request:
-            parameters:
-              querystrings:
-                userId: true
-                loginToken: true
 
   scanBook:
     handler: handlers/scanBook.handler
-    events:
-      - http:
-          path: scan
-          method: post
-          cors: true
 
 custom:
   esbuild:
-    packager: yarn
     bundle: true
     minify: true
+    exclude: ["aws-sdk", "@aws-sdk/util-utf8-node", "@aws-sdk/client-apigatewaymanagementapi", "@aws-sdk/lib-dynamodb", "@aws-sdk/client-dynamodb"]
 
 package:
   individually: true
