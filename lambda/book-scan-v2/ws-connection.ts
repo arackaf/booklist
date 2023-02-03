@@ -11,19 +11,17 @@ export const connect = async event => {
   try {
     const timestamp = +new Date();
 
-    await dynamo
-      .put({
-        TableName: TABLE_NAME,
-        Item: {
-          pk: key,
-          sk: key,
-          "connection-id": connectionId,
-          timestamp,
-          expires: Math.round(timestamp / 1000) + 60 * 60 * 24 * 7, // 1 week
-          endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
-        }
-      })
-      .promise();
+    await dynamo.put({
+      TableName: TABLE_NAME,
+      Item: {
+        pk: key,
+        sk: key,
+        "connection-id": connectionId,
+        timestamp,
+        expires: Math.round(timestamp / 1000) + 60 * 60 * 24 * 7, // 1 week
+        endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
+      }
+    });
   } catch (er) {
     console.log("ERROR", er);
   }
@@ -78,7 +76,7 @@ export const disconnect = async event => {
   const connectionId = event.requestContext.connectionId;
   const key = getWsSessionKey(connectionId);
 
-  await dynamo.delete({ TableName: TABLE_NAME, Key: { pk: key, sk: key } }).promise();
+  await dynamo.delete({ TableName: TABLE_NAME, Key: { pk: key, sk: key } });
 
   return {
     statusCode: 200

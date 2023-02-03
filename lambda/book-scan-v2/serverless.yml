@@ -77,7 +77,7 @@ custom:
   esbuild:
     bundle: true
     minify: true
-    exclude: ["aws-sdk", "@aws-sdk/util-utf8", "@aws-sdk/client-apigatewaymanagementapi"]
+    exclude: ["aws-sdk", "@aws-sdk/client-apigatewaymanagementapi", "@aws-sdk/lib-dynamodb", "@aws-sdk/client-dynamodb"]
 
 package:
   individually: true

@@ -1,4 +1,5 @@
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
+import { fromUtf8 } from "@aws-sdk/util-utf8";
 
 import { db, getQueryPacket } from "../../util/dynamoHelpers";
 
@@ -22,7 +23,7 @@ export async function sendWsMessageToUser(userId, message) {
 
     console.log("POSTING", { connectionId, endpoint: item.endpoint });
     try {
-      await messenger.postToConnection({ ConnectionId: connectionId, Data: JSON.stringify(message) }).promise();
+      await messenger.postToConnection({ ConnectionId: connectionId, Data: fromUtf8(JSON.stringify(message)) });
     } catch (er) {}
   }
 }
