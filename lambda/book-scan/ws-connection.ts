@@ -1,8 +1,5 @@
-import { fromUtf8 } from "@aws-sdk/util-utf8-node";
-import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-
-import { getWsSessionKey } from "./util/ws-helpers";
-import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo } from "../util/dynamoHelpers";
+import { getWsSessionKey, WebSocketMessenger } from "./util/ws-helpers";
+import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo, getPutPacket } from "../util/dynamoHelpers";
 
 export const connect = async event => {
   const connectionId = event.requestContext.connectionId;
@@ -11,17 +8,16 @@ export const connect = async event => {
   try {
     const timestamp = +new Date();
 
-    await dynamo.put({
-      TableName: TABLE_NAME,
-      Item: {
+    await dynamo.put(
+      getPutPacket({
         pk: key,
         sk: key,
         "connection-id": connectionId,
         timestamp,
         expires: Math.round(timestamp / 1000) + 60 * 60 * 24 * 7, // 1 week
         endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
-      }
-    });
+      })
+    );
   } catch (er) {
     console.log("ERROR", er);
   }
@@ -39,10 +35,7 @@ export const sync = async event => {
     const endpoint = "https://" + event.requestContext.domainName + "/" + event.requestContext.stage;
     console.log("Creating apiGateway instance", endpoint);
 
-    const messenger = new ApiGatewayManagementApi({
-      region: "us-east-1",
-      endpoint
-    });
+    const messenger = new WebSocketMessenger(endpoint);
 
     const key = getWsSessionKey(connectionId);
     const wsConnection = db.get(getGetPacket(key, key));
@@ -58,15 +51,7 @@ export const sync = async event => {
       })
     );
 
-    await new Promise(res => {
-      messenger.postToConnection(
-        { ConnectionId: connectionId, Data: fromUtf8(JSON.stringify({ message: "Connected and listening ..." })) },
-        (err, data) => {
-          res({});
-          console.log("CALLBACK ERROR", err, "DATA", data);
-        }
-      );
-    });
+    await messenger.postMessage(connectionId, { message: "Connected and listening ..." });
   } catch (er) {
     console.log("ERROR in sync", er);
   }
