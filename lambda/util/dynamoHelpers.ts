@@ -17,8 +17,13 @@ export const getQueryPacket = (keyExpression, rest = {}): QueryCommandInput => (
   KeyConditionExpression: keyExpression,
   ...rest
 });
+
+type MultiPurposeUpdateCommand = Omit<UpdateCommandInput, "UpdateExpression"> & {
+  UpdateExpression: string;
+};
+
 export const getPutPacket = (obj, rest = {}): PutCommandInput => ({ TableName: TABLE_NAME, Item: obj, ...rest });
-export const getUpdatePacket = (pk, sk, rest): UpdateCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getUpdatePacket = (pk, sk, rest): MultiPurposeUpdateCommand => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 export const getDeletePacket = (key): DeleteCommandInput => ({ TableName: TABLE_NAME, Key: key });
 
 const dynamoConfig: DynamoDBClientConfig = {
