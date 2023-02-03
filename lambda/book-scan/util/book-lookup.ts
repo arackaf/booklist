@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import getSecrets from "../../util/getSecrets";
+import { getSecrets } from "../../util/getSecrets";
 import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
@@ -24,14 +24,20 @@ export const runBookLookupIfAble = async () => {
   const lookupsFree = await getBookLookupsFree();
   console.log("BOOK LOOKUP STATUS", JSON.stringify(lookupsFree));
 
+  try {
+    const secrets = await getSecrets();
+    console.log("secrets got", secrets);
+  } catch (er) {
+    console.log(er);
+  }
+
   if (!lookupsFree.free0 && !lookupsFree.free1) {
     return;
   }
 
   if (lookupsFree.free0) {
     await setupLookup(0);
-  }
-  if (lookupsFree.free1) {
+  } else if (lookupsFree.free1) {
     await setupLookup(1);
   }
 };
@@ -40,56 +46,54 @@ export const setupLookup = async lookupIdx => {
   const [pk, sk] = getCurrentLookupFullKey(lookupIdx);
   let scanPacket;
 
-  for (let i = 1; i <= 3; i++) {
-    try {
-      const scanItems: ScanItem[] = await getScanItemBatch();
+  try {
+    const scanItems: ScanItem[] = await getScanItemBatch();
 
-      if (!scanItems.length) {
-        console.log("No scan items remaining");
-        return;
-      }
-
-      console.log("Scan items found", scanItems.length, scanItems);
-
-      scanPacket = {
-        pk,
-        sk,
-        scanItems
-      };
-
-      console.log("SCAN PACKET SETUP", lookupIdx, scanItems);
-
-      await db.transactWrite(
-        {
-          TransactItems: [
-            ...scanItems.map(({ pk, sk }) => ({
-              Delete: {
-                Key: { pk, sk },
-                TableName: TABLE_NAME,
-                ConditionExpression: "attribute_exists(#sk)",
-                ExpressionAttributeNames: {
-                  "#sk": "sk"
-                }
-              }
-            })),
-            {
-              Put: getPutPacket(scanPacket, {
-                ConditionExpression: "attribute_not_exists(#sk)",
-                ExpressionAttributeNames: {
-                  "#sk": "sk"
-                }
-              })
-            }
-          ]
-        },
-        1
-      );
-      console.log("Setup success, doing lookup");
-      await doLookup(scanPacket);
+    if (!scanItems.length) {
+      console.log("No scan items remaining");
       return;
-    } catch (err) {
-      console.log("Scan packet setup transaction error", err);
     }
+
+    console.log("Scan items found", scanItems.length, scanItems);
+
+    scanPacket = {
+      pk,
+      sk,
+      scanItems
+    };
+
+    console.log("SCAN PACKET SETUP", lookupIdx, scanItems);
+
+    await db.transactWrite(
+      {
+        TransactItems: [
+          ...scanItems.map(({ pk, sk }) => ({
+            Delete: {
+              Key: { pk, sk },
+              TableName: TABLE_NAME,
+              ConditionExpression: "attribute_exists(#sk)",
+              ExpressionAttributeNames: {
+                "#sk": "sk"
+              }
+            }
+          })),
+          {
+            Put: getPutPacket(scanPacket, {
+              ConditionExpression: "attribute_not_exists(#sk)",
+              ExpressionAttributeNames: {
+                "#sk": "sk"
+              }
+            })
+          }
+        ]
+      },
+      3
+    );
+    console.log("Setup success, doing lookup");
+    //await doLookup(scanPacket);
+    return;
+  } catch (err) {
+    console.log("Scan packet setup transaction error", err);
   }
 };
 

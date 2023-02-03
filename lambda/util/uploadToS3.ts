@@ -1,14 +1,14 @@
-import S3 from "aws-sdk/clients/s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { defaultMetaData } from "./s3MetaData";
 
 type S3UploadResult = { STATUS: "error"; message: any } | { STATUS: "success"; url: string };
 
 export default (fileName, body) => {
-  const s3 = new S3({});
-  var params = { Bucket: "my-library-cover-uploads", Key: `${fileName}`, Body: body, ...defaultMetaData };
+  const s3 = new S3Client({ region: "us-east-1" });
+  var params = new PutObjectCommand({ Bucket: "my-library-cover-uploads", Key: `${fileName}`, Body: body, ...defaultMetaData });
 
   return new Promise<S3UploadResult>(res => {
-    s3.upload(params, function (err, data) {
+    s3.send(params, function (err, data) {
       if (err) {
         return res({ STATUS: "error", message: err });
       }

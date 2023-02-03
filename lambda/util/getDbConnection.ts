@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import getSecrets from "./getSecrets";
+import { getSecrets } from "./getSecrets";
 
 export default async () => {
   const IS_DEV = process.env.stage === "dev";
