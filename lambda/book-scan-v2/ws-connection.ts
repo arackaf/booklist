@@ -1,4 +1,4 @@
-import { fromUtf8 } from "@aws-sdk/util-utf8";
+import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 
 import { getWsSessionKey } from "./util/ws-helpers";

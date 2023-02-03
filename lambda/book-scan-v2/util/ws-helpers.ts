@@ -1,5 +1,5 @@
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { fromUtf8 } from "@aws-sdk/util-utf8";
+import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
 import { db, getQueryPacket } from "../../util/dynamoHelpers";
 
