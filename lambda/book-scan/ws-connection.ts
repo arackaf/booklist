@@ -34,11 +34,15 @@ export const connect = async event => {
 export const sync = async event => {
   try {
     const packet = JSON.parse(event.body);
-    const messenger = new ApiGatewayManagementApi({
-      apiVersion: "2018-11-29",
-      endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
-    });
+
     const connectionId = event.requestContext.connectionId;
+    const endpoint = "https://" + event.requestContext.domainName + "/" + event.requestContext.stage;
+    console.log("Creating apiGateway instance", endpoint);
+
+    const messenger = new ApiGatewayManagementApi({
+      region: "us-east-1",
+      endpoint
+    });
 
     const key = getWsSessionKey(connectionId);
     const wsConnection = db.get(getGetPacket(key, key));
@@ -56,15 +60,15 @@ export const sync = async event => {
 
     await new Promise(res => {
       messenger.postToConnection(
-        { ConnectionId: event.requestContext.connectionId, Data: fromUtf8(JSON.stringify({ message: "Connected and listening ..." })) },
+        { ConnectionId: connectionId, Data: fromUtf8(JSON.stringify({ message: "Connected and listening ..." })) },
         (err, data) => {
           res({});
-          console.log("CALLBACK", "ERROR", err, "DATA", data);
+          console.log("CALLBACK ERROR", err, "DATA", data);
         }
       );
     });
   } catch (er) {
-    console.log("ERROR in foo", er);
+    console.log("ERROR in sync", er);
   }
 
   return {

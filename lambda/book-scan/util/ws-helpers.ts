@@ -17,7 +17,7 @@ export async function sendWsMessageToUser(userId, message) {
   for (let item of wsSubscriptions) {
     const messenger = new ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
-      endpoint: item.endpoint
+      endpoint: "https://" + item.endpoint
     });
     const connectionId = item["connection-id"];
 
