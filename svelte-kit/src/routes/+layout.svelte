@@ -75,9 +75,12 @@
 
   function startToastListen() {
     window.addEventListener("ws-info", ({ detail }: any) => {
-      if (detail.type === "scanResults" && $page.url.pathname !== "/scan") {
-        for (const { item: book } of detail.packet.results.filter((result: any) => result.success)) {
-          showBookToast(book.title, book.smallImage);
+      if (detail.type === "scanResults") {
+        fetch("/api/clear-books-cache", { method: "POST" });
+        if ($page.url.pathname !== "/scan") {
+          for (const { item: book } of detail.packet.results.filter((result: any) => result.success)) {
+            showBookToast(book.title, book.smallImage);
+          }
         }
       }
     });
