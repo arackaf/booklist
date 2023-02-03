@@ -1,52 +1,52 @@
-import AWS from "aws-sdk";
-
 import { BOOKLIST_DYNAMO, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
-type GetItemInput = AWS.DynamoDB.DocumentClient.GetItemInput;
-type UpdateItemInput = AWS.DynamoDB.DocumentClient.UpdateItemInput;
-type PutItemInput = AWS.DynamoDB.DocumentClient.PutItemInput;
-type QueryInput = AWS.DynamoDB.DocumentClient.QueryInput;
-type TransactWriteItemsInput = AWS.DynamoDB.DocumentClient.TransactWriteItemsInput;
+import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
+
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import type { PutCommandInput, GetCommandInput, QueryCommandInput, UpdateCommandInput, TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb";
 
 export const TABLE_NAME = BOOKLIST_DYNAMO;
 
-export const getGetPacket = (pk: string, sk: string, rest: object = {}): GetItemInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-export const getQueryPacket = (keyExpression: string, rest = {}) => ({
+export const getGetPacket = (pk: string, sk: string, rest: object = {}): GetCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getQueryPacket = (keyExpression: string, rest = {}): QueryCommandInput => ({
   TableName: TABLE_NAME,
   KeyConditionExpression: keyExpression,
   ...rest
 });
-export const getPutPacket = (obj: object, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
-export const getUpdatePacket = (pk: string, sk: string, rest: object) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getPutPacket = (obj: object, rest = {}): PutCommandInput => ({ TableName: TABLE_NAME, Item: obj, ...rest });
+export const getUpdatePacket = (pk: string, sk: string, rest: object): UpdateCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 
-const dynamo = new AWS.DynamoDB.DocumentClient({
-  region: "us-east-1",
+const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
     accessKeyId: AMAZON_ACCESS_KEY,
     secretAccessKey: AMAZON_SECRET_KEY
-  }
-});
+  },
+
+  region: "us-east-1"
+};
+
+const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
 
 export { dynamo };
 
 export const db = {
-  async put(packet: PutItemInput) {
-    await dynamo.put(packet).promise();
+  async put(packet: PutCommandInput) {
+    await dynamo.put(packet);
   },
 
-  async get(packet: GetItemInput) {
-    let result = await dynamo.get(packet).promise();
+  async get(packet: GetCommandInput) {
+    let result = await dynamo.get(packet);
     return result.Item || null;
   },
 
-  async query(packet: QueryInput) {
-    let res = await dynamo.query(packet).promise();
+  async query(packet: QueryCommandInput) {
+    let res = await dynamo.query(packet);
 
     return res?.Items ?? [];
   },
 
-  async queryOne(packet: QueryInput) {
-    let res = await dynamo.query(packet).promise();
+  async queryOne(packet: QueryCommandInput) {
+    let res = await dynamo.query(packet);
 
     if (!res || !res.Items || !res.Items[0]) {
       return null;
@@ -55,21 +55,21 @@ export const db = {
     return res.Items[0];
   },
 
-  async pagedQuery(packet: QueryInput) {
-    let result = await dynamo.query(packet).promise();
+  async pagedQuery(packet: QueryCommandInput) {
+    let result = await dynamo.query(packet);
 
     return { items: result.Items || null, lastEvaluatedKey: result.LastEvaluatedKey };
   },
 
-  async update(packet: UpdateItemInput) {
-    return dynamo.update(packet).promise();
+  async update(packet: UpdateCommandInput) {
+    return dynamo.update(packet);
   },
 
-  async transactWrite(packet: TransactWriteItemsInput) {
-    return dynamo.transactWrite(packet).promise();
+  async transactWrite(packet: TransactWriteCommandInput) {
+    return dynamo.transactWrite(packet);
   },
 
   async deleteItem(pk: string, sk: string) {
-    return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } }).promise();
+    return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } });
   }
 };
