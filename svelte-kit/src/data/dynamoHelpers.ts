@@ -7,14 +7,14 @@ import type { PutCommandInput, GetCommandInput, QueryCommandInput, UpdateCommand
 
 export const TABLE_NAME = BOOKLIST_DYNAMO;
 
-export const getGetPacket = (pk: string, sk: string, rest: object = {}): GetItemInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-export const getQueryPacket = (keyExpression: string, rest = {}) => ({
+export const getGetPacket = (pk: string, sk: string, rest: object = {}): GetCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getQueryPacket = (keyExpression: string, rest = {}): QueryCommandInput => ({
   TableName: TABLE_NAME,
   KeyConditionExpression: keyExpression,
   ...rest
 });
-export const getPutPacket = (obj: object, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
-export const getUpdatePacket = (pk: string, sk: string, rest: object) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getPutPacket = (obj: object, rest = {}): PutCommandInput => ({ TableName: TABLE_NAME, Item: obj, ...rest });
+export const getUpdatePacket = (pk: string, sk: string, rest: object): UpdateCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
