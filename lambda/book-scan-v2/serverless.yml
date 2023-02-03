@@ -1,9 +1,9 @@
 service: book-scan-v2
+frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
+  runtime: nodejs18.x
   stage: dev
   environment:
     stage: ${self:provider.stage}
@@ -72,15 +72,6 @@ functions:
 
   scanBook:
     handler: handlers/scanBook.handler
-
-  streamHandler:
-    timeout: 120
-    handler: handlers/dynamoStream.handler
-    events:
-      - stream:
-          type: dynamodb
-          arn:
-            Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
 
 custom:
   esbuild:
