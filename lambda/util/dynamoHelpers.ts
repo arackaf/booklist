@@ -1,37 +1,45 @@
-import AWS from "aws-sdk";
+import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import type {
+  PutCommandInput,
+  GetCommandInput,
+  QueryCommandInput,
+  UpdateCommandInput,
+  DeleteCommandInput,
+  TransactWriteCommandInput
+} from "@aws-sdk/lib-dynamodb";
 
 export const TABLE_NAME = `My_Library_${process.env.STAGE}`;
 
-export const getGetPacket = (pk, sk, rest = {}) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-export const getQueryPacket = (keyExpression, rest = {}) => ({
+export const getGetPacket = (pk, sk, rest = {}): GetCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getQueryPacket = (keyExpression, rest = {}): QueryCommandInput => ({
   TableName: TABLE_NAME,
   KeyConditionExpression: keyExpression,
   ...rest
 });
-export const getPutPacket = (obj, rest = {}) => ({ TableName: TABLE_NAME, Item: obj, ...rest });
+export const getPutPacket = (obj, rest = {}): PutCommandInput => ({ TableName: TABLE_NAME, Item: obj, ...rest });
+export const getUpdatePacket = (pk, sk, rest): UpdateCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+export const getDeletePacket = (key): DeleteCommandInput => ({ TableName: TABLE_NAME, Key: key });
 
-export const getUpdatePacket = (pk, sk, rest) => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-
-export const getDeletePacket = key => ({ TableName: TABLE_NAME, Key: key });
-
-export const dynamo = new AWS.DynamoDB.DocumentClient({
+const dynamoConfig: DynamoDBClientConfig = {
   region: "us-east-1"
-});
+};
+export const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
 
 const wait = ms => new Promise(res => setTimeout(res, ms));
 
 export const db = {
-  async put(packet) {
-    return dynamo.put(packet).promise();
+  async put(packet: PutCommandInput) {
+    return dynamo.put(packet);
   },
 
-  async get(packet) {
-    let result = await dynamo.get(packet).promise();
+  async get(packet: GetCommandInput) {
+    let result = await dynamo.get(packet);
     return result.Item || null;
   },
 
-  async query(packet) {
-    let res = await dynamo.query(packet).promise();
+  async query(packet: QueryCommandInput) {
+    let res = await dynamo.query(packet);
 
     if (!res || !res.Items) {
       return [];
@@ -40,8 +48,8 @@ export const db = {
     return res.Items;
   },
 
-  async queryOne(packet) {
-    let res = await dynamo.query(packet).promise();
+  async queryOne(packet: QueryCommandInput) {
+    let res = await dynamo.query(packet);
 
     if (!res || !res.Items || !res.Items[0]) {
       return null;
@@ -50,14 +58,14 @@ export const db = {
     return res.Items[0];
   },
 
-  async update(packet) {
-    return dynamo.update(packet).promise();
+  async update(packet: UpdateCommandInput) {
+    return dynamo.update(packet);
   },
 
-  async transactWrite(packet, attempts = 5) {
+  async transactWrite(packet: TransactWriteCommandInput, attempts = 5) {
     console.log("ATTEMPTING TRANSACTION", JSON.stringify(packet));
     try {
-      const result = await attemptExecution(attempts, () => dynamo.transactWrite(packet).promise());
+      const result = await attemptExecution(attempts, () => dynamo.transactWrite(packet));
       console.log("TRANSACTION SUCCESS");
     } catch (err) {
       console.log("TRANSACTION FAILED", err);
@@ -65,8 +73,8 @@ export const db = {
     }
   },
 
-  async deleteItem(pk, sk) {
-    return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } }).promise();
+  async deleteItem(pk: string, sk: string) {
+    return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } });
   }
 };
 

@@ -75,9 +75,9 @@ functions:
 
 custom:
   esbuild:
-    packager: yarn
     bundle: true
     minify: true
+    exclude: ["aws-sdk", "@aws-sdk/util-utf8", "@aws-sdk/client-apigatewaymanagementapi"]
 
 package:
   individually: true

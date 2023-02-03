@@ -1,4 +1,5 @@
-import AWS from "aws-sdk";
+import { fromUtf8 } from "@aws-sdk/util-utf8";
+import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 
 import { getWsSessionKey } from "./util/ws-helpers";
 import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo } from "../util/dynamoHelpers";
@@ -35,7 +36,7 @@ export const connect = async event => {
 export const sync = async event => {
   try {
     const packet = JSON.parse(event.body);
-    const messenger = new AWS.ApiGatewayManagementApi({
+    const messenger = new ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
       endpoint: event.requestContext.domainName + "/" + event.requestContext.stage
     });
@@ -57,7 +58,7 @@ export const sync = async event => {
 
     await new Promise(res => {
       messenger.postToConnection(
-        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Connected and listening ..." }) },
+        { ConnectionId: event.requestContext.connectionId, Data: fromUtf8(JSON.stringify({ message: "Connected and listening ..." })) },
         (err, data) => {
           res({});
           console.log("CALLBACK", "ERROR", err, "DATA", data);

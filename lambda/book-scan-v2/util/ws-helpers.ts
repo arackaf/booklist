@@ -1,7 +1,6 @@
-import AWS from "aws-sdk";
+import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 
 import { db, getQueryPacket } from "../../util/dynamoHelpers";
-import { getPendingCount } from "./data-helpers";
 
 export const getWsSessionKey = connectionId => `WebSocketScanSession#${connectionId}`;
 
@@ -15,7 +14,7 @@ export async function sendWsMessageToUser(userId, message) {
   console.log("Subscriptions found for user", userId, JSON.stringify(wsSubscriptions));
 
   for (let item of wsSubscriptions) {
-    const messenger = new AWS.ApiGatewayManagementApi({
+    const messenger = new ApiGatewayManagementApi({
       apiVersion: "2018-11-29",
       endpoint: item.endpoint
     });
