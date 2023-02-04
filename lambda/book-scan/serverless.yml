@@ -75,3 +75,24 @@ functions:
 
   scanCheck:
     handler: handlers/scanCheck.handler
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true
+    exclude:
+      [
+        "aws-sdk",
+        "@aws-sdk/util-utf8-node",
+        "@aws-sdk/client-apigatewaymanagementapi",
+        "@aws-sdk/lib-dynamodb",
+        "@aws-sdk/client-dynamodb",
+        "@aws-sdk/client-secrets-manager",
+        "@aws-sdk/client-s3"
+      ]
+
+package:
+  individually: true
+
+plugins:
+  - serverless-esbuild
