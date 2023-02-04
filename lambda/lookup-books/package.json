@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "install-deps": "npm i && rm -rf node_modules/sharp && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i -f --platform=linux --arch=x64 sharp@^0.31.3 && cp -r ../util ./node_modules/shared"
+    "install-deps": "npm i && rm -rf node_modules/{sharp,shared} && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i -f --platform=linux --arch=x64 sharp@^0.31.3 && cp -r ../util ./node_modules/shared && cd node_modules/shared && tsc"
   },
   "author": "",
   "license": "ISC",

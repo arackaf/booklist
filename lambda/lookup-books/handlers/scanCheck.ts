@@ -2,7 +2,7 @@ import { runBookLookupIfAvailable } from "../util/book-lookup";
 
 export const handler = async event => {
   try {
-    console.log("go!!");
+    console.log("Go!!");
     const lookup = await runBookLookupIfAvailable();
 
     return { success: true };

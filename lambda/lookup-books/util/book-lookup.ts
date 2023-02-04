@@ -223,7 +223,7 @@ type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 //type ProcessCoverResults = UnwrapPromise<ReturnType<typeof processCoverUrl>>;
 
 async function getBookFromIsbnDbData(book, userId) {
-  console.log("Processing", JSON.stringify(book));
+  console.log("Processing:", JSON.stringify(book));
 
   let isbn = book.isbn13 || book.isbn;
 

@@ -6,6 +6,6 @@
     "skipLibCheck": true,
     "esModuleInterop": true
   },
-  "include": ["./handlers/*.ts"],
+  "include": ["./handlers/*.ts", "./node_modules/shared/*"],
   "exclude": ["./node_modules/*"]
 }

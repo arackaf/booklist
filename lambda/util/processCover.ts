@@ -20,7 +20,7 @@ export const QUALITIES: { [k in Sizes]: number } = {
 };
 
 export async function processCover(url, isbn, userId) {
-  console.log("Processing image for isbn", isbn);
+  console.log("Processing image: isbn", isbn);
 
   const result = await sharpDownload(url);
   if (result.error) {
@@ -29,7 +29,6 @@ export async function processCover(url, isbn, userId) {
   }
 
   const body = result.body!;
-
   const extension = path.extname(url) || ".jpg";
 
   const img = sharp(body) as any;
