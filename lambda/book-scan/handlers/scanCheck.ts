@@ -1,8 +1,8 @@
-import { runBookLookupIfAble } from "../util/book-lookup";
+import { runBookLookupIfAvailable } from "../util/book-lookup";
 
 export const handler = async event => {
   try {
-    const lookup = runBookLookupIfAble();
+    const lookup = await runBookLookupIfAvailable();
 
     return { success: true };
   } catch (err) {

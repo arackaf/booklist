@@ -5,8 +5,8 @@ import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import { getSecrets } from "../../util/getSecrets";
-import { getBookLookupsFree, getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
-import { getCurrentLookupFullKey, getScanResultKey } from "./key-helpers";
+import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
+import { getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
 import { getDbConnection } from "../../util/getDbConnection";
@@ -20,30 +20,9 @@ type BookLookupPacket = {
   scanItems: ScanItem[];
 };
 
-export const runBookLookupIfAble = async () => {
-  const lookupsFree = await getBookLookupsFree();
-  console.log("BOOK LOOKUP STATUS", JSON.stringify(lookupsFree));
+export const runBookLookupIfAvailable = async () => {
+  const key = `BookLookup#${uuid()}`;
 
-  try {
-    const secrets = await getSecrets();
-    console.log("secrets got", secrets);
-  } catch (er) {
-    console.log(er);
-  }
-
-  if (!lookupsFree.free0 && !lookupsFree.free1) {
-    return;
-  }
-
-  if (lookupsFree.free0) {
-    await setupLookup(0);
-  } else if (lookupsFree.free1) {
-    await setupLookup(1);
-  }
-};
-
-export const setupLookup = async lookupIdx => {
-  const [pk, sk] = getCurrentLookupFullKey(lookupIdx);
   let scanPacket;
 
   try {
@@ -56,13 +35,16 @@ export const setupLookup = async lookupIdx => {
 
     console.log("Scan items found", scanItems.length, scanItems);
 
+    const timestamp = +new Date();
+
     scanPacket = {
-      pk,
-      sk,
-      scanItems
+      pk: "BookLookup",
+      sk: key,
+      scanItems,
+      expires: Math.round(timestamp / 1000) + 60 * 60 * 24 // 1 day
     };
 
-    console.log("SCAN PACKET SETUP", lookupIdx, scanItems);
+    console.log("SCAN PACKET SETUP", scanItems);
 
     await db.transactWrite(
       {
@@ -78,20 +60,14 @@ export const setupLookup = async lookupIdx => {
             }
           })),
           {
-            Put: getPutPacket(scanPacket, {
-              ConditionExpression: "attribute_not_exists(#sk)",
-              ExpressionAttributeNames: {
-                "#sk": "sk"
-              }
-            })
+            Put: getPutPacket(scanPacket)
           }
         ]
       },
       3
     );
     console.log("Setup success, doing lookup");
-    //await doLookup(scanPacket);
-    return;
+    await doLookup(scanPacket);
   } catch (err) {
     console.log("Scan packet setup transaction error", err);
   }
@@ -101,6 +77,8 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
   const scanItems: ScanItem[] = scanPacket.scanItems;
 
   await lookupBooks(scanPacket.scanItems);
+
+  return;
 
   const userUpdateMap = scanItems.reduce((hash, { userId }) => {
     if (!hash.hasOwnProperty(userId)) {
@@ -117,9 +95,6 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
       {
         Delete: getDeletePacket({ pk: scanPacket.pk, sk: scanPacket.sk })
       },
-      // {
-      //   Update: {}
-      // },
       ...Object.entries(userUpdateMap).map(([userId, amount]) => {
         return {
           Update: getStatusCountUpdate(userId, amount)
@@ -141,14 +116,16 @@ const wait = ms => new Promise(res => setTimeout(res, ms));
 
 export const lookupBooks = async (scanItems: ScanItem[]) => {
   try {
-    const startTime = +new Date();
-
     const secrets = await getSecrets();
     const isbnDbKey = secrets["isbn-db-key"];
 
     const isbns = [...new Set(scanItems.map(entry => entry.isbn))].join(",");
     const userIds = [...new Set(scanItems.map(entry => entry.userId))];
+
     console.log("---- BOOK LOOKUP STARTING ----", isbns);
+    const startTime = +new Date();
+
+    return;
 
     const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
       method: "post",
@@ -191,18 +168,18 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     for (const newBookMaybe of scanItems) {
       const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
 
-      if (!newBookMaybe.pk) {
-        const { db: mongoDb, client: mongoClient } = await getDbConnection();
-        await mongoDb.collection("books").insertOne(newBookMaybe);
-        await mongoClient.close();
+      // if (!newBookMaybe.pk) {
+      //   const { db: mongoDb, client: mongoClient } = await getDbConnection();
+      //   await mongoDb.collection("books").insertOne(newBookMaybe);
+      //   await mongoClient.close();
 
-        userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
-        const { title, smallImage } = newBookMaybe as any;
-        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));
-      } else {
-        userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
-        await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
-      }
+      //   userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
+      //   const { title, smallImage } = newBookMaybe as any;
+      //   await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));
+      // } else {
+      //   userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
+      //   await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
+      // }
     }
 
     console.log("---- FINISHED. ALL SAVED ----");
@@ -213,9 +190,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     const endTime = +new Date();
 
-    const waitFor = 1000 - (endTime - startTime);
-    await wait(Math.max(waitFor, 0));
-    console.log("---- Waiting .... ----", waitFor);
+    console.log("---- Time elapsed .... ----", endTime - startTime);
 
     return { success: true };
   } catch (err) {
