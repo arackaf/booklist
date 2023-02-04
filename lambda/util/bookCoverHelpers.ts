@@ -24,6 +24,7 @@ export function saveContentToS3(content, s3Key) {
         res(err);
       } else {
         console.log("S3 File Saved");
+        // @ts-ignore
         res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
       }
     });

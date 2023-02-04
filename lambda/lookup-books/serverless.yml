@@ -1,4 +1,4 @@
-service: book-scan-v2
+service: lookup-books
 frameworkVersion: "3"
 
 provider:
@@ -49,47 +49,8 @@ provider:
             - "arn:aws:execute-api:*:*:**/@connections/*"
 
 functions:
-  connect:
-    handler: ws-connection.connect
-    events:
-      - websocket:
-          route: $connect
-
-  disconnect:
-    handler: ws-connection.disconnect
-    events:
-      - websocket:
-          route: $disconnect
-
-  sync:
-    handler: ws-connection.sync
-    events:
-      - websocket:
-          route: sync
-
-  checkScanStatus:
-    handler: handlers/getPendingScanCount.handler
-
-  scanBook:
-    handler: handlers/scanBook.handler
-
-custom:
-  esbuild:
-    bundle: true
-    minify: true
-    exclude:
-      [
-        "aws-sdk",
-        "@aws-sdk/util-utf8-node",
-        "@aws-sdk/client-apigatewaymanagementapi",
-        "@aws-sdk/lib-dynamodb",
-        "@aws-sdk/client-dynamodb",
-        "@aws-sdk/client-secrets-manager",
-        "@aws-sdk/client-s3"
-      ]
-
-package:
-  individually: true
+  scanCheck:
+    handler: handlers/scanCheck.handler
 
 plugins:
-  - serverless-esbuild
+  - serverless-plugin-typescript
