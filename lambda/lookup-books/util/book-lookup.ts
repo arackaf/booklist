@@ -6,15 +6,15 @@ import { v4 as uuid } from "uuid";
 
 //import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import { getSecrets } from "../../util/getSecrets";
+import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "shared/dynamoHelpers";
+import { getSecrets } from "shared/getSecrets";
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getScanResultKey } from "./key-helpers";
-import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
+import { getOpenLibraryCoverUri } from "shared/bookCoverHelpers";
 //import downloadFromUrl from "../../util/downloadFromUrl";
 //import { getDbConnection } from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
-import { processCover } from "../../util/processCover";
+import { processCover } from "shared/processCover";
 
 //import { handleCover } from "../../util/handleCover";
 

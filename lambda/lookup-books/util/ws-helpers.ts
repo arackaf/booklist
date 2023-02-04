@@ -1,7 +1,7 @@
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 import { fromUtf8 } from "@aws-sdk/util-utf8-node";
 
-import { db, getQueryPacket } from "../../util/dynamoHelpers";
+import { db, getQueryPacket } from "shared/dynamoHelpers";
 
 export const getWsSessionKey = connectionId => `WebSocketScanSession#${connectionId}`;
 
