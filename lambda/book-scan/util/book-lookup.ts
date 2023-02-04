@@ -1,7 +1,10 @@
 import path from "path";
-
 import fetch from "node-fetch";
 import { v4 as uuid } from "uuid";
+import sharp from "sharp";
+import { getPlaiceholder } from "plaiceholder";
+
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import { getSecrets } from "../../util/getSecrets";
@@ -11,6 +14,7 @@ import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
 import downloadFromUrl from "../../util/downloadFromUrl";
 import { getDbConnection } from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
+import { processCover } from "../../util/processCover";
 
 import { handleCover } from "../../util/handleCover";
 
@@ -49,7 +53,7 @@ export const runBookLookupIfAvailable = async () => {
     await db.transactWrite(
       {
         TransactItems: [
-          ...scanItems.map(({ pk, sk }) => ({
+          /*...scanItems.map(({ pk, sk }) => ({
             Delete: {
               Key: { pk, sk },
               TableName: TABLE_NAME,
@@ -58,7 +62,7 @@ export const runBookLookupIfAvailable = async () => {
                 "#sk": "sk"
               }
             }
-          })),
+          })),*/
           {
             Put: getPutPacket(scanPacket)
           }
@@ -124,8 +128,6 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     console.log("---- BOOK LOOKUP STARTING ----", isbns);
     const startTime = +new Date();
-
-    return;
 
     const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
       method: "post",
@@ -199,47 +201,43 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
   }
 };
 
-const getEmptyImageData = () => ({
+type ImageData = {
+  mobileImage: string;
+  mobileImagePreview: any;
+  smallImage: string;
+  smallImagePreview: any;
+  mediumImage: string;
+  mediumImagePreview: any;
+};
+
+const getEmptyImageData = (): ImageData => ({
   mobileImage: "",
-  mobileImagePreview: "",
+  mobileImagePreview: null,
   smallImage: "",
-  smallImagePreview: "",
+  smallImagePreview: null,
   mediumImage: "",
-  mediumImagePreview: ""
+  mediumImagePreview: null
 });
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
-type ProcessCoverResults = UnwrapPromise<ReturnType<typeof processCoverUrl>>;
-
-const syncImageData = (results: ProcessCoverResults, imageData: ReturnType<typeof getEmptyImageData>) => {
-  if (!imageData.mobileImage && results?.mobile.STATUS === "success") {
-    imageData.mobileImage = results?.mobile?.image.url;
-    imageData.mobileImagePreview = results.mobile.image.preview;
-  }
-  if (!imageData.smallImage && results?.small.STATUS === "success") {
-    imageData.smallImage = results?.small?.image.url;
-    imageData.smallImagePreview = results.small.image.preview;
-  }
-  if (!imageData.mediumImage && results?.medium.STATUS === "success") {
-    imageData.mediumImage = results?.medium?.image.url;
-    imageData.mediumImagePreview = results.medium.image.preview;
-  }
-};
+//type ProcessCoverResults = UnwrapPromise<ReturnType<typeof processCoverUrl>>;
 
 async function getBookFromIsbnDbData(book, userId) {
   console.log("Processing", JSON.stringify(book));
 
   let isbn = book.isbn13 || book.isbn;
 
-  let imageData = getEmptyImageData();
-  let initialCoverResults = await processCoverUrl(book.image, isbn, userId);
+  let imageData: ImageData = getEmptyImageData();
+  if (book.image) {
+    let initialCoverResults = await processCover(book.image, isbn, userId);
 
-  syncImageData(initialCoverResults, imageData);
-  if (!imageData.mobileImage || !imageData.smallImage || !imageData.mediumImage) {
-    console.log("One or more covers missing, trying OpenLibrary");
+    if (initialCoverResults == null) {
+      initialCoverResults = await processCover(getOpenLibraryCoverUri(isbn), isbn, userId);
+    }
 
-    let imageResult = await processCoverUrl(getOpenLibraryCoverUri(isbn), isbn, userId);
-    syncImageData(imageResult, imageData);
+    if (initialCoverResults != null) {
+      Object.assign(imageData, initialCoverResults);
+    }
   }
 
   const newBook = {
@@ -271,32 +269,4 @@ async function getBookFromIsbnDbData(book, userId) {
   }
 
   return newBook;
-}
-
-async function processCoverUrl(url, isbn, userId) {
-  const { body, error } = await downloadFromUrl(url);
-
-  if (error) {
-    return null;
-  }
-  const extension = path.extname(url) || ".jpg";
-  const filePath = `${userId}/${uuid()}${extension}`;
-
-  const allResults = await Promise.all([
-    handleCover(body, "mobile", `mobile-covers/${filePath}`),
-    handleCover(body, "small", `small-covers/${filePath}`),
-    handleCover(body, "medium", `medium-covers/${filePath}`)
-  ]);
-
-  if (allResults.every(r => r.STATUS === "error") || allResults.every(r => r.STATUS === "invalid-size")) {
-    return null;
-  }
-
-  const [mobile, small, medium] = allResults;
-
-  return {
-    mobile,
-    small,
-    medium
-  };
 }
