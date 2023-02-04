@@ -37,11 +37,16 @@ export async function processCover(url, isbn, userId) {
 
   const uploadPath = `aaa/${userId}/${uuid()}${extension}`;
 
+  console.log("Width of image", metadata.width);
+
   if (metadata.width >= SIZE_WIDTHS.medium) {
+    console.log("Processing size medium ...");
     return uploadAndGeneratePreviews(img.resize(SIZE_WIDTHS.medium).jpeg({ quality: 95 }), uploadPath, "medium", "small", "mobile");
   } else if (metadata.width >= SIZE_WIDTHS.small) {
+    console.log("Processing size small ...");
     return uploadAndGeneratePreviews(img.resize(SIZE_WIDTHS.small).jpeg({ quality: 95 }), uploadPath, "small", "mobile");
   } else if (metadata.width >= SIZE_WIDTHS.mobile) {
+    console.log("Processing size mobile ...");
     return uploadAndGeneratePreviews(img.resize(SIZE_WIDTHS.mobile).jpeg({ quality: 95 }), uploadPath, "mobile");
   }
 
