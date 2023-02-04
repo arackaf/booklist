@@ -3,7 +3,7 @@ import sharp from "sharp";
 import { getPlaiceholder } from "plaiceholder";
 import { v4 as uuid } from "uuid";
 import { sharpDownload } from "./sharpDownload";
-import { uploadToS3 } from "./uploadToS3";
+import { uploadToS3 } from "../../util/uploadToS3";
 
 type Sizes = "mobile" | "small" | "medium";
 
@@ -19,9 +19,7 @@ export const QUALITIES: { [k in Sizes]: number } = {
   medium: 90
 };
 
-export async function processCover(url, isbn, userId) {
-  console.log("Processing image: isbn", isbn);
-
+export async function processCover(url, userId) {
   const result = await sharpDownload(url);
   if (result.error) {
     console.log("Could not download image");

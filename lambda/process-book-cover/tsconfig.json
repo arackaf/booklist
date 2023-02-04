@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
+    "outDir": "./dist",
     "module": "CommonJS",
     "target": "es2017",
     "moduleResolution": "node",
     "skipLibCheck": true,
     "esModuleInterop": true
   },
-  "include": ["./handlers/*.ts", "./node_modules/shared/*"],
+  "include": ["./index.ts", "./util/*.ts"],
   "exclude": ["./node_modules/*"]
 }

@@ -1,4 +1,4 @@
-service: lookup-books
+service: process-book-cover
 frameworkVersion: "3"
 
 provider:
@@ -49,8 +49,5 @@ provider:
             - "arn:aws:execute-api:*:*:**/@connections/*"
 
 functions:
-  scanCheck:
-    handler: handlers/scanCheck.handler
-
-plugins:
-  - serverless-plugin-typescript
+  processCover:
+    handler: ./dist/process-book-cover/index.handler

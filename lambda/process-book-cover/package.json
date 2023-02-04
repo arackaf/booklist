@@ -1,0 +1,19 @@
+{
+  "name": "lookup-books",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "compile": "rm -rf ./dist && tsc",
+    "install-deps": "npm i && rm -rf node_modules/sharp && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i -f --platform=linux --arch=x64 sharp@^0.31.3",
+    "deploy": "npm run compile && npm run install-deps && sls deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.9",
+    "plaiceholder": "^2.5.0",
+    "sharp": "^0.31.3",
+    "ulid": "^2.3.0",
+    "uuid": "7.0.3"
+  }
+}
