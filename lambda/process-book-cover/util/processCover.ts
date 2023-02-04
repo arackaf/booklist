@@ -47,7 +47,7 @@ export async function processCover(url, userId) {
     return uploadAndGeneratePreviews(img.resize(SIZE_WIDTHS.mobile).jpeg({ quality: 95 }), uploadPath, "mobile");
   }
 
-  return null;
+  return { imagesProcessed: true, message: "Lessgoooooo" };
 }
 
 async function uploadAndGeneratePreviews(sharpImage: any, uploadPath: string, ...sizes: Sizes[]) {
@@ -64,6 +64,8 @@ async function uploadAndGeneratePreviews(sharpImage: any, uploadPath: string, ..
   } catch (er) {
     console.log("Error sizing and previewing", er);
   }
+
+  return { imagesProcessed: true, message: "Lessgoooooo" };
 }
 
 async function generatePreview(sharpImage: any, uploadPath: string, size: Sizes) {}

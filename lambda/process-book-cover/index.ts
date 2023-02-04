@@ -5,5 +5,6 @@ export const handler = async (event: any) => {
   console.log("Processing", { url, userId });
   const result = await processCover(url, userId);
 
+  return { imagesProcessed: true, message: "Lessgoooooo", processCoverResults: result };
   return result;
 };

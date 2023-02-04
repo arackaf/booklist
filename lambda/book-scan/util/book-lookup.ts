@@ -11,12 +11,16 @@ import { getSecrets } from "../../util/getSecrets";
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getScanResultKey } from "./key-helpers";
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
+import { invoke } from "../../util/invokeLambda";
+import { IS_DEV } from "../../util/environment";
 //import downloadFromUrl from "../../util/downloadFromUrl";
 //import { getDbConnection } from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
-import { processCover } from "../../util/processCover";
+import { toUtf8 } from "@aws-sdk/util-utf8-node";
 
 //import { handleCover } from "../../util/handleCover";
+
+const COVER_PROCESSING_LAMBDA = `process-book-cover-${IS_DEV ? "dev" : "live"}-processCover`;
 
 type BookLookupPacket = {
   pk: string;
@@ -229,14 +233,23 @@ async function getBookFromIsbnDbData(book, userId) {
 
   let imageData: ImageData = getEmptyImageData();
   if (book.image) {
-    let initialCoverResults = await processCover(book.image, isbn, userId);
+    // let initialCoverResults = await processCover(book.image, isbn, userId);
+    console.log("Processing image");
+    try {
+      let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
+      let initialCoverResults = toUtf8(lambdaResult.Payload);
 
-    if (initialCoverResults == null) {
-      initialCoverResults = await processCover(getOpenLibraryCoverUri(isbn), isbn, userId);
-    }
+      console.log("Image results", initialCoverResults);
 
-    if (initialCoverResults != null) {
-      Object.assign(imageData, initialCoverResults);
+      if (initialCoverResults == null) {
+        //initialCoverResults = await processCover(getOpenLibraryCoverUri(isbn), isbn, userId);
+      }
+
+      if (initialCoverResults != null) {
+        //Object.assign(imageData, initialCoverResults);
+      }
+    } catch (err) {
+      console.log("Error processing image", err);
     }
   }
 
