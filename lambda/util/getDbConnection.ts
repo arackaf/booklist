@@ -1,7 +1,7 @@
+import { IS_DEV } from "./environment";
 import { getSecrets } from "./getSecrets";
 
 export async function getDbConnection() {
-  const IS_DEV = process.env.stage === "dev";
   const secrets = await getSecrets();
 
   const url = secrets[IS_DEV ? "mongo-url-dev" : "mongo-url-live"];
