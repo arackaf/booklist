@@ -2,9 +2,9 @@
   "compilerOptions": {
     "module": "CommonJS",
     "target": "es2017",
-    "allowJs": true,
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true
   },
   "include": ["./handlers/*.ts"],
   "exclude": ["./node_modules/*"]
