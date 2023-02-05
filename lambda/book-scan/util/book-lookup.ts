@@ -223,9 +223,6 @@ const getEmptyImageData = (): ImageData => ({
   mediumImagePreview: null
 });
 
-type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
-//type ProcessCoverResults = UnwrapPromise<ReturnType<typeof processCoverUrl>>;
-
 async function getBookFromIsbnDbData(book, userId) {
   console.log("Processing:", JSON.stringify(book));
 
@@ -233,20 +230,23 @@ async function getBookFromIsbnDbData(book, userId) {
 
   let imageData: ImageData = getEmptyImageData();
   if (book.image) {
-    // let initialCoverResults = await processCover(book.image, isbn, userId);
     console.log("Processing image");
     try {
       let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
-      let initialCoverResults = toUtf8(lambdaResult.Payload);
+      let bookCoverResults = toUtf8(lambdaResult.Payload);
 
-      console.log("Image results", initialCoverResults);
+      console.log("Book covers from ISBN DB", bookCoverResults);
 
-      if (initialCoverResults == null) {
-        //initialCoverResults = await processCover(getOpenLibraryCoverUri(isbn), isbn, userId);
+      if (bookCoverResults == null) {
+        console.log("No book covers from ISBN DB");
+        let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
+        bookCoverResults = toUtf8(lambdaResult.Payload);
+
+        console.log("Book covers from OpenLibrary", bookCoverResults);
       }
 
-      if (initialCoverResults != null) {
-        //Object.assign(imageData, initialCoverResults);
+      if (bookCoverResults != null) {
+        Object.assign(imageData, bookCoverResults);
       }
     } catch (err) {
       console.log("Error processing image", err);
