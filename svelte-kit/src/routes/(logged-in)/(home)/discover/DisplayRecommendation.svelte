@@ -7,7 +7,7 @@
 
 <tr>
   <td>
-    <BookCover size="small" url={book.smallImage} preview={book.smallImagePreview} />
+    <BookCover size="small" {book} />
   </td>
   <td>
     {book.title}

@@ -55,6 +55,15 @@ export type Book = {
   dateAdded: string;
 };
 
+export type BookImages = {
+  mobileImage: string | null;
+  mobileImagePreview: string | PreviewPacket | null;
+  smallImage: string | null;
+  smallImagePreview: string | PreviewPacket | null;
+  mediumImage: string | null;
+  mediumImagePreview: string | PreviewPacket | null;
+};
+
 export type BookCoversEdits = Partial<
   Pick<Book, "mobileImage" | "mobileImagePreview" | "smallImage" | "smallImagePreview" | "mediumImage" | "mediumImagePreview">
 >;
@@ -94,8 +103,14 @@ type EditorialReview = {
 type SimilarBook = {
   title: string;
   authors: string[];
-  smallImage: string;
-  smallImagePreview: string;
+  // this type only has smallImage, but we'll add the other two to avoid unnecessary errors with the BookCover component
+  mobileImage: string | null;
+  mobileImagePreview: string | PreviewPacket | null;
+  smallImage: string | null;
+  smallImagePreview: string | PreviewPacket | null;
+  mediumImage: string | null;
+  mediumImagePreview: string | PreviewPacket | null;
+
   asin: string;
 };
 

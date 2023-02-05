@@ -1,29 +1,39 @@
 <script lang="ts">
-  import type { Book, PreviewPacket } from "$data/types";
+  import type { BookImages, PreviewPacket } from "$data/types";
 
   type Sizes = "mobile" | "small" | "medium";
 
   export let style = "";
   export let url: string | null = null;
-  export let preview: string | PreviewPacket | null | undefined = null;
   export let size: Sizes;
-  export let book: Book | null = null;
+  export let book: BookImages | null = null;
 
-  $: withRealPreview = preview != null && typeof preview === "object";
-  $: previewString = preview == null ? "" : typeof preview === "string" ? preview : preview.b64;
-  $: sizingStyle = preview != null && typeof preview === "object" ? `width:${preview.w}px;height:${preview.h}px` : "";
+  export let preview: string | PreviewPacket | null = null;
+
+  let previewToUse: string | PreviewPacket | null;
+  $: {
+    if (preview != null) {
+      previewToUse = preview;
+    } else if (book) {
+      previewToUse = size === "medium" ? book.mediumImagePreview : size === "small" ? book.smallImagePreview : book.mobileImagePreview;
+    }
+  }
+
+  $: previewString = previewToUse == null ? "" : typeof previewToUse === "string" ? previewToUse : previewToUse.b64;
+  $: sizingStyle = previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "";
 
   $: urlToUse = getUrlToUse(book, size, url, sizingStyle);
-  function getUrlToUse(book: Book | null, size: Sizes, url: string | null, sizingStyle: string) {
+  function getUrlToUse(book: BookImages | null, size: Sizes, url: string | null, sizingStyle: string) {
     if (!book) {
       return url;
     }
     // we know the exact size
     if (sizingStyle) {
+      return book.mediumImage || book.smallImage || book.mobileImage;
+    } else {
+      return size === "medium" ? book.mediumImage : size === "small" ? book.smallImage : book.mobileImage;
     }
   }
-
-  //withRealPreview ? optimizedUrl || url : url;
 </script>
 
 <div {style}>

@@ -9,7 +9,7 @@
 </script>
 
 <section>
-  <BookCover style="width: 60px" optimizedUrl={book.mediumImage} url={book.smallImage} preview={book.smallImagePreview} size="small" />
+  <BookCover style="width: 60px" {book} size="small" />
   <div class="book-info">
     <div class="title">{book.title}</div>
     <div class="authors">{authors}</div>
