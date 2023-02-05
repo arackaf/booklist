@@ -85,7 +85,7 @@
               style="display: flex; flex-direction: row; color: {book.success ? 'var(--neutral-text)' : 'red'}"
             >
               <div style="min-width: 90px">
-                <BookCover size="small" url={book.smallImage} />
+                <BookCover size="small" {book} />
               </div>
               <span>{book.title}</span>
             </div>

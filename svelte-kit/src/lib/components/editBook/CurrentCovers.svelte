@@ -12,19 +12,19 @@
   <Stack style="flex: 1" tightest={true}>
     <div>
       <label class="form-label">Mobile</label>
-      <BookCover size="mobile" url={book.mobileImage} preview={book.mobileImagePreview} />
+      <BookCover size="mobile" {book} />
     </div>
   </Stack>
   <Stack style="flex: 1" tightest={true}>
     <div>
       <label class="form-label">Standard</label>
-      <BookCover size="small" url={book.smallImage} preview={book.smallImagePreview} />
+      <BookCover size="small" {book} />
     </div>
   </Stack>
   <Stack style="flex: 1" tightest={true}>
     <div>
       <label class="form-label">Full</label>
-      <BookCover size="medium" url={book.mediumImage} preview={book.mediumImagePreview} />
+      <BookCover size="medium" {book} />
     </div>
   </Stack>
 </FlowItems>

@@ -37,7 +37,7 @@
     <Stack>
       <FlowItems>
         <div style="min-width: 70px">
-          <BookCover size="small" url={book.smallImage} preview={book.smallImagePreview} />
+          <BookCover size="small" {book} />
         </div>
 
         <Stack style="flex: 1; justify-content: space-between">

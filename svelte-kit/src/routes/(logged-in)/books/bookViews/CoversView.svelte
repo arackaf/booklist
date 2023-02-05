@@ -25,7 +25,7 @@
       {#each books as book, i}
         <figure on:click={() => previewBook(book)} on:keydown={() => {}}>
           <div>
-            <BookCover size="medium" url={book.mediumImage} preview={book.mediumImagePreview} />
+            <BookCover size="medium" {book} />
           </div>
           <figcaption>{book.title}</figcaption>
         </figure>
