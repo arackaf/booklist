@@ -1,22 +1,11 @@
-//import path from "path";
-
 import { v4 as uuid } from "uuid";
-//import sharp from "sharp";
-//import { getPlaiceholder } from "plaiceholder";
 
-//import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-
-import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
+import { db, getDeletePacket, getPutPacket } from "../../util/dynamoHelpers";
 
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
-
-//import downloadFromUrl from "../../util/downloadFromUrl";
-//import { getDbConnection } from "../../util/getDbConnection";
 import { sendWsMessageToUser } from "./ws-helpers";
-
-//import { handleCover } from "../../util/handleCover";
 
 type BookLookupPacket = {
   pk: string;
