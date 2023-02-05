@@ -50,17 +50,17 @@ export async function processCover(url, userId) {
   const uploadPath = `${userId}/${uuid()}${extension}`;
 
   if (metadata.width >= SIZE_WIDTHS.medium) {
-    return uploadAndGeneratePreviews(img, SIZE_WIDTHS.medium, uploadPath, "medium", "small", "mobile");
+    return uploadAndGeneratePreviews(img, uploadPath, "medium", "small", "mobile");
   } else if (metadata.width >= SIZE_WIDTHS.small) {
-    return uploadAndGeneratePreviews(img, SIZE_WIDTHS.small, uploadPath, "small", "mobile");
+    return uploadAndGeneratePreviews(img, uploadPath, "small", "mobile");
   } else if (metadata.width >= SIZE_WIDTHS.mobile) {
-    return uploadAndGeneratePreviews(img, SIZE_WIDTHS.mobile, uploadPath, "mobile");
+    return uploadAndGeneratePreviews(img, uploadPath, "mobile");
   }
 
   return null;
 }
 
-async function uploadAndGeneratePreviews(originalImage: Sharp, width: number, uploadPath: string, ...sizes: Sizes[]) {
+async function uploadAndGeneratePreviews(originalImage: Sharp, uploadPath: string, ...sizes: Sizes[]) {
   const [currentSize, ...otherSizes] = sizes;
 
   const sizedImage = await sizeImage(originalImage, currentSize);
