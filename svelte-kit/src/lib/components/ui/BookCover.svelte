@@ -1,17 +1,29 @@
 <script lang="ts">
-  import type { PreviewPacket } from "$data/types";
+  import type { Book, PreviewPacket } from "$data/types";
+
+  type Sizes = "mobile" | "small" | "medium";
 
   export let style = "";
   export let url: string | null = null;
-  export let optimizedUrl: string | null = null;
   export let preview: string | PreviewPacket | null | undefined = null;
-  export let size: "mobile" | "small" | "medium";
+  export let size: Sizes;
+  export let book: Book | null = null;
 
   $: withRealPreview = preview != null && typeof preview === "object";
   $: previewString = preview == null ? "" : typeof preview === "string" ? preview : preview.b64;
   $: sizingStyle = preview != null && typeof preview === "object" ? `width:${preview.w}px;height:${preview.h}px` : "";
 
-  $: urlToUse = withRealPreview ? optimizedUrl || url : url;
+  $: urlToUse = getUrlToUse(book, size, url, sizingStyle);
+  function getUrlToUse(book: Book | null, size: Sizes, url: string | null, sizingStyle: string) {
+    if (!book) {
+      return url;
+    }
+    // we know the exact size
+    if (sizingStyle) {
+    }
+  }
+
+  //withRealPreview ? optimizedUrl || url : url;
 </script>
 
 <div {style}>
