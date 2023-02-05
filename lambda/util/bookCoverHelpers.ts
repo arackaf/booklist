@@ -1,5 +1,4 @@
-import S3 from "aws-sdk/clients/s3";
-
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { defaultMetaData } from "./s3MetaData";
 
 const GOOGLE_LIBRARY_KEY = process.env.GOOGLE_LIBRARY_KEY;
@@ -10,20 +9,22 @@ export const getGoogleLibraryUri = (isbn, GOOGLE_LIBRARY_KEY) =>
 
 export function saveContentToS3(content, s3Key) {
   return new Promise(res => {
-    let s3bucket = new S3({ params: { Bucket: "my-library-cover-uploads" } });
+    let s3bucket = new S3Client({ region: "us-east-1" });
 
-    let params: any = {
+    let params = new PutObjectCommand({
+      Bucket: "my-library-cover-uploads",
       Key: s3Key,
       Body: content,
       ...defaultMetaData
-    };
+    });
 
-    s3bucket.upload(params, function (err) {
+    s3bucket.send(params, function (err) {
       if (err) {
         console.log("Error uploading to S3", { s3Key, err });
         res(err);
       } else {
         console.log("S3 File Saved");
+        // @ts-ignore
         res(`https://my-library-cover-uploads.s3.amazonaws.com/${params.Key}`);
       }
     });

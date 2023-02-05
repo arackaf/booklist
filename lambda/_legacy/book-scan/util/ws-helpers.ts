@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-import { db, getQueryPacket } from "../../util/dynamoHelpers";
+import { db, getQueryPacket } from "../../../util/dynamoHelpers";
 import { getPendingCount } from "./data-helpers";
 
 export const getWsSessionKey = connectionId => `WebSocketScanSession#${connectionId}`;

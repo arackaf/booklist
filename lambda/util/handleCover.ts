@@ -1,4 +1,5 @@
-import uploadToS3 from "../util/uploadToS3";
+//import uploadToS3 from "../util/uploadToS3";
+var uploadToS3: any = {};
 import { resizeImage, getBuffer, ResizeImageFailure, ResizeInvalidSize } from "./resizeImage";
 
 type Sizes = "mobile" | "small" | "medium";

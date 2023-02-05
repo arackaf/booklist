@@ -1,4 +1,4 @@
-service: book-scan-v2
+service: book-scan
 
 provider:
   name: aws
@@ -69,18 +69,24 @@ functions:
 
   checkScanStatus:
     handler: handlers/getPendingScanCount.handler
+    events:
+      - http:
+          path: getScanStatus
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                userId: true
+                loginToken: true
 
   scanBook:
     handler: handlers/scanBook.handler
-
-  streamHandler:
-    timeout: 120
-    handler: handlers/dynamoStream.handler
     events:
-      - stream:
-          type: dynamodb
-          arn:
-            Fn::ImportValue: Booklist-Dynamo-Table-${self:provider.stage}
+      - http:
+          path: scan
+          method: post
+          cors: true
 
 custom:
   esbuild:

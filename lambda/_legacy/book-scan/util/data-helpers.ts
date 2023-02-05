@@ -1,4 +1,4 @@
-import { db, getGetPacket, getQueryPacket, getUpdatePacket } from "../../util/dynamoHelpers";
+import { db, getGetPacket, getQueryPacket, getUpdatePacket } from "../../../util/dynamoHelpers";
 import { getCurrentLookupPk, getCurrentLookupSk, getScanItemPk, getUserScanStatusKey } from "./key-helpers";
 
 export const getPendingCount = async (userId, consistentRead = false) => {

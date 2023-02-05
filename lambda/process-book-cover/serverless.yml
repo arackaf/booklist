@@ -1,4 +1,4 @@
-service: book-scan-v2
+service: process-book-cover
 frameworkVersion: "3"
 
 provider:
@@ -34,10 +34,6 @@ provider:
             - dynamodb:DescribeStream
             - dynamodb:ConditionCheckItem
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}/index/*"
-        - Effect: Allow
-          Action:
-            - lambda:InvokeFunction
-          Resource: "arn:aws:lambda:us-east-1:*:function:process-book-cover*"
         - Effect: "Allow"
           Action:
             - "secretsmanager:GetSecretValue"
@@ -53,54 +49,5 @@ provider:
             - "arn:aws:execute-api:*:*:**/@connections/*"
 
 functions:
-  connect:
-    handler: ws-connection.connect
-    events:
-      - websocket:
-          route: $connect
-
-  disconnect:
-    handler: ws-connection.disconnect
-    events:
-      - websocket:
-          route: $disconnect
-
-  sync:
-    handler: ws-connection.sync
-    events:
-      - websocket:
-          route: sync
-
-  checkScanStatus:
-    handler: handlers/getPendingScanCount.handler
-
-  scanBook:
-    handler: handlers/scanBook.handler
-
-  scanCheck:
-    timeout: 500
-    handler: handlers/scanCheck.handler
-    events:
-      - schedule: rate(1 minute)
-
-custom:
-  esbuild:
-    bundle: true
-    minify: true
-    exclude:
-      [
-        "aws-sdk",
-        "@aws-sdk/util-utf8-node",
-        "@aws-sdk/client-apigatewaymanagementapi",
-        "@aws-sdk/lib-dynamodb",
-        "@aws-sdk/client-dynamodb",
-        "@aws-sdk/client-secrets-manager",
-        "@aws-sdk/client-s3",
-        "@aws-sdk/client-lambda"
-      ]
-
-package:
-  individually: true
-
-plugins:
-  - serverless-esbuild
+  processCover:
+    handler: ./dist/process-book-cover/index.handler
