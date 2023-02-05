@@ -233,14 +233,14 @@ async function getBookFromIsbnDbData(book, userId) {
     console.log("Processing image");
     try {
       let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
-      let bookCoverResults = toUtf8(lambdaResult.Payload);
+      let bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
       console.log("Book covers from ISBN DB", bookCoverResults);
 
       if (bookCoverResults == null) {
         console.log("No book covers from ISBN DB");
         let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
-        bookCoverResults = toUtf8(lambdaResult.Payload);
+        bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
         console.log("Book covers from OpenLibrary", bookCoverResults);
       }
