@@ -146,9 +146,9 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
           document: newBookMaybe
         });
 
-        userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
-        const { title, smallImage } = newBookMaybe as any;
-        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));
+        const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
+        userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
+        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, smallImagePreview, expires }));
       } else {
         userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
         await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
