@@ -1,8 +1,11 @@
+import fetch from "node-fetch";
 import { toUtf8 } from "@aws-sdk/util-utf8-node";
 
 import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
-import { invoke } from "../../util/invokeLambda";
 import { IS_DEV } from "../../util/environment";
+import { invoke } from "../../util/invokeLambda";
+import { getSecrets } from "../../util/getSecrets";
+import { ScanItem } from "./data-helpers";
 
 const COVER_PROCESSING_LAMBDA = `process-book-cover-${IS_DEV ? "dev" : "live"}-processCover`;
 
@@ -84,3 +87,26 @@ export async function getBookFromIsbnDbData(book, userId) {
 
   return newBook;
 }
+
+export const isbnDbLookup = async (scanItems: ScanItem[]) => {
+  const secrets = await getSecrets();
+  const isbnDbKey = secrets["isbn-db-key"];
+
+  const isbns = [...new Set(scanItems.map(entry => entry.isbn))].join(",");
+
+  console.log("---- BOOK LOOKUP STARTING ----", isbns);
+
+  const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
+    method: "post",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: isbnDbKey
+    },
+    body: `isbns=${isbns}`
+  });
+  const json: any = await isbnDbResponse.json();
+
+  const allResults = Array.isArray(json?.data) ? json.data : [];
+  return allResults;
+};

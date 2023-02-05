@@ -1,5 +1,5 @@
 //import path from "path";
-import fetch from "node-fetch";
+
 import { v4 as uuid } from "uuid";
 //import sharp from "sharp";
 //import { getPlaiceholder } from "plaiceholder";
@@ -7,9 +7,9 @@ import { v4 as uuid } from "uuid";
 //import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import { getSecrets } from "../../util/getSecrets";
+
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
-import { getBookFromIsbnDbData } from "./isbn-db-utils";
+import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 
 //import downloadFromUrl from "../../util/downloadFromUrl";
@@ -120,27 +120,10 @@ const wait = ms => new Promise(res => setTimeout(res, ms));
 
 export const lookupBooks = async (scanItems: ScanItem[]) => {
   try {
-    const secrets = await getSecrets();
-    const isbnDbKey = secrets["isbn-db-key"];
-
-    const isbns = [...new Set(scanItems.map(entry => entry.isbn))].join(",");
+    const startTime = +new Date();
     const userIds = [...new Set(scanItems.map(entry => entry.userId))];
 
-    console.log("---- BOOK LOOKUP STARTING ----", isbns);
-    const startTime = +new Date();
-
-    const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: isbnDbKey
-      },
-      body: `isbns=${isbns}`
-    });
-    const json: any = await isbnDbResponse.json();
-
-    const allResults = Array.isArray(json?.data) ? json.data : [];
+    const allResults = await isbnDbLookup(scanItems);
     const allBookDownloads = [];
 
     for (const book of allResults) {
