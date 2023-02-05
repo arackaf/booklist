@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import { db, getDeletePacket, getPutPacket } from "../../util/dynamoHelpers";
+import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
 import { runRequest } from "../../util/mongo-helpers";
 
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
@@ -43,7 +43,7 @@ export const runBookLookupIfAvailable = async () => {
     await db.transactWrite(
       {
         TransactItems: [
-          /*...scanItems.map(({ pk, sk }) => ({
+          ...scanItems.map(({ pk, sk }) => ({
             Delete: {
               Key: { pk, sk },
               TableName: TABLE_NAME,
@@ -52,7 +52,7 @@ export const runBookLookupIfAvailable = async () => {
                 "#sk": "sk"
               }
             }
-          })),*/
+          })),
           {
             Put: getPutPacket(scanPacket)
           }

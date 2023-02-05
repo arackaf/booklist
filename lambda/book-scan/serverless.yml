@@ -78,7 +78,10 @@ functions:
     handler: handlers/scanBook.handler
 
   scanCheck:
+    timeout: 500
     handler: handlers/scanCheck.handler
+    events:
+      - schedule: rate(1 minute)
 
 custom:
   esbuild:

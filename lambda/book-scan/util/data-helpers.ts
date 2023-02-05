@@ -38,7 +38,7 @@ export const getScanItemBatch = async () => {
   const result = (await db.query(
     getQueryPacket(` pk = :pk `, {
       ExpressionAttributeValues: { ":pk": getScanItemPk() },
-      Limit: 2,
+      Limit: 10,
       ConsistentRead: true
     })
   )) as ScanItem[];
