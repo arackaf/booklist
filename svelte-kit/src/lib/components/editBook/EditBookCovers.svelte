@@ -15,39 +15,23 @@
     uploadResults = null;
   };
 
-  let useNewMobile = false;
-  let useNewSmall = false;
-  let useNewMedium = false;
-
-  const setUseNewMobile = (val: any) => (useNewMobile = val);
-  const setUseNewSmall = (val: any) => (useNewSmall = val);
-  const setUseNewMedium = (val: any) => (useNewMedium = val);
-
   const onCoverError = () => {
     uploadResults = { success: false, status: "error" };
   };
 
   const onCoverResults = (obj: CoverUploadResults) => {
-    uploadResults = obj;
-    if (obj.success) {
-      useNewMobile = obj.mobile?.STATUS === "success";
-      useNewSmall = obj.small?.STATUS === "success";
-      useNewMedium = obj.medium?.STATUS === "success";
-    } else {
-      useNewMobile = false;
-      useNewSmall = false;
-      useNewMedium = false;
-    }
+    console.log("Cover results", obj);
+    //uploadResults = obj;
   };
 
-  $: mobileImage = useNewMobile && uploadResults?.success ? uploadResults.mobile.image?.url : null;
-  $: mobileImagePreview = useNewMobile && uploadResults?.success ? uploadResults.mobile.image?.preview : null;
+  $: mobileImage = uploadResults?.success ? uploadResults.mobile.image?.url : null;
+  $: mobileImagePreview = uploadResults?.success ? uploadResults.mobile.image?.preview : null;
 
-  $: smallImage = useNewSmall && uploadResults?.success ? uploadResults.small.image?.url : null;
-  $: smallImagePreview = useNewSmall && uploadResults?.success ? uploadResults.small.image?.preview : null;
+  $: smallImage = uploadResults?.success ? uploadResults.small.image?.url : null;
+  $: smallImagePreview = uploadResults?.success ? uploadResults.small.image?.preview : null;
 
-  $: mediumImage = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.url : null;
-  $: mediumImagePreview = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.preview : null;
+  $: mediumImage = uploadResults?.success ? uploadResults.medium.image?.url : null;
+  $: mediumImagePreview = uploadResults?.success ? uploadResults.medium.image?.preview : null;
 </script>
 
 <div>
@@ -57,7 +41,7 @@
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
   {#if uploadResults}
-    <UploadResults {uploadResults} {useNewMobile} {setUseNewMobile} {useNewSmall} {setUseNewSmall} {useNewMedium} {setUseNewMedium} />
+    <UploadResults {uploadResults} />
   {/if}
 
   {#if mobileImage}

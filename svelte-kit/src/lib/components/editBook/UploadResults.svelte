@@ -21,13 +21,6 @@
       mobile = small = medium = null;
     }
   }
-
-  export let useNewMobile: boolean;
-  export let setUseNewMobile: (val: boolean) => void;
-  export let useNewSmall: boolean;
-  export let setUseNewSmall: (val: boolean) => void;
-  export let useNewMedium: boolean;
-  export let setUseNewMedium: (val: boolean) => void;
 </script>
 
 {#if !success}
@@ -38,8 +31,8 @@
   {/if}
 {:else}
   <FlowItems>
-    <UploadResult packet={mobile} useNewImage={useNewMobile} setUseNewImage={setUseNewMobile} size="mobile" />
-    <UploadResult packet={small} useNewImage={useNewSmall} setUseNewImage={setUseNewSmall} size="small" />
-    <UploadResult packet={medium} useNewImage={useNewMedium} setUseNewImage={setUseNewMedium} size="medium" />
+    <UploadResult packet={mobile} size="mobile" />
+    <UploadResult packet={small} size="small" />
+    <UploadResult packet={medium} size="medium" />
   </FlowItems>
 {/if}
