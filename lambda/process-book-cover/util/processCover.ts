@@ -47,7 +47,7 @@ export async function processCover(url, userId) {
   const img = sharp(body);
   const metadata = await img.metadata();
 
-  const uploadPath = `aaa/${userId}/${uuid()}${extension}`;
+  const uploadPath = `${userId}/${uuid()}${extension}`;
 
   if (metadata.width >= SIZE_WIDTHS.medium) {
     return uploadAndGeneratePreviews(img, SIZE_WIDTHS.medium, uploadPath, "medium", "small", "mobile");

@@ -72,8 +72,6 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
 
   await lookupBooks(scanPacket.scanItems);
 
-  return;
-
   const userUpdateMap = scanItems.reduce((hash, { userId }) => {
     if (!hash.hasOwnProperty(userId)) {
       hash[userId] = 0;
