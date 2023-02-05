@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "reset-dev": "rm -rf ./node_modules && npm i",
     "compile": "rm -rf ./dist && tsc",
     "install-deps": "npm i && rm -rf node_modules/sharp && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i -f --platform=linux --arch=x64 sharp@^0.31.3",
     "deploy": "npm run compile && npm run install-deps && sls deploy"
@@ -10,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/sharp": "^0.31.1",
     "node-fetch": "^2.6.9",
     "plaiceholder": "^2.5.0",
     "sharp": "^0.31.3",
