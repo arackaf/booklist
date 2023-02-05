@@ -85,12 +85,38 @@
   }
 
   function startToastListen() {
+    showBookToast({
+      title: "This is a very very very long title",
+      authors: ["Richard Dawkins", "Stephan Jay Gould", "Carl Sagan"],
+      mobileImage:
+        "https://my-library-cover-uploads.s3.amazonaws.com/medium-covers/60a93babcc3928454b5d1cc6/24782c1d-2425-4030-8515-ae816f55f27f.jpg",
+      mobileImagePreview: {
+        w: 35,
+        h: 46,
+        b64: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMUlEQVR4nGMoy81vaWk5f/48w7Yd2xNjI7o72xmiI0JFORi+ffnEEOjn3dvZ/vPnTwB8sxOVv4T/PgAAAABJRU5ErkJggg=="
+      },
+      smallImage: "https://my-library-cover-uploads.s3.amazonaws.com/medium-covers/60a93babcc3928454b5d1cc6/24782c1d-2425-4030-8515-ae816f55f27f.jpg",
+      smallImagePreview: {
+        w: 50,
+        h: 66,
+        b64: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMUlEQVR4nGMoy81vaWk5f/48w7Yd2xNjI7o72xmiI0JFORi+ffnEEOjn3dvZ/vPnTwB8sxOVv4T/PgAAAABJRU5ErkJggg=="
+      },
+      mediumImage:
+        "https://my-library-cover-uploads.s3.amazonaws.com/medium-covers/60a93babcc3928454b5d1cc6/24782c1d-2425-4030-8515-ae816f55f27f.jpg",
+      mediumImagePreview: {
+        w: 106,
+        h: 139,
+        b64: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAMUlEQVR4nGMoy81vaWk5f/48w7Yd2xNjI7o72xmiI0JFORi+ffnEEOjn3dvZ/vPnTwB8sxOVv4T/PgAAAABJRU5ErkJggg=="
+      }
+    } as any);
+
     window.addEventListener("ws-info", ({ detail }: any) => {
       if (detail.type === "scanResults") {
         fetch("/api/clear-books-cache", { method: "POST" });
         if ($page.url.pathname !== "/scan") {
           for (const { item: book } of detail.packet.results.filter((result: any) => result.success)) {
             showBookToast(book);
+            console.log("Showing", book);
           }
         }
       }
