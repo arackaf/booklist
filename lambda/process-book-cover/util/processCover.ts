@@ -47,14 +47,14 @@ export async function processCover(url, userId) {
   const img = sharp(body);
   const metadata = await img.metadata();
 
-  const uploadPath = `${userId}/${uuid()}${extension}`;
+  const uploadPath = (size: Sizes) => `${size}-covers/${userId}/${uuid()}${extension}`;
 
   if (metadata.width >= SIZE_WIDTHS.medium) {
-    return uploadAndGeneratePreviews(img, uploadPath, "medium", "small", "mobile");
+    return uploadAndGeneratePreviews(img, uploadPath("medium"), "medium", "small", "mobile");
   } else if (metadata.width >= SIZE_WIDTHS.small) {
-    return uploadAndGeneratePreviews(img, uploadPath, "small", "mobile");
+    return uploadAndGeneratePreviews(img, uploadPath("small"), "small", "mobile");
   } else if (metadata.width >= SIZE_WIDTHS.mobile) {
-    return uploadAndGeneratePreviews(img, uploadPath, "mobile");
+    return uploadAndGeneratePreviews(img, uploadPath("mobile"), "mobile");
   }
 
   return null;
