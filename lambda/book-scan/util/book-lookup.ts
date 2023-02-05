@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket } from "../../util/dynamoHelpers";
+import { runRequest } from "../../util/mongo-helpers";
 
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
@@ -142,18 +143,18 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     for (const newBookMaybe of scanItems) {
       const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
 
-      // if (!newBookMaybe.pk) {
-      //   const { db: mongoDb, client: mongoClient } = await getDbConnection();
-      //   await mongoDb.collection("books").insertOne(newBookMaybe);
-      //   await mongoClient.close();
+      if (!newBookMaybe.pk) {
+        await runRequest("insertOne", "books", {
+          document: newBookMaybe
+        });
 
-      //   userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
-      //   const { title, smallImage } = newBookMaybe as any;
-      //   await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));
-      // } else {
-      //   userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
-      //   await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
-      // }
+        userMessages[newBookMaybe.userId].results.push({ success: true, item: newBookMaybe });
+        const { title, smallImage } = newBookMaybe as any;
+        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, expires }));
+      } else {
+        userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
+        await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
+      }
     }
 
     console.log("---- FINISHED. ALL SAVED ----");
