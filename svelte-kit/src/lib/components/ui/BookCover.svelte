@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PreviewPacket } from "$data/types";
 
+  export let style = "";
   export let url: string | null = null;
   export let optimizedUrl: string | null = null;
   export let preview: string | PreviewPacket | null | undefined = null;
@@ -13,7 +14,7 @@
   $: urlToUse = withRealPreview ? optimizedUrl || url : url;
 </script>
 
-<div>
+<div {style}>
   {#if previewString}
     <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
   {/if}

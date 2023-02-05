@@ -17,6 +17,8 @@
   import { NUM_THEMES } from "$lib/util/constants";
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
   import PublicLandingPage from "./PublicLandingPage.svelte";
+  import type { Book } from "$data/types";
+  import ScanToasterContent from "$lib/components/ui/ScanToasterContent.svelte";
 
   export let data: any;
 
@@ -62,14 +64,23 @@
     });
   }
 
-  function showBookToast(title: string, url: string) {
+  function showBookToast(book: Book) {
+    const { title, smallImage } = book;
+
+    const node = document.createElement("div");
+
+    new ScanToasterContent({
+      target: node,
+      props: { book }
+    });
+
     Toastify({
-      text: `<div><img alt="Book cover for recently scanned ${title}" src="${url}" ></div><span>${title}</span>`,
+      node,
       escapeMarkup: false,
       duration: 5 * 1000,
       gravity: "bottom",
       close: true,
-      className: "toast-notification book-loaded"
+      className: "toast-notification success"
     }).showToast();
   }
 
@@ -79,7 +90,7 @@
         fetch("/api/clear-books-cache", { method: "POST" });
         if ($page.url.pathname !== "/scan") {
           for (const { item: book } of detail.packet.results.filter((result: any) => result.success)) {
-            showBookToast(book.title, book.smallImage);
+            showBookToast(book);
           }
         }
       }
