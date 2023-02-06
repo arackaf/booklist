@@ -59,7 +59,7 @@ export async function POST({ cookies, locals, request }: any) {
         })
       )
       .catch(err => {
-        console.log({ err });
+        console.log("Error putting into S3", { err });
       });
 
     const url = `https://s3.amazonaws.com/my-library-cover-uploads/${uploadKey}`;
@@ -78,7 +78,7 @@ export async function POST({ cookies, locals, request }: any) {
         })
       )
       .catch(err => {
-        console.log({ err });
+        console.log("Error deleting from S3", { err });
       });
 
     if (response.Payload) {
@@ -92,6 +92,4 @@ export async function POST({ cookies, locals, request }: any) {
     console.log("Error invoking lambda", er);
     return json({ error: true });
   }
-
-  return json({});
 }

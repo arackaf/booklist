@@ -10,6 +10,14 @@
   let status: "error" | "invalid-size" | "" = "";
 
   let error = false;
+  const emptyImages: BookImages = {
+    mobileImage: "",
+    mobileImagePreview: null,
+    smallImage: "",
+    smallImagePreview: null,
+    mediumImage: "",
+    mediumImagePreview: null
+  };
   let uploadResults: BookImages | null = null;
 
   export const reset = () => {
@@ -23,13 +31,13 @@
   };
 
   const onCoverResults = (obj: BookImages) => {
-    if (!obj.mediumImage && !obj.smallImage && !obj.mobileImage) {
+    if (obj == null) {
       error = true;
       status = "invalid-size";
     } else {
       error = false;
       status = "";
-      uploadResults = obj;
+      uploadResults = Object.assign({}, emptyImages, obj);
     }
   };
 
@@ -49,26 +57,18 @@
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
-  {#if uploadResults}
+  {#if uploadResults || error}
     <UploadResults {error} {status} {uploadResults} />
   {/if}
 
-  {#if mobileImage}
+  {#if uploadResults}
     <input type="hidden" name="mobileImage" value={mobileImage || ""} />
-  {/if}
-  {#if mobileImagePreview}
     <input type="hidden" name="mobileImagePreview" value={JSON.stringify(mobileImagePreview)} />
-  {/if}
-  {#if smallImage}
+
     <input type="hidden" name="smallImage" value={smallImage || ""} />
-  {/if}
-  {#if smallImagePreview}
     <input type="hidden" name="smallImagePreview" value={JSON.stringify(smallImagePreview)} />
-  {/if}
-  {#if mediumImage}
+
     <input type="hidden" name="mediumImage" value={mediumImage || ""} />
-  {/if}
-  {#if mediumImagePreview}
     <input type="hidden" name="mediumImagePreview" value={JSON.stringify(mediumImagePreview)} />
   {/if}
 </div>

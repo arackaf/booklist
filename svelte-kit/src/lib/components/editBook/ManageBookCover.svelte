@@ -54,7 +54,7 @@
       "/api/cover-upload",
       requestData,
       resp => {
-        if (!resp.error) {
+        if (resp == null || !resp.error) {
           onResults(resp);
         } else {
           onError();
