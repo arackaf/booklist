@@ -1,12 +1,12 @@
 import path from "path";
 import uuid from "uuid/v4";
 
-import checkLogin from "../util/checkLoginToken";
-import { handleCover, HandleCoverResult } from "../util/handleCover";
-import corsResponse from "../util/corsResponse";
+import checkLogin from "../../util/checkLoginToken";
+import { handleCover, HandleCoverResult } from "../../util/handleCover";
+import corsResponse from "../../util/corsResponse";
 
-import downloadFromUrl from "../util/downloadFromUrl";
-import { isWarmingCall } from "../util/isWarmingCall";
+import downloadFromUrl from "../../util/downloadFromUrl";
+import { isWarmingCall } from "../../util/isWarmingCall";
 
 export const handler = async event => {
   if (isWarmingCall(event)) {

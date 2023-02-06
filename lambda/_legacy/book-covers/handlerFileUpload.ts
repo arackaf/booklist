@@ -2,10 +2,10 @@ import path from "path";
 import uuid from "uuid/v4";
 import awsMultiPartParser from "lambda-multipart-parser";
 
-import checkLogin from "../util/checkLoginToken";
-import corsResponse from "../util/corsResponse";
-import { isWarmingCall } from "../util/isWarmingCall";
-import { handleCover } from "../util/handleCover";
+import checkLogin from "../../util/checkLoginToken";
+import corsResponse from "../../util/corsResponse";
+import { isWarmingCall } from "../../util/isWarmingCall";
+import { handleCover } from "../../util/handleCover";
 
 export const handler = async event => {
   if (isWarmingCall(event)) {

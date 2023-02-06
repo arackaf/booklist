@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
-import corsResponse from "../util/corsResponse";
-import getSecrets from "../util/getSecrets";
+import corsResponse from "../../util/corsResponse";
+import getSecrets from "../../util/getSecrets";
 
 export const handler = async event => {
   const secrets = await getSecrets();
