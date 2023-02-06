@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Book } from "$data/types";
-  import type { CoverUploadResults } from "$lambda/types";
+  import type { Book, BookImages } from "$data/types";
 
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
@@ -8,46 +7,49 @@
   import CurrentCovers from "./CurrentCovers.svelte";
 
   export let book: Book;
+  let status: "error" | "invalid-size" | "" = "";
 
-  let uploadResults: CoverUploadResults | null = null;
+  let error = false;
+  const emptyImages: BookImages = {
+    mobileImage: "",
+    mobileImagePreview: null,
+    smallImage: "",
+    smallImagePreview: null,
+    mediumImage: "",
+    mediumImagePreview: null
+  };
+  let uploadResults: BookImages | null = null;
 
   export const reset = () => {
     uploadResults = null;
   };
 
-  let useNewMobile = false;
-  let useNewSmall = false;
-  let useNewMedium = false;
-
-  const setUseNewMobile = (val: any) => (useNewMobile = val);
-  const setUseNewSmall = (val: any) => (useNewSmall = val);
-  const setUseNewMedium = (val: any) => (useNewMedium = val);
-
   const onCoverError = () => {
-    uploadResults = { success: false, status: "error" };
+    error = true;
+    status = "error";
+    uploadResults = {} as BookImages;
   };
 
-  const onCoverResults = (obj: CoverUploadResults) => {
-    uploadResults = obj;
-    if (obj.success) {
-      useNewMobile = obj.mobile?.STATUS === "success";
-      useNewSmall = obj.small?.STATUS === "success";
-      useNewMedium = obj.medium?.STATUS === "success";
+  const onCoverResults = (obj: BookImages) => {
+    if (obj == null) {
+      error = true;
+      status = "invalid-size";
+      uploadResults = null;
     } else {
-      useNewMobile = false;
-      useNewSmall = false;
-      useNewMedium = false;
+      error = false;
+      status = "";
+      uploadResults = Object.assign({}, emptyImages, obj);
     }
   };
 
-  $: mobileImage = useNewMobile && uploadResults?.success ? uploadResults.mobile.image?.url : null;
-  $: mobileImagePreview = useNewMobile && uploadResults?.success ? uploadResults.mobile.image?.preview : null;
+  $: mobileImage = uploadResults?.mobileImage;
+  $: mobileImagePreview = uploadResults?.mobileImagePreview;
 
-  $: smallImage = useNewSmall && uploadResults?.success ? uploadResults.small.image?.url : null;
-  $: smallImagePreview = useNewSmall && uploadResults?.success ? uploadResults.small.image?.preview : null;
+  $: smallImage = uploadResults?.smallImage;
+  $: smallImagePreview = uploadResults?.smallImagePreview;
 
-  $: mediumImage = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.url : null;
-  $: mediumImagePreview = useNewMedium && uploadResults?.success ? uploadResults.medium.image?.preview : null;
+  $: mediumImage = uploadResults?.mediumImage;
+  $: mediumImagePreview = uploadResults?.mediumImagePreview;
 </script>
 
 <div>
@@ -56,26 +58,18 @@
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
-  {#if uploadResults}
-    <UploadResults {uploadResults} {useNewMobile} {setUseNewMobile} {useNewSmall} {setUseNewSmall} {useNewMedium} {setUseNewMedium} />
+  {#if uploadResults || error}
+    <UploadResults {error} {status} {uploadResults} />
   {/if}
 
-  {#if mobileImage}
-    <input type="hidden" name="mobileImage" value={mobileImage} />
-  {/if}
-  {#if mobileImagePreview}
-    <input type="hidden" name="mobileImagePreview" value={mobileImagePreview} />
-  {/if}
-  {#if smallImage}
-    <input type="hidden" name="smallImage" value={smallImage} />
-  {/if}
-  {#if smallImagePreview}
-    <input type="hidden" name="smallImagePreview" value={smallImagePreview} />
-  {/if}
-  {#if mediumImage}
-    <input type="hidden" name="mediumImage" value={mediumImage} />
-  {/if}
-  {#if mediumImagePreview}
-    <input type="hidden" name="mediumImagePreview" value={mediumImagePreview} />
+  {#if uploadResults}
+    <input type="hidden" name="mobileImage" value={mobileImage || ""} />
+    <input type="hidden" name="mobileImagePreview" value={JSON.stringify(mobileImagePreview)} />
+
+    <input type="hidden" name="smallImage" value={smallImage || ""} />
+    <input type="hidden" name="smallImagePreview" value={JSON.stringify(smallImagePreview)} />
+
+    <input type="hidden" name="mediumImage" value={mediumImage || ""} />
+    <input type="hidden" name="mediumImagePreview" value={JSON.stringify(mediumImagePreview)} />
   {/if}
 </div>

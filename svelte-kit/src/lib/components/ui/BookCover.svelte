@@ -9,6 +9,7 @@
   export let book: BookImages | null = null;
 
   export let preview: string | PreviewPacket | null = null;
+  export let noCoverMessage: string = "No Cover";
 
   let previewToUse: string | PreviewPacket | null;
   $: {
@@ -44,7 +45,7 @@
     <img alt="Book cover" src={urlToUse} class="image" style={sizingStyle} />
   {:else}
     <div class="no-cover-{size}">
-      <div>No Cover</div>
+      <div>{noCoverMessage}</div>
     </div>
   {/if}
 </div>
