@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { BookImages } from "$data/types";
-  import type { IndividualCoverResult } from "$lambda/types";
   import FlowItems from "../layout/FlowItems.svelte";
   import UploadResult from "./UploadResult.svelte";
 
