@@ -12,7 +12,7 @@
   {#if !error}
     <Stack inline={true} style="align-items: center; height: 100%">
       <div class="margin-bottom">
-        <BookCover {size} book={packet} />
+        <BookCover {size} book={packet} noCoverMessage="Too small" />
       </div>
     </Stack>
   {/if}

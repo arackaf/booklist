@@ -23,13 +23,13 @@
   };
 
   const onCoverResults = (obj: BookImages) => {
-    uploadResults = obj;
-    if (!uploadResults.mediumImage && !uploadResults.smallImage && !uploadResults.mobileImage) {
+    if (!obj.mediumImage && !obj.smallImage && !obj.mobileImage) {
       error = true;
       status = "invalid-size";
     } else {
       error = false;
       status = "";
+      uploadResults = obj;
     }
   };
 
@@ -54,19 +54,19 @@
   {/if}
 
   {#if mobileImage}
-    <input type="hidden" name="mobileImage" value={mobileImage} />
+    <input type="hidden" name="mobileImage" value={mobileImage || ""} />
   {/if}
   {#if mobileImagePreview}
     <input type="hidden" name="mobileImagePreview" value={JSON.stringify(mobileImagePreview)} />
   {/if}
   {#if smallImage}
-    <input type="hidden" name="smallImage" value={smallImage} />
+    <input type="hidden" name="smallImage" value={smallImage || ""} />
   {/if}
   {#if smallImagePreview}
     <input type="hidden" name="smallImagePreview" value={JSON.stringify(smallImagePreview)} />
   {/if}
   {#if mediumImage}
-    <input type="hidden" name="mediumImage" value={mediumImage} />
+    <input type="hidden" name="mediumImage" value={mediumImage || ""} />
   {/if}
   {#if mediumImagePreview}
     <input type="hidden" name="mediumImagePreview" value={JSON.stringify(mediumImagePreview)} />
