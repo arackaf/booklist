@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Book } from "$data/types";
-  import type { CoverUploadResults } from "$lambda/types";
+  import type { Book, BookImages } from "$data/types";
 
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
@@ -8,30 +7,40 @@
   import CurrentCovers from "./CurrentCovers.svelte";
 
   export let book: Book;
+  let status: "error" | "invalid-size" | "" = "";
 
-  let uploadResults: CoverUploadResults | null = null;
+  let error = false;
+  let uploadResults: BookImages | null = null;
 
   export const reset = () => {
     uploadResults = null;
   };
 
   const onCoverError = () => {
-    uploadResults = { success: false, status: "error" };
+    error = true;
+    status = "error";
+    uploadResults = {} as BookImages;
   };
 
-  const onCoverResults = (obj: CoverUploadResults) => {
-    console.log("Cover results", obj);
-    //uploadResults = obj;
+  const onCoverResults = (obj: BookImages) => {
+    uploadResults = obj;
+    if (!uploadResults.mediumImage && !uploadResults.smallImage && !uploadResults.mobileImage) {
+      error = true;
+      status = "invalid-size";
+    } else {
+      error = false;
+      status = "";
+    }
   };
 
-  $: mobileImage = uploadResults?.success ? uploadResults.mobile.image?.url : null;
-  $: mobileImagePreview = uploadResults?.success ? uploadResults.mobile.image?.preview : null;
+  $: mobileImage = uploadResults?.mobileImage;
+  $: mobileImagePreview = uploadResults?.mobileImagePreview;
 
-  $: smallImage = uploadResults?.success ? uploadResults.small.image?.url : null;
-  $: smallImagePreview = uploadResults?.success ? uploadResults.small.image?.preview : null;
+  $: smallImage = uploadResults?.smallImage;
+  $: smallImagePreview = uploadResults?.smallImagePreview;
 
-  $: mediumImage = uploadResults?.success ? uploadResults.medium.image?.url : null;
-  $: mediumImagePreview = uploadResults?.success ? uploadResults.medium.image?.preview : null;
+  $: mediumImage = uploadResults?.mediumImage;
+  $: mediumImagePreview = uploadResults?.mediumImagePreview;
 </script>
 
 <div>
@@ -41,25 +50,25 @@
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
   {#if uploadResults}
-    <UploadResults {uploadResults} />
+    <UploadResults {error} {status} {uploadResults} />
   {/if}
 
   {#if mobileImage}
     <input type="hidden" name="mobileImage" value={mobileImage} />
   {/if}
   {#if mobileImagePreview}
-    <input type="hidden" name="mobileImagePreview" value={mobileImagePreview} />
+    <input type="hidden" name="mobileImagePreview" value={JSON.stringify(mobileImagePreview)} />
   {/if}
   {#if smallImage}
     <input type="hidden" name="smallImage" value={smallImage} />
   {/if}
   {#if smallImagePreview}
-    <input type="hidden" name="smallImagePreview" value={smallImagePreview} />
+    <input type="hidden" name="smallImagePreview" value={JSON.stringify(smallImagePreview)} />
   {/if}
   {#if mediumImage}
     <input type="hidden" name="mediumImage" value={mediumImage} />
   {/if}
   {#if mediumImagePreview}
-    <input type="hidden" name="mediumImagePreview" value={mediumImagePreview} />
+    <input type="hidden" name="mediumImagePreview" value={JSON.stringify(mediumImagePreview)} />
   {/if}
 </div>

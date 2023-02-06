@@ -6,7 +6,7 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client
 
 import { json } from "@sveltejs/kit";
 
-import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, UPLOAD_FROM_URL_LAMBDA } from "$env/static/private";
+import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, PROCESS_COVER_LAMBDA } from "$env/static/private";
 
 function getExtension(name: string) {
   const ext = name.lastIndexOf(".");
@@ -65,7 +65,7 @@ export async function POST({ cookies, locals, request }: any) {
     const url = `https://s3.amazonaws.com/my-library-cover-uploads/${uploadKey}`;
 
     const command = new InvokeCommand({
-      FunctionName: UPLOAD_FROM_URL_LAMBDA,
+      FunctionName: PROCESS_COVER_LAMBDA,
       Payload: fromUtf8(JSON.stringify({ url, userId: session.userId }))
     });
     const response = await client.send(command);
@@ -90,6 +90,7 @@ export async function POST({ cookies, locals, request }: any) {
     }
   } catch (er) {
     console.log("Error invoking lambda", er);
+    return json({ error: true });
   }
 
   return json({});
