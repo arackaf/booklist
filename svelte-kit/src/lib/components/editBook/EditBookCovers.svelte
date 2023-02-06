@@ -34,6 +34,7 @@
     if (obj == null) {
       error = true;
       status = "invalid-size";
+      uploadResults = null;
     } else {
       error = false;
       status = "";
