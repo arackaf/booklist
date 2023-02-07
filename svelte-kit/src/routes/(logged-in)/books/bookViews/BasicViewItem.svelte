@@ -44,8 +44,10 @@
         <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(", ") : ""}</span>
         <FlowItems style="margin-top: auto;" class="padding-top-xs">
           {#if !isPublic}
-            <button class="btn btn-xxs btn-light btn-square-icon" on:click={() => editBook(book)}><i class="fal fa-fw fa-pencil-alt" /></button>
-            <button class="btn btn-xxs btn-light btn-square-icon margin-left" on:click={() => (pendingDelete = true)}>
+            <button class="btn btn-xxs btn-light btn-square-icon" aria-label="Edit book" on:click={() => editBook(book)}>
+              <i class="fal fa-fw fa-pencil-alt" />
+            </button>
+            <button class="btn btn-xxs btn-light btn-square-icon margin-left" aria-label="Delete book" on:click={() => (pendingDelete = true)}>
               <i class="far fa-fw fa-trash" />
             </button>
           {/if}
