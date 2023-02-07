@@ -3,3 +3,9 @@
     <slot />
   </nav>
 </div>
+
+<style>
+  .section-nav-container {
+    z-index: 3;
+  }
+</style>
