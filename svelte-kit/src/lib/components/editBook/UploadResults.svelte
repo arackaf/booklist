@@ -1,36 +1,15 @@
 <script lang="ts">
-  import type { CoverUploadResults, IndividualCoverResult } from "$lambda/types";
+  import type { BookImages } from "$data/types";
   import FlowItems from "../layout/FlowItems.svelte";
   import UploadResult from "./UploadResult.svelte";
 
-  export let uploadResults: CoverUploadResults;
+  export let error: boolean;
+  export let uploadResults: BookImages | null;
 
-  let status: "error" | "invalid-size";
-  let mobile: IndividualCoverResult | null;
-  let small: IndividualCoverResult | null;
-  let medium: IndividualCoverResult | null;
-
-  $: ({ success } = uploadResults);
-  $: {
-    if (uploadResults.success) {
-      mobile = uploadResults.mobile;
-      small = uploadResults.small;
-      medium = uploadResults.medium;
-    } else {
-      status = uploadResults.status;
-      mobile = small = medium = null;
-    }
-  }
-
-  export let useNewMobile: boolean;
-  export let setUseNewMobile: (val: boolean) => void;
-  export let useNewSmall: boolean;
-  export let setUseNewSmall: (val: boolean) => void;
-  export let useNewMedium: boolean;
-  export let setUseNewMedium: (val: boolean) => void;
+  export let status: "error" | "invalid-size" | "";
 </script>
 
-{#if !success}
+{#if error}
   {#if status === "invalid-size"}
     <div class="alert alert-warning margin-top">This image is too small to use</div>
   {:else}
@@ -38,8 +17,8 @@
   {/if}
 {:else}
   <FlowItems>
-    <UploadResult packet={mobile} useNewImage={useNewMobile} setUseNewImage={setUseNewMobile} size="mobile" />
-    <UploadResult packet={small} useNewImage={useNewSmall} setUseNewImage={setUseNewSmall} size="small" />
-    <UploadResult packet={medium} useNewImage={useNewMedium} setUseNewImage={setUseNewMedium} size="medium" />
+    <UploadResult packet={uploadResults} size="mobile" {error} />
+    <UploadResult packet={uploadResults} size="small" {error} />
+    <UploadResult packet={uploadResults} size="medium" {error} />
   </FlowItems>
 {/if}

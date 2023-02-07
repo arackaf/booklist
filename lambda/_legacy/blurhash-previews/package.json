@@ -15,7 +15,7 @@
     "mongodb": "^4.2.0",
     "node-fetch": "^2.6.7",
     "plaiceholder": "^2.5.0",
-    "sharp": "^0.30.7",
+    "sharp": "^0.31.3",
     "typescript": "^4.6.3"
   }
 }

@@ -33,7 +33,7 @@
     <FlowItems>
       <div><button on:click={() => unselectBook(book)} style="cursor: pointer" class="btn btn-xs btn-danger"> Remove </button></div>
       <div style="min-width: 70px">
-        <BookCover size="small" preview={book.smallImagePreview} url={book.smallImage} />
+        <BookCover size="small" {book} />
       </div>
       <div style="flex: 1">
         <div>{book.title}</div>

@@ -1,19 +1,43 @@
 <script lang="ts">
-  import type { PreviewPacket } from "$data/types";
+  import type { BookImages, PreviewPacket } from "$data/types";
 
+  type Sizes = "mobile" | "small" | "medium";
+
+  export let style = "";
   export let url: string | null = null;
-  export let optimizedUrl: string | null = null;
-  export let preview: string | PreviewPacket | null | undefined = null;
-  export let size: "mobile" | "small" | "medium";
+  export let size: Sizes;
+  export let book: BookImages | null = null;
 
-  $: withRealPreview = preview != null && typeof preview === "object";
-  $: previewString = preview == null ? "" : typeof preview === "string" ? preview : preview.b64;
-  $: sizingStyle = preview != null && typeof preview === "object" ? `width:${preview.w}px;height:${preview.h}px` : "";
+  export let preview: string | PreviewPacket | null = null;
+  export let noCoverMessage: string = "No Cover";
 
-  $: urlToUse = withRealPreview ? optimizedUrl || url : url;
+  let previewToUse: string | PreviewPacket | null;
+  $: {
+    if (preview != null) {
+      previewToUse = preview;
+    } else if (book) {
+      previewToUse = size === "medium" ? book.mediumImagePreview : size === "small" ? book.smallImagePreview : book.mobileImagePreview;
+    }
+  }
+
+  $: previewString = previewToUse == null ? "" : typeof previewToUse === "string" ? previewToUse : previewToUse.b64;
+  $: sizingStyle = previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "";
+
+  $: urlToUse = getUrlToUse(book, size, url, sizingStyle);
+  function getUrlToUse(book: BookImages | null, size: Sizes, url: string | null, sizingStyle: string) {
+    if (!book) {
+      return url;
+    }
+    // we know the exact size
+    if (sizingStyle) {
+      return book.mediumImage || book.smallImage || book.mobileImage;
+    } else {
+      return size === "medium" ? book.mediumImage : size === "small" ? book.smallImage : book.mobileImage;
+    }
+  }
 </script>
 
-<div>
+<div {style}>
   {#if previewString}
     <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
   {/if}
@@ -21,7 +45,7 @@
     <img alt="Book cover" src={urlToUse} class="image" style={sizingStyle} />
   {:else}
     <div class="no-cover-{size}">
-      <div>No Cover</div>
+      <div>{noCoverMessage}</div>
     </div>
   {/if}
 </div>

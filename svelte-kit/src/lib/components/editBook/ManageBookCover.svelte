@@ -1,9 +1,7 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  //import { appState } from "app/state/appState";
   import Dropzone from "svelte-file-dropzone/src/components/Dropzone.svelte";
-  //import ajaxUtil from "util/ajaxUtil";
   import FlowItems from "../layout/FlowItems.svelte";
 
   export let onResults: (results: any) => void;
@@ -56,8 +54,10 @@
       "/api/cover-upload",
       requestData,
       resp => {
-        if (!resp.error) {
+        if (resp == null || !resp.error) {
           onResults(resp);
+        } else {
+          onError();
         }
         uploading = false;
       },

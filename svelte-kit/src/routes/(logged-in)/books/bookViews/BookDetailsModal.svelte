@@ -41,7 +41,7 @@
     <div style="display: flex; align-items: top">
       <div>
         <div>
-          <BookCover size="medium" preview={book?.mediumImagePreview} url={book?.mediumImage} />
+          <BookCover size="medium" {book} />
         </div>
       </div>
       <Stack tighter={true} style="padding-left: 10px">

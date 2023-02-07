@@ -3,12 +3,12 @@
 import { getPendingCount } from "../util/data-helpers";
 import { sendWsMessageToUser } from "../util/ws-helpers";
 
-import { runBookLookupIfAble } from "../util/book-lookup";
+import { runBookLookupIfAvailable } from "../util/book-lookup";
 
 export const handler = async event => {
   try {
     const userNotifications = notifyUserScanStatusUpdates(event);
-    const lookup = runBookLookupIfAble();
+    const lookup = runBookLookupIfAvailable();
 
     await Promise.all([userNotifications, lookup]);
   } catch (er) {

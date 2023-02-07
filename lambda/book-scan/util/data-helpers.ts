@@ -1,5 +1,5 @@
 import { db, getGetPacket, getQueryPacket, getUpdatePacket } from "../../util/dynamoHelpers";
-import { getCurrentLookupPk, getCurrentLookupSk, getScanItemPk, getUserScanStatusKey } from "./key-helpers";
+import { getScanItemPk, getUserScanStatusKey } from "./key-helpers";
 
 export const getPendingCount = async (userId, consistentRead = false) => {
   const scanStatusKey = getUserScanStatusKey(userId);
@@ -25,27 +25,6 @@ export type LookupSlotsFree = {
 const allFree: LookupSlotsFree = {
   free0: true,
   free1: true
-};
-
-export const getBookLookupsFree = async () => {
-  const pk = getCurrentLookupPk();
-
-  const currentLookups = await db.query(
-    getQueryPacket(`pk = :pk`, {
-      ExpressionAttributeValues: { ":pk": pk },
-      ConsistentRead: true
-    })
-  );
-  if (!currentLookups.length) {
-    return allFree;
-  }
-
-  const result: LookupSlotsFree = {
-    free0: !currentLookups.find(x => x.sk === getCurrentLookupSk(0)),
-    free1: !currentLookups.find(x => x.sk === getCurrentLookupSk(1))
-  };
-
-  return result;
 };
 
 export type ScanItem = {

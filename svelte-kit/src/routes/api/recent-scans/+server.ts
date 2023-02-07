@@ -23,7 +23,7 @@ export async function GET({ url, locals }: { url: URL; locals: any }) {
   const results = await db.pagedQuery(
     getQueryPacket(`pk = :pk`, {
       ExpressionAttributeValues: { ":pk": pk },
-      ExclusiveStartKey: pageKey,
+      ExclusiveStartKey: pageKey ?? void 0,
       Limit: 10
     })
   );

@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 
 import { getWsSessionKey } from "./util/ws-helpers";
-import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo } from "../util/dynamoHelpers";
+import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo } from "../../util/dynamoHelpers";
 
 export const connect = async event => {
   const connectionId = event.requestContext.connectionId;
@@ -50,14 +50,14 @@ export const sync = async event => {
 
     await db.update(
       getUpdatePacket(key, key, {
-        UpdateExpression: "SET userId = :userId, gsiUserWebSocketLookupPk = :userId",
-        ExpressionAttributeValues: { ":userId": packet.userId }
+        UpdateExpression: "SET userId = :userId, loginToken = :loginToken, gsiUserWebSocketLookupPk = :userId",
+        ExpressionAttributeValues: { ":userId": packet.userId, ":loginToken": packet.loginToken }
       })
     );
 
     await new Promise(res => {
       messenger.postToConnection(
-        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Connected and listening ..." }) },
+        { ConnectionId: event.requestContext.connectionId, Data: JSON.stringify({ message: "Hello, World TWO Baby " }) },
         (err, data) => {
           res({});
           console.log("CALLBACK", "ERROR", err, "DATA", data);

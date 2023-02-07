@@ -17,6 +17,7 @@ type Options = {
   strings?: string[];
   numbers?: string[];
   optionals?: string[];
+  optionalObjects?: string[];
   arrays?: string[];
 };
 
@@ -38,6 +39,16 @@ export const toJson = (params: URLSearchParams, options: Options) => {
     const val = params.get(k);
     if (val != null) {
       result[k] = val;
+    }
+  });
+  options.optionalObjects?.forEach(k => {
+    const val = params.get(k);
+    if (val) {
+      try {
+        result[k] = JSON.parse(val);
+      } catch (er) {
+        result[k] = null;
+      }
     }
   });
 

@@ -1,9 +1,9 @@
-service: book-scan
+service: book-scan-v2
+frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: nodejs12.x
-  lambdaHashingVersion: 20201221
+  runtime: nodejs18.x
   stage: dev
   environment:
     stage: ${self:provider.stage}
@@ -34,6 +34,10 @@ provider:
             - dynamodb:DescribeStream
             - dynamodb:ConditionCheckItem
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}/index/*"
+        - Effect: Allow
+          Action:
+            - lambda:InvokeFunction
+          Resource: "arn:aws:lambda:us-east-1:*:function:process-book-cover*"
         - Effect: "Allow"
           Action:
             - "secretsmanager:GetSecretValue"
@@ -69,30 +73,31 @@ functions:
 
   checkScanStatus:
     handler: handlers/getPendingScanCount.handler
-    events:
-      - http:
-          path: getScanStatus
-          method: get
-          cors: true
-          request:
-            parameters:
-              querystrings:
-                userId: true
-                loginToken: true
 
   scanBook:
     handler: handlers/scanBook.handler
+
+  scanCheck:
+    timeout: 500
+    handler: handlers/scanCheck.handler
     events:
-      - http:
-          path: scan
-          method: post
-          cors: true
+      - schedule: rate(1 minute)
 
 custom:
   esbuild:
-    packager: yarn
     bundle: true
     minify: true
+    exclude:
+      [
+        "aws-sdk",
+        "@aws-sdk/util-utf8-node",
+        "@aws-sdk/client-apigatewaymanagementapi",
+        "@aws-sdk/lib-dynamodb",
+        "@aws-sdk/client-dynamodb",
+        "@aws-sdk/client-secrets-manager",
+        "@aws-sdk/client-s3",
+        "@aws-sdk/client-lambda"
+      ]
 
 package:
   individually: true

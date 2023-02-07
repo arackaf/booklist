@@ -3,6 +3,9 @@ import { toJson } from "$lib/util/formDataHelpers";
 
 export const load = async ({ locals, depends }: any) => {
   const session = await locals.getSession();
+  if (!session) {
+    return { user: null };
+  }
   const { userId } = session;
 
   depends("user:settings");
