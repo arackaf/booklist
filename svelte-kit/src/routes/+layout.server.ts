@@ -14,13 +14,17 @@ async function connect() {
 
     await client.db("my-library").command({ ping: 1 });
 
+    const start2 = +new Date();
+
     const x = await client
       .db("my-library")
       .collection("books")
-      .aggregate([{ $limit: 10 }])
+      .aggregate([{ $match: { userId: "573d1b97120426ef0078aa92" } }, { $limit: 10 }])
       .toArray();
+    const end2 = +new Date();
+    console.log("Time 2 for books query", end2 - start2);
 
-    console.log({ x: x[0].title });
+    console.log({ x: x[0]?.title });
 
     console.log("Success connecting");
   } catch (err) {
