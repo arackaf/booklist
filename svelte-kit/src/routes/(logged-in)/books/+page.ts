@@ -6,7 +6,7 @@ export async function load({ url, parent, fetch, depends }: any) {
   depends("reload:books");
 
   const isClient = typeof document === "object";
-  const cache = isClient ? getCurrentCookieValue(BOOKS_CACHE) : global.initialBooksCache;
+  const cache = isClient ? getCurrentCookieValue(BOOKS_CACHE) : globalThis.initialBooksCache;
 
   const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}`);
   const { books, totalBooks, page, totalPages } = await resp.json();
