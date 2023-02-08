@@ -24,7 +24,7 @@
 
   const publicModules = new Set(["/", "/discover", "/books", "/settings/theme"]);
 
-  $: ({ showMobile, uxState, loggedIn, publicUser, userId } = data);
+  $: ({ showMobile, uxState, loggedIn, hasPublicUserId, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -42,7 +42,7 @@
   }
 
   $: currentPath = $page.url.pathname;
-  $: showContent = loggedIn || (publicUser && publicModules.has(currentPath));
+  $: showContent = loggedIn || (hasPublicUserId && publicModules.has(currentPath));
 
   let navigating = false;
   beforeNavigate(({ type }) => {

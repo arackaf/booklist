@@ -9,10 +9,8 @@ import { getUser } from "$data/user";
 export async function load({ cookies, locals, parent, isDataRequest, request }: any) {
   const initialRequest = !isDataRequest;
 
-  // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
-  const requestUrl = new URL(request.url);
-
-  const publicUserId = requestUrl.searchParams.get("user");
+  const parentData = await parent();
+  const { publicUserId } = parentData;
 
   let isPublic = false;
   let publicUser: DynamoUser | null = null;
@@ -23,10 +21,7 @@ export async function load({ cookies, locals, parent, isDataRequest, request }: 
 
   let activeUserId = session?.userId;
   if (publicUserId) {
-    const start = +new Date();
     publicUser = await getUser(publicUserId);
-    const end = +new Date();
-    console.log("Time to get public user object", end - start);
 
     if (!publicUser || !publicUser.isPublic) {
       activeUserId = "";
@@ -52,7 +47,6 @@ export async function load({ cookies, locals, parent, isDataRequest, request }: 
     publicName,
     publicBooksHeader,
     booksCache,
-    publicUser,
     ...(await subjects),
     ...(await tags)
   };
