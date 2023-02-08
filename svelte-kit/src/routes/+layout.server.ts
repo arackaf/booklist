@@ -10,14 +10,16 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   const uxState = getUxState(cookies);
 
   const initialRequest = !isDataRequest;
+  const booksCache = initialRequest ? +new Date() : cookies.get(BOOKS_CACHE);
+
   if (initialRequest) {
-    globalThis.initialBooksCache = +new Date();
-    updateCacheCookie(cookies, BOOKS_CACHE, globalThis.initialBooksCache);
+    updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
   }
 
   return {
     uxState,
     isMobile,
+    booksCache,
     showMobile: isMobile && uxState.desktopRequested !== "1"
   };
 }
