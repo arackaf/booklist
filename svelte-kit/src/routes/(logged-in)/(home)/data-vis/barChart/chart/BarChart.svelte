@@ -18,7 +18,7 @@
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
 
-  $: hasPublicUserId = $page.data.hasPublicUserId;
+  $: publicUser = $page.data.publicUser;
 
   const margin = { top: 30, bottom: 180 };
 </script>
@@ -37,7 +37,7 @@
     <div class="alert alert-warning">
       It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
     </div>
-    {#if !hasPublicUserId}
+    {#if !publicUser}
       <div class="alert alert-warning" style="margin-top: 20px; margin-bottom: 75px">
         If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
         <a href="/settings/account-sync">here</a>
