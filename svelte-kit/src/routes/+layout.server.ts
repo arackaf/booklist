@@ -12,10 +12,19 @@ async function connect() {
     const end = +new Date();
     console.log("Time", end - start);
 
-    await client.db("books").command({ ping: 1 });
+    await client.db("my-library").command({ ping: 1 });
 
-    console.log("Success");
+    const x = await client
+      .db("my-library")
+      .collection("books")
+      .aggregate([{ $limit: 10 }])
+      .toArray();
+
+    console.log({ x: x[0].title });
+
+    console.log("Success connecting");
   } catch (err) {
+    console.log("Error", err);
   } finally {
     await client.close();
   }
