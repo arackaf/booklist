@@ -8,14 +8,7 @@
   import BasicView from "./bookViews/BasicView.svelte";
   import CoversView from "./bookViews/CoversView.svelte";
 
-  import BookSearchModal from "./SearchModal.svelte";
   import MenuBar from "./menuBar/MenuBar.svelte";
-
-  import SubjectEditModal from "./SubjectEditModal.svelte";
-  import TagEditModal from "./TagEditModal.svelte";
-  import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
-  import BookSubjectSetter from "./BookSubjectSetter.svelte";
-  import BookTagSetter from "./BookTagSetter.svelte";
 
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
   import type { Book } from "$data/types";
@@ -32,9 +25,28 @@
 
   $: bookViewToUse = bookViewOverride || defaultBookView;
 
-  let client = false;
+  let modalsReady = false;
+
+  let BookSearchModal: any;
+  let SubjectEditModal: any;
+  let TagEditModal: any;
+  let EditBookModal: any;
+  let BookSubjectSetter: any;
+  let BookTagSetter: any;
+
   onMount(() => {
-    client = true;
+    Promise.all([
+      import("./SearchModal.svelte").then(res => res.default),
+      import("./SubjectEditModal.svelte").then(res => res.default),
+      import("./TagEditModal.svelte").then(res => res.default),
+      import("$lib/components/editBook/EditBookModal.svelte").then(res => res.default),
+      import("./BookSubjectSetter.svelte").then(res => res.default),
+      import("./BookTagSetter.svelte").then(res => res.default)
+    ]).then(results => {
+      [BookSearchModal, SubjectEditModal, TagEditModal, EditBookModal, BookSubjectSetter, BookTagSetter] = results;
+      modalsReady = true;
+    });
+
     selectionState.clear();
   });
 
@@ -112,7 +124,7 @@
           </div>
         {/if}
 
-        {#if client}
+        {#if modalsReady}
           <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
 
           <EditBookModal
