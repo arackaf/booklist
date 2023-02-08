@@ -1,16 +1,13 @@
-import { redirect } from "@sveltejs/kit";
-
 import type { DynamoUser } from "$data/types";
 import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
-import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
+
 import { getUser } from "$data/user";
 
-export async function load({ cookies, locals, parent, isDataRequest, request }: any) {
-  const initialRequest = !isDataRequest;
-
-  const parentData = await parent();
-  const { publicUserId } = parentData;
+export async function load({ locals, request, fetch }: any) {
+  // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
+  const requestUrl = new URL(request.url);
+  const publicUserId = requestUrl.searchParams.get("user");
 
   let isPublic = false;
   let publicUser: DynamoUser | null = null;
@@ -18,35 +15,30 @@ export async function load({ cookies, locals, parent, isDataRequest, request }: 
   let publicBooksHeader: string | null = null;
 
   const session = await locals.getSession();
+  let activeUserId = publicUserId || session?.userId;
 
-  let activeUserId = session?.userId;
+  const tags = allTags(activeUserId);
+  const subjects = allSubjects(activeUserId);
+  const colors = fetch("/api/colors").then((resp: any) => resp.json());
+
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
 
     if (!publicUser || !publicUser.isPublic) {
-      activeUserId = "";
     } else {
       isPublic = true;
-      activeUserId = publicUserId;
       publicName = publicUser.publicName;
       publicBooksHeader = publicUser.publicBooksHeader;
     }
   }
 
-  const booksCache = initialRequest ? +new Date() : cookies.get(BOOKS_CACHE);
-
-  if (initialRequest) {
-    updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
-  }
-
-  const tags = allTags(activeUserId);
-  const subjects = allSubjects(activeUserId);
-
   return {
     isPublic,
     publicName,
     publicBooksHeader,
-    booksCache,
+    colors,
+    loggedIn: !!session?.user,
+    userId: session?.userId,
     ...(await subjects),
     ...(await tags)
   };
