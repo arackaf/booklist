@@ -1,14 +1,10 @@
-import { redirect } from "@sveltejs/kit";
-
 import type { DynamoUser } from "$data/types";
 import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
 
 import { getUser } from "$data/user";
 
-export async function load({ cookies, locals, parent, isDataRequest, request }: any) {
-  const initialRequest = !isDataRequest;
-
+export async function load({ locals, request }: any) {
   // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
   const requestUrl = new URL(request.url);
   const publicUserId = requestUrl.searchParams.get("user");
