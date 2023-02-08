@@ -11,7 +11,8 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
 
   const initialRequest = !isDataRequest;
   if (initialRequest) {
-    updateCacheCookie(cookies, BOOKS_CACHE);
+    global.initialBooksCache = +new Date();
+    updateCacheCookie(cookies, BOOKS_CACHE, global.initialBooksCache);
   }
 
   const session = await locals.getSession();

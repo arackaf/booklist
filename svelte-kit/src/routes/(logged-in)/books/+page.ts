@@ -5,13 +5,13 @@ import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 export async function load({ url, parent, fetch, depends }: any) {
   depends("reload:books");
 
-  const parentData = await parent();
-
-  const cache = getCurrentCookieValue(BOOKS_CACHE) || parentData.booksCache;
+  const isClient = typeof document === "object";
+  const cache = isClient ? getCurrentCookieValue(BOOKS_CACHE) : global.initialBooksCache;
 
   const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}`);
   const { books, totalBooks, page, totalPages } = await resp.json();
 
+  const parentData = await parent();
   const { uxState, showMobile } = parentData;
 
   const defaultBookView = uxState.bkVw ?? (showMobile ? BASIC_LIST_VIEW : GRID_VIEW);

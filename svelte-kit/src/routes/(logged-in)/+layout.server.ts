@@ -3,7 +3,7 @@ import { redirect } from "@sveltejs/kit";
 import type { DynamoUser } from "$data/types";
 import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
-import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
+
 import { getUser } from "$data/user";
 
 export async function load({ cookies, locals, parent, isDataRequest, request }: any) {
@@ -34,12 +34,6 @@ export async function load({ cookies, locals, parent, isDataRequest, request }: 
     }
   }
 
-  const booksCache = initialRequest ? +new Date() : cookies.get(BOOKS_CACHE);
-
-  if (initialRequest) {
-    updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
-  }
-
   const tags = allTags(activeUserId);
   const subjects = allSubjects(activeUserId);
 
@@ -47,7 +41,6 @@ export async function load({ cookies, locals, parent, isDataRequest, request }: 
     isPublic,
     publicName,
     publicBooksHeader,
-    booksCache,
     ...(await subjects),
     ...(await tags)
   };
