@@ -4,6 +4,8 @@ import { getUxState } from "$lib/util/uxState";
 export async function load({ locals, isDataRequest, request, cookies, depends }: any) {
   depends("app:root");
 
+  console.log("typeof global", typeof global);
+
   const userAgent = request.headers.get("User-Agent");
   const isMobile = /mobile/i.test(userAgent);
 
