@@ -32,7 +32,9 @@
 
   $: bookViewToUse = bookViewOverride || defaultBookView;
 
+  let client = false;
   onMount(() => {
+    client = true;
     selectionState.clear();
   });
 
@@ -110,34 +112,36 @@
           </div>
         {/if}
 
-        <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
+        {#if client}
+          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
 
-        <EditBookModal
-          isOpen={editBookModalOpen}
-          book={editingBook}
-          onSave={onBooksUpdated}
-          closeOnSave={true}
-          onHide={stopEditingBook}
-          {subjects}
-          {tags}
-        />
+          <EditBookModal
+            isOpen={editBookModalOpen}
+            book={editingBook}
+            onSave={onBooksUpdated}
+            closeOnSave={true}
+            onHide={stopEditingBook}
+            {subjects}
+            {tags}
+          />
 
-        <BookSubjectSetter
-          isOpen={booksSubjectsModalOpen}
-          onSave={onBooksUpdated}
-          onHide={() => (booksSubjectsModalOpen = false)}
-          modifyingBooks={booksEditing}
-        />
-        <BookTagSetter
-          isOpen={booksTagsModalOpen}
-          onSave={onBooksUpdated}
-          onHide={() => (booksTagsModalOpen = false)}
-          modifyingBooks={booksEditing}
-        />
+          <BookSubjectSetter
+            isOpen={booksSubjectsModalOpen}
+            onSave={onBooksUpdated}
+            onHide={() => (booksSubjectsModalOpen = false)}
+            modifyingBooks={booksEditing}
+          />
+          <BookTagSetter
+            isOpen={booksTagsModalOpen}
+            onSave={onBooksUpdated}
+            onHide={() => (booksTagsModalOpen = false)}
+            modifyingBooks={booksEditing}
+          />
 
-        <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+          <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
 
-        <TagEditModal {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+          <TagEditModal {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+        {/if}
       </div>
     </div>
   </div>
