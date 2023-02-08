@@ -15,30 +15,30 @@ export async function load({ locals, request, fetch }: any) {
   let publicBooksHeader: string | null = null;
 
   const session = await locals.getSession();
-
-  let activeUserId = session?.userId;
-  if (publicUserId) {
-    publicUser = await getUser(publicUserId);
-
-    if (!publicUser || !publicUser.isPublic) {
-      activeUserId = "";
-    } else {
-      isPublic = true;
-      activeUserId = publicUserId;
-      publicName = publicUser.publicName;
-      publicBooksHeader = publicUser.publicBooksHeader;
-    }
-  }
+  let activeUserId = publicUserId || session?.userId;
 
   const tags = allTags(activeUserId);
   const subjects = allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
+
+  if (publicUserId) {
+    publicUser = await getUser(publicUserId);
+
+    if (!publicUser || !publicUser.isPublic) {
+    } else {
+      isPublic = true;
+      publicName = publicUser.publicName;
+      publicBooksHeader = publicUser.publicBooksHeader;
+    }
+  }
 
   return {
     isPublic,
     publicName,
     publicBooksHeader,
     colors,
+    loggedIn: !!session?.user,
+    userId: session?.userId,
     ...(await subjects),
     ...(await tags)
   };

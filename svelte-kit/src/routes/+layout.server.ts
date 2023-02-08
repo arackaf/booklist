@@ -15,14 +15,9 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
     updateCacheCookie(cookies, BOOKS_CACHE, global.initialBooksCache);
   }
 
-  const session = await locals.getSession();
-  const loggedIn = !!session?.user;
-
   return {
     uxState,
     isMobile,
-    showMobile: isMobile && uxState.desktopRequested !== "1",
-    loggedIn,
-    userId: session?.userId
+    showMobile: isMobile && uxState.desktopRequested !== "1"
   };
 }
