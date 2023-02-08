@@ -31,11 +31,13 @@ const getFieldProjection = (fields: string[]) =>
     return result;
   }, {});
 
+export const EMPTY_BOOKS_RESULTS = { books: [], totalBooks: 0, page: 0, totalPages: 0 };
+
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
 
   if (!userId) {
-    return { books: [], totalBooks: 0, page: 0, totalPages: 0 };
+    return EMPTY_BOOKS_RESULTS;
   }
 
   const httpStart = +new Date();
