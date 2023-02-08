@@ -1,8 +1,5 @@
-export async function load({ fetch, data }: any) {
-  const colors = fetch("/api/colors").then((resp: any) => resp.json());
-
+export async function load({ data }: any) {
   return {
-    ...data,
-    colors
+    ...data
   };
 }

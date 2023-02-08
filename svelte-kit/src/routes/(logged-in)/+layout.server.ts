@@ -4,7 +4,7 @@ import { allTags } from "$data/tags";
 
 import { getUser } from "$data/user";
 
-export async function load({ locals, request }: any) {
+export async function load({ locals, request, fetch }: any) {
   // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
   const requestUrl = new URL(request.url);
   const publicUserId = requestUrl.searchParams.get("user");
@@ -32,11 +32,13 @@ export async function load({ locals, request }: any) {
 
   const tags = allTags(activeUserId);
   const subjects = allSubjects(activeUserId);
+  const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
   return {
     isPublic,
     publicName,
     publicBooksHeader,
+    colors,
     ...(await subjects),
     ...(await tags)
   };
