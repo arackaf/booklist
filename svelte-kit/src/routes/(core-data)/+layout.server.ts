@@ -11,8 +11,6 @@ export async function load({ locals, request, fetch }: any) {
 
   let isPublic = false;
   let publicUser: DynamoUser | null = null;
-  let publicName: string | null = null;
-  let publicBooksHeader: string | null = null;
 
   const session = await locals.getSession();
   let activeUserId = publicUserId || session?.userId;
@@ -27,15 +25,13 @@ export async function load({ locals, request, fetch }: any) {
     if (!publicUser || !publicUser.isPublic) {
     } else {
       isPublic = true;
-      publicName = publicUser.publicName;
-      publicBooksHeader = publicUser.publicBooksHeader;
     }
   }
 
   return {
     isPublic,
-    publicName,
-    publicBooksHeader,
+    hasPublicId: !!publicUserId,
+    publicUser,
     colors,
     loggedIn: !!session?.user,
     userId: session?.userId,
