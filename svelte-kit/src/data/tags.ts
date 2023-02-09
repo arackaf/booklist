@@ -20,6 +20,7 @@ export const allTags = async (userId: string = "") => {
     })
     .catch(err => {
       console.log({ err });
+      return [];
     });
 };
 

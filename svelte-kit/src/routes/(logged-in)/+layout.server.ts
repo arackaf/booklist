@@ -1,4 +1,4 @@
-import type { DynamoUser } from "$data/types";
+import type { DynamoUser, Subject, Tag } from "$data/types";
 import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
 
@@ -15,14 +15,16 @@ export async function load({ locals, request, fetch }: any) {
   const session = await locals.getSession();
   let activeUserId = publicUserId || session?.userId;
 
-  const tags = allTags(activeUserId);
-  const subjects = allSubjects(activeUserId);
+  let tags: Promise<Tag[]> | Tag[] = allTags(activeUserId);
+  let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
 
     if (!publicUser || !publicUser.isPublic) {
+      tags = [];
+      subjects = [];
     } else {
       isPublic = true;
     }

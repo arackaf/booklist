@@ -11,13 +11,18 @@ export const allSubjects = async (userId: string = "") => {
 
   return querySubjects({
     pipeline: [{ $match: { userId } }, { $project: { _id: 1, name: 1, path: 1, textColor: 1, backgroundColor: 1 } }, { $sort: { name: 1 } }]
-  }).then(subjects => {
-    const httpEnd = +new Date();
+  })
+    .then(subjects => {
+      const httpEnd = +new Date();
 
-    console.log("HTTP subjects time", httpEnd - httpStart);
+      console.log("HTTP subjects time", httpEnd - httpStart);
 
-    return subjects;
-  });
+      return subjects;
+    })
+    .catch(err => {
+      console.log("Error loading subjects", err);
+      return [];
+    });
 };
 
 export const saveSubject = async (userId: string, _id: string, subject: SubjectEditFields) => {
