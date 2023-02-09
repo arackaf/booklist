@@ -4,7 +4,7 @@ import type { TagEditFields } from "./types";
 
 export const allTags = async (userId: string = "") => {
   if (!userId) {
-    return { tags: [], tagHash: {} };
+    return [];
   }
 
   const httpStart = +new Date();
@@ -16,9 +16,7 @@ export const allTags = async (userId: string = "") => {
       const httpEnd = +new Date();
       console.log("HTTP tags time", httpEnd - httpStart);
 
-      const tagHash = toHash(tags);
-
-      return { tags, tagHash };
+      return tags;
     })
     .catch(err => {
       console.log({ err });

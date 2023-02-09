@@ -4,9 +4,7 @@ export async function load({ data }: any) {
 
   if (!loggedIn && !isPublic) {
     overrides.subjects = [];
-    overrides.subjectHash = {};
     overrides.tags = [];
-    overrides.tagHash = {};
   }
 
   return {

@@ -1,5 +1,6 @@
-import { page } from "$app/stores";
 import { derived } from "svelte/store";
+import { page } from "$app/stores";
+import { toHash } from "$lib/state/helpers";
 
 type SortValue = keyof typeof sortDisplayLookup;
 export const sortDisplayLookup = {
@@ -27,10 +28,10 @@ export const searchState = derived(page, $page => {
   const sortString = sort ?? DEFAULT_SORT;
   const [sortField, sortDirection] = sortString.split("-");
 
-  const subjectHash = $page.data.subjectHash;
+  const subjectHash = toHash($page.data.subjects);
   const subjectsObjects = subjects.map(_id => subjectHash[_id]).filter(s => s);
 
-  const tagHash = $page.data.tagHash;
+  const tagHash = toHash($page.data.tags);
   const tagObjects = tags.map(_id => tagHash[_id]).filter(s => s);
 
   const result = {

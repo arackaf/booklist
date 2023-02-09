@@ -39,7 +39,7 @@ export async function load({ locals, request, fetch }: any) {
     colors,
     loggedIn: !!session?.user,
     userId: session?.userId,
-    ...(await subjects),
-    ...(await tags)
+    subjects,
+    tags
   };
 }

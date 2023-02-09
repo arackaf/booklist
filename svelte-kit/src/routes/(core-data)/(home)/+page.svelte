@@ -2,13 +2,15 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
 
-  import type { BookSubjectStack, Hash, Subject } from "$data/types";
+  import type { BookSubjectStack, Subject } from "$data/types";
 
+  import { toHash } from "$lib/state/helpers";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
+
   import BarChart from "./data-vis/barChart/chart/BarChart.svelte";
 
   const subjects: Subject[] = $page.data.subjects;
-  const subjectHash: Hash<Subject> = $page.data.subjectHash;
+  $: subjectHash = toHash(subjects);
   const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const books: BookSubjectStack[] = $page.data.books;
