@@ -22,9 +22,7 @@
 
   export let data: any;
 
-  const publicModules = new Set(["/", "/discover", "/books", "/settings/theme"]);
-
-  $: ({ showMobile, uxState, loggedIn, isPublic, userId } = data);
+  $: ({ showMobile, uxState, loggedIn, hasPublicId, userId } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -41,8 +39,7 @@
     }
   }
 
-  $: currentPath = $page.url.pathname;
-  $: showContent = loggedIn || (isPublic && publicModules.has(currentPath));
+  $: showContent = loggedIn || hasPublicId;
 
   let navigating = false;
   beforeNavigate(({ type }) => {
