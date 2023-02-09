@@ -1,9 +1,17 @@
 <script lang="ts">
   import { page } from "$app/stores";
 
-  $: ({ publicName, publicBooksHeader } = $page.data);
+  $: ({ publicUser } = $page.data);
+  $: ({ publicName, publicBooksHeader } = publicUser || {});
 
-  $: booksHeader = publicBooksHeader || `${publicName}'s Books`;
+  let booksHeader: string;
+  $: {
+    if (!publicName && !publicBooksHeader) {
+      booksHeader = "";
+    } else {
+      booksHeader = publicBooksHeader || `${publicName}'s Books`;
+    }
+  }
 </script>
 
 <h4>{booksHeader}</h4>
