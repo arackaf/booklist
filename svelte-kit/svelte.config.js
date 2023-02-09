@@ -7,7 +7,8 @@ const config = {
 
   kit: {
     adapter: adapter({
-      edge: true
+      runtime: "edge",
+      regions: ["iad1"]
     }),
     alias: {
       $styles: "src/styles",
