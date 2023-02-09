@@ -74,10 +74,10 @@
     loading = true;
     let searchParams = new URLSearchParams([
       ["page", pageBind],
-      ["page-size", "5"],
+      ["page-size", "15"],
       ["result-set", "compact"],
       ["cache", getCurrentCookieValue(BOOKS_CACHE)],
-      ...["search", "is-read", "child-subjects"].map(k => [k, data.get(k)?.toString() ?? ""]),
+      ...["search", "is-read", "child-subjects"].filter(k => data.get(k)).map(k => [k, data.get(k).toString()]),
       ...["subjects", "tags"].flatMap(k => (data.getAll(k) ?? []).map((val: any) => [k, val.toString()]))
     ]);
 
