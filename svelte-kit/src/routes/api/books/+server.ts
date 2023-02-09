@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 
-import type { BookSearch, DynamoUser } from "$data/types";
-import { searchBooks, EMPTY_BOOKS_RESULTS } from "$data/books";
+import type { BookSearch } from "$data/types";
+import { searchBooks } from "$data/books";
 import { getUser } from "$data/user";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
@@ -26,10 +26,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const noSubjects = url.searchParams.get("no-subjects") === "true";
   const resultSet = url.searchParams.get("result-set") || "";
 
-  let publicUserPendingMaybe: Promise<DynamoUser | null> | null = null;
   if (publicUser) {
     userId = publicUser;
-    publicUserPendingMaybe = getUser(publicUser);
   }
 
   const packet: BookSearch = {
@@ -55,13 +53,6 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   }
 
   const books = await searchBooks(userId, packet);
-
-  if (publicUserPendingMaybe) {
-    const publicUser = await publicUserPendingMaybe;
-    if (!publicUser?.isPublic) {
-      return json(EMPTY_BOOKS_RESULTS);
-    }
-  }
 
   return json(books);
 }

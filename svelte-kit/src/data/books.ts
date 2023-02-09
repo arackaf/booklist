@@ -1,7 +1,8 @@
+import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
+
 import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
-import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
 const defaultBookFields = [
   "_id",
@@ -30,8 +31,6 @@ const getFieldProjection = (fields: string[]) =>
     result[field] = 1;
     return result;
   }, {});
-
-export const EMPTY_BOOKS_RESULTS = { books: [], totalBooks: 0, page: 0, totalPages: 0 };
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
