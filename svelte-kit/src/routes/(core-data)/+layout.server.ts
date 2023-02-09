@@ -3,11 +3,10 @@ import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
 
 import { getUser } from "$data/user";
+import { getPublicId } from "$lib/util/getPublicId";
 
 export async function load({ locals, request, fetch }: any) {
-  // do NOT use the url arg that comes with the loader, since we don't want this to re-run whenever the url changes
-  const requestUrl = new URL(request.url);
-  const publicUserId = requestUrl.searchParams.get("user");
+  const publicUserId = getPublicId(request);
 
   let isPublic = false;
   let publicUser: DynamoUser | null = null;
