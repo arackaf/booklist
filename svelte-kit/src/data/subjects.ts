@@ -1,10 +1,9 @@
 import type { Subject } from "./types";
-import { getSubject, querySubjects, runMultiUpdate, deleteById, type SubjectEditFields, insertObject, runRequest } from "./dbUtils";
-import { toHash } from "$lib/state/helpers";
+import { getSubject, querySubjects, runMultiUpdate, type SubjectEditFields, insertObject, runRequest } from "./dbUtils";
 
 export const allSubjects = async (userId: string = "") => {
   if (!userId) {
-    return { subjects: [], subjectHash: {} };
+    return [];
   }
 
   userId = userId || "";
@@ -17,9 +16,7 @@ export const allSubjects = async (userId: string = "") => {
 
     console.log("HTTP subjects time", httpEnd - httpStart);
 
-    const subjectHash = toHash(subjects);
-
-    return { subjects, subjectHash };
+    return subjects;
   });
 };
 
