@@ -4,6 +4,7 @@
   import type { Writable } from "svelte/store";
 
   import Button from "$lib/components/buttons/Button.svelte";
+  import BookCover from "$lib/components/ui/BookCover.svelte";
 
   export let data: { scans: Writable<any>; nextPageKey: Writable<string> };
 
@@ -34,7 +35,8 @@
     <div class="results">
       {#each $scans as item, i}
         {#if item.success}
-          <img alt="Book cover" src={item.smallImage} />
+          <BookCover size="small" book={item} />
+
           <div>{item.title ?? `${item.isbn} Failure`}</div>
         {:else}
           <div />
