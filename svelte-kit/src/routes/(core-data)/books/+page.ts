@@ -7,7 +7,7 @@ export async function load({ url, parent, fetch, depends, ...rest }: any) {
   depends("reload:books");
 
   const parentData = await parent();
-  const { uxState, showMobile } = parentData;
+  const { uxState, showMobile, isMobile } = parentData;
   const defaultBookView = uxState.bkVw ?? (showMobile ? BASIC_LIST_VIEW : GRID_VIEW);
 
   const cache = getCurrentCookieValue(BOOKS_CACHE) || parentData.booksCache;
@@ -19,7 +19,7 @@ export async function load({ url, parent, fetch, depends, ...rest }: any) {
     };
   }
 
-  const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}`);
+  const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}&is-mobile=${isMobile}`);
   const { books, totalBooks, page, totalPages } = await resp.json();
 
   return {

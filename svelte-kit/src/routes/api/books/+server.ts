@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
-import { getUser } from "$data/user";
+import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
   const session = await locals.getSession();
@@ -12,9 +12,9 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     "cache-control": "max-age=60"
   });
 
+  const isMobile = (url.searchParams.get("is-mobile") || "") === "true";
   const publicUser = url.searchParams.get("user") || "";
   const page = parseInt(url.searchParams.get("page")!) || 1;
-  const pageSize = parseInt(url.searchParams.get("page-size") ?? "", 10) || undefined;
   const search = url.searchParams.get("search") || "";
   const publisher = url.searchParams.get("publisher") || "";
   const author = url.searchParams.get("author") || "";
@@ -33,7 +33,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
   const packet: BookSearch = {
     publicUser,
     page,
-    pageSize,
+    pageSize: isMobile ? Math.round(DEFAULT_BOOKS_PAGE_SIZE / 2) : DEFAULT_BOOKS_PAGE_SIZE,
     author,
     search,
     publisher,
