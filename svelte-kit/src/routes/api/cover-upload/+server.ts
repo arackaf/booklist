@@ -48,14 +48,13 @@ export async function POST({ cookies, locals, request }: any) {
     });
 
     const arrayBuffer = await file.arrayBuffer();
-    const fileBuffer = Buffer.from(arrayBuffer);
 
     await s3
       .send(
         new PutObjectCommand({
           Bucket: "my-library-cover-uploads",
           Key: uploadKey,
-          Body: fileBuffer
+          Body: arrayBuffer
         })
       )
       .catch(err => {
