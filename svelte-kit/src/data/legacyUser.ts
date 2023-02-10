@@ -1,11 +1,11 @@
 import md5 from "blueimp-md5";
-import { env } from "$env/dynamic/private";
+import { SALT } from "$env/static/private";
 
 import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
 const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
 
-const salt = env.SALT;
+const salt = SALT;
 
 export async function lookupUser(email: string, password: string) {
   email = email.toLowerCase();
