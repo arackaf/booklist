@@ -35,7 +35,7 @@ export async function POST({ locals }: any) {
       return json({ error: true });
     }
   } catch (er) {
-    console.log("Error invoking lambda:", er);
+    console.log("Error invoking lambda", er);
     return json({ error: true });
   }
 }

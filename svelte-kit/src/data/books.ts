@@ -35,7 +35,6 @@ const getFieldProjection = (fields: string[]) =>
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
 
-  console.log({ userId });
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
