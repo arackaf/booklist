@@ -1,4 +1,4 @@
-import uuid from "uuid";
+import { v4 } from "uuid";
 
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
@@ -28,7 +28,7 @@ export async function POST({ cookies, locals, request }: any) {
   const filename = reqBody.get("filename");
 
   const extension = getExtension(filename) || ".jpg";
-  const uploadKey = `upload-staging/${uuid.v4()}${extension}`;
+  const uploadKey = `upload-staging/${v4()}${extension}`;
 
   try {
     const client = new LambdaClient({
