@@ -38,8 +38,6 @@ const auth = SvelteKitAuth({
     strategy: "jwt"
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
-
   adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any,
 
   callbacks: {
