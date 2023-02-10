@@ -13,7 +13,6 @@ export async function load({ url, parent, fetch, depends, ...rest }: any) {
   const cache = getCurrentCookieValue(BOOKS_CACHE) || parentData.booksCache;
 
   if (parentData.hasPublicId && !parentData.isPublic) {
-    console.log("SENDING");
     return {
       defaultBookView,
       ...EMPTY_BOOKS_RESULTS_CLIENT
