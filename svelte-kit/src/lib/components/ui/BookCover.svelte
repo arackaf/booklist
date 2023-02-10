@@ -39,7 +39,7 @@
 
 <div {style}>
   {#if previewString}
-    <img alt="Book cover preview" src={previewString} style={sizingStyle} class="preview" />
+    <span class="preview" style={`background: url('${previewString}') no-repeat; background-size: cover; ${sizingStyle}`} />
   {/if}
   {#if urlToUse}
     <img alt="Book cover" src={urlToUse} class="image" style={sizingStyle} />
