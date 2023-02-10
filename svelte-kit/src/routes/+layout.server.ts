@@ -19,6 +19,8 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
   }
 
   return {
+    loggedIn: !!session?.user,
+    userId: session?.userId,
     uxState,
     isMobile,
     booksCache,

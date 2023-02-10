@@ -34,8 +34,6 @@ export async function load({ locals, request, fetch }: any) {
     hasPublicId: !!publicUserId,
     publicUser,
     colors,
-    loggedIn: !!session?.user,
-    userId: session?.userId,
     subjects,
     tags
   };
