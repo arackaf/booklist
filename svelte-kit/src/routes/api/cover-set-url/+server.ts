@@ -24,20 +24,25 @@ export async function POST({ cookies, locals, request }: any) {
         secretAccessKey: AMAZON_SECRET_KEY
       }
     });
+    console.log("a");
     const command = new InvokeCommand({
       FunctionName: PROCESS_COVER_LAMBDA,
       Payload: fromUtf8(JSON.stringify({ url, userId }))
     });
+    console.log("b");
     const response = await client.send(command);
 
+    console.log("c");
     if (response.Payload) {
       const respJson = JSON.parse(toUtf8(response.Payload));
 
+      console.log("d");
       return json(respJson);
     } else {
       return json({ error: true });
     }
   } catch (er) {
+    console.log("e");
     console.log("Error invoking lambda", er);
     return json({ error: true });
   }
