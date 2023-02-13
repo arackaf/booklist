@@ -58,9 +58,6 @@ export async function getUserSync(userId: string) {
     return syncEntry;
   } catch (er) {
     console.log("Error getting user sync", er);
-    setTimeout(() => {
-      console.log("Error", er);
-    }, 3000);
     return null;
   }
 }

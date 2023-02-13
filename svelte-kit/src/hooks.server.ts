@@ -6,6 +6,7 @@ import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AMAZON_ACCESS_KEY, AMAZON_SE
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
+import { getUserSync } from "$data/legacyUser";
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -24,8 +25,6 @@ const client = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
   }
 });
 
-import { getUserSync } from "$data/legacyUser";
-// force deploy
 const auth = SvelteKitAuth({
   providers: [
     // @ts-ignore
