@@ -57,7 +57,7 @@ export async function getUserSync(userId: string) {
     console.log({ syncEntry });
     return syncEntry;
   } catch (er) {
-    console.log("Error", er);
+    console.log("Error getting user sync", er);
     return null;
   }
 }

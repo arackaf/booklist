@@ -44,13 +44,17 @@ const auth = SvelteKitAuth({
 
   callbacks: {
     async signIn({ account }) {
-      console.log("Sign in callback");
+      console.log("Sign in callback", { account });
       if (account == null) {
         return false;
       }
 
       console.log({ "account.providerAccountId": account.providerAccountId });
+
       const userSync = await getUserSync(account.providerAccountId);
+
+      console.log("userSync", userSync);
+
       if (userSync) {
         account.syncdId = userSync.sk;
       }
