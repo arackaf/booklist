@@ -49,6 +49,7 @@
 
       if (result.data.success) {
         runDelete($page.data.books, _id);
+        $page.data.totalBooks.update((x: number) => x - 1);
       }
     };
   };

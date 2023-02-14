@@ -1,8 +1,11 @@
 import { lookupUser, syncUser } from "$data/legacyUser";
+import { ensureLoggedIn } from "$lib/util/authCheck";
 
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const load = async ({ locals }: any) => {
+  await ensureLoggedIn({ locals });
+
   const session = await locals.getSession();
   const { legacySync } = session;
 

@@ -1,17 +1,14 @@
 import { booksSubjectsDump } from "$data/books";
-import { allSubjects } from "$data/subjects";
+import { ensureAnyUser } from "$lib/util/authCheck";
+import { getPublicId } from "$lib/util/getPublicId";
 
-export async function load({ locals }: any) {
+export async function load({ locals, request }: any) {
+  await ensureAnyUser({ locals, request });
+
   const session = await locals.getSession();
-  if (!session) {
-    return {};
-  }
-
-  const subjects = allSubjects(session.userId);
-  const books = booksSubjectsDump(session.userId);
+  const parentId = getPublicId(request);
 
   return {
-    ...(await subjects),
-    books
+    books: booksSubjectsDump(session?.userId || parentId)
   };
 }

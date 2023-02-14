@@ -1,18 +1,14 @@
 import { createUser, getUser, updateUser } from "$data/user";
+import { ensureLoggedIn } from "$lib/util/authCheck";
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const load = async ({ locals, depends }: any) => {
-  const session = await locals.getSession();
-  if (!session) {
-    return { user: null };
-  }
-  const { userId } = session;
-
   depends("user:settings");
 
-  if (!userId) {
-    return {};
-  }
+  await ensureLoggedIn({ locals });
+
+  const session = await locals.getSession();
+  const { userId } = session;
 
   let user = await getUser(userId);
 

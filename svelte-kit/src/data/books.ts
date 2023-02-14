@@ -192,6 +192,7 @@ export const booksSubjectsDump = async (userId: string) => {
     pipeline: [
       { $match: { userId, "subjects.0": { $exists: true } } },
       { $group: { _id: "$subjects", count: { $count: {} } } },
+      { $sort: { _id: 1 } },
       { $project: { _id: 0, subjects: "$_id", count: 1 } }
     ]
   })

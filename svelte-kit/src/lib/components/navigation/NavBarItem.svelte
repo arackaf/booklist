@@ -9,14 +9,15 @@
   export { className as class };
   export let onClick: (() => void) | null = null;
   export let label: string = "";
+  export let active: boolean | null = null;
 
   $: currentModule = $page.route.id;
-  $: active = href && currentModule?.indexOf(href) !== -1;
+  $: isActive = (active != null && active) || (href && currentModule?.indexOf(href) !== -1);
 
   const spreadClassNames = (baseCssClasses = "", ...userClasses: string[]) => `${baseCssClasses} ${userClasses.join(" ")}`;
 </script>
 
-<li class={spreadClassNames(className || "", !!disabled ? "disabled" : "", active ? "active" : "")}>
+<li class={spreadClassNames(className || "", !!disabled ? "disabled" : "", isActive ? "active" : "")}>
   <ModuleLink {onClick} {style} {href} {label}>
     <slot />
   </ModuleLink>
