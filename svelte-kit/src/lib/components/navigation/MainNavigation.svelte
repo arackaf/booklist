@@ -14,6 +14,7 @@
 
   $: ({ loggedIn } = $page.data);
 
+  $: isSettings = /\/settings/.test($page.url.pathname);
   $: currentModule = $page.url.pathname;
 
   //let isAdminUser = isAdmin();
@@ -80,7 +81,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem href="/settings/theme" label={"Settings"}>
+        <NavBarItem active={isSettings} href="/settings/theme" label={"Settings"}>
           <span class="hidden-xs">Settings</span>
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
