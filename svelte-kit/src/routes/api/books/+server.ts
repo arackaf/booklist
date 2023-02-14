@@ -3,8 +3,9 @@ import { json } from "@sveltejs/kit";
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+import { parseUserAgent } from "$lib/util/parseUserAgent";
 
-export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
+export async function GET({ url, setHeaders, locals, request }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
   const session = await locals.getSession();
   let userId = session?.userId;
 
@@ -12,7 +13,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     "cache-control": "max-age=60"
   });
 
-  const isMobile = (url.searchParams.get("is-mobile") || "") === "true";
+  const { isMobile } = parseUserAgent(request);
   const publicUser = url.searchParams.get("user") || "";
   const page = parseInt(url.searchParams.get("page")!) || 1;
   const search = url.searchParams.get("search") || "";

@@ -1,14 +1,11 @@
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
+import { parseUserAgent } from "$lib/util/parseUserAgent";
 import { getUxState } from "$lib/util/uxState";
 
 export async function load({ locals, isDataRequest, request, cookies, depends }: any) {
   depends("app:root");
 
-  const session = await locals.getSession();
-
-  const userAgent = request.headers.get("User-Agent");
-  const isMobile = /mobile/i.test(userAgent);
-
+  const { isMobile } = parseUserAgent(request);
   const uxState = getUxState(cookies);
 
   const initialRequest = !isDataRequest;
@@ -18,6 +15,7 @@ export async function load({ locals, isDataRequest, request, cookies, depends }:
     updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
   }
 
+  const session = await locals.getSession();
   return {
     loggedIn: !!session?.user,
     userId: session?.userId,
