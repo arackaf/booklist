@@ -1,10 +1,13 @@
+import { writable } from "svelte/store";
 import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 import { EMPTY_BOOKS_RESULTS_CLIENT } from "$lib/state/dataConstants";
-import { writable } from "svelte/store";
+import { ensureAnyUser } from "$lib/util/authCheck";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
-export async function load({ url, parent, fetch, depends, ...rest }: any) {
+export async function load({ url, parent, fetch, depends }: any) {
   depends("reload:books");
+
+  await ensureAnyUser({ parent, url });
 
   const parentData = await parent();
   const { uxState, showMobile, isMobile } = parentData;

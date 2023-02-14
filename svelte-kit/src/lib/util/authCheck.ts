@@ -5,8 +5,8 @@ export const redirectToLanding = () => {
   throw redirect(302, "/landing");
 };
 
-export const ensureAnyUser = async ({ locals, parent, request }: any) => {
-  const publicUserId = getPublicId(request);
+export const ensureAnyUser = async ({ locals, parent, request, url }: any) => {
+  const publicUserId = getPublicId(request || { url });
   if (publicUserId) {
     return {
       valid: true
