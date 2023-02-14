@@ -14,8 +14,8 @@
 
   $: ({ loggedIn } = $page.data);
 
-  $: isSettings = /\/settings/.test($page.url.pathname);
-  $: currentModule = $page.url.pathname;
+  $: pathname = $page.url.pathname;
+  $: isSettings = /\/settings/.test(pathname);
 
   //let isAdminUser = isAdmin();
   let isAdminUser = false;
@@ -24,7 +24,7 @@
   let isPublic = false;
 
   const homeModules = new Set(["/", "/discover", "/recent-scans"]);
-  $: isHome = homeModules.has(currentModule);
+  $: isHome = homeModules.has(pathname);
 
   let pendingCount = 0;
 
