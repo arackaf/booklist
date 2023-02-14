@@ -1,17 +1,13 @@
 import { booksSubjectsDump } from "$data/books";
-import { allSubjects } from "$data/subjects";
+import { redirectToLanding } from "$lib/util/authCheck";
 
 export async function load({ locals }: any) {
   const session = await locals.getSession();
   if (!session) {
-    return {};
+    redirectToLanding();
   }
 
-  const subjects = allSubjects(session.userId);
-  const books = booksSubjectsDump(session.userId);
-
   return {
-    ...(await subjects),
-    books
+    books: booksSubjectsDump(session.userId)
   };
 }
