@@ -1,4 +1,3 @@
-import { toHash } from "$lib/state/helpers";
 import { deleteById, insertObject, queryTags, updateById } from "./dbUtils";
 import type { TagEditFields } from "./types";
 

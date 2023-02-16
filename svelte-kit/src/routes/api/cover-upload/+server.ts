@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { json } from "@sveltejs/kit";
 
@@ -17,7 +17,7 @@ function getExtension(name: string) {
   return name.slice(ext);
 }
 
-export async function POST({ cookies, locals, request }: any) {
+export async function POST({ locals, request }: any) {
   const session = await locals.getSession();
   if (!session) {
     return json({ error: true });

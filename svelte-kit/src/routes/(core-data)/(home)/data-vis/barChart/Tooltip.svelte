@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Subject } from "$data/types";
   import type { Data, Position } from "./tooltip";
 
   export let position: Position;

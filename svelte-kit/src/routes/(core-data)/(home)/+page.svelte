@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { page } from "$app/stores";
 
   import type { BookSubjectStack, Subject } from "$data/types";
