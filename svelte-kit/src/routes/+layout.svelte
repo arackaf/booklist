@@ -32,11 +32,11 @@
   }
 
   let navigating = false;
-  beforeNavigate(({ type }) => {
+  beforeNavigate(() => {
     navigating = true;
   });
 
-  afterNavigate(({ type }) => {
+  afterNavigate(() => {
     navigating = false;
   });
 </script>

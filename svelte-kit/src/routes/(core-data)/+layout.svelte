@@ -28,8 +28,6 @@
   }
 
   function showBookToast(book: Book) {
-    const { title, smallImage } = book;
-
     const node = document.createElement("div");
 
     new ScanToasterContent({

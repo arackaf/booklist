@@ -15,12 +15,6 @@
 
   const books: BookSubjectStack[] = $page.data.books;
 
-  let ready = false;
-
-  onMount(() => {
-    ready = true;
-  });
-
   let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
 
   const getDrilldownChart = (index: number, subjects: any, header: any) => {
