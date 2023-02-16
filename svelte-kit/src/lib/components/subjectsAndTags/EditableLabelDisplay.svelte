@@ -8,30 +8,27 @@
   export let setExpanded: (val: boolean) => void;
   export let childSubjects: Label[];
 
-  export let extraStyles = "";
-  let className = "";
-  export { className as class };
-
-  let extraClasses = className || "";
+  $: textColor = item.textColor || "white";
 </script>
 
-<span
-  style="background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {extraStyles}"
-  class={"label label-default label-editable-expandable noselect " + extraClasses}
->
+<span style="background-color: {item.backgroundColor}; color: {textColor};" class="label label-default label-editable-expandable noselect ">
   {#if childSubjects?.length}
-    <a
-      class={cn("toggle", { expanded })}
+    <button
+      class={cn("toggle raw-button", { expanded })}
       on:click={() => setExpanded(!expanded)}
-      style="color: {item.textColor || 'white'}; border-right: {`var(--default-border-width) solid ${item.textColor || 'white'}`}"
+      style="color: {textColor}; border-right: {`var(--default-border-width) solid ${textColor}`}"
     >
       <i class="fad fa-chevron-right" />
-    </a>
+    </button>
   {/if}
 
   {#if $$slots.default}
     <slot />
-  {:else}{item.name}{/if}
+  {:else}
+    {item.name}
+  {/if}
 
-  <a on:click={onEdit} style="color: {item.textColor || 'white'}; cursor: pointer; margin-left: 5px;"> <i class="fal fa-pencil-alt" /> </a>
+  <button class="raw-button" on:click={onEdit} style="color: {textColor}; cursor: pointer; margin-left: 5px;">
+    <i class="fal fa-pencil-alt" />
+  </button>
 </span>
