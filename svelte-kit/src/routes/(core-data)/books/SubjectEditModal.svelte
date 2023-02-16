@@ -22,10 +22,6 @@
     path: ""
   };
 
-  interface ILocalProps {
-    editModalOpen: boolean;
-    stopEditing: any;
-  }
   let editingSubject: Subject | null = null;
 
   const cancelEdit = () => (editingSubject = null);

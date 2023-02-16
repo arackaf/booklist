@@ -5,7 +5,6 @@
 
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   import ScanResults from "./ScanResults.svelte";
@@ -27,10 +26,6 @@
       subjects: []
     } as unknown as Book);
 
-  let onClient = false;
-  onMount(() => {
-    onClient = true;
-  });
   let editingBook: Book | null = null;
 
   let enteringBook = false;

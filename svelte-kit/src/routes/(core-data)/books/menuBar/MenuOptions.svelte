@@ -15,8 +15,6 @@
   let bulkReadSaving: boolean;
   let bulkUnReadSaving: boolean;
 
-  let uiView: any = writable({}); // ReturnType<typeof getBookSearchUiView>;
-
   let reloading = false;
   const reload = () => {
     reloading = true;
