@@ -1,11 +1,12 @@
 <script lang="ts">
+  import type { Label } from "$data/types";
   import cn from "classnames";
 
-  export let item;
-  export let onEdit;
-  export let expanded;
-  export let setExpanded;
-  export let childSubjects;
+  export let item: Label;
+  export let onEdit: () => void;
+  export let expanded: boolean;
+  export let setExpanded: (val: boolean) => void;
+  export let childSubjects: Label[];
 
   export let extraStyles = "";
   let className = "";
