@@ -61,7 +61,7 @@ export const searchState = derived(page, $page => {
 
   result.activeFilterCount = [
     ...simpleFilters.filter(key => result[key]),
-    ...arrayFilters.flatMap(key => result[key]),
+    ...arrayFilters.flatMap(key => result[key] as any),
     ...toggleFilters.filter(key => result[key])
   ].length;
 
