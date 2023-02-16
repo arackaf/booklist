@@ -18,7 +18,7 @@
 </script>
 
 <li class={spreadClassNames(className || "", !!disabled ? "disabled" : "", isActive ? "active" : "")}>
-  <ModuleLink {onClick} {style} {href} {label}>
+  <ModuleLink {onClick} {style} href={disabled ? "" : href} {label}>
     <slot />
   </ModuleLink>
 </li>
