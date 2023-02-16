@@ -15,7 +15,6 @@
 
   let jscolorInstance: any;
   let rootElement: HTMLElement;
-  let valueElement;
   let valueElementId = `${uniqueId}_value`;
   let styleElementId = `${uniqueId}_style`;
 
@@ -44,6 +43,6 @@
 
 <div>
   <a id={uniqueId} bind:this={rootElement} style="height: 20px; {labelStyle}"> Custom </a>
-  <input style="display: none;" bind:this={valueElement} id={valueElementId} value={currentColor} />
+  <input style="display: none;" id={valueElementId} value={currentColor} />
   <input style="display: none" id={styleElementId} />
 </div>
