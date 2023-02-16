@@ -114,7 +114,7 @@ const subjectSortCompare = ({ name: name1 }: Subject, { name: name2 }: Subject) 
 
 export const getEligibleParents = (subjectHash: Hash<Subject>, _id: string) => {
   let eligibleParents = _id
-    ? flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path))
+    ? flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path || ""))
     : flattenSubjects(subjectHash);
 
   return eligibleParents.sort(subjectSortCompare);
