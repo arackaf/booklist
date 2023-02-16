@@ -12,16 +12,12 @@
   import { onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
 
-  $: ({ loggedIn } = $page.data);
+  $: ({ loggedIn, isPublic } = $page.data);
 
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
 
-  //let isAdminUser = isAdmin();
   let isAdminUser = false;
-
-  //$: isPublic = $appState.isPublic;
-  let isPublic = false;
 
   const homeModules = new Set(["/", "/discover", "/recent-scans"]);
   $: isHome = homeModules.has(pathname);
