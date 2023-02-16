@@ -33,7 +33,7 @@
 <div class="recent-scans-module margin-top-med">
   <div class="overlay-holder">
     <div class="results">
-      {#each $scans as item, i}
+      {#each $scans as item}
         {#if item.success}
           <BookCover size="small" book={item} />
 

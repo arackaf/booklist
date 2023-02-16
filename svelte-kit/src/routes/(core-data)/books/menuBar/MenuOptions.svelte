@@ -2,7 +2,6 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import { getContext } from "svelte";
-  import { writable } from "svelte/store";
   import BookReadSetter from "../BookReadSetter.svelte";
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
   import { endSaving, startSaving } from "../state/booksReadSavingState";

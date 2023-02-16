@@ -10,7 +10,7 @@
   import DemoStyles from "./DemoStyles.svelte";
   import ThemeOption from "./ThemeOption.svelte";
 
-  const themeNames = Array.from({ length: NUM_THEMES }, (v, i) => `scheme${i + 1}`);
+  const themeNames = Array.from({ length: NUM_THEMES }, (_, i) => `scheme${i + 1}`);
 
   export let data: PageData;
   $: ({ uxState } = data);

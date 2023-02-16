@@ -30,7 +30,7 @@
     }
   }
 
-  const update = ({ data, cancel }: any) => {
+  const update = ({ cancel }: any) => {
     if (local_isPublic && !local_publicName) {
       error = true;
       return cancel();

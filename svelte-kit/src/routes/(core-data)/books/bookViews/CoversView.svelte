@@ -22,7 +22,7 @@
 <div>
   <div class="root">
     <div style="border: 0" class="covers-list">
-      {#each books as book, i}
+      {#each books as book}
         <figure on:click={() => previewBook(book)} on:keydown={() => {}}>
           <div>
             <BookCover size="medium" {book} />

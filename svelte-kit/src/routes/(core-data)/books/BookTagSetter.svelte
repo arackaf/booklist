@@ -49,7 +49,7 @@
         }
       }
     };
-    return async ({ result }: any) => {
+    return async () => {
       onSave(
         modifyingBooks.map(b => b._id),
         updates
