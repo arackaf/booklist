@@ -3,7 +3,6 @@
   import cn from "classnames";
   import localStorageManager from "$lib/util/localStorage";
 
-  export let text = "";
   export let tabName = "";
   export let disabled = false;
 
