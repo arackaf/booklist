@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { children } from "svelte/internal";
-
   export let subject: any;
 </script>
 
