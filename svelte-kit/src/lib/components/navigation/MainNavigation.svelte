@@ -11,6 +11,7 @@
   import "./mobile-menu.scss";
   import { onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
+  import { publicUserIdPersist } from "$lib/state/urlHelpers";
 
   $: ({ loggedIn, isPublic } = $page.data);
 
@@ -65,7 +66,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem href={"/books"} label={"View books"}>
+        <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
           <span class="hidden-xs">Books</span>
           <i class="visible-xs fal fa-fw fa-books" />
         </NavBarItem>
@@ -77,7 +78,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || isPublic}
-        <NavBarItem active={isSettings} href="/settings/theme" label={"Settings"}>
+        <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
           <span class="hidden-xs">Settings</span>
           <i class="visible-xs fal fa-fw fa-cogs" />
         </NavBarItem>
