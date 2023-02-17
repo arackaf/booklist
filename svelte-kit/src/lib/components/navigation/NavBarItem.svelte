@@ -11,8 +11,9 @@
   export let label: string = "";
   export let active: boolean | null = null;
 
-  $: currentModule = $page.route.id;
-  $: isActive = active != null ? active : href && currentModule?.indexOf(href) !== -1;
+  $: currentPathname = $page.url.pathname;
+  $: hrefPathname = href ? href.replace(/\?.*/, "") : "";
+  $: isActive = active != null ? active : currentPathname === hrefPathname;
 
   const spreadClassNames = (baseCssClasses = "", ...userClasses: string[]) => `${baseCssClasses} ${userClasses.join(" ")}`;
 </script>
