@@ -12,7 +12,7 @@
   export let active: boolean | null = null;
 
   $: currentModule = $page.route.id;
-  $: isActive = (active != null && active) || (href && currentModule?.indexOf(href) !== -1);
+  $: isActive = active != null ? active : href && currentModule?.indexOf(href) !== -1;
 
   const spreadClassNames = (baseCssClasses = "", ...userClasses: string[]) => `${baseCssClasses} ${userClasses.join(" ")}`;
 </script>
