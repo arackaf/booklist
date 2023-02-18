@@ -38,6 +38,7 @@ const auth = SvelteKitAuth({
     strategy: "jwt"
   },
 
+  trustHost: true,
   secret: AUTH_SECRET,
 
   adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any,

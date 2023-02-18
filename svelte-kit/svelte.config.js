@@ -6,7 +6,10 @@ const config = {
   preprocess: preprocess(),
 
   kit: {
-    adapter: adapter({}),
+    adapter: adapter({
+      runtime: "edge",
+      regions: ["iad1"]
+    }),
     alias: {
       $styles: "src/styles",
       $lib: "src/lib",
