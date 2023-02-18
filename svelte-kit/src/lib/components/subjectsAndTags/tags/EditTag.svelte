@@ -60,7 +60,7 @@
   };
 
   let saving = false;
-  function runSave({ data, action, cancel }: any) {
+  function runSave({ data, cancel }: any) {
     const name = data.get("name");
     if (!name) {
       missingName = true;
@@ -101,8 +101,9 @@
           <input type="hidden" name="_id" value={editingTag._id} />
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
-              <label>Name</label>
+              <label for="tag-name">Name</label>
               <input
+                id="tag-name"
                 bind:this={inputEl}
                 bind:value={editingTag.name}
                 name="name"
@@ -124,7 +125,7 @@
           <div class="col-xs-12 col-lg-6" />
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Label Color</label>
+              <span>Label Color</span>
               <ColorsPalette
                 currentColor={editingTag.backgroundColor}
                 colors={colors.map(c => c.backgroundColor)}
@@ -140,7 +141,7 @@
           </div>
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Text Color</label>
+              <span>Text Color</span>
               <ColorsPalette currentColor={editingTag.textColor} colors={textColors} onColorChosen={color => (editingTag.textColor = color)} />
               <CustomColorPicker
                 labelStyle="margin-left: 3px"

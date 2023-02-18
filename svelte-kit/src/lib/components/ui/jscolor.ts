@@ -1,3 +1,8 @@
+// @ts-nocheck
+"use strict";
+
+export default null;
+
 /**
  * jscolor - JavaScript Color Picker
  *
@@ -10,10 +15,10 @@
  * See usage examples at http://jscolor.com/examples/
  */
 
-"use strict";
-
 if (typeof window === "object" && !window.jscolor) {
   window.jscolor = (function () {
+    "use strict";
+
     var jsc = {
       register: function () {
         jsc.attachDOMReadyEvent(jsc.init);

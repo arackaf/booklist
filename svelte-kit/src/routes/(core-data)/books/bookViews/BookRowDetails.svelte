@@ -60,7 +60,7 @@
                 <h4>Similar Books</h4>
                 <table class="table table-condensed" style="backgroundColor: transparent">
                   <tbody>
-                    {#each similarBooks as book, i}
+                    {#each similarBooks as book}
                       <tr>
                         <td>
                           {#if book.smallImage}

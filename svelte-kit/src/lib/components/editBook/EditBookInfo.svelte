@@ -30,7 +30,7 @@
 
   let missingTitle = false;
 
-  const addAuthor = (evt: any) => {
+  const addAuthor = () => {
     updateBook({ authors: [...book.authors, ""] });
   };
 
@@ -118,18 +118,12 @@
       <div class="col-xs-4">
         <div class="form-group">
           <label for={`book-edit-author-${index}`}>Author</label>
-          <input
-            id={`book-edit-author-${index}`}
-            value={book.authors[index]}
-            class="form-control"
-            name="authors"
-            placeholder={`Author ${index + 1}`}
-          />
+          <input id={`book-edit-author-${index}`} value={author} class="form-control" name="authors" placeholder={`Author ${index + 1}`} />
         </div>
       </div>
     {/each}
     <div class="col-xs-12">
-      <Button type="button" disabled={saving} onClick={evt => addAuthor(evt)} preset="default-xs"><i class="far fa-fw fa-plus" />Add author</Button>
+      <Button type="button" disabled={saving} onClick={addAuthor} preset="default-xs"><i class="far fa-fw fa-plus" />Add author</Button>
     </div>
   </FlexRow>
 </fieldset>

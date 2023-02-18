@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import type { Book } from "$data/types";
 
   import BasicViewItem from "./BasicViewItem.svelte";

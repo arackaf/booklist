@@ -30,7 +30,7 @@
     }
   }
 
-  const update = ({ data, cancel }: any) => {
+  const update = ({ cancel }: any) => {
     if (local_isPublic && !local_publicName) {
       error = true;
       return cancel();
@@ -69,14 +69,21 @@
         {#if local_isPublic}
           <div class="col-xs-12">
             <div class="form-group">
-              <label>Publicly display your name as</label>
-              <input name="publicName" class:error bind:value={local_publicName} disabled={saving} placeholder="Public name" />
+              <label for="public-name">Publicly display your name as</label>
+              <input id="public-name" name="publicName" class:error bind:value={local_publicName} disabled={saving} placeholder="Public name" />
             </div>
           </div>
           <div class="col-xs-12">
             <div class="form-group">
-              <label>Publicly display your collection as</label>
-              <input name="publicBooksHeader" bind:value={local_publicBooksHeader} disabled={saving} class="form-control" placeholder="Book header" />
+              <label for="public-header">Publicly display your collection as</label>
+              <input
+                id="public-header"
+                name="publicBooksHeader"
+                bind:value={local_publicBooksHeader}
+                disabled={saving}
+                class="form-control"
+                placeholder="Book header"
+              />
             </div>
           </div>
         {/if}

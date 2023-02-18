@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { page } from "$app/stores";
 
   import type { BookSubjectStack, Subject } from "$data/types";
@@ -14,12 +13,6 @@
   const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
 
   const books: BookSubjectStack[] = $page.data.books;
-
-  let ready = false;
-
-  onMount(() => {
-    ready = true;
-  });
 
   let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
 

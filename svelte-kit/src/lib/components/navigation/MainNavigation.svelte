@@ -40,7 +40,7 @@
 
 <header class="master-nav">
   <nav class="nav">
-    <div class={`nav-header hidden-xs ${isHome && loggedIn ? "active" : ""}`}>
+    <div class={`nav-header hidden-xs ${isHome ? "active" : ""}`}>
       <ModuleLink href="/">
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
@@ -48,11 +48,11 @@
     </div>
 
     <ul class="nav-items">
-      <NavBarItem class="visible-xs" disabled={isPublic} href="/" style="margin-top: '2px';" label={"Home"}>
+      <NavBarItem active={isHome} class="visible-xs" href="/" style="margin-top: '2px';" label={"Home"}>
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
       {#if loggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="/scan" style="position: relative;" label={"Scan books"}>
+        <NavBarItem href="/scan" style="position: relative;" label={"Scan books"}>
           <span class="hidden-xs">Book entry</span>
           <i class="visible-xs fal fa-fw fa-scanner" />
           {#if pendingCount}

@@ -5,6 +5,7 @@
   export let focused: boolean;
   export let selected: boolean;
   export let entryFinished: () => void;
+  export let idx: number;
 
   let inputEl: HTMLInputElement;
   $: {
@@ -56,8 +57,10 @@
 </script>
 
 <div style="display: flex; align-items: center; margin-bottom: 10px">
-  <div><label class="control-label" style="margin-right: 5px"> ISBN </label></div>
-  <input on:focus={onFocus} style="max-width: 250px" class="form-control" bind:this={inputEl} on:keydown={keyDown} />
+  <div>
+    <label for="entry-item-{idx}" class="control-label" style="margin-right: 5px"> ISBN </label>
+  </div>
+  <input id="entry-item-{idx}" on:focus={onFocus} style="max-width: 250px" class="form-control" bind:this={inputEl} on:keydown={keyDown} />
   {#if queuing}<span class="label label-default margin-left">Queuing</span>{/if}
   {#if queued}<span class="label label-success margin-left">Queued</span>{/if}
 </div>

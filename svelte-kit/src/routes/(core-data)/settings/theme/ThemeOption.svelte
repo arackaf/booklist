@@ -7,7 +7,7 @@
   export let name: string;
   export let theme: string;
 
-  const arrayOfTen = Array.from({ length: 10 }, (v, i) => i + 1);
+  const arrayOfTen = Array.from({ length: 10 }, (_, i) => i + 1);
   let formEl: HTMLFormElement;
 
   function setTheme() {

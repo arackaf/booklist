@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { DisablableSubject, Subject } from "$data/types";
-  import type { Label } from "../types";
   import { filterSubjects, subjectState } from "$lib/state/subjectsState";
 
   import GenericLabelSelect from "../GenericLabelSelect.svelte";

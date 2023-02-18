@@ -26,7 +26,7 @@ export const allSubjects = async (userId: string = "") => {
 };
 
 export const saveSubject = async (userId: string, _id: string, subject: SubjectEditFields) => {
-  const { name, originalParentId, parentId, backgroundColor, path, textColor } = subject;
+  const { name, originalParentId, parentId, backgroundColor, textColor } = subject;
 
   const newPath = await getNewPath(userId, parentId);
   if (_id) {

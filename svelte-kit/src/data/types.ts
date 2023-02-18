@@ -1,10 +1,13 @@
 import type { Readable } from "svelte/store";
 
-export type Subject = {
+export type Label = {
   _id: string;
   name: string;
   textColor: string;
   backgroundColor: string;
+};
+
+export type Subject = Label & {
   path: string | null;
 };
 
@@ -21,12 +24,7 @@ export type Hash<T> = {
   [_id: string]: T;
 };
 
-export type Tag = {
-  _id: string;
-  name: string;
-  textColor: string;
-  backgroundColor: string;
-};
+export type Tag = Label;
 
 export type TagEditFields = Omit<Tag, "_id">;
 

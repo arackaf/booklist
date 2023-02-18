@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import type { Book } from "$data/types";
 
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
@@ -80,6 +78,7 @@
       {#each Array.from({ length: 10 }) as _, idx}
         <div>
           <BookEntryItem
+            {idx}
             on:focus={() => (focused = idx)}
             focused={idx == focused}
             selected={idx == selected}

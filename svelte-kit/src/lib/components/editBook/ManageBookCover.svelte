@@ -38,7 +38,7 @@
   };
 
   const onDrop = (evt: any) => {
-    const { acceptedFiles, fileRejections } = evt.detail;
+    const { acceptedFiles } = evt.detail;
     if (!acceptedFiles.length) {
       //TODO: ??
       return;

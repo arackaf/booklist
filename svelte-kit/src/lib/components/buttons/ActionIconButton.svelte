@@ -20,29 +20,6 @@
   let isFinished = false;
 
   const styleToUse = `minWidth: 5ch; ${style}`;
-
-  const onClickFn = (...args: any[]) => {
-    let result = onClick(...args);
-
-    if (!result?.then) {
-      return;
-    }
-
-    isRunning = true;
-    Promise.resolve(result).then(() => {
-      if (!active) {
-        return;
-      }
-
-      isFinished = true;
-      setTimeout(() => {
-        if (active) {
-          isFinished = false;
-          isRunning = false;
-        }
-      }, 2000);
-    });
-  };
 </script>
 
 <button

@@ -68,7 +68,7 @@
   let currentQuery = "";
   let totalBooks = 0;
 
-  async function executeSearch({ cancel, data, ...rest }: any) {
+  async function executeSearch({ cancel, data }: any) {
     cancel();
 
     loading = true;
@@ -113,14 +113,14 @@
     <FlexRow>
       <div class="col-xs-6">
         <div class="form-group">
-          <label>Title</label>
-          <input bind:this={titleEl} name="search" placeholder="Search title" class="form-control" />
+          <label for="discover-title-search-id">Title</label>
+          <input id="discover-title-search-id" bind:this={titleEl} name="search" placeholder="Search title" class="form-control" />
         </div>
       </div>
 
       <div class="col-xs-6">
         <Stack>
-          <label class="form-label">Is read?</label>
+          <span class="form-label">Is read?</span>
           <FlowItems class="radio">
             <FlowItems tightest={true} vCenter={true}>
               <input type="radio" checked value="" name="is-read" id="isReadE" />

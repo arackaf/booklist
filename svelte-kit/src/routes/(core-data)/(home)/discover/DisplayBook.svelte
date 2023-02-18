@@ -12,7 +12,7 @@
 
   const SLIDE_IN_SPRING = { stiffness: 0.1, damping: 0.4 };
 
-  const slideIn: any = (node: HTMLElement) => {
+  const slideIn: any = () => {
     const { duration, tickToValue } = springIn(-25, 0, SLIDE_IN_SPRING);
     return {
       duration: duration,

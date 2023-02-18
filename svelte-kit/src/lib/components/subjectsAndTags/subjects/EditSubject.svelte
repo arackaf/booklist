@@ -69,7 +69,7 @@
   };
 
   let saving = false;
-  function runSave({ data, action, cancel }: any) {
+  function runSave({ data, cancel }: any) {
     const name = data.get("name");
     if (!name) {
       missingName = true;
@@ -112,8 +112,9 @@
           <input type="hidden" name="originalParentId" value={originalParentId} />
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
-              <label>Name</label>
+              <label for="subject-name">Name</label>
               <input
+                id="subject-name"
                 bind:this={inputEl}
                 bind:value={editingSubject.name}
                 name="name"
@@ -134,8 +135,8 @@
           </div>
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
-              <label>Parent</label>
-              <select bind:value={editingSubject.parentId} name="parentId" class="form-control">
+              <label for="subject-parent">Parent</label>
+              <select id="subject-parent" bind:value={editingSubject.parentId} name="parentId" class="form-control">
                 <option value="">No Parent</option>
                 {#each eligibleParents as s}
                   <option value={s._id}>{s.name}</option>
@@ -145,7 +146,7 @@
           </div>
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Label Color</label>
+              <span>Label Color</span>
               <ColorsPalette
                 currentColor={editingSubject.backgroundColor}
                 colors={colors.map(c => c.backgroundColor)}
@@ -161,7 +162,7 @@
           </div>
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label>Text Color</label>
+              <span>Text Color</span>
               <ColorsPalette
                 currentColor={editingSubject.textColor}
                 colors={textColors}

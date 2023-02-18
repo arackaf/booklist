@@ -15,8 +15,6 @@
 
   let initialRenderFinished = false;
 
-  let rootEl: any;
-
   $: _colors = data.entries.map((e: any) => e.color);
   let colors: any[] = [];
 
@@ -58,7 +56,7 @@
   }
 </script>
 
-<g bind:this={rootEl} use:tooltip={{ position, data, drilldown, removeBar }}>
+<g use:tooltip={{ position, data, drilldown, removeBar }}>
   {#each colors as c}
     <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
   {/each}

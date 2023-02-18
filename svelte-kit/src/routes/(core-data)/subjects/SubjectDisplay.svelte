@@ -8,7 +8,7 @@
   import type { FullSubject, Subject } from "$data/types";
 
   import { syncHeight } from "$lib/util/animationHelpers";
-  import EditableExpandableLabelDisplay from "$lib/components/subjectsAndTags/EditableLabelDisplay.svelte";
+  import SubjectLabelDisplay from "$lib/components/subjectsAndTags/SubjectLabelDisplay.svelte";
   import { flip } from "svelte/animate";
   import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
@@ -70,7 +70,7 @@
 
 <div>
   <div class="padding-bottom-med subjectRow">
-    <EditableExpandableLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+    <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
   <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">

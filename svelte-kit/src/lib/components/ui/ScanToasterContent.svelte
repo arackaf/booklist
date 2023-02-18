@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Book } from "$data/types";
-  import Stack from "../layout/Stack.svelte";
   import BookCover from "./BookCover.svelte";
 
   export let book: Book;

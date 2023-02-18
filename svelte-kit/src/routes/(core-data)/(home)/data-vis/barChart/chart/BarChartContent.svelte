@@ -1,6 +1,5 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import { writable } from "svelte/store";
   import { scaleLinear } from "d3-scale";
   import { scaleBand } from "d3-scale";
   import { max } from "d3-array";

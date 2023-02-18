@@ -7,7 +7,7 @@
   export let style = "";
   export let disabled = false;
   export let preset = "";
-  export let onClick = (evt: any) => {};
+  export let onClick = () => {};
 </script>
 
 <button class={cssFromPreset(preset, className)} {style} on:click={onClick} {disabled} {...$$restProps}>
