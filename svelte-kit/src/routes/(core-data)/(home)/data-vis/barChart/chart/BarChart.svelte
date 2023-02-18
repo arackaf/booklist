@@ -2,7 +2,6 @@
   import { page } from "$app/stores";
   import { stackGraphData } from "../../stackGraphData";
   import BarChartContent from "./BarChartContent.svelte";
-  //import SectionLoading from "app/components/ui/SectionLoading.svelte";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";
 
   export let books: BookSubjectStack[];
@@ -23,10 +22,7 @@
   const margin = { top: 30, bottom: 180 };
 </script>
 
-{#if !graphData}
-  <span />
-  <!-- <SectionLoading style="margin-top: {chartIndex === 0 ? 150 : 20}px;" /> -->
-{:else if !graphData.length}
+{#if !graphData.length}
   {#if chartIndex == 0}
     <div class="alert alert-warning">
       It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
