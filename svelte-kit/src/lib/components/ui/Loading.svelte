@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition";
 </script>
 
-<div in:fade>
+<div in:fade={{ delay: 50, duration: 200 }}>
   <i class="far fa-5x fa-spin fa-spinner" />
 </div>
 
