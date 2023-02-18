@@ -61,9 +61,12 @@
     else if (size < 1000) sizeClass = "medium";
     else sizeClass = "large";
   }
+
+  let rootElement: HTMLDivElement;
+  $: rendered = !!rootElement;
 </script>
 
-<div use:scrollInitial>
+<div use:scrollInitial bind:this={rootElement}>
   <div class="chart-container" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
       <h4 style="display: inline">{header}</h4>
@@ -94,7 +97,7 @@
             totalSvgWidth={adjustedWidth}
             {drilldown}
             {removeBar}
-            noInitialAnimation={chartIndex === 0}
+            noInitialAnimation={chartIndex === 0 && !rendered}
           />
         {/each}
       </g>
