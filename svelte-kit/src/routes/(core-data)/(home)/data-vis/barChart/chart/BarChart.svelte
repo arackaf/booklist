@@ -23,12 +23,6 @@
   const margin = { top: 30, bottom: 180 };
 </script>
 
-<!-- 
-  Don't show the graph until the isReady flag is true, which flips when the module transition is done. Both transitions running causes
-  problems I don't fully understand. If we have graphData, just assume the page was cached, and show no spinner. There's a small
-  race condition where the data could return faster than the 150ms animation, but the only consequence would be the spinner disappearing
-  a few ms too soon
--->
 {#if !graphData}
   <span />
   <!-- <SectionLoading style="margin-top: {chartIndex === 0 ? 150 : 20}px;" /> -->
