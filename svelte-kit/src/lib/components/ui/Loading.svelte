@@ -1,8 +1,10 @@
 <script>
-  export let style = "";
+  import { fade } from "svelte/transition";
 </script>
 
-<div><i {style} class="far fa-5x fa-spin fa-spinner" /></div>
+<div in:fade>
+  <i class="far fa-5x fa-spin fa-spinner" />
+</div>
 
 <style>
   div {
