@@ -14,7 +14,8 @@ const config = {
       $styles: "src/styles",
       $lib: "src/lib",
       $data: "src/data",
-      $lambda: "src/lambda"
+      $lambda: "src/lambda",
+      "svelte-file-dropzone": "svelte-file-dropzone/src/components/Dropzone.svelte"
     }
   }
 };

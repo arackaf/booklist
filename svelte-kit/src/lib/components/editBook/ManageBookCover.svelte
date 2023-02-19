@@ -1,7 +1,8 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  import Dropzone from "svelte-file-dropzone/src/components/Dropzone.svelte";
+  import Dropzone from "svelte-file-dropzone";
+
   import FlowItems from "../layout/FlowItems.svelte";
 
   export let onResults: (results: any) => void;
