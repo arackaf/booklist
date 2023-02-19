@@ -38,7 +38,7 @@
     "@aws-sdk/util-utf8": "^3.254.0",
     "@next-auth/dynamodb-adapter": "3.0.0",
     "@popperjs/core": "^2.11.6",
-    "@sveltejs/kit": "^1.5.2",
+    "@sveltejs/kit": "^1.7.2",
     "@types/toastify-js": "^1.11.1",
     "blueimp-md5": "2.3.0",
     "classnames": "^2.3.2",
