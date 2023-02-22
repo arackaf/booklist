@@ -24,3 +24,5 @@ lambda/data-migrations/connection-strings.js
 svelte-kit/.vercel
 lambda/lookup-books/.build
 lambda/process-book-cover/dist
+mysql/.dbeaver
+mysql/.project
