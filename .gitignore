@@ -26,3 +26,4 @@ lambda/lookup-books/.build
 lambda/process-book-cover/dist
 mysql/.dbeaver
 mysql/.project
+mysql/.idea

@@ -1,0 +1,6 @@
+DROP TABLE junk;
+
+CREATE TABLE IF NOT EXISTS junk (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name varchar(255)
+)
