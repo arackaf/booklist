@@ -1,6 +1,9 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+const primaryUser = process.env.PRIMARY_USER;
+const userIdToSkip = process.env.REPLICANT_USER;
+
 const mysql = require("mysql");
 
 const { MongoClient } = require("mongodb");
@@ -29,16 +32,47 @@ function query(...args) {
   });
 }
 
-async function insertBook(book) {
-  try {
-    await query("INSERT INTO books (title, isbn, pages) VALUES (?, ?, ?)", [book.title, book.isbn, book.pages]);
-    console.log("Book inserted");
-  } catch (err) {
-    console.log("Error inserting book", err);
-  }
+async function getLastId() {
+  const lastId = await query("SELECT LAST_INSERT_ID() as id");
+  return lastId[0].id;
 }
 
-const userIdToSkip = process.env.REPLICANT_USER;
+const bookFields = [
+  "userId",
+  "title",
+  "isbn",
+  "pages",
+  "mobileImage",
+  "mobileImagePreview",
+  "smallImage",
+  "smallImagePreview",
+  "mediumImage",
+  "mediumImagePreview",
+  "publicationDate",
+  "publisher",
+  "editorialReviews"
+];
+
+async function insertBook(book) {
+  await query(`INSERT INTO books (${bookFields.join(", ")}) VALUES (${bookFields.map(() => "?").join(", ")})`, [
+    book.userId,
+    book.title,
+    book.isbn,
+    book.pages,
+    book.mobileImage,
+    JSON.stringify(book.mobileImagePreview),
+    book.smallImage,
+    JSON.stringify(book.smallImagePreview),
+    book.mediumImage,
+    JSON.stringify(book.mediumImagePreview),
+    book.publicationDate,
+    book.publisher,
+    JSON.stringify(book.editorialReviews)
+  ]);
+
+  const lastId = await getLastId();
+  console.log("Book inserted", lastId);
+}
 
 async function run() {
   const client = await MongoClient.connect(process.env.MONGO_CONNECTION_LIVE);
@@ -51,10 +85,18 @@ async function run() {
   try {
     const books = await db
       .collection("books")
-      .aggregate([{ $limit: 50 }])
+      .aggregate([{ $limit: 10 }])
       .toArray();
 
     for (const book of books) {
+      if (book.userId === primaryUser) {
+        console.log("Primary user book");
+        book.userId = "test-user1";
+      } else if (book.userId === userIdToSkip) {
+        console.log("Skipping replicant book");
+        continue;
+      }
+
       await insertBook(book);
     }
 
