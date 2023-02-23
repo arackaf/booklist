@@ -29,23 +29,36 @@ function query(...args) {
   });
 }
 
+async function insertBook(book) {
+  try {
+    await query("INSERT INTO books (title, isbn, pages) VALUES (?, ?, ?)", [book.title, book.isbn, book.pages]);
+    console.log("Book inserted");
+  } catch (err) {
+    console.log("Error inserting book", err);
+  }
+}
+
 const userIdToSkip = process.env.REPLICANT_USER;
 
 async function run() {
   const client = await MongoClient.connect(process.env.MONGO_CONNECTION_LIVE);
   const db = await client.db(process.env.DB_NAME);
 
-  const subjects = await query("SELECT * FROM subjects WHERE name = ?", ["Subject e"]);
-
-  console.log({ subjects });
-
   // mySqlConnection.query("SELECT * FROM subjects", (err, results, fields) => {
   //   console.log({ err, results, fields });
   // });
 
   try {
-    // const books = await db.collection("books").find({}).toArray();
-    // console.log({ books: books.length });
+    const books = await db
+      .collection("books")
+      .aggregate([{ $limit: 50 }])
+      .toArray();
+
+    for (const book of books) {
+      await insertBook(book);
+    }
+
+    console.log({ books: books.length });
   } catch (er) {
     console.log(er);
   } finally {
