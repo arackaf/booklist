@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
+const TEST_USER_ID = "test-user1";
+
 const insertBook = require("./insert-book");
 const { mySqlConnection } = require("./db-utils");
 
@@ -9,26 +11,37 @@ const userIdToSkip = process.env.REPLICANT_USER;
 
 const { MongoClient } = require("mongodb");
 
-//const mySqlConnection = mysql.createConnection(process.env.MYSQL);
+const subjectsLookup = {};
+
+function adjustUserForItems(items) {
+  items = items.filter(item => item.userId !== userIdToSkip);
+  items.forEach(item => {
+    if (item.userId === primaryUser) {
+      item.userId = TEST_USER_ID;
+    }
+  });
+
+  return items;
+}
 
 async function run() {
   const client = await MongoClient.connect(process.env.MONGO_CONNECTION_LIVE);
   const db = await client.db(process.env.DB_NAME);
 
-  // mySqlConnection.query("SELECT * FROM subjects", (err, results, fields) => {
-  //   console.log({ err, results, fields });
-  // });
-
   try {
-    const books = await db
-      .collection("books")
-      .aggregate([{ $limit: 10 }])
-      .toArray();
+    const allSubjects = adjustUserForItems(await db.collection("subjects").find({}).toArray());
+
+    const books = adjustUserForItems(
+      await db
+        .collection("books")
+        .aggregate([{ $limit: 10 }])
+        .toArray()
+    );
 
     for (const book of books) {
       if (book.userId === primaryUser) {
         console.log("Primary user book");
-        book.userId = "test-user1";
+        book.userId = TEST_USER_ID;
       } else if (book.userId === userIdToSkip) {
         console.log("Skipping replicant book");
         continue;
