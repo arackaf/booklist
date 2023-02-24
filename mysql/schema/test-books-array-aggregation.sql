@@ -1,0 +1,1 @@
+SELECT id, title, (SELECT JSON_ARRAYAGG(book) from books_tags WHERE book = id) tags FROM books

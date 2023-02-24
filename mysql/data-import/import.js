@@ -18,6 +18,8 @@ const { MongoClient } = require("mongodb");
 const subjectsLookup = {};
 const tagsLookup = {};
 
+const PARTIAL_RUN = false;
+
 function adjustUserForItems(items) {
   items = items.filter(item => item.userId !== userIdToSkip);
   items.forEach(item => {
@@ -39,7 +41,7 @@ async function run() {
     const allSubjects = adjustUserForItems(
       await db
         .collection("subjects")
-        .aggregate([{ $limit: 10 }])
+        .aggregate([PARTIAL_RUN ? { $limit: 10 } : null].filter(x => x))
         .toArray()
     );
 
@@ -55,7 +57,7 @@ async function run() {
     const allTags = adjustUserForItems(
       await db
         .collection("tags")
-        .aggregate([{ $limit: 10 }])
+        .aggregate([PARTIAL_RUN ? { $limit: 10 } : null].filter(x => x))
         .toArray()
     );
 
@@ -71,7 +73,7 @@ async function run() {
     const books = adjustUserForItems(
       await db
         .collection("books")
-        .aggregate([{ $limit: 10 }, { $addFields: { dateAdded: { $toDate: "$_id" } } }])
+        .aggregate([PARTIAL_RUN ? { $limit: 10 } : null, { $addFields: { dateAdded: { $toDate: "$_id" } } }].filter(x => x))
         .toArray()
     );
 
