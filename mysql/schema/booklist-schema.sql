@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS books (
     mediumImage         VARCHAR(250),
     mediumImagePreview  JSON,
     publicationDate     VARCHAR(30),
-    publisher           VARCHAR(50),
+    publisher           VARCHAR(100),
     editorialReviews    JSON
 );
 
@@ -54,7 +54,7 @@ CREATE TABLE books_tags
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     book        INT NOT NULL,
-    tags        INT NOT NULL
+    tag        INT NOT NULL
 );
 
 

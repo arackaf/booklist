@@ -21,7 +21,7 @@ module.exports = async function insertBook(book) {
     book.userId,
     book.title,
     book.isbn,
-    book.pages,
+    typeof book.pages !== "number" ? null : book.pages,
     book.mobileImage,
     JSON.stringify(book.mobileImagePreview),
     book.smallImage,
@@ -34,5 +34,5 @@ module.exports = async function insertBook(book) {
   ]);
 
   const lastId = await getLastId();
-  console.log("Book inserted", lastId);
+  return lastId;
 };

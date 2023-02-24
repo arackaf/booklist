@@ -4,6 +4,8 @@ dotenv.config();
 const TEST_USER_ID = "test-user1";
 
 const insertBook = require("./insert-book");
+const insertBookSubject = require("./insert-book-subject");
+const insertSubject = require("./insert-subject");
 const { mySqlConnection } = require("./db-utils");
 
 const primaryUser = process.env.PRIMARY_USER;
@@ -28,29 +30,48 @@ async function run() {
   const client = await MongoClient.connect(process.env.MONGO_CONNECTION_LIVE);
   const db = await client.db(process.env.DB_NAME);
 
-  try {
-    const allSubjects = adjustUserForItems(await db.collection("subjects").find({}).toArray());
+  console.log("\nStarting\n");
 
-    const books = adjustUserForItems(
+  try {
+    const allSubjects = adjustUserForItems(
       await db
-        .collection("books")
+        .collection("subjects")
         .aggregate([{ $limit: 10 }])
         .toArray()
     );
 
-    for (const book of books) {
-      if (book.userId === primaryUser) {
-        console.log("Primary user book");
-        book.userId = TEST_USER_ID;
-      } else if (book.userId === userIdToSkip) {
-        console.log("Skipping replicant book");
-        continue;
-      }
+    let i = 1;
+    for (const subject of allSubjects) {
+      const newId = await insertSubject(subject);
+      subjectsLookup[subject._id] = newId;
 
-      await insertBook(book);
+      console.log("Subject", i++, "of", allSubjects.length, subject.name, "created");
+    }
+    console.log("\nSubjects done\n");
+
+    const books = adjustUserForItems(
+      await db
+        .collection("books")
+        .aggregate([{ $limit: 100 }])
+        .toArray()
+    );
+
+    i = 1;
+    for (const book of books) {
+      const bookId = await insertBook(book);
+
+      console.log("Book", i++, "of", books.length, book.title, "created");
+
+      for (const subject of book?.subjects ?? []) {
+        const subjectId = subjectsLookup[subject];
+        if (subjectId) {
+          await insertBookSubject(bookId, subjectId);
+          console.log("Subject", subjectId, "added");
+        }
+      }
     }
 
-    console.log({ books: books.length });
+    console.log("\n\nDONE\n\n");
   } catch (er) {
     console.log(er);
   } finally {
