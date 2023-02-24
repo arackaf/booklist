@@ -36,7 +36,12 @@ async function run() {
   console.log("\nStarting\n");
 
   try {
-    const allSubjects = adjustUserForItems(await db.collection("subjects").aggregate([]).toArray());
+    const allSubjects = adjustUserForItems(
+      await db
+        .collection("subjects")
+        .aggregate([{ $limit: 10 }])
+        .toArray()
+    );
 
     let i = 1;
     for (const subject of allSubjects) {
@@ -47,7 +52,12 @@ async function run() {
     }
     console.log("\nSubjects done\n");
 
-    const allTags = adjustUserForItems(await db.collection("tags").aggregate([]).toArray());
+    const allTags = adjustUserForItems(
+      await db
+        .collection("tags")
+        .aggregate([{ $limit: 10 }])
+        .toArray()
+    );
 
     i = 1;
     for (const tag of allTags) {
@@ -58,7 +68,12 @@ async function run() {
     }
     console.log("\nTags done\n");
 
-    const books = adjustUserForItems(await db.collection("books").aggregate([]).toArray());
+    const books = adjustUserForItems(
+      await db
+        .collection("books")
+        .aggregate([{ $limit: 10 }, { $addFields: { dateAdded: { $toDate: "$_id" } } }])
+        .toArray()
+    );
 
     i = 1;
     for (const book of books) {

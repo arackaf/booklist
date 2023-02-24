@@ -2,6 +2,7 @@ const { query, getLastId, mySqlConnection } = require("./db-utils");
 
 const bookFields = [
   "userId",
+  "dateAdded",
   "title",
   "isbn",
   "pages",
@@ -19,6 +20,7 @@ const bookFields = [
 module.exports = async function insertBook(book) {
   await query(`INSERT INTO books (${bookFields.join(", ")}) VALUES (${bookFields.map(() => "?").join(", ")})`, [
     book.userId,
+    book.dateAdded,
     book.title,
     book.isbn,
     typeof book.pages !== "number" ? null : book.pages,
