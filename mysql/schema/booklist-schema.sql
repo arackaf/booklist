@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS tags;
 CREATE TABLE tags
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
+    userId          VARCHAR(25) NOT NULL,
     name            VARCHAR(255) NOT NULL,
     color           VARCHAR(255),
     backgroundColor VARCHAR(255)
