@@ -2,9 +2,9 @@ DROP TABLE IF EXISTS books;
 
 CREATE TABLE IF NOT EXISTS books (
     id                  INT AUTO_INCREMENT PRIMARY KEY,
-    userId              VARCHAR(25) NOT NULL,
+    userId              VARCHAR(50) NOT NULL,
     title               VARCHAR(250) NOT NULL,
-    isbn                VARCHAR(15),
+    isbn                VARCHAR(25),
     pages               INT,
     mobileImage         VARCHAR(250),
     mobileImagePreview  JSON,
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS subjects;
 CREATE TABLE subjects
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    userId          VARCHAR(25) NOT NULL,
+    userId          VARCHAR(50) NOT NULL,
     name            VARCHAR(255) NOT NULL,
     path            VARCHAR(255),
     color           VARCHAR(255),
@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS tags;
 CREATE TABLE tags
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
-    userId          VARCHAR(25) NOT NULL,
+    userId          VARCHAR(50) NOT NULL,
     name            VARCHAR(255) NOT NULL,
     color           VARCHAR(255),
     backgroundColor VARCHAR(255)

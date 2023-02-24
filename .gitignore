@@ -27,3 +27,4 @@ lambda/process-book-cover/dist
 mysql/.dbeaver
 mysql/.project
 mysql/.idea
+mysql/data-import/dev.env
