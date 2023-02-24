@@ -14,8 +14,8 @@ export async function load({ locals, request, fetch }: any) {
   const session = await locals.getSession();
   let activeUserId = publicUserId || session?.userId;
 
-  let tags: Promise<Tag[]> | Tag[] = allTags(activeUserId);
-  let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
+  let tags: Promise<Tag[]> | Tag[] = await allTags(activeUserId);
+  let subjects: Promise<Subject[]> | Subject[] = await allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
   if (publicUserId) {

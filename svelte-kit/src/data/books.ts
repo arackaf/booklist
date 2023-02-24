@@ -32,6 +32,36 @@ const getFieldProjection = (fields: string[]) =>
     return result;
   }, {});
 
+import { MY_SQL_HOST, MY_SQL_USERNAME, MY_SQL_PASSWORD, MY_SQL_DB } from "$env/static/private";
+
+import { connect } from "@planetscale/database";
+const config = {
+  host: MY_SQL_HOST,
+  username: MY_SQL_USERNAME,
+  password: MY_SQL_PASSWORD
+};
+
+export const searchBooksMySql = async (userId: string, searchPacket: BookSearch) => {
+  if (!userId) {
+    return EMPTY_BOOKS_RESULTS;
+  }
+
+  try {
+    let start = +new Date();
+    const conn = connect(config);
+    let end = +new Date();
+    console.log("Connecting time", end - start);
+
+    start = +new Date();
+    const results = await conn.execute("SELECT * FROM books WHERE userId = ?;", [userId]);
+    end = +new Date();
+    console.log("HTTP books MySQL time", end - start);
+    console.log("MYSQL", results.rows.length, "books for", userId);
+  } catch (er) {
+    console.log("er", er);
+  }
+};
+
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
 
