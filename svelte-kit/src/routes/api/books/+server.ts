@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 
 import type { BookSearch } from "$data/types";
-import { searchBooks, searchBooksMySql } from "$data/books";
+import { searchBooksMySql } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
 export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
@@ -52,7 +52,6 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     };
   }
 
-  //const books = await searchBooks(userId, packet);
   const booksPacket = await searchBooksMySql(userId, packet);
 
   return json(booksPacket);

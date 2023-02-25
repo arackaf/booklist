@@ -164,7 +164,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       const totalBooks = resultsCount?.[0]?.count ?? 0;
 
       const httpEnd = +new Date();
-      console.log("HTTP books time", httpEnd - httpStart);
+      console.log("HTTP books time A", httpEnd - httpStart);
 
       const arrayFieldsToInit = ["authors", "subjects", "tags"] as (keyof Book)[];
       books.forEach(book => {
@@ -218,7 +218,7 @@ export const getBookDetails = async (id: string) => {
   })
     .then(books => {
       const httpEnd = +new Date();
-      console.log("HTTP books time", httpEnd - httpStart);
+      console.log("HTTP books time B", httpEnd - httpStart);
 
       return books[0];
     })
@@ -240,7 +240,7 @@ export const booksSubjectsDump = async (userId: string) => {
   })
     .then(records => {
       const httpEnd = +new Date();
-      console.log("HTTP books time", httpEnd - httpStart);
+      console.log("HTTP books time C", httpEnd - httpStart);
 
       return records;
     })
