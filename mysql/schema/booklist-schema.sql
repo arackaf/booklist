@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS books (
     authors             JSON,
     isbn                VARCHAR(25),
     pages               INT,
+    isRead              BOOL NOT NULL,
     mobileImage         VARCHAR(250),
     mobileImagePreview  JSON,
     smallImage          VARCHAR(250),
