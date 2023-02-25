@@ -92,7 +92,7 @@ async function handleFn({ event, resolve }: any) {
 async function deployedAuthOverride({ event, resolve }: any) {
   const { url } = event;
 
-  if (url.hostname.indexOf(".vercel.app") !== -1) {
+  if (url.hostname.indexOf(".vercel.app") !== -1 || url.hostname.indexOf("localhost") !== -1) {
     event.locals.getSession = () => ({
       user: {},
       userId: "test-user1"
