@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS books (
     userId              VARCHAR(50) NOT NULL,
     dateAdded           DATETIME NOT NULL,
     title               VARCHAR(250) NOT NULL,
+    authors             JSON,
     isbn                VARCHAR(25),
     pages               INT,
     mobileImage         VARCHAR(250),
