@@ -5,17 +5,15 @@ import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 
 const defaultBookFields = [
-  "_id",
+  "id",
   "title",
   "pages",
   "userId",
   "authors",
-  "tags",
-  "subjects",
   "isbn",
   "publisher",
   "publicationDate",
-  "isRead",
+  // "isRead",
   "mobileImage",
   "mobileImagePreview",
   "smallImage",
@@ -47,7 +45,7 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
     const booksReq = conn.execute(
       `
       SELECT 
-        *, 
+        ${defaultBookFields.join(",")},
         id as _id,
         (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
         (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
