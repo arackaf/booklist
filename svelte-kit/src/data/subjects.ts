@@ -1,7 +1,29 @@
 import type { Subject } from "./types";
-import { getSubject, querySubjects, runMultiUpdate, type SubjectEditFields, insertObject, runRequest } from "./dbUtils";
+import { getSubject, querySubjects, runMultiUpdate, type SubjectEditFields, insertObject, runRequest, mySqlConnectionFactory } from "./dbUtils";
 
 export const allSubjects = async (userId: string = "") => {
+  if (!userId) {
+    return [];
+  }
+
+  const httpStart = +new Date();
+
+  try {
+    const conn = mySqlConnectionFactory.connection();
+
+    const subjectsResp = (await conn.execute(`SELECT *, id as _id FROM subjects WHERE userId = ? ORDER BY name;`, [userId])) as any;
+    const subjects = subjectsResp.rows;
+
+    const httpEnd = +new Date();
+    console.log("MySQL subjects time", httpEnd - httpStart);
+
+    console.log({ subjects });
+    return subjects;
+  } catch (err) {
+    console.log("Error reading subjects", err);
+  }
+};
+export const allSubjects__mongo = async (userId: string = "") => {
   if (!userId) {
     return [];
   }

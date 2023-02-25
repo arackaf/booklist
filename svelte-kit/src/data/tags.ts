@@ -1,7 +1,29 @@
-import { deleteById, insertObject, queryTags, updateById } from "./dbUtils";
+import { deleteById, insertObject, mySqlConnectionFactory, queryTags, updateById } from "./dbUtils";
 import type { TagEditFields } from "./types";
 
 export const allTags = async (userId: string = "") => {
+  if (!userId) {
+    return [];
+  }
+
+  const httpStart = +new Date();
+
+  try {
+    const conn = mySqlConnectionFactory.connection();
+
+    const tagsResp = (await conn.execute(`SELECT *, id as _id FROM tags WHERE userId = ? ORDER BY name;`, [userId])) as any;
+    const tags = tagsResp.rows;
+
+    const httpEnd = +new Date();
+    console.log("MySQL tags time", httpEnd - httpStart);
+
+    return tags;
+  } catch (err) {
+    console.log("Error reading tags", err);
+  }
+};
+
+export const allTags__mongo = async (userId: string = "") => {
   if (!userId) {
     return [];
   }

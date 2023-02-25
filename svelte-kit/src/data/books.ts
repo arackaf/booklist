@@ -44,13 +44,13 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
 
     const start = +new Date();
 
-    const booksReq = conn.execute(`SELECT * FROM books WHERE userId = ? LIMIT ${pageSize};`, [userId]) as any;
+    const booksReq = conn.execute(`SELECT *, id as _id FROM books WHERE userId = ? LIMIT ${pageSize};`, [userId]) as any;
     const countReq = conn.execute(`SELECT COUNT(*) total FROM books WHERE userId = ?`, [userId]) as any;
 
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
     const end = +new Date();
 
-    console.log("HTTP books MySQL time", end - start);
+    console.log("MySQL books time", end - start);
 
     const books: Book[] = booksResp.rows;
     const totalBooks = countResp.rows[0].total;
