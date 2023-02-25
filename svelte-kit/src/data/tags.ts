@@ -11,7 +11,7 @@ export const allTags = async (userId: string = "") => {
   try {
     const conn = mySqlConnectionFactory.connection();
 
-    const tagsResp = (await conn.execute(`SELECT *, id as _id FROM tags WHERE userId = ? ORDER BY name;`, [userId])) as any;
+    const tagsResp = (await conn.execute(`SELECT *, id as _id FROM tags USE INDEX (idx_user_name) WHERE userId = ? ORDER BY name;`, [userId])) as any;
     const tags = tagsResp.rows;
 
     const httpEnd = +new Date();
