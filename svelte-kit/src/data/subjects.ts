@@ -17,7 +17,6 @@ export const allSubjects = async (userId: string = "") => {
     const httpEnd = +new Date();
     console.log("MySQL subjects time", httpEnd - httpStart);
 
-    console.log({ subjects });
     return subjects;
   } catch (err) {
     console.log("Error reading subjects", err);
