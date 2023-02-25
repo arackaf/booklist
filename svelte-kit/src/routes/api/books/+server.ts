@@ -52,8 +52,8 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     };
   }
 
-  const books = await searchBooks(userId, packet);
-  await searchBooksMySql(userId, packet);
+  //const books = await searchBooks(userId, packet);
+  const booksPacket = await searchBooksMySql(userId, packet);
 
-  return json(books);
+  return json(booksPacket);
 }
