@@ -44,7 +44,18 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
 
     const start = +new Date();
 
-    const booksReq = conn.execute(`SELECT *, id as _id FROM books WHERE userId = ? LIMIT ${pageSize};`, [userId]) as any;
+    const booksReq = conn.execute(
+      `
+      SELECT 
+        *, 
+        id as _id,
+        (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
+        (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
+      FROM books b
+      WHERE userId = ? LIMIT ${pageSize};
+      `,
+      [userId]
+    ) as any;
     const countReq = conn.execute(`SELECT COUNT(*) total FROM books WHERE userId = ?`, [userId]) as any;
 
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
