@@ -13,7 +13,8 @@ const defaultBookFields = [
   "isbn",
   "publisher",
   "publicationDate",
-  // "isRead",
+  "isRead",
+  "dateAdded",
   "mobileImage",
   "mobileImagePreview",
   "smallImage",
@@ -72,6 +73,8 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
           (book as any)[arr] = [] as string[];
         }
       });
+
+      book.isRead = (book.isRead as any) == 1;
 
       const date = new Date(book.dateAdded);
       book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
