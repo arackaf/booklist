@@ -1,6 +1,6 @@
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
-import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject } from "./dbUtils";
+import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject, mySqlConnectionFactory } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 
@@ -32,37 +32,43 @@ const getFieldProjection = (fields: string[]) =>
     return result;
   }, {});
 
-import { MY_SQL_HOST, MY_SQL_USERNAME, MY_SQL_PASSWORD, MY_SQL_DB } from "$env/static/private";
-
-import { connect } from "@planetscale/database";
-const config = {
-  host: MY_SQL_HOST,
-  username: MY_SQL_USERNAME,
-  password: MY_SQL_PASSWORD
-};
-
 export const searchBooksMySql = async (userId: string, searchPacket: BookSearch) => {
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
+  const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
+  const pageSize = Math.min(searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE, 100);
 
   try {
-    let pageSize = searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE;
+    const conn = mySqlConnectionFactory.connection();
 
-    let start = +new Date();
-    const conn = connect(config);
-    let end = +new Date();
-    console.log("Connecting time", end - start);
+    const start = +new Date();
 
-    start = +new Date();
+    const booksReq = conn.execute(`SELECT * FROM books WHERE userId = ? LIMIT ${pageSize};`, [userId]) as any;
+    const countReq = conn.execute(`SELECT COUNT(*) total FROM books WHERE userId = ?`, [userId]) as any;
 
-    const booksReq = conn.execute(`SELECT * FROM books WHERE userId = ? LIMIT ${pageSize};`, [userId]);
-    const countReq = conn.execute(`SELECT COUNT(*) total FROM books WHERE userId = ?`, [userId]);
+    const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
+    const end = +new Date();
 
-    const [books, count] = await Promise.all([booksReq, countReq]);
-    end = +new Date();
     console.log("HTTP books MySQL time", end - start);
-    console.log("MYSQL", books.rows.length, "books for", userId, "total", count.rows[0].total);
+
+    const books: Book[] = booksResp.rows;
+    const totalBooks = countResp.rows[0].total;
+    const totalPages = Math.ceil(totalBooks / pageSize);
+
+    const arrayFieldsToInit = ["subjects", "tags"] as (keyof Book)[];
+    books.forEach(book => {
+      arrayFieldsToInit.forEach(arr => {
+        if (!Array.isArray(book[arr])) {
+          (book as any)[arr] = [] as string[];
+        }
+      });
+
+      const date = new Date(book.dateAdded);
+      book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    });
+
+    return { books, totalBooks, page, totalPages };
   } catch (er) {
     console.log("er", er);
   }
