@@ -47,7 +47,6 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
       `
       SELECT 
         ${defaultBookFields.join(",")},
-        id as _id,
         (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
         (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
       FROM books b
@@ -266,9 +265,9 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
-  const { _id, ...fields } = book;
+  const { id, ...fields } = book;
 
-  return updateById("books", userId, _id!, { $set: { ...fields } });
+  return updateById("books", userId, id!, { $set: { ...fields } });
 };
 
 type BulkUpdate = {

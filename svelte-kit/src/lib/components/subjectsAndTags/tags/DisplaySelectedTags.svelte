@@ -21,7 +21,7 @@
 </script>
 
 <svelte:component this={Component} tightest={true} {style}>
-  {#each currentlySelected.filter(_id => tagHash[_id]).map(_id => tagHash[_id]) as t}
+  {#each currentlySelected.filter(id => tagHash[id]).map(id => tagHash[id]) as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}

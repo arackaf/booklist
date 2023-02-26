@@ -2,7 +2,7 @@
   import { getContext } from "svelte";
   import { enhance } from "$app/forms";
 
-  export let _ids: string[];
+  export let ids: string[];
   export let value: boolean;
   export let onSave: () => void = () => {};
 
@@ -11,7 +11,7 @@
 
   const booksUpdated = () => {
     saving = true;
-    const _idsToUse = _ids;
+    const _idsToUse = ids;
     return async ({ result }: any) => {
       onBooksUpdated(_idsToUse, result.data.updates);
       onSave?.();
@@ -21,8 +21,8 @@
 </script>
 
 <form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
-  {#each _ids as _id}
-    <input type="hidden" name="_ids" value={_id} />
+  {#each ids as id}
+    <input type="hidden" name="_ids" value={id} />
   {/each}
   <input type="hidden" name="read" value={value ? "true" : "false"} />
   <slot />

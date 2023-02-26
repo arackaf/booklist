@@ -7,7 +7,7 @@ import { removeEmpty, toJson } from "$lib/util/formDataHelpers";
 import { updateUxState } from "$lib/util/uxState";
 
 type Book = {
-  _id: string;
+  id: string;
   title: string;
   authors: string[];
 };
@@ -31,7 +31,7 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "title", "isbn", "publisher", "publicationDate"],
+      strings: ["id", "title", "isbn", "publisher", "publicationDate"],
       numbers: ["pages"],
       optionals: ["mobileImage", "smallImage", "mediumImage"],
       optionalObjects: ["mobileImagePreview", "smallImagePreview", "mediumImagePreview"],
@@ -39,7 +39,7 @@ export const actions = {
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
 
-    if (fields._id) {
+    if (fields.id) {
       await updateBook(session.userId, fields);
     } else {
       await insertBook(session.userId, fields);
@@ -59,7 +59,7 @@ export const actions = {
 
     const fields: Partial<Book> = removeEmpty(
       toJson(formData, {
-        strings: ["_id", "mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"]
+        strings: ["id", "mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"]
       })
     );
 
@@ -126,9 +126,9 @@ export const actions = {
     }
 
     const formData: URLSearchParams = await request.formData();
-    const _id = formData.get("_id")!;
+    const id = formData.get("id")!;
 
-    await deleteBook(session.userId, _id);
+    await deleteBook(session.userId, id);
 
     return { success: true };
   },
@@ -141,10 +141,10 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "name", "backgroundColor", "textColor"]
+      strings: ["id", "name", "backgroundColor", "textColor"]
     }) as Tag;
 
-    await saveTag(session.userId, fields._id, fields);
+    await saveTag(session.userId, fields.id, fields);
   },
   async deleteTag({ request, locals }: any) {
     const session = await locals.getSession();
@@ -153,8 +153,8 @@ export const actions = {
     }
 
     const formData: URLSearchParams = await request.formData();
-    const _id = formData.get("_id")!;
+    const id = formData.get("id")!;
 
-    await deleteSingleTag(session.userId, _id);
+    await deleteSingleTag(session.userId, id);
   }
 };

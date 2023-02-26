@@ -17,7 +17,7 @@
 
   let editingTag: Tag | null = null;
 
-  const createNewTag = () => ({ _id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
+  const createNewTag = () => ({ id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
 
   const cancelEdit = () => (editingTag = null);
   const newTag = () => (editingTag = createNewTag());

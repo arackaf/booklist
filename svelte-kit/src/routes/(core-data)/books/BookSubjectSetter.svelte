@@ -20,7 +20,7 @@
   $: subjects = $page.data.subjects;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
-  export let onSave: (_id: string | string[], updates: UpdatesTo<Book>) => void;
+  export let onSave: (id: string | string[], updates: UpdatesTo<Book>) => void;
   export let onHide: () => void;
 
   let addingSubjects: string[] = [];
@@ -50,19 +50,19 @@
     };
     return async ({}) => {
       onSave(
-        modifyingBooks.map(b => b._id),
+        modifyingBooks.map(b => b.id),
         updates
       );
       saving = false;
       onHide();
     };
   };
-  const addingSubjectSet = (adding: boolean, { _id }: Subject) =>
-    (addingSubjects = adding ? addingSubjects.concat(_id) : addingSubjects.filter(x => x != _id));
+  const addingSubjectSet = (adding: boolean, { id }: Subject) =>
+    (addingSubjects = adding ? addingSubjects.concat(id) : addingSubjects.filter(x => x != id));
   const subjectSelectedToAdd = addingSubjectSet.bind(null, true);
 
-  const removingSubjectSet = (adding: boolean, { _id }: Subject) =>
-    (removingSubjects = adding ? removingSubjects.concat(_id) : removingSubjects.filter(x => x != _id));
+  const removingSubjectSet = (adding: boolean, { id }: Subject) =>
+    (removingSubjects = adding ? removingSubjects.concat(id) : removingSubjects.filter(x => x != id));
   const subjectSelectedToRemove = removingSubjectSet.bind(null, true);
 
   const dontAddSubject = addingSubjectSet.bind(null, false);
@@ -81,7 +81,7 @@
       <TabContents>
         <TabContent tabName="subjects">
           {#each modifyingBooks as b}
-            <input type="hidden" name="_ids" value={b._id} />
+            <input type="hidden" name="_ids" value={b.id} />
           {/each}
           {#each addingSubjects as s}
             <input type="hidden" name="add" value={s} />
@@ -111,7 +111,7 @@
         </TabContent>
         <TabContent tabName="books">
           <Stack style="font-size: 14px">
-            {#each modifyingBooks as book (book._id)}
+            {#each modifyingBooks as book (book.id)}
               <div>{book.title}</div>
             {/each}
           </Stack>

@@ -68,14 +68,14 @@
     editBookModalOpen = true;
   };
 
-  const onBooksUpdated = (_id: string | string[], updates: UpdatesTo<Book>) => {
-    runUpdate($page.data.books, _id, updates);
+  const onBooksUpdated = (id: string | string[], updates: UpdatesTo<Book>) => {
+    runUpdate($page.data.books, id, updates);
   };
 
   let booksSubjectsModalOpen = false;
   let booksTagsModalOpen = false;
 
-  $: booksEditing = $books.filter(b => $selectedBooksLookup[b._id]);
+  $: booksEditing = $books.filter(b => $selectedBooksLookup[b.id]);
   const editBooksSubjects = () => (booksSubjectsModalOpen = true);
   const editBooksTags = () => (booksTagsModalOpen = true);
 

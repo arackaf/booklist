@@ -27,7 +27,7 @@
       pendingDelete = false;
 
       if (result.data.success) {
-        runDelete($page.data.books, book._id);
+        runDelete($page.data.books, book.id);
         $page.data.totalBooks.update((x: number) => x - 1);
       }
     };
@@ -54,7 +54,7 @@
           {/if}
           {#if pendingDelete}
             <form method="POST" action="?/deleteBook" use:enhance={deleteBook} style="display: flex;">
-              <input type="hidden" name="_id" value={book._id} />
+              <input type="hidden" name="id" value={book.id} />
               <ActionButton isRunning={deleting} text="Confirm Delete" runningText="Deleting" class="margin-left btn btn-xxs btn-danger no-border">
                 Confirm Delete
               </ActionButton>

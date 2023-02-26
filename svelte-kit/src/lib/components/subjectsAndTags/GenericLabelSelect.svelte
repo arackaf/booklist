@@ -14,7 +14,7 @@
 
 <div>
   <AutoSuggest
-    keyField="_id"
+    keyField="id"
     {options}
     {inputProps}
     {placeholder}

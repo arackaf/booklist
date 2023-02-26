@@ -15,7 +15,7 @@
   export let subjects: Subject[];
 
   const emptySubject = {
-    _id: "",
+    id: "",
     name: "",
     textColor: "",
     backgroundColor: "",

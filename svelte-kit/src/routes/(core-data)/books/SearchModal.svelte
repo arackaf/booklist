@@ -42,15 +42,15 @@
     noSubjects = localSearchValues.noSubjects;
   }
 
-  const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject._id));
-  const selectTag = (tag: any) => (localTags = localTags.concat(tag._id));
-  const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(_id => _id != subject._id));
-  const removeTag = (tag: any) => (localTags = localTags.filter(_id => _id != tag._id));
+  const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject.id));
+  const selectTag = (tag: any) => (localTags = localTags.concat(tag.id));
+  const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(id => id != subject.id));
+  const removeTag = (tag: any) => (localTags = localTags.filter(id => id != tag.id));
 
   const onFormData = (evt: any) => {
     const searchParams: URLSearchParams = evt.formData;
 
-    if (searchParams.get("sort") === "_id-desc") {
+    if (searchParams.get("sort") === "id-desc") {
       searchParams.delete("sort");
     }
 

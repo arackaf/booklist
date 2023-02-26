@@ -29,10 +29,10 @@
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
 
-  $: ({ _id } = book);
+  $: ({ id } = book);
 
   let readSaving: boolean;
-  $: multiReadSaving = $booksReadSaving[_id] == "1";
+  $: multiReadSaving = $booksReadSaving[id] == "1";
 
   let expanded = false;
   let detailsLoading: boolean;
@@ -48,7 +48,7 @@
       pendingDelete = false;
 
       if (result.data.success) {
-        runDelete($page.data.books, _id);
+        runDelete($page.data.books, id);
         $page.data.totalBooks.update((x: number) => x - 1);
       }
     };
@@ -60,8 +60,8 @@
 <tr>
   {#if !isPublic}
     <td>
-      <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(_id)}>
-        <i class={"fal " + (!!$selectedBooksLookup[_id] ? "fa-check-square" : "fa-square")} />
+      <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(id)}>
+        <i class={"fal " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")} />
       </button>
     </td>
   {/if}
@@ -112,7 +112,7 @@
         {/if}
         {#if pendingDelete}
           <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
-            <input type="hidden" name="_id" value={_id} />
+            <input type="hidden" name="id" value={id} />
             <ActionButton text="Confirm Delete" runningText="Deleting" isRunning={deleting} preset="danger-xs">Confirm Delete</ActionButton>
           </form>
         {/if}
@@ -126,16 +126,16 @@
       vertical={true}
       currentlySelected={book.subjects}
       {subjects}
-      href={s => $changeFilter.addSubject(s._id)}
+      href={s => $changeFilter.addSubject(s.id)}
     />
   </td>
   <td>
-    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} href={t => $changeFilter.addTag(t._id)} />
+    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} href={t => $changeFilter.addTag(t.id)} />
   </td>
   <td>
     <div style="margin-top: {!isPublic ? '3' : '0'}px">
       {#if !isPublic}
-        <BookReadSetter _ids={[_id]} value={!book.isRead} bind:saving={readSaving}>
+        <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
           <ActionButton
             baseWidth="10ch"
             text={book.isRead ? "Read" : "Set read"}
@@ -163,7 +163,7 @@
   <td>{book.dateAddedDisplay}</td>
 </tr>
 {#if expanded}
-  <BookRowDetails {isPublic} id={book._id} bind:detailsLoading />
+  <BookRowDetails {isPublic} id={book.id} bind:detailsLoading />
 {/if}
 
 <style>

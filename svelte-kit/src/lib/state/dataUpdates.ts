@@ -18,17 +18,17 @@ export type UpdatesTo<T> = {
   arraySync?: Partial<ArraySyncs<T>>;
 };
 
-export const runUpdate = <T>(currentItems: Writable<T[]>, _id: string | string[], updates: UpdatesTo<T>) => {
-  const _ids: string[] = Array.isArray(_id) ? _id : [_id];
-  updateItems(currentItems, _ids, updates);
+export const runUpdate = <T>(currentItems: Writable<T[]>, id: string | string[], updates: UpdatesTo<T>) => {
+  const ids: string[] = Array.isArray(id) ? id : [id];
+  updateItems(currentItems, ids, updates);
 };
 
-export const updateItems = <T>(store: Writable<T[]>, _ids: string[], updates: UpdatesTo<T>) => {
+export const updateItems = <T>(store: Writable<T[]>, ids: string[], updates: UpdatesTo<T>) => {
   const currentItems = get(store);
-  const _idLookup = new Set(_ids);
+  const _idLookup = new Set(ids);
 
   const updatedItems = currentItems.map((item: any) => {
-    if (!_idLookup.has(item._id)) {
+    if (!_idLookup.has(item.id)) {
       return item;
     }
 
@@ -61,21 +61,21 @@ export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo
   return item;
 };
 
-type MongoObject = {
-  _id: string;
+type WithId = {
+  id: string;
 };
 
-export const runDelete = <T extends MongoObject>(currentItems: Writable<T[]>, _id: string | string[]) => {
-  const _ids: string[] = Array.isArray(_id) ? _id : [_id];
+export const runDelete = <T extends WithId>(currentItems: Writable<T[]>, id: string | string[]) => {
+  const _ids: string[] = Array.isArray(id) ? id : [id];
   deleteItems(currentItems, _ids);
 };
 
-export const deleteItems = <T extends MongoObject>(store: Writable<T[]>, _ids: string[]) => {
-  const idLookup = new Set(_ids);
+export const deleteItems = <T extends WithId>(store: Writable<T[]>, ids: string[]) => {
+  const idLookup = new Set(ids);
 
   store.update(items =>
     items.filter(item => {
-      return !idLookup.has(item._id);
+      return !idLookup.has(item.id);
     })
   );
 };

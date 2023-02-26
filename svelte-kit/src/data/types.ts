@@ -1,7 +1,7 @@
 import type { Readable } from "svelte/store";
 
 export type Label = {
-  _id: string;
+  id: string;
   name: string;
   textColor: string;
   backgroundColor: string;
@@ -21,19 +21,19 @@ export type FullSubject = Subject & {
 };
 
 export type Hash<T> = {
-  [_id: string]: T;
+  [id: string]: T;
 };
 
 export type Tag = Label;
 
-export type TagEditFields = Omit<Tag, "_id">;
+export type TagEditFields = Omit<Tag, "id">;
 
 export type PreviewPacket = { w: number; h: number; b64: string };
 
 export type BookSubjectStack = { subjects: string[]; count: number };
 
 export type Book = {
-  _id: string;
+  id: string;
   title: string;
   pages?: number;
   isbn: string;
@@ -72,7 +72,7 @@ export type BookDisplay = Book & {
   dateAddedDisplay: string;
 };
 
-type BookSortKeys = "_id" | "title" | "pages";
+type BookSortKeys = "dateAdded" | "title" | "pages";
 type BookSortValue = Partial<{
   [k in BookSortKeys]: number;
 }>;
@@ -118,7 +118,6 @@ export type BookDetails = {
 };
 
 export type Color = {
-  _id: string;
   backgroundColor: string;
   order: number;
 };

@@ -20,7 +20,7 @@
     search = "";
   };
 
-  type LookupHash = { [_id: string]: true };
+  type LookupHash = { [id: string]: true };
   $: itemHash = currentlySelected.reduce<LookupHash>((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
 
   $: subjectsPacket = subjectState(subjects);
@@ -28,7 +28,7 @@
   $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, itemHash);
 </script>
 
-{#each currentlySelected as _id}
-  <input type="hidden" name="subjects" value={_id} />
+{#each currentlySelected as id}
+  <input type="hidden" name="subjects" value={id} />
 {/each}
 <GenericLabelSelect {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />

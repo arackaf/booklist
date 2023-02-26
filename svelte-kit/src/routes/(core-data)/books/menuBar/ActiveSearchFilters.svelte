@@ -47,10 +47,10 @@
   {/if}
 
   {#each $searchState.subjectsObjects as s}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={s} href={$changeFilter.withoutSubject(s._id)} />
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={s} href={$changeFilter.withoutSubject(s.id)} />
   {/each}
   {#each $searchState.tagObjects as t}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} href={$changeFilter.withoutTag(t._id)} />
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} href={$changeFilter.withoutTag(t.id)} />
   {/each}
   {#if $searchState.sort}
     <RemovableLabelDisplay

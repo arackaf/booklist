@@ -26,7 +26,7 @@ export const stackAndGetTopLevelSubjects = (allSubjects: Subject[]): FullSubject
   }));
 
   subjects.forEach(parent => {
-    parent.children.push(...subjects.filter(child => new RegExp(`,${parent._id},$`).test(child.path || "")));
+    parent.children.push(...subjects.filter(child => new RegExp(`,${parent.id},$`).test(child.path || "")));
     parent.childLevel = !parent.path ? 0 : (parent.path.match(/\,/g) || []).length - 1;
   });
 
@@ -39,16 +39,16 @@ export const unwindSubjects = (subjects: FullSubject[]): FullSubject[] => {
   return result;
 };
 
-type LookupHash = { [_id: string]: true };
+type LookupHash = { [id: string]: true };
 type SearchFn = (s: Subject) => boolean;
 
 export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: Hash<FullSubject> = {}, alreadySelected: LookupHash = {}) => {
   let searchFn: SearchFn;
   if (!search) {
-    searchFn = s => !alreadySelected[s._id];
+    searchFn = s => !alreadySelected[s.id];
   } else {
     let regex = new RegExp(search, "i");
-    searchFn = s => regex.test(s.name) && !alreadySelected[s._id];
+    searchFn = s => regex.test(s.name) && !alreadySelected[s.id];
   }
   const forcedLookup: Set<string> = new Set([]);
   return subjects.reduce<DisablableSubject[]>((result, s) => {
@@ -68,11 +68,11 @@ export const filterSubjects = (subjects: Subject[], search?: string, lookupMap: 
 
         const parentEntry: DisablableSubject = { ...parent, disabled: false };
 
-        if (alreadySelected[parent._id] || !searchFn(parent)) {
+        if (alreadySelected[parent.id] || !searchFn(parent)) {
           toAdd.unshift(parentEntry);
           forcedLookup.add(parentId);
 
-          if (alreadySelected[parent._id]) {
+          if (alreadySelected[parent.id]) {
             parentEntry.disabled = true;
           }
         }
@@ -95,10 +95,10 @@ export const computeParentId = (path: string | null) => {
   }
 };
 
-export const getChildSubjectsSorted = (_id: string, subjectHash: Hash<Subject>) => {
-  let regex = new RegExp(`,${_id},$`);
+export const getChildSubjectsSorted = (id: string, subjectHash: Hash<Subject>) => {
+  let regex = new RegExp(`,${id},$`);
   return Object.keys(subjectHash)
-    .map(_id => subjectHash[_id])
+    .map(id => subjectHash[id])
     .filter(sc => regex.test(sc.path!))
     .sort(subjectSortCompare);
 };
@@ -112,9 +112,9 @@ const subjectSortCompare = ({ name: name1 }: Subject, { name: name2 }: Subject) 
   return bothEqual ? 0 : name1After ? 1 : -1;
 };
 
-export const getEligibleParents = (subjectHash: Hash<Subject>, _id: string) => {
-  let eligibleParents = _id
-    ? flattenSubjects(subjectHash).filter(s => s._id !== _id && !new RegExp(`,${_id},`).test(s.path || ""))
+export const getEligibleParents = (subjectHash: Hash<Subject>, id: string) => {
+  let eligibleParents = id
+    ? flattenSubjects(subjectHash).filter(s => s.id !== id && !new RegExp(`,${id},`).test(s.path || ""))
     : flattenSubjects(subjectHash);
 
   return eligibleParents.sort(subjectSortCompare);

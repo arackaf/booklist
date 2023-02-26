@@ -30,7 +30,7 @@
   };
   const openModal = () => (searchModalOpen = true);
 
-  $: selectedBooksSet = new Set(selectedBooks.map(b => b._id));
+  $: selectedBooksSet = new Set(selectedBooks.map(b => b.id));
 
   const getRecommendations = async () => {
     recommendationsLoading = true;
@@ -59,7 +59,7 @@
         </FlowItems>
 
         <div>
-          {#each selectedBooks as book (book._id)}
+          {#each selectedBooks as book (book.id)}
             <DisplayBook {book} {unselectBook} />
           {/each}
         </div>
@@ -71,7 +71,7 @@
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
           <table class="table table-condensed table-striped">
             <tbody>
-              {#each recommendations as book (book._id)}
+              {#each recommendations as book (book.id)}
                 <DisplayRecommendation {book} />
               {/each}
             </tbody>

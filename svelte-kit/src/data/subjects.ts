@@ -11,7 +11,7 @@ export const allSubjects = async (userId: string = "") => {
   try {
     const conn = mySqlConnectionFactory.connection();
 
-    const subjectsResp = (await conn.execute(`SELECT *, id as _id FROM subjects WHERE userId = ? ORDER BY name;`, [userId])) as any;
+    const subjectsResp = (await conn.execute(`SELECT * FROM subjects WHERE userId = ? ORDER BY name;`, [userId])) as any;
     const subjects = subjectsResp.rows;
 
     const httpEnd = +new Date();
@@ -57,7 +57,7 @@ export const saveSubject = async (userId: string, _id: string, subject: SubjectE
   }
 };
 
-const insertSingleSubject = async (userId: string, subject: Omit<Subject, "_id">) => {
+const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">) => {
   return insertObject("subjects", userId, subject);
 };
 
@@ -76,7 +76,7 @@ const updateSingleSubject = async (userId: string, _id: string, updates: Subject
       }
     }
 
-    newSubjectPath = newParent ? (newParent.path || ",") + `${newParent._id},` : null;
+    newSubjectPath = newParent ? (newParent.path || ",") + `${newParent.id},` : null;
     newDescendantPathPiece = `${newSubjectPath || ","}${_id},`;
   }
 
@@ -141,7 +141,7 @@ export const deleteSubject = async (userId: string, _id: string) => {
     ]
   });
 
-  const subjectIds = subjectsToDelete.map(s => s._id);
+  const subjectIds = subjectsToDelete.map(s => s.id);
 
   await runMultiUpdate(
     "books",
@@ -167,5 +167,5 @@ const getNewPath = async (userId: string, parentId: string | null): Promise<stri
     return null;
   }
 
-  return `${newParent.path || ","}${newParent._id},`;
+  return `${newParent.path || ","}${newParent.id},`;
 };

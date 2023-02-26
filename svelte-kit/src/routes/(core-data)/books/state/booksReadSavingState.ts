@@ -16,7 +16,7 @@ export const endSaving = (_ids: string | string[]) => {
   }
   const lookup = new Set(_ids);
 
-  booksReadSaving.update(items => toRecord(Object.keys(items).filter(_id => !lookup.has(_id))));
+  booksReadSaving.update(items => toRecord(Object.keys(items).filter(id => !lookup.has(id))));
 };
 
 const toRecord = (arr: string[]): Record<string, string> => {

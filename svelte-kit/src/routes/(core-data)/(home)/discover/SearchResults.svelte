@@ -29,7 +29,7 @@
     {#if books?.length}
       {#key currentQuery}
         <ul in:resultsIn|local out:resultsOut|local>
-          {#each books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
+          {#each books.filter(b => !selectedBooksSet.has(b.id)) as book (book.id)}
             <SearchResult {book} {selectBook} />
           {/each}
         </ul>

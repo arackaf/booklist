@@ -21,14 +21,14 @@
   $: rootSubjects = stackAndGetTopLevelSubjects(subjects);
 
   let editModalOpen = false;
-  let editingSubject: Subject = { _id: "", name: "", backgroundColor: "", textColor: "", path: null };
+  let editingSubject: Subject = { id: "", name: "", backgroundColor: "", textColor: "", path: null };
   const closeEditModal = () => (editModalOpen = false);
   const editSubject = (subject: any) => {
     editingSubject = subject;
     editModalOpen = true;
   };
 
-  const newSubject = () => ({ _id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
+  const newSubject = () => ({ id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
 
   let resetEditSubject: () => void;
 
@@ -42,7 +42,7 @@
 
   <div class="contentRoot">
     <ul>
-      {#each rootSubjects as s (s._id)}
+      {#each rootSubjects as s (s.id)}
         <li on:outrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
           <SubjectDisplay subject={s} {editSubject} />
         </li>

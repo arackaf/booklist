@@ -21,7 +21,7 @@
   $: tags = $page.data.tags;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
-  export let onSave: (_id: string | string[], updates: UpdatesTo<Book>) => void;
+  export let onSave: (id: string | string[], updates: UpdatesTo<Book>) => void;
   export let onHide: () => void;
 
   let addingTags: string[] = [];
@@ -51,7 +51,7 @@
     };
     return async () => {
       onSave(
-        modifyingBooks.map(b => b._id),
+        modifyingBooks.map(b => b.id),
         updates
       );
       saving = false;
@@ -59,10 +59,10 @@
     };
   };
 
-  const addingTagSet = (adding: boolean, { _id }: Tag) => (addingTags = adding ? addingTags.concat(_id) : addingTags.filter(x => x != _id));
+  const addingTagSet = (adding: boolean, { id }: Tag) => (addingTags = adding ? addingTags.concat(id) : addingTags.filter(x => x != id));
   const tagSelectedToAdd = addingTagSet.bind(null, true);
 
-  const removingTagSet = (adding: boolean, { _id }: Tag) => (removingTags = adding ? removingTags.concat(_id) : removingTags.filter(x => x != _id));
+  const removingTagSet = (adding: boolean, { id }: Tag) => (removingTags = adding ? removingTags.concat(id) : removingTags.filter(x => x != id));
   const tagSelectedToRemove = removingTagSet.bind(null, true);
 
   const dontAddTag = addingTagSet.bind(null, false);
@@ -81,7 +81,7 @@
       <TabContents>
         <TabContent tabName="tags">
           {#each modifyingBooks as b}
-            <input type="hidden" name="_ids" value={b._id} />
+            <input type="hidden" name="_ids" value={b.id} />
           {/each}
           {#each addingTags as t}
             <input type="hidden" name="add" value={t} />
@@ -111,7 +111,7 @@
         </TabContent>
         <TabContent tabName="books">
           <Stack style="font-size: 14px">
-            {#each modifyingBooks as book (book._id)}
+            {#each modifyingBooks as book (book.id)}
               <div>{book.title}</div>
             {/each}
           </Stack>
