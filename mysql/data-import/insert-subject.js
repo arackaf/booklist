@@ -1,6 +1,6 @@
 const { query, getLastId, mySqlConnection } = require("./db-utils");
 
-const subjectFields = ["userId", "name", "path", "color", "backgroundColor"];
+const subjectFields = ["userId", "name", "path", "textColor", "backgroundColor"];
 
 module.exports = async function insertSubject(subject) {
   await query(
