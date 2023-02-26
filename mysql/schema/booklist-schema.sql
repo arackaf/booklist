@@ -30,7 +30,7 @@ CREATE TABLE subjects
     userId          VARCHAR(50) NOT NULL,
     name            VARCHAR(255) NOT NULL,
     path            VARCHAR(255),
-    color           VARCHAR(255),
+    textColor       VARCHAR(255),
     backgroundColor VARCHAR(255)
 );
 CREATE INDEX idx_user_name ON subjects(userId, name);
@@ -41,7 +41,7 @@ CREATE TABLE tags
     id              INT AUTO_INCREMENT PRIMARY KEY,
     userId          VARCHAR(50) NOT NULL,
     name            VARCHAR(255) NOT NULL,
-    color           VARCHAR(255),
+    textColor       VARCHAR(255),
     backgroundColor VARCHAR(255)
 );
 CREATE INDEX idx_user_name ON tags(userId, name);

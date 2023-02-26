@@ -1,6 +1,6 @@
 const { query, getLastId, mySqlConnection } = require("./db-utils");
 
-const tagFields = ["userId", "name", "color", "backgroundColor"];
+const tagFields = ["userId", "name", "textColor", "backgroundColor"];
 
 module.exports = async function insertTag(tag) {
   await query(
