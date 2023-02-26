@@ -8,10 +8,9 @@ export async function load({ locals, request }: any) {
   const session = await locals.getSession();
   const publicId = getPublicId(request);
 
-  const A = await booksSubjectsDump(session?.userId || publicId);
-  const B = await aggregateBooksSubjects(session?.userId || publicId);
+  await booksSubjectsDump(session?.userId || publicId);
 
   return {
-    books: booksSubjectsDump(session?.userId || publicId)
+    books: aggregateBooksSubjects(session?.userId || publicId)
   };
 }
