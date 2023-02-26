@@ -7,6 +7,7 @@ const insertBook = require("./insert-book");
 const insertBookSubject = require("./insert-book-subject");
 const insertBookTag = require("./insert-book-tag");
 const insertSubject = require("./insert-subject");
+const subjectPathSync = require("./subject-path-sync");
 const insertTag = require("./insert-tag");
 const { mySqlConnection } = require("./db-utils");
 
@@ -52,6 +53,10 @@ async function run() {
 
       console.log("Subject", i++, "of", allSubjects.length, subject.name, "created");
     }
+
+    console.log("Syncing paths");
+    await subjectPathSync(subjectsLookup);
+
     console.log("\nSubjects done\n");
 
     const allTags = adjustUserForItems(
