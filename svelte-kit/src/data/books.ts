@@ -238,6 +238,36 @@ export const getBookDetails = async (id: string) => {
     });
 };
 
+export const aggregateBooksSubjects = async (userId: string) => {
+  const start = +new Date();
+  const conn = mySqlConnectionFactory.connection();
+  const results = await conn.execute(
+    `
+    SELECT
+      COUNT(*) count,
+      (SELECT JSON_ARRAYAGG(bs.subject)
+      FROM books_subjects bs
+      JOIN subjects s
+      ON bs.subject = s.id
+      WHERE book = b.id
+      ORDER BY s.name
+      ) subjects
+    FROM books b
+    WHERE b.userId = ?
+    GROUP BY subjects
+    HAVING subjects IS NOT NULL
+  `,
+    [userId]
+  );
+
+  const rows = results.rows.map((r: any) => ({ ...r, count: +r.count }));
+
+  const end = +new Date();
+  console.log("MySQL subject books aggregate time", end - start);
+
+  return rows;
+};
+
 export const booksSubjectsDump = async (userId: string) => {
   const httpStart = +new Date();
 
@@ -251,7 +281,7 @@ export const booksSubjectsDump = async (userId: string) => {
   })
     .then(records => {
       const httpEnd = +new Date();
-      console.log("HTTP books time C", httpEnd - httpStart);
+      console.log("HTTP subject books aggregate time", httpEnd - httpStart);
 
       return records;
     })
