@@ -68,6 +68,18 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
       filters.push("EXISTS (SELECT 1 FROM books_tags bt WHERE bt.book = b.id AND bt.tag IN (?))");
       args.push(tags);
     }
+    if (subjects.length) {
+      if (!searchChildSubjects) {
+        filters.push("EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id AND bs.subject IN (?))");
+        args.push(subjects);
+      } else {
+        const pathMatch = subjects.map(id => "s.path LIKE ?").join(" OR ");
+        filters.push(
+          `EXISTS (SELECT 1 FROM books_subjects bs JOIN subjects s ON bs.subject = s.id WHERE bs.book = b.id AND (bs.subject IN (?) OR ${pathMatch}))`
+        );
+        args.push(subjects, ...subjects.map(id => `%,${id},%`));
+      }
+    }
 
     args.push(pageSize);
     const query = `
