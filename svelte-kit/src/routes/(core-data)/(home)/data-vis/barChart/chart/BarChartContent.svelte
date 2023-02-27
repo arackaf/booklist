@@ -86,7 +86,7 @@
     </div>
     <svg width="100%" class={sizeClass} style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
-        {#each nonExcludedGroups as d, i (d)}
+        {#each nonExcludedGroups as d, i (d.groupId)}
           <Bar
             barCount={nonExcludedGroups.length}
             data={d}
