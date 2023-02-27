@@ -23,13 +23,20 @@ const defaultBookFields = [
   "mediumImagePreview"
 ];
 
-const compactBookFields = ["_id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
+const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
 
 const getFieldProjection = (fields: string[]) =>
   fields.reduce<{ [k: string]: 1 }>((result, field) => {
     result[field] = 1;
     return result;
   }, {});
+
+const getSort = (sortPack: any = { _id: -1 }) => {
+  const rawField = Object.keys(sortPack)[0];
+  const field = rawField === "_id" || rawField === "id" ? "dateAdded" : rawField === "title" ? "title" : "pages";
+  const dir = sortPack[rawField] === -1 ? "DESC" : "ASC";
+  return `ORDER BY ${field} ${dir}`;
+};
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (!userId) {
@@ -42,8 +49,6 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     const conn = mySqlConnectionFactory.connection();
 
     const start = +new Date();
-
-    const setup: string[] = [];
 
     const filters = ["userId = ?"];
     const args: any[] = [userId];
@@ -81,17 +86,19 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       }
     }
 
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
+    const sortExpression = getSort(sort);
+
     const mainBooksProjection = `
       SELECT 
-        ${defaultBookFields.join(",")},
+        ${fieldsToSelect.join(",")},
         (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
-        (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
-    `;
+        (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects`;
     const filterBody = `
       FROM books b 
       WHERE ${filters.join(" AND ")}`;
 
-    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} LIMIT ?`, args.concat(pageSize)) as any;
+    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} ${sortExpression} LIMIT ?`, args.concat(pageSize)) as any;
     const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
 
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
