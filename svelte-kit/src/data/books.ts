@@ -81,20 +81,18 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
       }
     }
 
-    args.push(pageSize);
-    const query = `
-    SELECT 
+    const mainBooksProjection = `
+      SELECT 
         ${defaultBookFields.join(",")},
         (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
         (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
-      FROM books b
-      WHERE ${filters.join(" AND ")} LIMIT ?;
     `;
+    const filterBody = `
+      FROM books b 
+      WHERE ${filters.join(" AND ")}`;
 
-    console.log({ query });
-
-    const booksReq = conn.execute(query, args) as any;
-    const countReq = conn.execute(`SELECT COUNT(*) total FROM books WHERE userId = ?`, [userId]) as any;
+    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} LIMIT ?`, args.concat(pageSize)) as any;
+    const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
 
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
     const end = +new Date();
