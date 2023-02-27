@@ -54,9 +54,10 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
       filters.push("publisher LIKE ?");
       args.push(`%${publisher}%`);
     }
-    // if (author) {
-    //   $match.authors = { $regex: escapeRegexp(author), $options: "i" };
-    // }
+    if (author) {
+      filters.push(`LOWER(authors->>"$") LIKE ?`);
+      args.push(`%${author.toLowerCase()}%`);
+    }
     // if (isRead != null) {
     //   if (isRead) {
     //     $match.isRead = true;
