@@ -84,6 +84,8 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
         );
         args.push(subjects, ...subjects.map(id => `%,${id},%`));
       }
+    } else if (noSubjects) {
+      filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
 
     const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
