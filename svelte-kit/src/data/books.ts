@@ -43,17 +43,43 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
 
     const start = +new Date();
 
-    const booksReq = conn.execute(
-      `
+    const filters = ["userId = ?"];
+    const args = [userId];
+
+    if (search) {
+      filters.push("title LIKE ?");
+      args.push(`%${search}%`);
+    }
+    if (publisher) {
+      filters.push("publisher LIKE ?");
+      args.push(`%${publisher}%`);
+    }
+    // if (author) {
+    //   $match.authors = { $regex: escapeRegexp(author), $options: "i" };
+    // }
+    // if (isRead != null) {
+    //   if (isRead) {
+    //     $match.isRead = true;
+    //   } else {
+    //     requiredOrs.push([{ isRead: false }, { isRead: { $exists: false } }]);
+    //   }
+    // }
+    // if (tags.length) {
+    //   $match.tags = { $in: tags };
+    // }
+
+    const query = `
       SELECT 
         ${defaultBookFields.join(",")},
         (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
         (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
       FROM books b
-      WHERE userId = ? LIMIT ${pageSize};
-      `,
-      [userId]
-    ) as any;
+      WHERE ${filters.join(" AND ")} LIMIT ${pageSize};
+    `;
+
+    console.log({ query });
+
+    const booksReq = conn.execute(query, args) as any;
     const countReq = conn.execute(`SELECT COUNT(*) total FROM books WHERE userId = ?`, [userId]) as any;
 
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
