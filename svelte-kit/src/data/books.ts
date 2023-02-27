@@ -32,9 +32,9 @@ const getFieldProjection = (fields: string[]) =>
   }, {});
 
 const getSort = (sortPack: any = { id: -1 }) => {
-  const rawField = Object.keys(sortPack)[0];
+  const [rawField, rawDir] = Object.entries(sortPack)[0];
   const field = rawField === "id" ? "dateAdded" : rawField === "title" ? "title" : "pages";
-  const dir = sortPack[rawField] === -1 ? "DESC" : "ASC";
+  const dir = rawDir === -1 ? "DESC" : "ASC";
   return `ORDER BY ${field} ${dir}`;
 };
 
