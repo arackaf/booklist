@@ -34,27 +34,36 @@ export const stackGraphData = (subjectHash: any, subjectIds: string[], books: Bo
     subjectResultsMap.set(uniqueSubjectString, subjectResultsMap.get(uniqueSubjectString)! + item.count);
   });
 
-  return Array.from(subjectResultsMap).map(([name, count]) => {
-    let _ids = name.split(",").filter(s => s);
-    let names = _ids
-      .map(id => subjectHash[id].name)
-      .sort()
-      .join(",");
+  return Array.from(subjectResultsMap)
+    .map(([name, count]) => {
+      let _ids = name.split(",").filter(s => s);
+      let names = _ids
+        .map(id => subjectHash[id].name)
+        .sort()
+        .join(",");
 
-    return {
-      groupId: name,
-      count,
-      display: names,
-      entries: _ids.map(id => {
-        let subject = subjectHash[id];
-        return {
-          name: subject.name,
-          color: subject.backgroundColor,
-          children: getChildSubjectsSorted(id, subjectHash)
-        };
-      })
-    };
-  });
+      return {
+        groupId: name,
+        count,
+        display: names,
+        entries: _ids.map(id => {
+          let subject = subjectHash[id];
+          return {
+            name: subject.name,
+            color: subject.backgroundColor,
+            children: getChildSubjectsSorted(id, subjectHash)
+          };
+        })
+      };
+    })
+    .sort((a, b) => {
+      if (a.display < b.display) {
+        return -1;
+      } else if (a.display > b.display) {
+        return 1;
+      }
+      return 0;
+    });
 
   function getApplicableRootSubject(subject: any): any {
     let parentId = computeParentId(subject.path);
