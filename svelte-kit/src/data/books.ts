@@ -31,7 +31,7 @@ const getFieldProjection = (fields: string[]) =>
     return result;
   }, {});
 
-export const searchBooksMySql = async (userId: string, searchPacket: BookSearch) => {
+export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
@@ -123,7 +123,7 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
   }
 };
 
-export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
+export const searchBooksMongo = async (userId: string, searchPacket: BookSearch) => {
   userId = userId || "";
 
   if (!userId) {
