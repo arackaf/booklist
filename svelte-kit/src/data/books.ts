@@ -44,7 +44,7 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
     const start = +new Date();
 
     const filters = ["userId = ?"];
-    const args = [userId];
+    const args: any[] = [userId];
 
     if (search) {
       filters.push("title LIKE ?");
@@ -58,13 +58,10 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
       filters.push(`LOWER(authors->>"$") LIKE ?`);
       args.push(`%${author.toLowerCase()}%`);
     }
-    // if (isRead != null) {
-    //   if (isRead) {
-    //     $match.isRead = true;
-    //   } else {
-    //     requiredOrs.push([{ isRead: false }, { isRead: { $exists: false } }]);
-    //   }
-    // }
+    if (isRead != null) {
+      filters.push(`isRead = ?`);
+      args.push(isRead);
+    }
     // if (tags.length) {
     //   $match.tags = { $in: tags };
     // }
