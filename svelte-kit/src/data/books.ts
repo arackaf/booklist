@@ -43,6 +43,8 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
 
     const start = +new Date();
 
+    const setup: string[] = [];
+
     const filters = ["userId = ?"];
     const args: any[] = [userId];
 
@@ -59,20 +61,22 @@ export const searchBooksMySql = async (userId: string, searchPacket: BookSearch)
       args.push(`%${author.toLowerCase()}%`);
     }
     if (isRead != null) {
-      filters.push(`isRead = ?`);
+      filters.push("isRead = ?");
       args.push(isRead);
     }
-    // if (tags.length) {
-    //   $match.tags = { $in: tags };
-    // }
+    if (tags.length) {
+      filters.push("EXISTS (SELECT 1 FROM books_tags bt WHERE bt.book = b.id AND bt.tag IN (?))");
+      args.push(tags);
+    }
 
+    args.push(pageSize);
     const query = `
-      SELECT 
+    SELECT 
         ${defaultBookFields.join(",")},
         (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
         (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects 
       FROM books b
-      WHERE ${filters.join(" AND ")} LIMIT ${pageSize};
+      WHERE ${filters.join(" AND ")} LIMIT ?;
     `;
 
     console.log({ query });
