@@ -23,9 +23,6 @@ const allBookFields: (keyof Book)[] = [
   "mediumImagePreview"
 ];
 
-const nonMutableFields = new Set(["id", "dateAdded", "userId"]);
-const mutableFields = allBookFields.filter(k => !nonMutableFields.has(k));
-
 const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
 
 const getFieldProjection = (fields: string[]) =>
@@ -344,39 +341,49 @@ export const booksSubjectsDump = async (userId: string) => {
     });
 };
 
-export const insertBook = async (userId: string, book: any) => {
+export const insertBook = async (userId: string, book: Partial<Book>) => {
   const conn = mySqlConnectionFactory.connection();
 
-  const fieldsToInsert: any[] = [...new Set([...mutableFields.slice(0, 4), "title", "isRead"])];
-
-  console.log(
-    `
-  INSERT INTO books (${fieldsToInsert.concat("userId", "dateAdded").join(", ")})
-  VALUES (${fieldsToInsert.map(_ => "?").join(", ")}, ?, ?)
-`,
-    [...fieldsToInsert.map(k => book[k] ?? null), userId, new Date()]
-  );
-  // const res = await conn.execute(
-  //   `
-  //   INSERT INTO books (title, userId, isRead, dateAdded)
-  //   VALUES (?, ?, ?, ?)
-  // `,
-  //   [book.title, userId, false, new Date()]
-  // );
   const res = await conn.execute(
     `
-    INSERT INTO books (${fieldsToInsert.concat("userId", "dateAdded").join(", ")})
-    VALUES (${fieldsToInsert.map(_ => "?").join(", ")}, ?, ?);
-  `,
-    [...fieldsToInsert.map(k => (k === "authors" ? "[]" : book[k] ?? null)), userId, new Date()]
+    INSERT INTO books (
+      title,
+      pages,
+      authors,
+      isbn,
+      publisher,
+      publicationDate,
+      isRead,
+      mobileImage,
+      mobileImagePreview,
+      smallImage,
+      smallImagePreview,
+      mediumImage,
+      mediumImagePreview,
+      userId,
+      dateAdded
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+    [
+      book.title,
+      book.pages ?? null,
+      JSON.stringify(book.authors ?? []),
+      book.isbn,
+      book.publisher,
+      book.publicationDate,
+      book.isRead,
+      book.mobileImage,
+      JSON.stringify(book.mobileImagePreview ?? null),
+      book.smallImage,
+      JSON.stringify(book.smallImagePreview ?? null),
+      book.mediumImage,
+      JSON.stringify(book.mediumImagePreview ?? null),
+      userId,
+      new Date()
+    ]
   );
 
   console.log("DONE", res);
-
-  const XXX = await conn.execute("SELECT LAST_INSERT_ID() as id");
-  console.log({ XXX });
-
-  //return insertObject("books", userId, book);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
