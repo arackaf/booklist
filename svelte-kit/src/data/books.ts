@@ -401,10 +401,16 @@ type BulkUpdate = {
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
+  const pairs = [
+    [ids[0], add[0]],
+    [ids[0], add[1]],
+    [ids[0], add[2]]
+  ];
+
   const conn = mySqlConnectionFactory.connection();
   const xxx = await conn.transaction(async tx => {
     const ct = await tx.execute(`CREATE TEMPORARY TABLE insert_books_subjects (book INT NOT NULL, subject INT NOT NULL);`);
-    const it = await tx.execute(`INSERT INTO insert_books_subjects (book, subject) VALUES (${ids[0]}, ${add[0]});`);
+    const it = await tx.execute(`INSERT INTO insert_books_subjects (book, subject) VALUES ${pairs.map(_ => "(?)").join(", ")};`, pairs);
     const sel = await tx.execute(`SELECT * FROM insert_books_subjects;`);
     const addSubjects = await tx.execute(
       `
