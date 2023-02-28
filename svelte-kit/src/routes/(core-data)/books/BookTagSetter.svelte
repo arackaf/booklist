@@ -81,7 +81,7 @@
       <TabContents>
         <TabContent tabName="tags">
           {#each modifyingBooks as b}
-            <input type="hidden" name="_ids" value={b.id} />
+            <input type="hidden" name="ids" value={b.id} />
           {/each}
           {#each addingTags as t}
             <input type="hidden" name="add" value={t} />

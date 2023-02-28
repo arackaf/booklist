@@ -78,7 +78,7 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      arrays: ["_ids", "add", "remove"]
+      arrays: ["ids", "add", "remove"]
     }) as any;
 
     await updateBooksSubjects(session.userId, fields);

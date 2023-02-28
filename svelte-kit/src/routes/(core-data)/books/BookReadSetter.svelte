@@ -11,9 +11,9 @@
 
   const booksUpdated = () => {
     saving = true;
-    const _idsToUse = ids;
+    const idsToUse = ids;
     return async ({ result }: any) => {
-      onBooksUpdated(_idsToUse, result.data.updates);
+      onBooksUpdated(idsToUse, result.data.updates);
       onSave?.();
       saving = void 0;
     };
@@ -22,7 +22,7 @@
 
 <form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
   {#each ids as id}
-    <input type="hidden" name="_ids" value={id} />
+    <input type="hidden" name="ids" value={id} />
   {/each}
   <input type="hidden" name="read" value={value ? "true" : "false"} />
   <slot />

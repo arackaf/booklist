@@ -120,13 +120,13 @@
     <span>Add / Remove Tags</span>
     <i class="fal fa-fw fa-tags" />
   </button>
-  <BookReadSetter _ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
+  <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
     <button title="Set read" class="btn btn-default" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Read</span>
       <i class="fal fa-fw fa-eye" />
     </button>
   </BookReadSetter>
-  <BookReadSetter _ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
+  <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
     <button title="Set un-read" class="btn btn-default put-line-through last-child" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Un-Read</span>
       <i class="fal fa-fw fa-eye-slash" />
