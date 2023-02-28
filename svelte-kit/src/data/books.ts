@@ -4,7 +4,7 @@ import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObje
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 
-const allBookFields: (keyof Book)[] = [
+const defaultBookFields: (keyof Book)[] = [
   "id",
   "title",
   "pages",
@@ -88,7 +88,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
 
-    const fieldsToSelect = resultSet === "compact" ? compactBookFields : allBookFields;
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
     const sortExpression = getSort(sort);
 
     const mainBooksProjection = `
@@ -143,7 +143,7 @@ export const searchBooksMongo = async (userId: string, searchPacket: BookSearch)
 
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
 
-  const fieldsToSelect = resultSet === "compact" ? compactBookFields : allBookFields;
+  const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
   const projection = getFieldProjection(fieldsToSelect);
 
   const $match: any = { userId };
