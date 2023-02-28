@@ -393,12 +393,42 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
 };
 
 type BulkUpdate = {
-  _ids: string[];
+  ids: string[];
   add: string[];
   remove: string[];
 };
 
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
+  const { ids, add, remove } = updates;
+
+  const conn = mySqlConnectionFactory.connection();
+  const xxx = await conn.transaction(async tx => {
+    const ct = await tx.execute(`CREATE TEMPORARY TABLE insert_books_subjects (book INT NOT NULL, subject INT NOT NULL);`);
+    const it = await tx.execute(`INSERT INTO insert_books_subjects (book, subject) VALUES (${ids[0]}, ${add[0]});`);
+    const sel = await tx.execute(`SELECT * FROM insert_books_subjects;`);
+    const addSubjects = await tx.execute(
+      `
+      INSERT INTO books_subjects (book, subject)
+      SELECT DISTINCT tmp.book, tmp.subject
+      FROM insert_books_subjects tmp
+      JOIN books b
+      ON tmp.book = b.id
+      LEFT OUTER JOIN books_subjects existing
+      ON existing.book = tmp.book AND existing.subject = tmp.subject
+      WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
+    `,
+      [userId]
+    );
+    //const removeSubjects = await tx.execute(`DELETE FROM books_subjects WHERE book = ? AND subject = ?`, [ids[0], remove[0]]);
+
+    return [ct, it, sel, addSubjects /*removeSubjects*/];
+  });
+
+  console.log({ xxx });
+  console.log({ res: xxx[2].rows });
+  console.log({ ids, add, remove });
+};
+export const updateBooksSubjects__mongo = async (userId: string, updates: any) => {
   const { _ids, add, remove } = updates;
 
   if (add.length) {
