@@ -4,7 +4,7 @@ import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObje
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 
-const defaultBookFields = [
+const allBookFields: (keyof Book)[] = [
   "id",
   "title",
   "pages",
@@ -22,6 +22,9 @@ const defaultBookFields = [
   "mediumImage",
   "mediumImagePreview"
 ];
+
+const nonMutableFields = new Set(["id", "dateAdded", "userId"]);
+const mutableFields = allBookFields.filter(k => !nonMutableFields.has(k));
 
 const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
 
@@ -88,7 +91,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
 
-    const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : allBookFields;
     const sortExpression = getSort(sort);
 
     const mainBooksProjection = `
@@ -143,7 +146,7 @@ export const searchBooksMongo = async (userId: string, searchPacket: BookSearch)
 
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
 
-  const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
+  const fieldsToSelect = resultSet === "compact" ? compactBookFields : allBookFields;
   const projection = getFieldProjection(fieldsToSelect);
 
   const $match: any = { userId };
@@ -341,8 +344,39 @@ export const booksSubjectsDump = async (userId: string) => {
     });
 };
 
-export const insertBook = async (userId: string, book: Partial<Book>) => {
-  return insertObject("books", userId, book);
+export const insertBook = async (userId: string, book: any) => {
+  const conn = mySqlConnectionFactory.connection();
+
+  const fieldsToInsert: any[] = [...new Set([...mutableFields.slice(0, 4), "title", "isRead"])];
+
+  console.log(
+    `
+  INSERT INTO books (${fieldsToInsert.concat("userId", "dateAdded").join(", ")})
+  VALUES (${fieldsToInsert.map(_ => "?").join(", ")}, ?, ?)
+`,
+    [...fieldsToInsert.map(k => book[k] ?? null), userId, new Date()]
+  );
+  // const res = await conn.execute(
+  //   `
+  //   INSERT INTO books (title, userId, isRead, dateAdded)
+  //   VALUES (?, ?, ?, ?)
+  // `,
+  //   [book.title, userId, false, new Date()]
+  // );
+  const res = await conn.execute(
+    `
+    INSERT INTO books (${fieldsToInsert.concat("userId", "dateAdded").join(", ")})
+    VALUES (${fieldsToInsert.map(_ => "?").join(", ")}, ?, ?);
+  `,
+    [...fieldsToInsert.map(k => (k === "authors" ? "[]" : book[k] ?? null)), userId, new Date()]
+  );
+
+  console.log("DONE", res);
+
+  const XXX = await conn.execute("SELECT LAST_INSERT_ID() as id");
+  console.log({ XXX });
+
+  //return insertObject("books", userId, book);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
