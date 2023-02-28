@@ -51,6 +51,7 @@ export type Book = {
   mediumImage: string | null;
   mediumImagePreview: string | PreviewPacket | null;
   dateAdded: string;
+  userId: string;
 };
 
 export type BookImages = {

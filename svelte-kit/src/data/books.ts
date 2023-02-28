@@ -4,7 +4,7 @@ import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObje
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 
-const defaultBookFields = [
+const defaultBookFields: (keyof Book)[] = [
   "id",
   "title",
   "pages",
@@ -342,7 +342,48 @@ export const booksSubjectsDump = async (userId: string) => {
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  return insertObject("books", userId, book);
+  const conn = mySqlConnectionFactory.connection();
+
+  const res = await conn.execute(
+    `
+    INSERT INTO books (
+      title,
+      pages,
+      authors,
+      isbn,
+      publisher,
+      publicationDate,
+      isRead,
+      mobileImage,
+      mobileImagePreview,
+      smallImage,
+      smallImagePreview,
+      mediumImage,
+      mediumImagePreview,
+      userId,
+      dateAdded
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+    [
+      book.title,
+      book.pages ?? null,
+      JSON.stringify(book.authors ?? []),
+      book.isbn,
+      book.publisher,
+      book.publicationDate,
+      book.isRead ?? false,
+      book.mobileImage,
+      JSON.stringify(book.mobileImagePreview ?? null),
+      book.smallImage,
+      JSON.stringify(book.smallImagePreview ?? null),
+      book.mediumImage,
+      JSON.stringify(book.mediumImagePreview ?? null),
+      userId,
+      new Date()
+    ]
+  );
+
+  console.log("DONE", res);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
