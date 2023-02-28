@@ -371,7 +371,7 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
       book.isbn,
       book.publisher,
       book.publicationDate,
-      book.isRead,
+      book.isRead ?? false,
       book.mobileImage,
       JSON.stringify(book.mobileImagePreview ?? null),
       book.smallImage,

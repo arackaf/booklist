@@ -42,7 +42,7 @@ export const actions = {
     if (fields.id) {
       await updateBook(session.userId, fields);
     } else {
-      await insertBook(session.userId, { ...fields, isRead: false });
+      await insertBook(session.userId, fields);
     }
 
     updateCacheCookie(cookies, BOOKS_CACHE);
