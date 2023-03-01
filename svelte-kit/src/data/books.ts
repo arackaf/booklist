@@ -397,44 +397,19 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
     }
 
     if (book.tags?.length) {
-      const tagPairs = book.tags.map(tagId => [bookId, tagId]);
-      ops.push(
-        await tx.execute(
-          `
-          INSERT INTO books_tags (book, tag)
-          VALUES ${getInsertLists(tagPairs)}
-          `,
-          tagPairs
-        )
-      );
+      ops.push(...(await syncBookTags(tx, bookId, book.tags)));
     }
 
     return ops;
   });
 };
 
-const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
-  const subjectPairs = subjects.map(subjectId => [bookId, subjectId]);
-  const result: ExecutedQuery[] = [];
-
-  result.push(
-    await tx.execute(
-      `
-    INSERT INTO books_subjects (book, subject)
-    VALUES ${getInsertLists(subjectPairs)}
-    `,
-      subjectPairs
-    )
-  );
-
-  return result;
-};
-
 export const updateBook = async (userId: string, book: Partial<Book>) => {
   const conn = mySqlConnectionFactory.connection();
 
-  await conn.execute(
-    `
+  conn.transaction(async tx => {
+    const update = await tx.execute(
+      `
     UPDATE books
     SET 
       title = ?,
@@ -451,24 +426,73 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
       mediumImage = ?,
       mediumImagePreview = ?
     WHERE id = ? AND userId = ?;`,
-    [
-      book.title,
-      book.pages ?? null,
-      JSON.stringify(book.authors ?? []),
-      book.isbn,
-      book.publisher,
-      book.publicationDate,
-      book.isRead ?? false,
-      book.mobileImage,
-      JSON.stringify(book.mobileImagePreview ?? null),
-      book.smallImage,
-      JSON.stringify(book.smallImagePreview ?? null),
-      book.mediumImage,
-      JSON.stringify(book.mediumImagePreview ?? null),
-      book.id,
-      userId
-    ]
-  );
+      [
+        book.title,
+        book.pages ?? null,
+        JSON.stringify(book.authors ?? []),
+        book.isbn,
+        book.publisher,
+        book.publicationDate,
+        book.isRead ?? false,
+        book.mobileImage,
+        JSON.stringify(book.mobileImagePreview ?? null),
+        book.smallImage,
+        JSON.stringify(book.smallImagePreview ?? null),
+        book.mediumImage,
+        JSON.stringify(book.mediumImagePreview ?? null),
+        book.id,
+        userId
+      ]
+    );
+
+    const subjects = await syncBookSubjects(tx, book.id!, book.subjects ?? [], true);
+    const tags = await syncBookSubjects(tx, book.id!, book.tags ?? [], true);
+
+    return [update, subjects, tags];
+  });
+};
+
+const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
+  const tagPairs = tags.map(tagId => [bookId, tagId]);
+  const result: ExecutedQuery[] = [];
+
+  if (clearExisting) {
+    result.push(await tx.execute(`DELETE books_tags WHERE book = ?`, [bookId]));
+  }
+  if (tags.length) {
+    result.push(
+      await tx.execute(
+        `
+        INSERT INTO books_tags (book, tag)
+        VALUES ${getInsertLists(tagPairs)}
+        `,
+        tagPairs
+      )
+    );
+  }
+  return result;
+};
+
+const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
+  const subjectPairs = subjects.map(subjectId => [bookId, subjectId]);
+  const result: ExecutedQuery[] = [];
+
+  if (clearExisting) {
+    result.push(await tx.execute(`DELETE books_subjects WHERE book = ?`, [bookId]));
+  }
+  if (subjects.length) {
+    result.push(
+      await tx.execute(
+        `
+        INSERT INTO books_subjects (book, subject)
+        VALUES ${getInsertLists(subjectPairs)}
+        `,
+        subjectPairs
+      )
+    );
+  }
+
+  return result;
 };
 
 export const updateBook__Mongo = async (userId: string, book: Partial<Book>) => {

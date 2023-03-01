@@ -1,16 +1,10 @@
 import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook, insertBook } from "$data/books";
-import type { Tag } from "$data/types";
+import type { Book, Tag } from "$data/types";
 import { saveTag, deleteSingleTag } from "$data/tags";
 
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { removeEmpty, toJson } from "$lib/util/formDataHelpers";
 import { updateUxState } from "$lib/util/uxState";
-
-type Book = {
-  id: string;
-  title: string;
-  authors: string[];
-};
 
 export const actions = {
   async setBooksView({ request, cookies }: any) {
@@ -37,7 +31,7 @@ export const actions = {
       optionalObjects: ["mobileImagePreview", "smallImagePreview", "mediumImagePreview"],
       arrays: ["authors"],
       numberArrays: ["tags", "subjects"]
-    }) as Book;
+    }) as unknown as Book;
     fields.authors = fields.authors.filter(a => a);
 
     if (fields.id) {

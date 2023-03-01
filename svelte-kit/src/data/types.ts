@@ -33,7 +33,7 @@ export type PreviewPacket = { w: number; h: number; b64: string };
 export type BookSubjectStack = { subjects: string[]; count: number };
 
 export type Book = {
-  id: string;
+  id: number;
   title: string;
   pages?: number;
   isbn: string;
