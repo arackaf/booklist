@@ -446,7 +446,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
     );
 
     const subjects = await syncBookSubjects(tx, book.id!, book.subjects ?? [], true);
-    const tags = await syncBookSubjects(tx, book.id!, book.tags ?? [], true);
+    const tags = await syncBookTags(tx, book.id!, book.tags ?? [], true);
 
     return [update, subjects, tags];
   });
@@ -457,7 +457,7 @@ const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], cle
   const result: ExecutedQuery[] = [];
 
   if (clearExisting) {
-    result.push(await tx.execute(`DELETE books_tags WHERE book = ?`, [bookId]));
+    result.push(await tx.execute(`DELETE FROM books_tags WHERE book = ?`, [bookId]));
   }
   if (tags.length) {
     result.push(
@@ -478,7 +478,7 @@ const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: numbe
   const result: ExecutedQuery[] = [];
 
   if (clearExisting) {
-    result.push(await tx.execute(`DELETE books_subjects WHERE book = ?`, [bookId]));
+    result.push(await tx.execute(`DELETE FROM books_subjects WHERE book = ?`, [bookId]));
   }
   if (subjects.length) {
     result.push(
