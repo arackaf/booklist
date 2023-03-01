@@ -42,8 +42,8 @@ export type Book = {
   dateAddedDisplay: string;
   isRead: boolean;
   authors: string[];
-  tags: string[];
-  subjects: string[];
+  tags: number[];
+  subjects: number[];
   mobileImage: string | null;
   mobileImagePreview: string | PreviewPacket | null;
   smallImage: string | null;

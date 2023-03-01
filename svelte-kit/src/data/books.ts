@@ -3,6 +3,7 @@ import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataCon
 import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject, mySqlConnectionFactory, getInsertLists } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
+import type { ExecutedQuery, Transaction } from "@planetscale/database";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -392,16 +393,7 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
     ops.push(insertBook, newId);
 
     if (book.subjects?.length) {
-      const subjectPairs = book.subjects.map(subjectId => [bookId, subjectId]);
-      ops.push(
-        await tx.execute(
-          `
-          INSERT INTO books_subjects (book, subject)
-          VALUES ${getInsertLists(subjectPairs)}
-          `,
-          subjectPairs
-        )
-      );
+      ops.push(...(await syncBookSubjects(tx, bookId, book.subjects)));
     }
 
     if (book.tags?.length) {
@@ -419,6 +411,23 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
 
     return ops;
   });
+};
+
+const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
+  const subjectPairs = subjects.map(subjectId => [bookId, subjectId]);
+  const result: ExecutedQuery[] = [];
+
+  result.push(
+    await tx.execute(
+      `
+    INSERT INTO books_subjects (book, subject)
+    VALUES ${getInsertLists(subjectPairs)}
+    `,
+      subjectPairs
+    )
+  );
+
+  return result;
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
