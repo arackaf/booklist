@@ -409,7 +409,7 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
   }
 
   const conn = mySqlConnectionFactory.connection();
-  const xxx = await conn.transaction(async tx => {
+  await conn.transaction(async tx => {
     const ops = [await tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
     if (addPairs.length) {
       ops.push(
@@ -448,10 +448,6 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
 
     return ops;
   });
-
-  console.log({ xxx });
-  console.log({ res: xxx[2].rows });
-  console.log({ ids, add, remove });
 };
 export const updateBooksSubjects__mongo = async (userId: string, updates: any) => {
   const { _ids, add, remove } = updates;
@@ -478,6 +474,57 @@ export const updateBooksSubjects__mongo = async (userId: string, updates: any) =
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
+  const { ids, add, remove } = updates;
+
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+
+  if (!addPairs.length && !removePairs.length) {
+    return;
+  }
+
+  const conn = mySqlConnectionFactory.connection();
+  await conn.transaction(async tx => {
+    const ops = [await tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, tag INT NOT NULL);`)];
+    if (addPairs.length) {
+      ops.push(
+        await tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(addPairs)};`, addPairs),
+        await tx.execute(
+          `
+          INSERT INTO books_tags (book, tag)
+          SELECT DISTINCT tmp.book, tmp.tag
+          FROM tmp
+          JOIN books b
+          ON tmp.book = b.id
+          LEFT OUTER JOIN books_tags existing
+          ON existing.book = tmp.book AND existing.tag = tmp.tag
+          WHERE b.userId = ? AND existing.book IS NULL AND existing.tag IS NULL
+          `,
+          [userId]
+        ),
+        await tx.execute(`DELETE FROM tmp`)
+      );
+    }
+    if (removePairs.length) {
+      ops.push(
+        await tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(removePairs)};`, removePairs),
+        await tx.execute(
+          `
+          DELETE FROM books_tags
+          WHERE EXISTS (
+            SELECT 1
+            FROM tmp
+            WHERE books_tags.book = tmp.book AND books_tags.tag = tmp.tag
+          );
+          `
+        )
+      );
+    }
+
+    return ops;
+  });
+};
+export const updateBooksTags__Mongo = async (userId: string, updates: BulkUpdate) => {
   const { _ids, add, remove } = updates;
 
   if (add.length) {
