@@ -1,6 +1,15 @@
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
-import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject, mySqlConnectionFactory, getInsertLists } from "./dbUtils";
+import {
+  queryBooks,
+  updateMultipleBooks,
+  deleteBookById,
+  updateById,
+  insertObject,
+  mySqlConnectionFactory,
+  getInsertLists,
+  runTransaction
+} from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
@@ -405,51 +414,47 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
-  const conn = mySqlConnectionFactory.connection();
-
-  conn.transaction(async tx => {
-    const update = await tx.execute(
-      `
-    UPDATE books
-    SET 
-      title = ?,
-      pages = ?,
-      authors = ?,
-      isbn = ?,
-      publisher = ?,
-      publicationDate = ?,
-      isRead = ?,
-      mobileImage = ?,
-      mobileImagePreview = ?,
-      smallImage = ?,
-      smallImagePreview = ?,
-      mediumImage = ?,
-      mediumImagePreview = ?
-    WHERE id = ? AND userId = ?;`,
-      [
-        book.title,
-        book.pages ?? null,
-        JSON.stringify(book.authors ?? []),
-        book.isbn,
-        book.publisher,
-        book.publicationDate,
-        book.isRead ?? false,
-        book.mobileImage,
-        JSON.stringify(book.mobileImagePreview ?? null),
-        book.smallImage,
-        JSON.stringify(book.smallImagePreview ?? null),
-        book.mediumImage,
-        JSON.stringify(book.mediumImagePreview ?? null),
-        book.id,
-        userId
-      ]
-    );
-
-    const subjects = await syncBookSubjects(tx, book.id!, book.subjects ?? [], true);
-    const tags = await syncBookTags(tx, book.id!, book.tags ?? [], true);
-
-    return [update, subjects, tags];
-  });
+  return runTransaction([
+    tx =>
+      tx.execute(
+        `
+        UPDATE books
+        SET 
+          title = ?,
+          pages = ?,
+          authors = ?,
+          isbn = ?,
+          publisher = ?,
+          publicationDate = ?,
+          isRead = ?,
+          mobileImage = ?,
+          mobileImagePreview = ?,
+          smallImage = ?,
+          smallImagePreview = ?,
+          mediumImage = ?,
+          mediumImagePreview = ?
+        WHERE id = ? AND userId = ?;`,
+        [
+          book.title,
+          book.pages ?? null,
+          JSON.stringify(book.authors ?? []),
+          book.isbn,
+          book.publisher,
+          book.publicationDate,
+          book.isRead ?? false,
+          book.mobileImage,
+          JSON.stringify(book.mobileImagePreview ?? null),
+          book.smallImage,
+          JSON.stringify(book.smallImagePreview ?? null),
+          book.mediumImage,
+          JSON.stringify(book.mediumImagePreview ?? null),
+          book.id,
+          userId
+        ]
+      ),
+    tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
+    tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
+  ]);
 };
 
 const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], clearExisting = false): Promise<ExecutedQuery[]> => {

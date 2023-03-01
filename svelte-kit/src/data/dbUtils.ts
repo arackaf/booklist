@@ -1,4 +1,4 @@
-import { Client } from "@planetscale/database";
+import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 
 import { MONGO_URL, MONGO_URL_API_KEY, MY_SQL_HOST, MY_SQL_USERNAME, MY_SQL_PASSWORD, MY_SQL_DB } from "$env/static/private";
 
@@ -9,6 +9,26 @@ export const mySqlConnectionFactory = new Client({
   username: MY_SQL_USERNAME,
   password: MY_SQL_PASSWORD
 });
+
+export type TransactionItem = (tx: Transaction) => Promise<ExecutedQuery | ExecutedQuery[]>;
+export const runTransaction = async (ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
+  const conn = mySqlConnectionFactory.connection();
+
+  return conn.transaction(async tx => {
+    const transactionItems: ExecutedQuery[] = [];
+    for (const op of ops) {
+      const result = await op(tx);
+
+      if (Array.isArray(result)) {
+        transactionItems.push(...result);
+      } else {
+        transactionItems.push(result);
+      }
+    }
+
+    return transactionItems;
+  });
+};
 
 type MongoMultiQueryResponse<T> = {
   documents: T[];
