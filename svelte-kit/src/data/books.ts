@@ -404,38 +404,49 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
   const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
   const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
 
+  if (!addPairs.length && !removePairs.length) {
+    return;
+  }
+
   const conn = mySqlConnectionFactory.connection();
   const xxx = await conn.transaction(async tx => {
-    const ct = await tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`);
-    // const addTmp = await tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs);
-    // const addSubjects = await tx.execute(
-    //   `
-    //   INSERT INTO books_subjects (book, subject)
-    //   SELECT DISTINCT tmp.book, tmp.subject
-    //   FROM tmp
-    //   JOIN books b
-    //   ON tmp.book = b.id
-    //   LEFT OUTER JOIN books_subjects existing
-    //   ON existing.book = tmp.book AND existing.subject = tmp.subject
-    //   WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
-    //   `,
-    //   [userId]
-    // );
-    // const clear = await tx.execute(`DELETE FROM tmp`);
-    const insertRemove = await tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs);
-    const removeSubjects = await tx.execute(
-      `
-      DELETE FROM books_subjects
-      WHERE id IN (
-        SELECT id
-        FROM tmp
-        WHERE books_subjects.book = tmp.book AND books_subjects.subject = tmp.subject
+    const ops = [await tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
+    if (addPairs.length) {
+      ops.push(
+        await tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs),
+        await tx.execute(
+          `
+          INSERT INTO books_subjects (book, subject)
+          SELECT DISTINCT tmp.book, tmp.subject
+          FROM tmp
+          JOIN books b
+          ON tmp.book = b.id
+          LEFT OUTER JOIN books_subjects existing
+          ON existing.book = tmp.book AND existing.subject = tmp.subject
+          WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
+          `,
+          [userId]
+        ),
+        await tx.execute(`DELETE FROM tmp`)
       );
-      `
-    );
-    //const removeSubjects = await tx.execute(`DELETE FROM books_subjects WHERE book = ? AND subject = ?`, [ids[0], remove[0]]);
+    }
+    if (removePairs.length) {
+      ops.push(
+        await tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs),
+        await tx.execute(
+          `
+          DELETE FROM books_subjects
+          WHERE EXISTS (
+            SELECT 1
+            FROM tmp
+            WHERE books_subjects.book = tmp.book AND books_subjects.subject = tmp.subject
+          );
+          `
+        )
+      );
+    }
 
-    return [ct, /*addTmp, addSubjects, clear,*/ insertRemove, removeSubjects];
+    return ops;
   });
 
   console.log({ xxx });
