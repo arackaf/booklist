@@ -35,7 +35,8 @@ export const actions = {
       numbers: ["id", "pages"],
       optionals: ["mobileImage", "smallImage", "mediumImage"],
       optionalObjects: ["mobileImagePreview", "smallImagePreview", "mediumImagePreview"],
-      arrays: ["authors", "tags", "subjects"]
+      arrays: ["authors"],
+      numberArrays: ["tags", "subjects"]
     }) as Book;
     fields.authors = fields.authors.filter(a => a);
 

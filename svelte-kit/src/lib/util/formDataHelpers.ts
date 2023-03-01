@@ -10,7 +10,7 @@ export const sanitize = (searchParams: URLSearchParams) => {
 };
 
 type Lookup = {
-  [k: string]: string | number | string[] | null;
+  [k: string]: string | number | string[] | number[] | null;
 };
 
 type Options = {
@@ -19,6 +19,7 @@ type Options = {
   optionals?: string[];
   optionalObjects?: string[];
   arrays?: string[];
+  numberArrays?: string[];
 };
 
 export const toJson = (params: URLSearchParams, options: Options) => {
@@ -54,6 +55,10 @@ export const toJson = (params: URLSearchParams, options: Options) => {
 
   options.arrays?.forEach(k => {
     result[k] = params.getAll(k);
+  });
+
+  options.numberArrays?.forEach(k => {
+    result[k] = params.getAll(k).map(val => +val);
   });
 
   return result;
