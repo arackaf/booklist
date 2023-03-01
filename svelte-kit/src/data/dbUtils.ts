@@ -46,6 +46,8 @@ const findById = <T>(collection: string, _id: string, userId: string) => {
   return runRequest("findOne", collection, { filter: { _id: { $oid: _id }, userId } }).then((res: MongoSingleQueryResponse<T>) => res.document);
 };
 
+export const getInsertLists = (lists: any[]) => Array.from({ length: lists.length }, () => "(?)").join(", ");
+
 export function insertObject<T>(collection: string, userId: string, document: Omit<T, "id">) {
   // @ts-ignore
   delete document._id;
