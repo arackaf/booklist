@@ -344,44 +344,81 @@ export const booksSubjectsDump = async (userId: string) => {
 export const insertBook = async (userId: string, book: Partial<Book>) => {
   const conn = mySqlConnectionFactory.connection();
 
-  const res = await conn.execute(
-    `
-    INSERT INTO books (
-      title,
-      pages,
-      authors,
-      isbn,
-      publisher,
-      publicationDate,
-      isRead,
-      mobileImage,
-      mobileImagePreview,
-      smallImage,
-      smallImagePreview,
-      mediumImage,
-      mediumImagePreview,
-      userId,
-      dateAdded
-    )
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-    [
-      book.title,
-      book.pages ?? null,
-      JSON.stringify(book.authors ?? []),
-      book.isbn,
-      book.publisher,
-      book.publicationDate,
-      book.isRead ?? false,
-      book.mobileImage,
-      JSON.stringify(book.mobileImagePreview ?? null),
-      book.smallImage,
-      JSON.stringify(book.smallImagePreview ?? null),
-      book.mediumImage,
-      JSON.stringify(book.mediumImagePreview ?? null),
-      userId,
-      new Date()
-    ]
-  );
+  await conn.transaction(async tx => {
+    const ops: any[] = [];
+
+    const insertBook = await tx.execute(
+      `
+      INSERT INTO books (
+        title,
+        pages,
+        authors,
+        isbn,
+        publisher,
+        publicationDate,
+        isRead,
+        mobileImage,
+        mobileImagePreview,
+        smallImage,
+        smallImagePreview,
+        mediumImage,
+        mediumImagePreview,
+        userId,
+        dateAdded
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+      [
+        book.title,
+        book.pages ?? null,
+        JSON.stringify(book.authors ?? []),
+        book.isbn,
+        book.publisher,
+        book.publicationDate,
+        book.isRead ?? false,
+        book.mobileImage,
+        JSON.stringify(book.mobileImagePreview ?? null),
+        book.smallImage,
+        JSON.stringify(book.smallImagePreview ?? null),
+        book.mediumImage,
+        JSON.stringify(book.mediumImagePreview ?? null),
+        userId,
+        new Date()
+      ]
+    );
+
+    const newId = await tx.execute("SELECT LAST_INSERT_ID() as id");
+    const bookId = +(newId.rows[0] as any).id;
+
+    ops.push(insertBook, newId);
+
+    if (book.subjects?.length) {
+      const subjectPairs = book.subjects.map(subjectId => [bookId, subjectId]);
+      ops.push(
+        await tx.execute(
+          `
+          INSERT INTO books_subjects (book, subject)
+          VALUES ${getInsertLists(subjectPairs)}
+          `,
+          subjectPairs
+        )
+      );
+    }
+
+    if (book.tags?.length) {
+      const tagPairs = book.tags.map(tagId => [bookId, tagId]);
+      ops.push(
+        await tx.execute(
+          `
+          INSERT INTO books_tags (book, tag)
+          VALUES ${getInsertLists(tagPairs)}
+          `,
+          tagPairs
+        )
+      );
+    }
+
+    return ops;
+  });
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
