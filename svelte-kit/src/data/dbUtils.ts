@@ -10,14 +10,14 @@ export const mySqlConnectionFactory = new Client({
   password: MY_SQL_PASSWORD
 });
 
-export type TransactionItem = (tx: Transaction) => Promise<ExecutedQuery | ExecutedQuery[]>;
+export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
 export const runTransaction = async (ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
   const conn = mySqlConnectionFactory.connection();
 
   return conn.transaction(async tx => {
     const transactionItems: ExecutedQuery[] = [];
     for (const op of ops) {
-      const result = await op(tx);
+      const result = await op(tx, transactionItems.length ? (transactionItems.at(-1) as ExecutedQuery) : null);
 
       if (Array.isArray(result)) {
         transactionItems.push(...result);

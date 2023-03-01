@@ -8,7 +8,8 @@ import {
   insertObject,
   mySqlConnectionFactory,
   getInsertLists,
-  runTransaction
+  runTransaction,
+  type TransactionItem
 } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
 import escapeRegexp from "escape-string-regexp";
@@ -352,13 +353,10 @@ export const booksSubjectsDump = async (userId: string) => {
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  const conn = mySqlConnectionFactory.connection();
-
-  await conn.transaction(async tx => {
-    const ops: any[] = [];
-
-    const insertBook = await tx.execute(
-      `
+  return runTransaction([
+    tx =>
+      tx.execute(
+        `
       INSERT INTO books (
         title,
         pages,
@@ -377,40 +375,38 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
         dateAdded
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-      [
-        book.title,
-        book.pages ?? null,
-        JSON.stringify(book.authors ?? []),
-        book.isbn,
-        book.publisher,
-        book.publicationDate,
-        book.isRead ?? false,
-        book.mobileImage,
-        JSON.stringify(book.mobileImagePreview ?? null),
-        book.smallImage,
-        JSON.stringify(book.smallImagePreview ?? null),
-        book.mediumImage,
-        JSON.stringify(book.mediumImagePreview ?? null),
-        userId,
-        new Date()
-      ]
-    );
+        [
+          book.title,
+          book.pages ?? null,
+          JSON.stringify(book.authors ?? []),
+          book.isbn,
+          book.publisher,
+          book.publicationDate,
+          book.isRead ?? false,
+          book.mobileImage,
+          JSON.stringify(book.mobileImagePreview ?? null),
+          book.smallImage,
+          JSON.stringify(book.smallImagePreview ?? null),
+          book.mediumImage,
+          JSON.stringify(book.mediumImagePreview ?? null),
+          userId,
+          new Date()
+        ]
+      ),
+    tx => tx.execute("SELECT LAST_INSERT_ID() as id"),
+    async (tx, newId) => {
+      const bookId = +(newId!.rows[0] as any).id;
 
-    const newId = await tx.execute("SELECT LAST_INSERT_ID() as id");
-    const bookId = +(newId.rows[0] as any).id;
-
-    ops.push(insertBook, newId);
-
-    if (book.subjects?.length) {
-      ops.push(...(await syncBookSubjects(tx, bookId, book.subjects)));
+      const result: ExecutedQuery[] = [];
+      if (book.subjects?.length) {
+        result.push(...(await syncBookSubjects(tx, bookId, book.subjects)));
+      }
+      if (book.tags?.length) {
+        result.push(...(await syncBookTags(tx, bookId, book.tags)));
+      }
+      return result;
     }
-
-    if (book.tags?.length) {
-      ops.push(...(await syncBookTags(tx, bookId, book.tags)));
-    }
-
-    return ops;
-  });
+  ]);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
