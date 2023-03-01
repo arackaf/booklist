@@ -382,11 +382,50 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
       new Date()
     ]
   );
-
-  console.log("DONE", res);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
+  const conn = mySqlConnectionFactory.connection();
+
+  await conn.execute(
+    `
+    UPDATE books
+    SET 
+      title = ?,
+      pages = ?,
+      authors = ?,
+      isbn = ?,
+      publisher = ?,
+      publicationDate = ?,
+      isRead = ?,
+      mobileImage = ?,
+      mobileImagePreview = ?,
+      smallImage = ?,
+      smallImagePreview = ?,
+      mediumImage = ?,
+      mediumImagePreview = ?
+    WHERE id = ? AND userId = ?;`,
+    [
+      book.title,
+      book.pages ?? null,
+      JSON.stringify(book.authors ?? []),
+      book.isbn,
+      book.publisher,
+      book.publicationDate,
+      book.isRead ?? false,
+      book.mobileImage,
+      JSON.stringify(book.mobileImagePreview ?? null),
+      book.smallImage,
+      JSON.stringify(book.smallImagePreview ?? null),
+      book.mediumImage,
+      JSON.stringify(book.mediumImagePreview ?? null),
+      book.id,
+      userId
+    ]
+  );
+};
+
+export const updateBook__Mongo = async (userId: string, book: Partial<Book>) => {
   const { id, ...fields } = book;
 
   return updateById("books", userId, id!, { $set: { ...fields } });

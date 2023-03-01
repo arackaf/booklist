@@ -17,7 +17,7 @@
   export let tags: Tag[];
 
   export let onCancel: () => void;
-  export let syncUpdates: (id: string, updates: UpdatesTo<Book>) => void;
+  export let syncUpdates: (id: number, updates: UpdatesTo<Book>) => void;
 
   let basicInfoValid: () => boolean;
 
@@ -27,7 +27,7 @@
       return cancel();
     }
 
-    const id = data.get("id");
+    const id = +data.get("id");
 
     saving = true;
     return async ({ result }: any) => {

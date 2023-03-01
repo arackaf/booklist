@@ -31,8 +31,8 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["id", "title", "isbn", "publisher", "publicationDate"],
-      numbers: ["pages"],
+      strings: ["title", "isbn", "publisher", "publicationDate"],
+      numbers: ["id", "pages"],
       optionals: ["mobileImage", "smallImage", "mediumImage"],
       optionalObjects: ["mobileImagePreview", "smallImagePreview", "mediumImagePreview"],
       arrays: ["authors", "tags", "subjects"]
