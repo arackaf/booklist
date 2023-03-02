@@ -121,7 +121,7 @@ export const actions = {
     }
 
     const formData: URLSearchParams = await request.formData();
-    const id = formData.get("id")!;
+    const id = parseInt(formData.get("id")!);
 
     await deleteBook(session.userId, id);
 
