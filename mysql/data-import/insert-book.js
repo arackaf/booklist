@@ -16,6 +16,7 @@ const bookFields = [
   "mediumImagePreview",
   "publicationDate",
   "publisher",
+  "similarItems",
   "editorialReviews"
 ];
 
@@ -36,6 +37,7 @@ module.exports = async function insertBook(book) {
     JSON.stringify(book.mediumImagePreview),
     book.publicationDate,
     book.publisher,
+    JSON.stringify(book.similarItems),
     JSON.stringify(book.editorialReviews)
   ]);
 
