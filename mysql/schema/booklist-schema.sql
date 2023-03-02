@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS similar_books (
     smallImage          VARCHAR(250),
     smallImagePreview   JSON
 );
+CREATE INDEX idx_isbn ON similar_books (isbn);
 
 CREATE INDEX idx_user_dateAdded ON books (userId, dateAdded DESC);
 CREATE INDEX idx_user_title ON books (userId, title);
