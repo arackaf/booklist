@@ -79,7 +79,7 @@ export function insertObject<T>(collection: string, userId: string, document: Om
   });
 }
 
-export function updateById(collection: string, userId: string, id: string, update: object) {
+export function updateById(collection: string, userId: string, id: number, update: object) {
   userId = userId || "";
 
   return runRequest("updateOne", collection, {

@@ -1,7 +1,7 @@
 import type { Readable } from "svelte/store";
 
 export type Label = {
-  id: string;
+  id: number;
   name: string;
   textColor: string;
   backgroundColor: string;
@@ -30,7 +30,7 @@ export type TagEditFields = Omit<Tag, "id">;
 
 export type PreviewPacket = { w: number; h: number; b64: string };
 
-export type BookSubjectStack = { subjects: string[]; count: number };
+export type BookSubjectStack = { subjects: number[]; count: number };
 
 export type Book = {
   id: number;

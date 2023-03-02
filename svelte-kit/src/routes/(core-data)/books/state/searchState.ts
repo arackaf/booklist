@@ -108,32 +108,32 @@ export const changeFilter = derived(page, $page => {
       return urlWithFilter(url, "sort", `${field}-${direction}`);
     },
 
-    addSubject(id: string) {
+    addSubject(id: number) {
       const subjects = url.searchParams.getAll("subjects");
-      if (subjects.includes(id)) {
+      if (subjects.includes(id + "")) {
         return null;
       }
 
-      return urlWithArrayFilter(url, "subjects", subjects.concat(id));
+      return urlWithArrayFilter(url, "subjects", subjects.concat(id + ""));
     },
-    withoutSubject(id: string) {
+    withoutSubject(id: number) {
       const subjects = url.searchParams.getAll("subjects");
-      const newSubjects = subjects.filter(s => s !== id);
+      const newSubjects = subjects.filter(s => s !== id + "");
 
       return urlWithArrayFilter(url, "subjects", newSubjects);
     },
 
-    addTag(id: string) {
+    addTag(id: number) {
       const tags = url.searchParams.getAll("tags");
-      if (tags.includes(id)) {
+      if (tags.includes(id + "")) {
         return null;
       }
 
-      return urlWithArrayFilter(url, "tags", tags.concat(id));
+      return urlWithArrayFilter(url, "tags", tags.concat(id + ""));
     },
-    withoutTag(id: string) {
+    withoutTag(id: number) {
       const tags = url.searchParams.getAll("tags");
-      const newTags = tags.filter(s => s !== id);
+      const newTags = tags.filter(s => s !== id + "");
 
       return urlWithArrayFilter(url, "tags", newTags);
     }

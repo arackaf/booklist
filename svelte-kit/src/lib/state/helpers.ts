@@ -1,7 +1,7 @@
 import type { Hash } from "$data/types";
 
 type WithId = {
-  id: string;
+  id: number;
 };
 
 export const toHash = <T extends WithId>(items: T[]): Hash<T> => {

@@ -5,7 +5,7 @@
 
   import SearchResult from "./SearchResult.svelte";
 
-  export let selectedBooksSet: Set<string>;
+  export let selectedBooksSet: Set<number>;
   export let books: any[];
   export let currentQuery: string;
   export let selectBook: (book: Book) => void;

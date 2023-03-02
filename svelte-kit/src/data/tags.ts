@@ -45,13 +45,13 @@ export const allTags__mongo = async (userId: string = "") => {
     });
 };
 
-export const saveTag = async (userId: string, _id: string, subject: TagEditFields) => {
+export const saveTag = async (userId: string, _id: number, subject: TagEditFields) => {
   const { name, backgroundColor, textColor } = subject;
 
   if (_id) {
-    return updateSingleTag(userId, _id, { name, backgroundColor, textColor });
+    //return updateSingleTag(userId, _id, { name, backgroundColor, textColor });
   } else {
-    return insertSingleTag(userId, { name, backgroundColor, textColor });
+    //return insertSingleTag(userId, { name, backgroundColor, textColor });
   }
 };
 
@@ -60,13 +60,13 @@ const insertSingleTag = async (userId: string, subject: TagEditFields) => {
 };
 
 const updateSingleTag = async (userId: string, _id: string, updates: TagEditFields) => {
-  return updateById("tags", userId, _id, {
-    $set: {
-      name: updates.name,
-      textColor: updates.textColor,
-      backgroundColor: updates.backgroundColor
-    }
-  });
+  // return updateById("tags", userId, _id, {
+  //   $set: {
+  //     name: updates.name,
+  //     textColor: updates.textColor,
+  //     backgroundColor: updates.backgroundColor
+  //   }
+  // });
 };
 
 export const deleteSingleTag = deleteById.bind(null, "tags");

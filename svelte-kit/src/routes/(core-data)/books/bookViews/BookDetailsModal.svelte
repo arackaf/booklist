@@ -27,7 +27,7 @@
 
   let editing = false;
 
-  const syncUpdates = (id: string, updates: UpdatesTo<Book>) => {
+  const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     book = updateSingleObject(book, updates);
     onBooksUpdated(id, updates);
     editing = false;

@@ -31,7 +31,7 @@
   let inputEl: HTMLInputElement;
 
   let originalName = "";
-  let originalParentId = "";
+  let originalParentId = 0;
 
   onMount(() => {
     inputEl?.focus({ preventScroll: true });

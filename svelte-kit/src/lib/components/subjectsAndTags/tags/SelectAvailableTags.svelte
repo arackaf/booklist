@@ -7,7 +7,7 @@
   export let tags: Tag[];
   export let onSelect: (tag: Tag) => void;
   export let placeholder = "Tags";
-  export let currentlySelected: string[] = [];
+  export let currentlySelected: number[] = [];
 
   let search = "";
 

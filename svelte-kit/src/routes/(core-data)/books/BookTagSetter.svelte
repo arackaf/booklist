@@ -21,11 +21,11 @@
   $: tags = $page.data.tags;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
-  export let onSave: (id: string | string[], updates: UpdatesTo<Book>) => void;
+  export let onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
   export let onHide: () => void;
 
-  let addingTags: string[] = [];
-  let removingTags: string[] = [];
+  let addingTags: number[] = [];
+  let removingTags: number[] = [];
 
   const resetTags = () => {
     addingTags = [];

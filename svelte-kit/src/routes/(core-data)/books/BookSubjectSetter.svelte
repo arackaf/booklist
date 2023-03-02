@@ -23,8 +23,8 @@
   export let onSave: (id: string | string[], updates: UpdatesTo<Book>) => void;
   export let onHide: () => void;
 
-  let addingSubjects: string[] = [];
-  let removingSubjects: string[] = [];
+  let addingSubjects: number[] = [];
+  let removingSubjects: number[] = [];
 
   const resetSubjects = () => {
     addingSubjects = [];

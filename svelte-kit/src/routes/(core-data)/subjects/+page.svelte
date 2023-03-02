@@ -21,7 +21,7 @@
   $: rootSubjects = stackAndGetTopLevelSubjects(subjects);
 
   let editModalOpen = false;
-  let editingSubject: Subject = { id: "", name: "", backgroundColor: "", textColor: "", path: null };
+  let editingSubject: Subject = { id: 0, name: "", backgroundColor: "", textColor: "", path: null };
   const closeEditModal = () => (editModalOpen = false);
   const editSubject = (subject: any) => {
     editingSubject = subject;

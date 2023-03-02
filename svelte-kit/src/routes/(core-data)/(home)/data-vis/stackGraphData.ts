@@ -1,7 +1,7 @@
 import type { BookSubjectStack } from "$data/types";
 import { computeParentId, getChildSubjectsSorted } from "$lib/state/subjectsState";
 
-export const stackGraphData = (subjectHash: any, subjectIds: string[], books: BookSubjectStack[], childSubjectsOnly: boolean) => {
+export const stackGraphData = (subjectHash: any, subjectIds: number[], books: BookSubjectStack[], childSubjectsOnly: boolean) => {
   let targetSubjectsLookup = new Set(subjectIds);
 
   let subjectResultsMap = new Map<string, number>([]);
@@ -36,7 +36,11 @@ export const stackGraphData = (subjectHash: any, subjectIds: string[], books: Bo
 
   return Array.from(subjectResultsMap)
     .map(([name, count]) => {
-      let _ids = name.split(",").filter(s => s);
+      let _ids = name
+        .split(",")
+        .filter(s => s)
+        .map(s => parseInt(s));
+
       let names = _ids
         .map(id => subjectHash[id].name)
         .sort()

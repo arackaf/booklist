@@ -23,7 +23,7 @@
 
   export let isOpen: boolean;
   export let onHide: () => void;
-  export let selectedBooksSet: Set<string>;
+  export let selectedBooksSet: Set<number>;
   export let selectBook: (book: Book) => void;
 
   export let allSubjects: Subject[];
@@ -36,8 +36,8 @@
   let active = false;
 
   let books: Book[] = [];
-  let subjects: string[] = [];
-  let tags: string[] = [];
+  let subjects: number[] = [];
+  let tags: number[] = [];
   let titleEl: HTMLInputElement;
 
   let loading = false;

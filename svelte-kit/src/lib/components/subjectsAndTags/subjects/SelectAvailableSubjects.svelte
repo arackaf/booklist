@@ -6,7 +6,7 @@
 
   export let onSelect: (item: DisablableSubject) => void;
   export let placeholder = "Subjects";
-  export let currentlySelected: string[] = [];
+  export let currentlySelected: number[] = [];
 
   export let subjects: Subject[];
 

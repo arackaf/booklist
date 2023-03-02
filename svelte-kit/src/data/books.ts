@@ -565,7 +565,7 @@ export const updateBooksSubjects__mongo = async (userId: string, updates: any) =
   if (add.length) {
     await updateMultipleBooks(
       userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      { _id: { $in: _ids.map((_id: any) => ({ $oid: _id })) } },
       {
         $addToSet: { subjects: { $each: add } }
       }
@@ -575,7 +575,7 @@ export const updateBooksSubjects__mongo = async (userId: string, updates: any) =
   if (remove.length) {
     await updateMultipleBooks(
       userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      { _id: { $in: _ids.map((_id: any) => ({ $oid: _id })) } },
       {
         $pull: { subjects: { $in: remove } }
       }
@@ -635,12 +635,12 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
   });
 };
 export const updateBooksTags__Mongo = async (userId: string, updates: BulkUpdate) => {
-  const { _ids, add, remove } = updates;
+  const { _ids, add, remove } = updates as any;
 
   if (add.length) {
     await updateMultipleBooks(
       userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      { _id: { $in: _ids.map((_id: any) => ({ $oid: _id })) } },
       {
         $addToSet: { tags: { $each: add } }
       }
@@ -649,7 +649,7 @@ export const updateBooksTags__Mongo = async (userId: string, updates: BulkUpdate
   if (remove.length) {
     await updateMultipleBooks(
       userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
+      { _id: { $in: _ids.map((_id: any) => ({ $oid: _id })) } },
       {
         $pull: { tags: { $in: remove } }
       }
