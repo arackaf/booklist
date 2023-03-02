@@ -14,5 +14,4 @@ module.exports = async function insertSimilarBook(book) {
     book.smallImage,
     JSON.stringify(book.smallImagePreview)
   ]);
-  console.log("Similar book inserted");
 };
