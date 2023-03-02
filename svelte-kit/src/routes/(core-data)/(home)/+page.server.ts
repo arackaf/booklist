@@ -1,4 +1,4 @@
-import { booksSubjectsDump, aggregateBooksSubjects } from "$data/books";
+import { aggregateBooksSubjects } from "$data/books";
 import { ensureAnyUser } from "$lib/util/authCheck";
 import { getPublicId } from "$lib/util/getPublicId";
 
@@ -7,8 +7,6 @@ export async function load({ locals, request }: any) {
 
   const session = await locals.getSession();
   const publicId = getPublicId(request);
-
-  await booksSubjectsDump(session?.userId || publicId);
 
   return {
     books: aggregateBooksSubjects(session?.userId || publicId)
