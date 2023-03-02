@@ -4,6 +4,7 @@ dotenv.config();
 const TEST_USER_ID = "test-user1";
 
 const insertBook = require("./insert-book");
+const insertSimilarBook = require("./insert-similar-book");
 const insertBookSubject = require("./insert-book-subject");
 const insertBookTag = require("./insert-book-tag");
 const insertSubject = require("./insert-subject");
@@ -38,6 +39,17 @@ async function run() {
   console.log("\nStarting\n");
 
   try {
+    const allSimilarBooks = await db
+      .collection("bookSummaries")
+      .aggregate(PARTIAL_RUN ? [{ $limit: 100 }] : [])
+      .toArray();
+
+    let similarBookCount = 1;
+    for (const similarBook of allSimilarBooks) {
+      await insertSimilarBook(similarBook);
+      console.log("Similar book", similarBookCount++, "of", allSimilarBooks.length, "inserted");
+    }
+
     const allSubjects = adjustUserForItems(
       await db
         .collection("subjects")

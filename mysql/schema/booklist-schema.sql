@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS books (
     isbn                VARCHAR(25),
     pages               INT,
     isRead              BOOL NOT NULL,
+    similarItems        JSON,
     mobileImage         VARCHAR(250),
     mobileImagePreview  JSON,
     smallImage          VARCHAR(250),
@@ -18,6 +19,16 @@ CREATE TABLE IF NOT EXISTS books (
     publicationDate     VARCHAR(30),
     publisher           VARCHAR(100),
     editorialReviews    JSON
+);
+
+DROP TABLE IF EXISTS similar_books;
+CREATE TABLE IF NOT EXISTS similar_books (
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    title               VARCHAR(250) NOT NULL,
+    authors             JSON,
+    isbn                VARCHAR(25),
+    smallImage          VARCHAR(250),
+    smallImagePreview   JSON
 );
 
 CREATE INDEX idx_user_dateAdded ON books (userId, dateAdded DESC);
