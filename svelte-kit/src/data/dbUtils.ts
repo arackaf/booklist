@@ -79,11 +79,11 @@ export function insertObject<T>(collection: string, userId: string, document: Om
   });
 }
 
-export function updateById(collection: string, userId: string, _id: string, update: object) {
+export function updateById(collection: string, userId: string, id: string, update: object) {
   userId = userId || "";
 
   return runRequest("updateOne", collection, {
-    filter: { _id: { $oid: _id }, userId },
+    filter: { _id: { $oid: id }, userId },
     update
   }).catch(err => {
     console.log({ err });

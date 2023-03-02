@@ -1,7 +1,7 @@
 import { derived, get, writable } from "svelte/store";
 import type { Book } from "$data/types";
 
-export const selectedBooks = writable([] as string[]);
+export const selectedBooks = writable([] as number[]);
 
 export const selectedBooksLookup = derived(selectedBooks, $selectedBooks => {
   return $selectedBooks.reduce<{ [s: string]: true }>((result, id) => {
@@ -14,13 +14,13 @@ export const selectionState = {
   selectAll(books: Book[]) {
     selectedBooks.set(books.map(b => b.id));
   },
-  selectBook(id: string) {
+  selectBook(id: number) {
     selectedBooks.update(books => books.concat(id));
   },
-  unSelectBook(id: string) {
+  unSelectBook(id: number) {
     selectedBooks.update(books => books.filter(bookId => bookId !== id));
   },
-  toggle(id: string) {
+  toggle(id: number) {
     if (get(selectedBooksLookup)[id]) {
       this.unSelectBook(id);
     } else {

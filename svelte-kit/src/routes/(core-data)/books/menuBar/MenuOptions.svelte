@@ -33,7 +33,7 @@
   const booksModuleContext: any = getContext("books-module-context");
   const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, overrideBookView } = booksModuleContext;
 
-  $: selectedBooksIds = Object.keys($selectedBooksLookup);
+  $: selectedBooksIds = Object.keys($selectedBooksLookup).map(s => +s);
   $: selectedBooksCount = selectedBooksIds.length;
   const getSelectedBooksIds = () => selectedBooksIds;
 

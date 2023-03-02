@@ -106,11 +106,11 @@ export const actions = {
 
     const fields = toJson(formData, {
       strings: ["read"],
-      arrays: ["_ids"]
+      numberArrays: ["ids"]
     }) as any;
 
     const setRead = fields.read === "true";
-    await updateBooksRead(session.userId, fields._ids, fields.read === "true");
+    await updateBooksRead(session.userId, fields.ids, fields.read === "true");
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
   },

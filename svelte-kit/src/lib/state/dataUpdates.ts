@@ -62,15 +62,15 @@ export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo
 };
 
 type WithId = {
-  id: string;
+  id: number;
 };
 
-export const runDelete = <T extends WithId>(currentItems: Writable<T[]>, id: string | string[]) => {
-  const _ids: string[] = Array.isArray(id) ? id : [id];
-  deleteItems(currentItems, _ids);
+export const runDelete = <T extends WithId>(currentItems: Writable<T[]>, id: number | number[]) => {
+  const ids: number[] = Array.isArray(id) ? id : [id];
+  deleteItems(currentItems, ids);
 };
 
-export const deleteItems = <T extends WithId>(store: Writable<T[]>, ids: string[]) => {
+export const deleteItems = <T extends WithId>(store: Writable<T[]>, ids: number[]) => {
   const idLookup = new Set(ids);
 
   store.update(items =>

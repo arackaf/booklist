@@ -2,7 +2,7 @@
   import { getContext } from "svelte";
   import { enhance } from "$app/forms";
 
-  export let ids: string[];
+  export let ids: number[];
   export let value: boolean;
   export let onSave: () => void = () => {};
 
@@ -12,6 +12,7 @@
   const booksUpdated = () => {
     saving = true;
     const idsToUse = ids;
+
     return async ({ result }: any) => {
       onBooksUpdated(idsToUse, result.data.updates);
       onSave?.();

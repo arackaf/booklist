@@ -6,7 +6,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import { onMount } from "svelte";
 
-  export let id: string;
+  export let id: number;
   export let detailsLoading: boolean | undefined = true;
 
   export let isPublic: boolean;

@@ -7,7 +7,7 @@
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
 
-  export let currentlySelected: string[];
+  export let currentlySelected: number[];
   export let onRemove: ((tag: Tag) => void) | null = null;
 
   export let tags: Tag[];

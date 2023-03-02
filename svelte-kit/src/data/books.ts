@@ -657,8 +657,16 @@ export const updateBooksTags__Mongo = async (userId: string, updates: BulkUpdate
   }
 };
 
-export const updateBooksRead = async (userId: string, _ids: string[], read: boolean) => {
-  await updateMultipleBooks(userId, { _id: { $in: _ids.map(_id => ({ $oid: _id })) } }, { $set: { isRead: read } });
+export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
+  const conn = mySqlConnectionFactory.connection();
+  conn.execute(
+    `
+    UPDATE books
+    SET isRead = ?
+    WHERE userId = ? AND id IN (?)
+  `,
+    [read, userId, ids]
+  );
 };
 
 export const deleteBook = async (userId: string, _id: string) => {
