@@ -669,6 +669,7 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
   );
 };
 
-export const deleteBook = async (userId: string, _id: string) => {
-  await deleteBookById(userId, _id);
+export const deleteBook = async (userId: string, id: number) => {
+  const conn = mySqlConnectionFactory.connection();
+  conn.execute(`DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
 };
