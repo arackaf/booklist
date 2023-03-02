@@ -127,43 +127,33 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 };
 
 export const getBookDetails = async (id: string) => {
-  const httpStart = +new Date();
+  const conn = mySqlConnectionFactory.connection();
+  const editorialReviewsQuery = conn.execute("SELECT editorialReviews FROM books WHERE id = ?", [id]);
 
-  return queryBooks<BookDetails>({
-    pipeline: [
-      { $match: { _id: { $oid: id } } },
-      {
-        $lookup: {
-          from: "bookSummaries",
-          localField: "similarItems",
-          foreignField: "isbn",
-          as: "similarBooks",
-          pipeline: [
-            {
-              $project: {
-                _id: 0,
-                title: 1,
-                authors: 1,
-                smallImage: 1,
-                smallImagePreview: 1,
-                asin: 1
-              }
-            }
-          ]
-        }
-      },
-      { $project: { editorialReviews: 1, similarBooks: 1 /*"$similarBooks.title": 1*/ } }
-    ]
-  })
-    .then(books => {
-      const httpEnd = +new Date();
-      console.log("HTTP books time B", httpEnd - httpStart);
+  const conn2 = mySqlConnectionFactory.connection();
+  const similarBooksQuery = conn2.execute(
+    `
+    SELECT sb.*
+    FROM books b
+    LEFT JOIN similar_books sb
+    ON JSON_SEARCH(b.similarItems, 'one', sb.isbn)
+    WHERE b.id = ? AND sb.id IS NOT NULL;
+    `,
+    [id]
+  );
 
-      return books[0];
-    })
-    .catch(err => {
-      console.log({ err });
+  const [bookRows, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
+  const book = bookRows.rows[0] as Book;
+  const editorialReviews = book.editorialReviews
+    .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
+    .map((er: any) => {
+      return {
+        content: er.content || er.Content,
+        source: er.source || er.Source
+      };
     });
+
+  return { editorialReviews, similarBooks: similarBooks.rows };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
