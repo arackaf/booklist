@@ -3,10 +3,10 @@ import { ObjectId, Db, MongoClient } from "mongodb";
 import { lookupSimilarBooks } from "./goodreads/lookupSimilarBooks";
 import { addPlaceholder, booksWithoutSimilarity, updateSimilarityInfo } from "./data-helpers/similar-books-helpers";
 
-import getSecrets from "../util/getSecrets";
-import { delay } from "../util/asyncHelpers";
-import corsResponse from "../util/corsResponse";
-import { isWarmingCall } from "../util/isWarmingCall";
+import getSecrets from "../../util/getSecrets";
+import { delay } from "../../util/asyncHelpers";
+import corsResponse from "../../util/corsResponse";
+import { isWarmingCall } from "../../util/isWarmingCall";
 import { getDbConnection } from "../util/getDbConnection";
 
 import orderBy from "lodash.orderby";
