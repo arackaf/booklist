@@ -1,5 +1,5 @@
 import type { Subject } from "./types";
-import { getSubject, querySubjects, runMultiUpdate, type SubjectEditFields, insertObject, runRequest, mySqlConnectionFactory } from "./dbUtils";
+import { querySubjects, runMultiUpdate, type SubjectEditFields, insertObject, runRequest, mySqlConnectionFactory, runTransaction } from "./dbUtils";
 
 export const allSubjects = async (userId: string = "") => {
   if (!userId) {
@@ -22,43 +22,28 @@ export const allSubjects = async (userId: string = "") => {
     console.log("Error reading subjects", err);
   }
 };
-export const allSubjects__mongo = async (userId: string = "") => {
-  if (!userId) {
-    return [];
-  }
 
-  userId = userId || "";
-  const httpStart = +new Date();
-
-  return querySubjects({
-    pipeline: [{ $match: { userId } }, { $project: { _id: 1, name: 1, path: 1, textColor: 1, backgroundColor: 1 } }, { $sort: { name: 1 } }]
-  })
-    .then(subjects => {
-      const httpEnd = +new Date();
-
-      console.log("HTTP subjects time", httpEnd - httpStart);
-
-      return subjects;
-    })
-    .catch(err => {
-      console.log("Error loading subjects", err);
-      return [];
-    });
-};
-
-export const saveSubject = async (userId: string, _id: string, subject: SubjectEditFields) => {
+export const saveSubject = async (userId: string, id: string, subject: SubjectEditFields) => {
   const { name, originalParentId, parentId, backgroundColor, textColor } = subject;
 
   const newPath = await getNewPath(userId, parentId);
-  if (_id) {
-    return updateSingleSubject(userId, _id, { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });
+  if (id) {
+    return updateSingleSubject(userId, id, { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });
   } else {
     return insertSingleSubject(userId, { name, path: newPath, backgroundColor, textColor });
   }
 };
 
 const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">) => {
-  return insertObject("subjects", userId, subject);
+  const conn = mySqlConnectionFactory.connection();
+  console.log({ newSubject: subject });
+  await conn.execute(`INSERT INTO subjects (name, path, textColor, backgroundColor, userId) VALUES (?, ?, ?, ?, ?)`, [
+    subject.name,
+    subject.path || null,
+    subject.textColor,
+    subject.backgroundColor,
+    userId
+  ]);
 };
 
 const updateSingleSubject = async (userId: string, _id: string, updates: SubjectEditFields) => {
@@ -128,39 +113,33 @@ const updateSingleSubject = async (userId: string, _id: string, updates: Subject
   ]);
 };
 
-export const deleteSubject = async (userId: string, _id: string) => {
-  const subjectsToDelete = await querySubjects({
-    pipeline: [
-      {
-        $match: {
-          userId,
-          $or: [{ _id: { $oid: _id } }, { path: { $regex: `.*,${_id},` } }]
-        }
-      },
-      { $project: { _id: 1, name: 1 } }
-    ]
-  });
-
-  const subjectIds = subjectsToDelete.map(s => s.id);
-
-  await runMultiUpdate(
-    "books",
-    userId,
-    {
-      subjects: { $in: subjectIds }
-    },
-    { $pull: { subjects: { $in: subjectIds } } }
-  );
-
-  await runRequest("deleteMany", "subjects", {
-    filter: {
-      userId,
-      $or: [{ _id: { $oid: _id } }, { path: { $regex: `.*,${_id},` } }]
-    }
-  });
+export const deleteSubject = async (userId: string, id: number) => {
+  await runTransaction([
+    tx =>
+      tx.execute(
+        `
+        DELETE
+        FROM books_subjects bs
+        WHERE bs.subject IN (
+          SELECT id
+          FROM subjects s
+          WHERE userId = ? AND (id = ? OR PATH LIKE '%,?,%')
+      )
+    `,
+        [userId, id, id]
+      ),
+    tx =>
+      tx.execute(
+        `
+        DELETE FROM subjects
+        WHERE userId = ? AND (id = ? OR PATH LIKE '%,?,%')
+      `,
+        [userId, id, id]
+      )
+  ]);
 };
 
-const getNewPath = async (userId: string, parentId: string | null): Promise<string | null> => {
+const getNewPath = async (userId: string, parentId: number | null): Promise<string | null> => {
   let newParent = parentId ? await getSubject(parentId, userId) : null;
 
   if (!newParent) {
@@ -168,4 +147,10 @@ const getNewPath = async (userId: string, parentId: string | null): Promise<stri
   }
 
   return `${newParent.path || ","}${newParent.id},`;
+};
+
+const getSubject = async (id: number, userId: string): Promise<Subject> => {
+  const conn = mySqlConnectionFactory.connection();
+  const res = await conn.execute("SELECT * FROM subjects WHERE id = ? AND userId = ?", [id, userId]);
+  return res.rows[0] as Subject;
 };
