@@ -1,13 +1,11 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 
-import { MONGO_URL, MONGO_URL_API_KEY, MY_SQL_HOST, MY_SQL_USERNAME, MY_SQL_PASSWORD, MY_SQL_DB } from "$env/static/private";
+import { MONGO_URL, MONGO_URL_API_KEY, MYSQL_CONNECTION_STRING } from "$env/static/private";
 
 import type { Book, Subject, Tag } from "./types";
 
 export const mySqlConnectionFactory = new Client({
-  host: MY_SQL_HOST,
-  username: MY_SQL_USERNAME,
-  password: MY_SQL_PASSWORD
+  url: MYSQL_CONNECTION_STRING
 });
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
