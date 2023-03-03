@@ -5,11 +5,11 @@ import { ObjectId } from "mongodb";
 
 import getDbConnection from "../util/getDbConnection";
 
-import { saveContentToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "../util/bookCoverHelpers";
+import { saveContentToS3, getOpenLibraryCoverUri, getGoogleLibraryUri } from "../../util/bookCoverHelpers";
 
-import getSecrets from "../util/getSecrets";
-import { HandleCoverResult } from "../util/handleCover";
-import { attemptSimilarBookCover } from "../util/similarBookHelpers";
+import { getSecrets } from "../../util/getSecrets";
+import { HandleCoverResult } from "../../util/handleCover";
+import { attemptSimilarBookCover } from "../../util/similarBookHelpers";
 
 const dbPromise = getDbConnection();
 
