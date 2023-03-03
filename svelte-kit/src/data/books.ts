@@ -191,7 +191,7 @@ export const aggregateBooksSubjects = async (userId: string) => {
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  return runTransaction([
+  return runTransaction(
     tx =>
       tx.execute(
         `
@@ -244,11 +244,11 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
       }
       return result;
     }
-  ]);
+  );
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
-  return runTransaction([
+  return runTransaction(
     tx =>
       tx.execute(
         `
@@ -288,7 +288,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
       ),
     tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
     tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
-  ]);
+  );
 };
 
 const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], clearExisting = false): Promise<ExecutedQuery[]> => {

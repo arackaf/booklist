@@ -114,7 +114,7 @@ const updateSingleSubject = async (userId: string, _id: string, updates: Subject
 };
 
 export const deleteSubject = async (userId: string, id: number) => {
-  await runTransaction([
+  await runTransaction(
     tx =>
       tx.execute(
         `
@@ -136,7 +136,7 @@ export const deleteSubject = async (userId: string, id: number) => {
       `,
         [userId, id, id]
       )
-  ]);
+  );
 };
 
 const getNewPath = async (userId: string, parentId: number | null): Promise<string | null> => {

@@ -9,7 +9,7 @@ export const mySqlConnectionFactory = new Client({
 });
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
-export const runTransaction = async (ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
+export const runTransaction = async (...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
   const conn = mySqlConnectionFactory.connection();
 
   return conn.transaction(async tx => {
