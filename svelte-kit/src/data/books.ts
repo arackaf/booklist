@@ -1,8 +1,8 @@
+import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
-import { queryBooks, mySqlConnectionFactory, getInsertLists, runTransaction } from "./dbUtils";
 import type { Book, BookDetails, BookSearch } from "./types";
-import type { ExecutedQuery, Transaction } from "@planetscale/database";
+import { mySqlConnectionFactory, getInsertLists, runTransaction } from "./dbUtils";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -126,7 +126,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   }
 };
 
-export const getBookDetails = async (id: string) => {
+export const getBookDetails = async (id: string): Promise<BookDetails> => {
   const conn = mySqlConnectionFactory.connection();
   const editorialReviewsQuery = conn.execute("SELECT editorialReviews FROM books WHERE id = ?", [id]);
 
@@ -153,7 +153,7 @@ export const getBookDetails = async (id: string) => {
       };
     });
 
-  return { editorialReviews, similarBooks: similarBooks.rows };
+  return { editorialReviews, similarBooks: similarBooks.rows as any };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
