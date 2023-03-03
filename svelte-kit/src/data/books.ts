@@ -136,7 +136,7 @@ export const getBookDetails = async (id: string) => {
     SELECT sb.*
     FROM books b
     LEFT JOIN similar_books sb
-    ON JSON_SEARCH(b.similarItems, 'one', sb.isbn)
+    ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
     WHERE b.id = ? AND sb.id IS NOT NULL;
     `,
     [id]
