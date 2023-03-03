@@ -39,7 +39,7 @@ type MongoSingleQueryResponse<T> = {
 export type SubjectEditFields = {
   name: string;
   path: string | null;
-  parentId: string | null;
+  parentId: number | null;
   originalParentId: string | null;
   textColor: string;
   backgroundColor: string;
