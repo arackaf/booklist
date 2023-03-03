@@ -39,15 +39,22 @@ async function run() {
   console.log("\nStarting\n");
 
   try {
-    const allSimilarBooks = await db
-      .collection("bookSummaries")
-      .aggregate(PARTIAL_RUN ? [{ $limit: 100 }] : [])
-      .toArray();
+    const allSimilarBooks = await db.collection("bookSummaries").aggregate([]).toArray();
 
     let similarBookCount = 1;
+    let similarBooksToInsert = [];
     for (const similarBook of allSimilarBooks) {
-      await insertSimilarBook(similarBook);
-      console.log("Similar book", similarBookCount++, "of", allSimilarBooks.length, "inserted");
+      similarBooksToInsert.push(similarBook);
+      similarBookCount++;
+      if (similarBooksToInsert.length === 25) {
+        await insertSimilarBook(similarBooksToInsert);
+        console.log(similarBookCount, "Similar books of", allSimilarBooks.length, "inserted");
+        similarBooksToInsert = [];
+      }
+    }
+    if (similarBooksToInsert.length) {
+      await insertSimilarBook(similarBooksToInsert);
+      console.log("All similar books iserted");
     }
 
     const allSubjects = adjustUserForItems(
