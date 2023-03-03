@@ -1,37 +1,36 @@
-import { ObjectId, Db, MongoClient } from "mongodb";
 import orderBy from "lodash.orderby";
+import { getConnection } from "../util/getDbConnection";
 
-import { getDbConnection } from "../util/getDbConnection";
-
-export const getRecommendations = async evt => {
-  let db: Db;
-  let client: MongoClient;
+export const getRecommendations = async (evt: any) => {
   try {
+    const connection = await getConnection();
+
     const { bookIds, userId, publicUserId } = evt;
 
-    ({ db, client } = await getDbConnection());
-    const books = await db
-      .collection("books")
-      .find({ _id: { $in: bookIds.map(_id => new ObjectId(_id)) } })
-      .project({ _id: 1, similarItems: 1 })
-      .toArray();
+    const allBooksReq = await connection.execute("SELECT id, similarBooks FROM books WHERE id IN (?)", [bookIds]);
+    const books: any[] = allBooksReq.rows;
 
     const isbnMap = new Map<string, number>([]);
     books.forEach(book => {
-      (book.similarItems || []).forEach(isbn => {
+      (book.similarBooks || []).forEach((isbn: string) => {
         if (!isbnMap.has(isbn)) {
           isbnMap.set(isbn, 0);
         }
-        isbnMap.set(isbn, isbnMap.get(isbn) + 1);
+        isbnMap.set(isbn, isbnMap.get(isbn)! + 1);
       });
     });
 
     const isbns = [...isbnMap.keys()];
 
-    const resultRecommendations = await db
-      .collection("bookSummaries")
-      .find({ isbn: { $in: isbns } })
-      .toArray();
+    if (!isbns.length) {
+      return {
+        success: true,
+        results: []
+      };
+    }
+
+    const resultRecommendationsReq = await connection.execute("SELECT * FROM similar_books WHERE isbn IN (?)", [isbns]);
+    const resultRecommendations: any[] = resultRecommendationsReq.rows;
 
     const resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
     const isbnsOrdered = orderBy(
@@ -39,18 +38,21 @@ export const getRecommendations = async evt => {
       ["count"],
       ["desc"]
     );
-    const potentialRecommendations = isbnsOrdered.map(b => resultRecommendationLookup.get(b.isbn)).filter(b => b);
-    const potentialIsbns = potentialRecommendations.map(b => b.isbn).filter(x => x);
+    const potentialRecommendations: any[] = isbnsOrdered.map((b: any) => resultRecommendationLookup.get(b.isbn)).filter((b: any) => b);
+    const potentialIsbns = potentialRecommendations.map((b: any) => b.isbn).filter((x: any) => x);
 
-    const matches = await db
-      .collection("books")
-      .find({ userId: userId || publicUserId, isbn: { $in: potentialIsbns } })
-      .toArray();
+    if (![potentialIsbns].length) {
+      return {
+        success: true,
+        results: []
+      };
+    }
+
+    const matchesReq = await connection.execute("SELECT * FROM books WHERE isbn IN (?) AND userId = ?", [potentialIsbns, userId || publicUserId]);
+    const matches: any[] = matchesReq.rows;
 
     const matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
     const finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
-
-    client.close();
 
     return {
       success: true,
@@ -58,8 +60,9 @@ export const getRecommendations = async evt => {
     };
   } catch (err) {
     try {
-      client?.close();
-    } catch (er) {}
+    } catch (er) {
+      console.log({ er });
+    }
 
     console.log("ERROR thrown", err);
     return { error: true };
