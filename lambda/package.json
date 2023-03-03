@@ -17,6 +17,7 @@
     "@aws-sdk/client-secrets-manager": "^3.264.0",
     "@aws-sdk/lib-dynamodb": "^3.264.0",
     "@aws-sdk/util-utf8-node": "^3.259.0",
+    "@planetscale/database": "^1.5.0",
     "aws-sdk": "2.1120.0",
     "blurhash": "^1.1.5",
     "del": "^6.0.0",
