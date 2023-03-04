@@ -1,5 +1,5 @@
 import type { Subject } from "./types";
-import { querySubjects, runMultiUpdate, type SubjectEditFields, insertObject, runRequest, mySqlConnectionFactory, runTransaction } from "./dbUtils";
+import { type SubjectEditFields, mySqlConnectionFactory, runTransaction } from "./dbUtils";
 
 export const allSubjects = async (userId: string = "") => {
   if (!userId) {
