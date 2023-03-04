@@ -94,6 +94,7 @@ export const changeFilter = derived(page, $page => {
     withoutIsRead: urlWithoutFilter(url, "is-read"),
     withoutPublisher: urlWithoutFilter(url, "publisher"),
     withoutNoSubjects: urlWithoutFilter(url, "no-subjects"),
+    withoutChildSubjects: urlWithoutFilter(url, "child-subjects"),
     withoutSort: urlWithoutFilter(url, "sort"),
     withoutFilters: `/books${userId ? `?userId=${userId}` : ""}`,
     pageTo: (val: number, totalPages?: number) => pageTo(val, totalPages),

@@ -49,9 +49,15 @@
   {#each $searchState.subjectsObjects as s}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={s} href={$changeFilter.withoutSubject(s._id)} />
   {/each}
+
   {#each $searchState.tagObjects as t}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} href={$changeFilter.withoutTag(t._id)} />
   {/each}
+
+  {#if $searchState.childSubjects}
+    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `Include child subjects` }} href={$changeFilter.withoutChildSubjects} />
+  {/if}
+
   {#if $searchState.sort}
     <RemovableLabelDisplay
       extraStyles={filterDisplayStyles}
