@@ -248,6 +248,19 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
+  const doImages = Object.hasOwn(book, "mobileImage");
+
+  const imageFields = doImages
+    ? [
+        book.mobileImage,
+        JSON.stringify(book.mobileImagePreview ?? null),
+        book.smallImage,
+        JSON.stringify(book.smallImagePreview ?? null),
+        book.mediumImage,
+        JSON.stringify(book.mediumImagePreview ?? null)
+      ]
+    : [];
+
   return runTransaction(
     tx =>
       tx.execute(
@@ -260,31 +273,30 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
           isbn = ?,
           publisher = ?,
           publicationDate = ?,
-          isRead = ?,
+          isRead = ?${
+            doImages
+              ? `,
           mobileImage = ?,
           mobileImagePreview = ?,
           smallImage = ?,
           smallImagePreview = ?,
           mediumImage = ?,
-          mediumImagePreview = ?
+          mediumImagePreview = ?`
+              : ""
+          }
         WHERE id = ? AND userId = ?;`,
         [
+          // core fields
           book.title,
           book.pages ?? null,
           JSON.stringify(book.authors ?? []),
           book.isbn,
           book.publisher,
           book.publicationDate,
-          book.isRead ?? false,
-          book.mobileImage,
-          JSON.stringify(book.mobileImagePreview ?? null),
-          book.smallImage,
-          JSON.stringify(book.smallImagePreview ?? null),
-          book.mediumImage,
-          JSON.stringify(book.mediumImagePreview ?? null),
-          book.id,
-          userId
+          book.isRead ?? false
         ]
+          .concat(imageFields)
+          .concat(book.id, userId)
       ),
     tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
     tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
