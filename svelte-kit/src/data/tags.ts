@@ -1,4 +1,4 @@
-import { deleteById, insertObject, mySqlConnectionFactory, queryTags, updateById } from "./dbUtils";
+import { mySqlConnectionFactory } from "./dbUtils";
 import type { TagEditFields } from "./types";
 
 export const allTags = async (userId: string = "") => {
@@ -23,50 +23,46 @@ export const allTags = async (userId: string = "") => {
   }
 };
 
-export const allTags__mongo = async (userId: string = "") => {
-  if (!userId) {
-    return [];
-  }
-
-  const httpStart = +new Date();
-
-  return queryTags({
-    pipeline: [{ $match: { userId } }, { $project: { _id: 1, name: 1, userId: 1, textColor: 1, backgroundColor: 1 } }, { $sort: { name: 1 } }]
-  })
-    .then(tags => {
-      const httpEnd = +new Date();
-      console.log("HTTP tags time", httpEnd - httpStart);
-
-      return tags;
-    })
-    .catch(err => {
-      console.log({ err });
-      return [];
-    });
-};
-
-export const saveTag = async (userId: string, _id: number, subject: TagEditFields) => {
+export const saveTag = async (userId: string, id: number, subject: TagEditFields) => {
   const { name, backgroundColor, textColor } = subject;
 
-  if (_id) {
-    //return updateSingleTag(userId, _id, { name, backgroundColor, textColor });
+  if (id) {
+    return updateSingleTag(userId, id, { name, backgroundColor, textColor });
   } else {
-    //return insertSingleTag(userId, { name, backgroundColor, textColor });
+    return insertSingleTag(userId, { name, backgroundColor, textColor });
   }
 };
 
-const insertSingleTag = async (userId: string, subject: TagEditFields) => {
-  return insertObject("tags", userId, subject);
+const insertSingleTag = async (userId: string, tag: TagEditFields) => {
+  const conn = mySqlConnectionFactory.connection();
+  conn.execute(
+    `
+    INSERT INTO tags (name, textColor, backgroundColor, userId)
+    VALUES (?, ?, ?, ?)
+  `,
+    [tag.name, tag.textColor, tag.backgroundColor, userId]
+  );
 };
 
-const updateSingleTag = async (userId: string, _id: string, updates: TagEditFields) => {
-  // return updateById("tags", userId, _id, {
-  //   $set: {
-  //     name: updates.name,
-  //     textColor: updates.textColor,
-  //     backgroundColor: updates.backgroundColor
-  //   }
-  // });
+const updateSingleTag = async (userId: string, id: number, updates: TagEditFields) => {
+  const conn = mySqlConnectionFactory.connection();
+  conn.execute(
+    `
+    UPDATE tags 
+    SET name = ?, textColor = ?, backgroundColor = ?
+    WHERE id = ? AND userId = ?
+  `,
+    [updates.name, updates.textColor, updates.backgroundColor, id, userId]
+  );
 };
 
-export const deleteSingleTag = deleteById.bind(null, "tags");
+export const deleteSingleTag = async (userId: string, id: string) => {
+  const conn = mySqlConnectionFactory.connection();
+  conn.execute(
+    `
+    DELETE FROM tags 
+    WHERE id = ? AND userId = ?
+  `,
+    [id, userId]
+  );
+};
