@@ -29,9 +29,11 @@
   let localSubjects = [] as any[];
   let localTags = [] as any[];
   let noSubjects: boolean;
+  let key = 1;
 
   $: {
     if (isOpen) {
+      key++;
       syncSearchState();
     }
   }
@@ -68,90 +70,92 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
-  <form action="/books" on:formdata={onFormData} on:submit={onHide}>
-    <FlexRow>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label for="book_search_title">Title</label>
-          <input id="book_search_title" name="search" value={localSearchValues.search} placeholder="Search title" class="form-control" />
+  {#key key}
+    <form action="/books" on:formdata={onFormData} on:submit={onHide}>
+      <FlexRow>
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="book_search_title">Title</label>
+            <input id="book_search_title" name="search" value={localSearchValues.search} placeholder="Search title" class="form-control" />
+          </div>
         </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label for="book_search_pub">Publisher</label>
-          <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="book_search_pub">Publisher</label>
+            <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
+          </div>
         </div>
-      </div>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label for="book_search_auth">Author</label>
-          <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="book_search_auth">Author</label>
+            <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
+          </div>
         </div>
-      </div>
-      <Stack class="col-xs-6">
-        <Stack tighter={true} style="flex: 1">
-          <label for="__" class="form-label">Is Read?</label>
-          <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
-            <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
-              <label for="isReadE">Either</label>
+        <Stack class="col-xs-6">
+          <Stack tighter={true} style="flex: 1">
+            <label for="__" class="form-label">Is Read?</label>
+            <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
+              <FlowItems tightest={true} vCenter={true}>
+                <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
+                <label for="isReadE">Either</label>
+              </FlowItems>
+              <FlowItems tightest={true} vCenter={true}>
+                <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
+                <label for="isReadY">Yes</label>
+              </FlowItems>
+              <FlowItems tightest={true} vCenter={true}>
+                <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
+                <label for="isReadN">No</label>
+              </FlowItems>
             </FlowItems>
-            <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
-              <label for="isReadY">Yes</label>
-            </FlowItems>
-            <FlowItems tightest={true} vCenter={true}>
-              <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
-              <label for="isReadN">No</label>
-            </FlowItems>
-          </FlowItems>
+          </Stack>
         </Stack>
-      </Stack>
-      <div class="col-xs-6">
-        <div class="form-group">
-          <label for="book_search_sort">Sort</label>
-          <select id="book_search_sort" name="sort" value={localSearchValues.sortPacket} class="form-control">
-            {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
-              <option value={sortVal}>{display}</option>
-            {/each}
-          </select>
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="book_search_sort">Sort</label>
+            <select id="book_search_sort" name="sort" value={localSearchValues.sortPacket} class="form-control">
+              {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
+                <option value={sortVal}>{display}</option>
+              {/each}
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="col-xs-6" />
+        <div class="col-xs-6" />
 
-      <div class="col-sm-3 col-xs-12">
-        <SelectAvailableTags {tags} currentlySelected={localTags} onSelect={selectTag} />
-      </div>
-      <div class="col-sm-9 col-xs-12">
-        <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
-      </div>
-
-      {#if !noSubjects}
         <div class="col-sm-3 col-xs-12">
-          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+          <SelectAvailableTags {tags} currentlySelected={localTags} onSelect={selectTag} />
         </div>
         <div class="col-sm-9 col-xs-12">
-          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
         </div>
+
+        {#if !noSubjects}
+          <div class="col-sm-3 col-xs-12">
+            <SelectAvailableSubjects subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+          </div>
+          <div class="col-sm-9 col-xs-12">
+            <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          </div>
+
+          <div class="col-xs-12">
+            <label class="checkbox">
+              <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
+              Also search child subjects
+            </label>
+          </div>
+        {/if}
 
         <div class="col-xs-12">
           <label class="checkbox">
-            <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
-            Also search child subjects
+            <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
+            Search books with no subjects set
           </label>
         </div>
-      {/if}
+      </FlexRow>
 
-      <div class="col-xs-12">
-        <label class="checkbox">
-          <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
-          Search books with no subjects set
-        </label>
+      <div class="margin-top-med">
+        <Button text="Filter" preset="primary">Search</Button>
       </div>
-    </FlexRow>
-
-    <div class="margin-top-med">
-      <Button text="Filter" preset="primary">Search</Button>
-    </div>
-  </form>
+    </form>
+  {/key}
 </Modal>
