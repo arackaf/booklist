@@ -23,14 +23,14 @@ module.exports.handler = async () => {
 
   await page.goto("https://www.amazon.com/dp/1492080519", {});
 
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(1000);
   //for (let i = 0; i < 20; i++) {
   await page.evaluate(async () => {
     window.scrollTo(0, 800);
   });
   await page.waitForTimeout(100);
   //}
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(1000);
 
   const pageMarkup = await page.content();
   //fs.writeFileSync("./foo.htm", pageMarkup);
@@ -52,8 +52,23 @@ module.exports.handler = async () => {
     (await a.elementHandle()).scrollIntoViewIfNeeded();
   }
 
-  const XXX = await page.getByText("Products related", { exact: false }).elementHandle();
-  console.log({ XXX });
+  // const XXX = await page.getByText("Products related to this item", { exact: false }).elementHandle();
+  const allHeadings = await page.getByText("Products related to this item", { exact: false }).all();
+  for (const header of allHeadings) {
+    console.log("---------------------------------------");
+    const headerEl = await header.elementHandle();
+    console.log(await headerEl.innerHTML());
+
+    const parent = await headerEl.$("xpath=..");
+    const cl1 = await parent.getAttribute("class");
+    console.log({ cl1 });
+
+    const sib = await parent.$("& + *:first");
+    const cl2 = await sib.getAttribute("class");
+
+    console.log({ cl2 });
+    console.log("---------------------------------------");
+  }
 
   // const relatedContainer = await page.getByText("Products related", { exact: false }).all();
 
