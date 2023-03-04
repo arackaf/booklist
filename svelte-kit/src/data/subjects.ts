@@ -28,7 +28,7 @@ export const saveSubject = async (userId: string, id: string, subject: SubjectEd
 
   const newPath = await getNewPath(userId, parentId);
   if (id) {
-    return updateSingleSubject(userId, id, { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });
+    return updateSingleSubject(userId, parseInt(id), { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });
   } else {
     return insertSingleSubject(userId, { name, path: newPath, backgroundColor, textColor });
   }
@@ -46,13 +46,18 @@ const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">)
   ]);
 };
 
-const updateSingleSubject = async (userId: string, _id: string, updates: SubjectEditFields) => {
+const updateSingleSubject = async (userId: string, id: number, updates: SubjectEditFields) => {
+  if (!id) {
+    return;
+  }
+
   let newParent: Subject | null = null;
   let newSubjectPath: string | null;
   let newDescendantPathPiece: string | null;
 
-  const parentChanged = updates.originalParentId !== updates.parentId;
+  const conn = mySqlConnectionFactory.connection();
 
+  const parentChanged = updates.originalParentId !== updates.parentId;
   if (parentChanged) {
     if (updates.parentId) {
       newParent = await getSubject(updates.parentId!, userId);
@@ -62,55 +67,41 @@ const updateSingleSubject = async (userId: string, _id: string, updates: Subject
     }
 
     newSubjectPath = newParent ? (newParent.path || ",") + `${newParent.id},` : null;
-    newDescendantPathPiece = `${newSubjectPath || ","}${_id},`;
+    newDescendantPathPiece = `${newSubjectPath || ","}${id},`;
+
+    await runTransaction(
+      tx =>
+        tx.execute(
+          `
+        UPDATE subjects
+        SET name = ?, textColor = ?, backgroundColor = ?, path = ?
+        WHERE id = ?
+        `,
+          [updates.name, updates.textColor, updates.backgroundColor, newSubjectPath, id]
+        ),
+      tx =>
+        tx.execute(
+          `
+        UPDATE subjects
+        SET path = REGEXP_REPLACE(path, '(.*,${id},)(.*)', '${newDescendantPathPiece}$2')
+        WHERE path LIKE '%,${id},%'
+      `,
+          []
+        )
+    );
+    return;
+  } else {
+    await conn.execute(
+      `
+        UPDATE subjects
+        SET name = ?, textColor = ?, backgroundColor = ?
+        WHERE id = ?
+    `,
+      [updates.name, updates.textColor, updates.backgroundColor, id]
+    );
+
+    return;
   }
-
-  const conditions: object[] = [{ _id: { $oid: _id } }];
-  if (parentChanged) {
-    conditions.push({
-      path: { $regex: `.*,${_id},` }
-    });
-  }
-
-  const changeOnOriginal = (field: string, value: any, altValue?: any) => {
-    return {
-      [field]: {
-        $cond: {
-          if: { $eq: ["$_id", { $oid: _id }] },
-          then: value,
-          else: altValue === void 0 ? `$${field}` : altValue
-        }
-      }
-    };
-  };
-
-  return runMultiUpdate("subjects", userId, { $or: conditions }, [
-    {
-      $addFields: {
-        pathMatch: {
-          $regexFind: {
-            input: "$path",
-            regex: `.*,${_id},`
-          }
-        }
-      }
-    },
-    {
-      $set: {
-        ...changeOnOriginal("name", updates.name),
-        ...changeOnOriginal("textColor", updates.textColor),
-        ...changeOnOriginal("backgroundColor", updates.backgroundColor),
-        ...(parentChanged
-          ? changeOnOriginal("path", newSubjectPath!, {
-              $replaceAll: { input: "$path", find: "$pathMatch.match", replacement: newDescendantPathPiece! }
-            })
-          : {})
-      }
-    },
-    {
-      $unset: ["pathMatch"]
-    }
-  ]);
 };
 
 export const deleteSubject = async (userId: string, id: number) => {
