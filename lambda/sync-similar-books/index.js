@@ -1,9 +1,11 @@
-const playwright = require("playwright");
-const fs = require("fs");
-const { parse } = require("node-html-parser");
+//const playwright = require("playwright");
+const playwright = require("playwright-aws-lambda");
 
-async function main() {
-  const browser = await playwright.chromium.launch({
+//const { parse } = require("node-html-parser");
+
+module.exports.handler = async () => {
+  // const browser = await playwright.chromium.launch({
+  const browser = await playwright.launchChromium({
     headless: true // setting this to true will not run the UI
   });
 
@@ -31,6 +33,4 @@ async function main() {
 
   // fs.writeFileSync("./foo.htm", pageMarkup);
   await browser.close();
-}
-
-main();
+};
