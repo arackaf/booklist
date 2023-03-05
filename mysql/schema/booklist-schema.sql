@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS books (
     publisher           VARCHAR(100),
     editorialReviews    JSON
 );
+CREATE INDEX idx_user_dateAdded ON books (userId, dateAdded DESC);
+CREATE INDEX idx_user_title ON books (userId, title);
+CREATE INDEX idx_user_pages ON books (userId, pages);
 
 DROP TABLE IF EXISTS similar_books;
 CREATE TABLE IF NOT EXISTS similar_books (
@@ -31,9 +34,6 @@ CREATE TABLE IF NOT EXISTS similar_books (
     smallImagePreview   JSON
 );
 CREATE INDEX idx_isbn ON similar_books (isbn);
-
-CREATE INDEX idx_user_dateAdded ON books (userId, dateAdded DESC);
-CREATE INDEX idx_user_title ON books (userId, title);
 
 DROP TABLE IF EXISTS subjects;
 CREATE TABLE subjects
@@ -66,6 +66,7 @@ CREATE TABLE books_subjects
     subject     INT NOT NULL
 );
 CREATE INDEX idx_book ON books_subjects(book);
+CREATE INDEX idx_subject ON books_subjects(subject);
 
 DROP TABLE IF EXISTS books_tags;
 CREATE TABLE books_tags
@@ -75,5 +76,6 @@ CREATE TABLE books_tags
     tag        INT NOT NULL
 );
 CREATE INDEX idx_book ON books_tags(book);
+CREATE INDEX idx_tag ON books_tags(tag);
 
 
