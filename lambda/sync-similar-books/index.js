@@ -1,14 +1,15 @@
-const playwright = require("playwright");
-// const playwright = require("playwright-aws-lambda");
+const playwright = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
 
-//const { parse } = require("node-html-parser");
-const fs = require("fs");
+//const fs = require("fs");
 
 module.exports.handler = async () => {
-  const browser = await playwright.chromium.launch({
-    // const browser = await playwright.launchChromium({
-    headless: true // setting this to true will not run the UI
-  });
+  const browser = process.env.stage
+    ? await await playwright.launchChromium({
+        headless: true
+      })
+    : await playwright.chromium.launch({
+        headless: true
+      });
 
   const page = await browser.newPage({
     userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
@@ -25,10 +26,7 @@ module.exports.handler = async () => {
 
   await page.waitForTimeout(1000);
   //for (let i = 0; i < 20; i++) {
-  await page.evaluate(async () => {
-    window.scrollTo(0, 800);
-  });
-  await page.waitForTimeout(100);
+
   //}
   await page.waitForTimeout(1000);
 
@@ -48,25 +46,32 @@ module.exports.handler = async () => {
   for (const a of anchors) {
     const href = await a.getAttribute("href");
     console.log({ href });
-
-    (await a.elementHandle()).scrollIntoViewIfNeeded();
   }
 
   // const XXX = await page.getByText("Products related to this item", { exact: false }).elementHandle();
-  const allHeadings = await page.getByText("Products related to this item", { exact: false }).all();
-  for (const header of allHeadings) {
+  const allCarousels = await page.locator("[data-a-carousel-options]").all();
+  for (const carousel of allCarousels) {
     console.log("---------------------------------------");
-    const headerEl = await header.elementHandle();
-    console.log(await headerEl.innerHTML());
+    const carouselEl = await carousel.elementHandle();
+    const headerEl = await carouselEl.$(".a-row.a-carousel-header-row");
 
-    const parent = await headerEl.$("xpath=..");
-    const cl1 = await parent.getAttribute("class");
-    console.log({ cl1 });
+    //("").first();
+    //const header = await headerEl.innerHTML();
+    if (headerEl == null) {
+      console.log("nuttin here");
+      continue;
+    }
+    console.log({ headerText: await headerEl.textContent() });
+    // console.log(await headerEl.innerHTML());
 
-    const sib = await parent.$("& + *:first");
-    const cl2 = await sib.getAttribute("class");
+    // const parent = await headerEl.$("xpath=..");
+    // const cl1 = await parent.getAttribute("class");
+    // console.log({ cl1 });
 
-    console.log({ cl2 });
+    // const sib = await parent.$("& + *:first");
+    // const cl2 = await sib.getAttribute("class");
+
+    // console.log({ cl2 });
     console.log("---------------------------------------");
   }
 
@@ -83,6 +88,6 @@ module.exports.handler = async () => {
   // console.log({ cl2 });
   // const queryable = parse(pageMarkup);
 
-  fs.writeFileSync("./foo.htm", pageMarkup);
+  //fs.writeFileSync("./foo.htm", pageMarkup);
   await browser.close();
 };
