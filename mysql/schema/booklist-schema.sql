@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS books (
     isbn                VARCHAR(25),
     pages               INT,
     isRead              BOOL NOT NULL,
-    similarItems        JSON,
+    similarBooks        JSON,
     mobileImage         VARCHAR(250),
     mobileImagePreview  JSON,
     smallImage          VARCHAR(250),

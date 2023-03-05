@@ -16,7 +16,7 @@ const bookFields = [
   "mediumImagePreview",
   "publicationDate",
   "publisher",
-  "similarItems",
+  "similarBooks",
   "editorialReviews"
 ];
 
