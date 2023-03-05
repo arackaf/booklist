@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS books (
     publisher           VARCHAR(100),
     editorialReviews    JSON
 );
+CREATE INDEX idx_isbn ON books (isbn);
 CREATE INDEX idx_user_dateAdded ON books (userId, dateAdded DESC);
 CREATE INDEX idx_user_title ON books (userId, title);
 CREATE INDEX idx_user_pages ON books (userId, pages);
