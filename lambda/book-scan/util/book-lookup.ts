@@ -162,10 +162,11 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
             smallImagePreview,
             mediumImage,
             mediumImagePreview,
+            editorialReviews,
             userId,
             dateAdded
           )
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
           [
             book.title,
             book.pages ?? null,
@@ -180,6 +181,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
             JSON.stringify(book.smallImagePreview ?? null),
             book.mediumImage,
             JSON.stringify(book.mediumImagePreview ?? null),
+            JSON.stringify(book.editorialReviews ?? []),
             book.userId,
             new Date()
           ]
