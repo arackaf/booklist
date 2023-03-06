@@ -15,7 +15,7 @@ export const executeSQLRaw = async (description: string, sql: string, args: any[
   const result = await conn.execute(sql, args);
 
   const end = +new Date();
-  console.log(description, "total latency:", end - start, "query time:", result.time.toFixed(1));
+  console.log(description, "latency:", end - start, "query time:", result.time.toFixed(1));
 
   return result;
 };
