@@ -1,8 +1,8 @@
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
-import type { Book, BookDetails, BookSearch } from "./types";
-import { mySqlConnectionFactory, getInsertLists, runTransaction } from "./dbUtils";
+import type { Book, BookDetails, BookSearch, SimilarBook } from "./types";
+import { mySqlConnectionFactory, getInsertLists, runTransaction, executeQueryFirst, executeQuery } from "./dbUtils";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -127,11 +127,10 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 };
 
 export const getBookDetails = async (id: string): Promise<BookDetails> => {
-  const conn = mySqlConnectionFactory.connection();
-  const editorialReviewsQuery = conn.execute("SELECT editorialReviews FROM books WHERE id = ?", [id]);
+  const editorialReviewsQuery = executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
 
-  const conn2 = mySqlConnectionFactory.connection();
-  const similarBooksQuery = conn2.execute(
+  const similarBooksQuery = executeQuery<SimilarBook>(
+    "similar books",
     `
     SELECT sb.*
     FROM books b
@@ -142,8 +141,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
     [id]
   );
 
-  const [bookRows, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
-  const book = bookRows.rows[0] as Book;
+  const [book, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
   const editorialReviews = book.editorialReviews
     .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
     .map((er: any) => {
@@ -153,7 +151,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
       };
     });
 
-  return { editorialReviews, similarBooks: similarBooks.rows as any };
+  return { editorialReviews, similarBooks };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {

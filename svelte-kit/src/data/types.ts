@@ -100,7 +100,7 @@ type EditorialReview = {
   content: string;
 };
 
-type SimilarBook = {
+export type SimilarBook = {
   title: string;
   authors: string[];
   // this type only has smallImage, but we'll add the other two to avoid unnecessary errors with the BookCover component
