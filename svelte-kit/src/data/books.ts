@@ -157,9 +157,8 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
-  const start = +new Date();
-  const conn = mySqlConnectionFactory.connection();
-  const results = await conn.execute(
+  const results = await executeQuery<{ count: string; subjects: any }>(
+    "subject books aggregate",
     `
     SELECT
       COUNT(*) count,
@@ -182,12 +181,7 @@ export const aggregateBooksSubjects = async (userId: string) => {
     [userId]
   );
 
-  const rows = results.rows.map((r: any) => ({ ...r, count: +r.count }));
-
-  const end = +new Date();
-  console.log("MySQL subject books aggregate time", end - start);
-
-  return rows;
+  return results.map((r: any) => ({ ...r, count: +r.count }));
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
