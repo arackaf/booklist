@@ -7,6 +7,33 @@ export const mySqlConnectionFactory = new Client({
 });
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
+
+export const executeSQLRaw = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
+  const start = +new Date();
+  const conn = mySqlConnectionFactory.connection();
+
+  const result = await conn.execute(sql, args);
+
+  const end = +new Date();
+  console.log(description, end - start);
+
+  return result;
+};
+
+export const executeCommand = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
+  return executeSQLRaw("Command: " + description, sql, args);
+};
+
+export const executeQuery = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T[]> => {
+  const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
+  return resultRaw.rows as T[];
+};
+
+export const executeQueryFirst = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T> => {
+  const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
+  return resultRaw.rows[0] as T;
+};
+
 export const runTransaction = async (description: string, ...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
   const start = +new Date();
   const conn = mySqlConnectionFactory.connection();
@@ -26,7 +53,7 @@ export const runTransaction = async (description: string, ...ops: TransactionIte
     return transactionItems;
   });
   const end = +new Date();
-  console.log("Transaction", description, end - start);
+  console.log("Transaction:", description, end - start);
 
   return result;
 };

@@ -1,25 +1,16 @@
 import type { Subject } from "./types";
-import { type SubjectEditFields, mySqlConnectionFactory, runTransaction } from "./dbUtils";
+import { type SubjectEditFields, mySqlConnectionFactory, runTransaction, executeQuery, executeQueryFirst, executeCommand } from "./dbUtils";
 
-export const allSubjects = async (userId: string = "") => {
+export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
   if (!userId) {
     return [];
   }
 
-  const httpStart = +new Date();
-
   try {
-    const conn = mySqlConnectionFactory.connection();
-
-    const subjectsResp = (await conn.execute(`SELECT * FROM subjects WHERE userId = ? ORDER BY name;`, [userId])) as any;
-    const subjects = subjectsResp.rows;
-
-    const httpEnd = +new Date();
-    console.log("MySQL subjects time", httpEnd - httpStart);
-
-    return subjects;
+    return executeQuery("read subjects", `SELECT * FROM subjects WHERE userId = ? ORDER BY name;`, [userId]);
   } catch (err) {
     console.log("Error reading subjects", err);
+    return [];
   }
 };
 
@@ -35,8 +26,7 @@ export const saveSubject = async (userId: string, id: string, subject: SubjectEd
 };
 
 const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">) => {
-  const conn = mySqlConnectionFactory.connection();
-  await conn.execute(`INSERT INTO subjects (name, path, textColor, backgroundColor, userId) VALUES (?, ?, ?, ?, ?)`, [
+  await executeCommand("insert subject", `INSERT INTO subjects (name, path, textColor, backgroundColor, userId) VALUES (?, ?, ?, ?, ?)`, [
     subject.name,
     subject.path || null,
     subject.textColor,
@@ -54,8 +44,6 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
   let newSubjectPath: string | null;
   let newDescendantPathPiece: string | null;
 
-  const conn = mySqlConnectionFactory.connection();
-
   const parentChanged = updates.originalParentId !== updates.parentId;
   if (parentChanged) {
     if (updates.parentId) {
@@ -69,7 +57,7 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
     newDescendantPathPiece = `${newSubjectPath || ","}${id},`;
 
     await runTransaction(
-      "update subject",
+      "update subject - with parent change",
       tx =>
         tx.execute(
           `
@@ -91,7 +79,8 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
     );
     return;
   } else {
-    await conn.execute(
+    await executeCommand(
+      "update subject - no parent change",
       `
         UPDATE subjects
         SET name = ?, textColor = ?, backgroundColor = ?
@@ -142,7 +131,5 @@ const getNewPath = async (userId: string, parentId: number | null): Promise<stri
 };
 
 const getSubject = async (id: number, userId: string): Promise<Subject> => {
-  const conn = mySqlConnectionFactory.connection();
-  const res = await conn.execute("SELECT * FROM subjects WHERE id = ? AND userId = ?", [id, userId]);
-  return res.rows[0] as Subject;
+  return executeQueryFirst("get subject", "SELECT * FROM subjects WHERE id = ? AND userId = ?", [id, userId]);
 };
