@@ -35,7 +35,12 @@ const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRea
 
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
-  const field = rawField === "id" ? "dateAdded" : rawField === "title" ? "title" : "pages";
+
+  if (rawField == "id") {
+    return rawDir === -1 ? "ORDER BY dateAdded DESC, id DESC" : "ORDER BY dateAdded, id";
+  }
+
+  const field = rawField === "title" ? "title" : "pages";
   const dir = rawDir === -1 ? "DESC" : "ASC";
   return `ORDER BY ${field} ${dir}`;
 };
