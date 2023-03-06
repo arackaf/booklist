@@ -136,7 +136,8 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["id", "name", "backgroundColor", "textColor"]
+      numbers: ["id"],
+      strings: ["name", "backgroundColor", "textColor"]
     }) as Tag;
 
     await saveTag(session.userId, fields.id, fields);

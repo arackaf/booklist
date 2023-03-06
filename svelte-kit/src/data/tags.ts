@@ -1,25 +1,16 @@
-import { mySqlConnectionFactory } from "./dbUtils";
-import type { TagEditFields } from "./types";
+import { executeCommand, executeQuery, mySqlConnectionFactory } from "./dbUtils";
+import type { Tag, TagEditFields } from "./types";
 
-export const allTags = async (userId: string = "") => {
+export const allTags = async (userId: string = ""): Promise<Tag[]> => {
   if (!userId) {
     return [];
   }
 
-  const httpStart = +new Date();
-
   try {
-    const conn = mySqlConnectionFactory.connection();
-
-    const tagsResp = (await conn.execute(`SELECT * FROM tags USE INDEX (idx_user_name) WHERE userId = ? ORDER BY name;`, [userId])) as any;
-    const tags = tagsResp.rows;
-
-    const httpEnd = +new Date();
-    console.log("MySQL tags time", httpEnd - httpStart);
-
-    return tags;
+    return await executeQuery("read tags", `SELECT * FROM tags USE INDEX (idx_user_name) WHERE userId = ? ORDER BY name;`, [userId]);
   } catch (err) {
     console.log("Error reading tags", err);
+    return [];
   }
 };
 
@@ -34,8 +25,8 @@ export const saveTag = async (userId: string, id: number, subject: TagEditFields
 };
 
 const insertSingleTag = async (userId: string, tag: TagEditFields) => {
-  const conn = mySqlConnectionFactory.connection();
-  conn.execute(
+  return executeCommand(
+    "insert tag",
     `
     INSERT INTO tags (name, textColor, backgroundColor, userId)
     VALUES (?, ?, ?, ?)
@@ -45,24 +36,16 @@ const insertSingleTag = async (userId: string, tag: TagEditFields) => {
 };
 
 const updateSingleTag = async (userId: string, id: number, updates: TagEditFields) => {
-  const conn = mySqlConnectionFactory.connection();
-  conn.execute(
+  return executeCommand(
+    "update tag",
     `
     UPDATE tags 
     SET name = ?, textColor = ?, backgroundColor = ?
-    WHERE id = ? AND userId = ?
-  `,
+    WHERE id = ? AND userId = ?`,
     [updates.name, updates.textColor, updates.backgroundColor, id, userId]
   );
 };
 
 export const deleteSingleTag = async (userId: string, id: string) => {
-  const conn = mySqlConnectionFactory.connection();
-  conn.execute(
-    `
-    DELETE FROM tags 
-    WHERE id = ? AND userId = ?
-  `,
-    [id, userId]
-  );
+  return executeCommand("delete tag", `DELETE FROM tags WHERE id = ? AND userId = ?`, [id, userId]);
 };

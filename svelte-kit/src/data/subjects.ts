@@ -7,7 +7,7 @@ export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
   }
 
   try {
-    return executeQuery("read subjects", `SELECT * FROM subjects WHERE userId = ? ORDER BY name;`, [userId]);
+    return await executeQuery("read subjects", `SELECT * FROM subjects WHERE userId = ? ORDER BY name;`, [userId]);
   } catch (err) {
     console.log("Error reading subjects", err);
     return [];
