@@ -114,7 +114,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
     const end = +new Date();
 
-    console.log("MySQL books time", end - start);
+    console.log(`MySQL books time for page ${page} with pageSize ${pageSize} -->`, end - start);
 
     const books: Book[] = booksResp.rows;
     const totalBooks = countResp.rows[0].total;
