@@ -1,26 +1,28 @@
 DROP TABLE IF EXISTS books;
 
 CREATE TABLE IF NOT EXISTS books (
-    id                  INT AUTO_INCREMENT PRIMARY KEY,
-    userId              VARCHAR(50) NOT NULL,
-    dateAdded           DATETIME NOT NULL,
-    title               VARCHAR(250) NOT NULL,
-    authors             JSON,
-    isbn                VARCHAR(25),
-    pages               INT,
-    isRead              BOOL NOT NULL,
-    similarBooks        JSON,
-    mobileImage         VARCHAR(250),
-    mobileImagePreview  JSON,
-    smallImage          VARCHAR(250),
-    smallImagePreview   JSON,
-    mediumImage         VARCHAR(250),
-    mediumImagePreview  JSON,
-    publicationDate     VARCHAR(30),
-    publisher           VARCHAR(100),
-    editorialReviews    JSON
+    id                      INT AUTO_INCREMENT PRIMARY KEY,
+    userId                  VARCHAR(50) NOT NULL,
+    dateAdded               DATETIME NOT NULL,
+    title                   VARCHAR(250) NOT NULL,
+    authors                 JSON,
+    isbn                    VARCHAR(25),
+    pages                   INT,
+    isRead                  BOOL NOT NULL,
+    similarBooks            JSON,
+    similarBooksLastSync    DATE,
+    mobileImage             VARCHAR(250),
+    mobileImagePreview      JSON,
+    smallImage              VARCHAR(250),
+    smallImagePreview       JSON,
+    mediumImage             VARCHAR(250),
+    mediumImagePreview      JSON,
+    publicationDate         VARCHAR(30),
+    publisher               VARCHAR(100),
+    editorialReviews        JSON
 );
 CREATE INDEX idx_isbn ON books (isbn);
+CREATE INDEX idx_similarBooksLastSync ON books (similarBooksLastSync DESC);
 CREATE INDEX idx_user_dateAdded ON books (userId, dateAdded DESC);
 CREATE INDEX idx_user_title ON books (userId, title);
 CREATE INDEX idx_user_pages ON books (userId, pages);
