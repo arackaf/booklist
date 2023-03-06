@@ -46,6 +46,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   }
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
   const pageSize = Math.min(searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE, 100);
+  const skip = (page - 1) * pageSize;
 
   try {
     const conn = mySqlConnectionFactory.connection();
@@ -102,7 +103,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       FROM books b 
       WHERE ${filters.join(" AND ")}`;
 
-    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} ${sortExpression} LIMIT ?`, args.concat(pageSize)) as any;
+    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} ${sortExpression} LIMIT ?, ?`, args.concat(skip, pageSize)) as any;
     const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
 
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
