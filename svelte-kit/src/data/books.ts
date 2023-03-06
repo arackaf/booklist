@@ -142,14 +142,16 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
   );
 
   const [book, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
-  const editorialReviews = book.editorialReviews
-    .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
-    .map((er: any) => {
-      return {
-        content: er.content || er.Content,
-        source: er.source || er.Source
-      };
-    });
+  const editorialReviews =
+    book.editorialReviews ??
+    []
+      .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
+      .map((er: any) => {
+        return {
+          content: er.content || er.Content,
+          source: er.source || er.Source
+        };
+      });
 
   return { editorialReviews, similarBooks };
 };
