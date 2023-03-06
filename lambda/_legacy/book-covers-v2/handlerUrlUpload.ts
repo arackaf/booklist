@@ -1,8 +1,8 @@
 import path from "path";
 import uuid from "uuid/v4";
 
-import { handleCover, HandleCoverResult } from "../util/handleCover";
-import downloadFromUrl from "../util/downloadFromUrl";
+import { handleCover, HandleCoverResult } from "../../util/handleCover";
+import downloadFromUrl from "../../util/downloadFromUrl";
 
 export const handler = async event => {
   const { userId, url, similarBookCover = false } = event;

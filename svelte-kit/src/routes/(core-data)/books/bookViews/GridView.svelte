@@ -49,15 +49,15 @@
         </a>
       </th>
       <th>
-        <a class="bold no-underline" href={$changeFilter.withSort("_id")}>
+        <a class="bold no-underline" href={$changeFilter.withSort("id")}>
           Added
-          {#if sortField == "_id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </a>
       </th>
     </tr>
   </thead>
   <tbody>
-    {#each books as book (book._id)}
+    {#each books as book (book.id)}
       <BookRow {book} {subjects} {tags} {isPublic} />
     {/each}
   </tbody>

@@ -77,6 +77,12 @@ export async function getBookFromIsbnDbData(book, userId) {
       content: book.synopsys
     });
   }
+  if (book.synopsis) {
+    newBook.editorialReviews.push({
+      source: "Synopsis",
+      content: book.synopsis
+    });
+  }
 
   if (book.overview) {
     newBook.editorialReviews.push({

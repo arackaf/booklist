@@ -2,21 +2,24 @@ import { writable } from "svelte/store";
 
 export const booksReadSaving = writable<Record<string, string>>({});
 
-export const startSaving = (_ids: string | string[]) => {
-  if (typeof _ids === "string") {
-    _ids = [_ids];
+export const startSaving = (ids: number | number[]) => {
+  if (typeof ids === "number") {
+    ids = [ids];
   }
+  const idsStr: string[] = ids.map(id => "" + id);
 
-  booksReadSaving.update(items => toRecord([...new Set([...Object.keys(items), ..._ids])]));
+  booksReadSaving.update(items => toRecord([...new Set([...Object.keys(items), ...idsStr])]));
 };
 
-export const endSaving = (_ids: string | string[]) => {
-  if (typeof _ids === "string") {
-    _ids = [_ids];
+export const endSaving = (ids: number | number[]) => {
+  if (typeof ids === "number") {
+    ids = [ids];
   }
-  const lookup = new Set(_ids);
+  const idsStr: string[] = ids.map(id => "" + id);
 
-  booksReadSaving.update(items => toRecord(Object.keys(items).filter(_id => !lookup.has(_id))));
+  const lookup = new Set(idsStr);
+
+  booksReadSaving.update(items => toRecord(Object.keys(items).filter(id => !lookup.has(id))));
 };
 
 const toRecord = (arr: string[]): Record<string, string> => {

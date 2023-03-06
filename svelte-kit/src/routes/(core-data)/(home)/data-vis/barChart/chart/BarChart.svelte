@@ -13,7 +13,7 @@
   export let chartIndex: any;
   export let height: any;
 
-  $: subjectIds = subjects.map(s => s._id);
+  $: subjectIds = subjects.map(s => s.id);
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
 

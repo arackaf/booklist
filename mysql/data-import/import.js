@@ -8,6 +8,7 @@ const insertSimilarBook = require("./insert-similar-book");
 const insertBookSubject = require("./insert-book-subject");
 const insertBookTag = require("./insert-book-tag");
 const insertSubject = require("./insert-subject");
+const subjectPathSync = require("./subject-path-sync");
 const insertTag = require("./insert-tag");
 const { mySqlConnection } = require("./db-utils");
 
@@ -39,23 +40,23 @@ async function run() {
   console.log("\nStarting\n");
 
   try {
-    const allSimilarBooks = await db.collection("bookSummaries").aggregate([]).toArray();
+    //const allSimilarBooks = await db.collection("bookSummaries").aggregate([]).toArray();
 
-    let similarBookCount = 1;
-    let similarBooksToInsert = [];
-    for (const similarBook of allSimilarBooks) {
-      similarBooksToInsert.push(similarBook);
-      similarBookCount++;
-      if (similarBooksToInsert.length === 25) {
-        await insertSimilarBook(similarBooksToInsert);
-        console.log(similarBookCount, "Similar books of", allSimilarBooks.length, "inserted");
-        similarBooksToInsert = [];
-      }
-    }
-    if (similarBooksToInsert.length) {
-      await insertSimilarBook(similarBooksToInsert);
-      console.log("All similar books iserted");
-    }
+    //let similarBookCount = 1;
+    //let similarBooksToInsert = [];
+    // for (const similarBook of allSimilarBooks) {
+    //   similarBooksToInsert.push(similarBook);
+    //   similarBookCount++;
+    //   if (similarBooksToInsert.length === 25) {
+    //     await insertSimilarBook(similarBooksToInsert);
+    //     console.log(similarBookCount, "Similar books of", allSimilarBooks.length, "inserted");
+    //     similarBooksToInsert = [];
+    //   }
+    // }
+    // if (similarBooksToInsert.length) {
+    //   await insertSimilarBook(similarBooksToInsert);
+    //   console.log("All similar books iserted");
+    // }
 
     const allSubjects = adjustUserForItems(
       await db
@@ -71,6 +72,10 @@ async function run() {
 
       console.log("Subject", i++, "of", allSubjects.length, subject.name, "created");
     }
+
+    console.log("Syncing paths");
+    await subjectPathSync(subjectsLookup);
+
     console.log("\nSubjects done\n");
 
     const allTags = adjustUserForItems(

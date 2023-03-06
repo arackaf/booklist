@@ -31,7 +31,7 @@
   let inputEl: HTMLInputElement;
 
   let originalName = "";
-  let originalParentId = "";
+  let originalParentId = 0;
 
   onMount(() => {
     inputEl?.focus({ preventScroll: true });
@@ -46,9 +46,9 @@
   $: editingSubjectChanged(subject);
 
   $: subjectHash = getSubjectsHash(allSubjects);
-  $: childSubjects = getChildSubjectsSorted(subject._id, subjectHash);
+  $: childSubjects = getChildSubjectsSorted(subject.id, subjectHash);
 
-  $: eligibleParents = getEligibleParents(subjectHash, editingSubject._id) || [];
+  $: eligibleParents = getEligibleParents(subjectHash, editingSubject.id) || [];
   $: {
     if (editingSubject.name) {
       missingName = false;
@@ -107,7 +107,7 @@
     {#if !deleteShowing}
       <form method="POST" action="/subjects?/saveSubject" use:enhance={runSave}>
         <FlexRow>
-          <input type="hidden" name="_id" value={editingSubject._id} />
+          <input type="hidden" name="id" value={editingSubject.id} />
           <input type="hidden" name="path" value={editingSubject.path} />
           <input type="hidden" name="originalParentId" value={originalParentId} />
           <div class="col-xs-12 col-lg-6">
@@ -139,7 +139,7 @@
               <select id="subject-parent" bind:value={editingSubject.parentId} name="parentId" class="form-control">
                 <option value="">No Parent</option>
                 {#each eligibleParents as s}
-                  <option value={s._id}>{s.name}</option>
+                  <option value={s.id}>{s.name}</option>
                 {/each}
               </select>
             </div>
@@ -183,7 +183,7 @@
                 <i class={`far fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
               </Button>
               <Button type="button" disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
-              {#if editingSubject._id}
+              {#if editingSubject.id}
                 <Button type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                   Delete
                   {originalName}
@@ -196,7 +196,7 @@
       </form>
     {:else}
       <form method="POST" action="/subjects?/deleteSubject" use:enhance={runDelete}>
-        <input type="hidden" name="_id" value={editingSubject._id} />
+        <input type="hidden" name="id" value={editingSubject.id} />
         <div class="col-xs-12">
           <Stack>
             <div class="alert alert-danger alert-slim" style="align-self: flex-start">

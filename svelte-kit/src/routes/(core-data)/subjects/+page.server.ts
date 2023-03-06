@@ -12,10 +12,10 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"]
-    }) as SubjectEditFields & { _id: string };
+      strings: ["id", "name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"]
+    }) as SubjectEditFields & { id: string };
 
-    await saveSubject(session.userId, fields._id, fields);
+    await saveSubject(session.userId, fields.id, fields);
   },
   async deleteSubject({ request, locals }: any) {
     const session = await locals.getSession();
@@ -24,8 +24,8 @@ export const actions = {
     }
 
     const formData: URLSearchParams = await request.formData();
-    const _id = formData.get("_id")!;
+    const id = parseInt(formData.get("id")!);
 
-    await deleteSubject(session.userId, _id);
+    await deleteSubject(session.userId, id);
   }
 };

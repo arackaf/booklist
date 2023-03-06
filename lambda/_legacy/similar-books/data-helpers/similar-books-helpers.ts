@@ -1,6 +1,6 @@
 import { ObjectId, Db } from "mongodb";
 
-import { attemptSimilarBookCover } from "../../util/similarBookHelpers";
+import { attemptSimilarBookCover } from "../../../util/similarBookHelpers";
 
 export async function booksWithoutSimilarity(db: Db, $limit: number = 20) {
   try {

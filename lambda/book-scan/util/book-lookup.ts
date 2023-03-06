@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import { runRequest } from "../../util/mongo-helpers";
+import { getConnection } from "../../util/getDbConnection";
 
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
@@ -138,13 +138,54 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     }, {});
 
     console.log("Book lookup results", JSON.stringify(scanItems));
+
+    const connection = await getConnection();
+
     for (const newBookMaybe of scanItems) {
       const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
 
       if (!newBookMaybe.pk) {
-        await runRequest("insertOne", "books", {
-          document: newBookMaybe
-        });
+        const book = newBookMaybe as any;
+        await connection.execute(
+          `      
+          INSERT INTO books (
+            title,
+            pages,
+            authors,
+            isbn,
+            publisher,
+            publicationDate,
+            isRead,
+            mobileImage,
+            mobileImagePreview,
+            smallImage,
+            smallImagePreview,
+            mediumImage,
+            mediumImagePreview,
+            editorialReviews,
+            userId,
+            dateAdded
+          )
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+          [
+            book.title,
+            book.pages ?? null,
+            JSON.stringify(book.authors ?? []),
+            book.isbn,
+            book.publisher,
+            book.publicationDate,
+            book.isRead ?? false,
+            book.mobileImage,
+            JSON.stringify(book.mobileImagePreview ?? null),
+            book.smallImage,
+            JSON.stringify(book.smallImagePreview ?? null),
+            book.mediumImage,
+            JSON.stringify(book.mediumImagePreview ?? null),
+            JSON.stringify(book.editorialReviews ?? []),
+            book.userId,
+            new Date()
+          ]
+        );
 
         const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
         userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });

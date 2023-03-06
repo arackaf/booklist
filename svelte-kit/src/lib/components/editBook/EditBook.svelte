@@ -17,7 +17,7 @@
   export let tags: Tag[];
 
   export let onCancel: () => void;
-  export let syncUpdates: (_id: string, updates: UpdatesTo<Book>) => void;
+  export let syncUpdates: (id: number, updates: UpdatesTo<Book>) => void;
 
   let basicInfoValid: () => boolean;
 
@@ -27,14 +27,14 @@
       return cancel();
     }
 
-    const _id = data.get("_id");
+    const id = +data.get("id");
 
     saving = true;
     return async ({ result }: any) => {
       const updates: UpdatesTo<Book> = result.data.updates;
 
       saving = false;
-      syncUpdates(_id, updates);
+      syncUpdates(id, updates);
     };
   }
 
@@ -48,7 +48,7 @@
 </script>
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
-  <input type="hidden" name="_id" value={book?._id ?? null} />
+  <input type="hidden" name="id" value={book?.id ?? null} />
   <Tabs bind:this={tabsInst} defaultTab="basic">
     <TabHeaders>
       <TabHeader tabName="basic">Book info</TabHeader>

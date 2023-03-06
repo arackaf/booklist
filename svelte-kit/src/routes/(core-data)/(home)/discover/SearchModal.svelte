@@ -23,7 +23,7 @@
 
   export let isOpen: boolean;
   export let onHide: () => void;
-  export let selectedBooksSet: Set<string>;
+  export let selectedBooksSet: Set<number>;
   export let selectBook: (book: Book) => void;
 
   export let allSubjects: Subject[];
@@ -36,8 +36,8 @@
   let active = false;
 
   let books: Book[] = [];
-  let subjects: string[] = [];
-  let tags: string[] = [];
+  let subjects: number[] = [];
+  let tags: number[] = [];
   let titleEl: HTMLInputElement;
 
   let loading = false;
@@ -58,12 +58,12 @@
   $: canPageUp = !loading && page < totalPages;
   $: canPageDown = !loading && page > 1;
 
-  $: noAvailableBooks = books.length && !books.find(b => !selectedBooksSet.has(b._id));
+  $: noAvailableBooks = books.length && !books.find(b => !selectedBooksSet.has(b.id));
 
-  const selectSubject = (subject: Subject) => (subjects = subjects.concat(subject._id));
-  const selectTag = (tag: Tag) => (tags = tags.concat(tag._id));
-  const removeSubject = (subject: Subject) => (subjects = subjects.filter(_id => _id != subject._id));
-  const removeTag = (tag: Tag) => (tags = tags.filter(_id => _id != tag._id));
+  const selectSubject = (subject: Subject) => (subjects = subjects.concat(subject.id));
+  const selectTag = (tag: Tag) => (tags = tags.concat(tag.id));
+  const removeSubject = (subject: Subject) => (subjects = subjects.filter(id => id != subject.id));
+  const removeTag = (tag: Tag) => (tags = tags.filter(id => id != tag.id));
 
   let currentQuery = "";
   let totalBooks = 0;

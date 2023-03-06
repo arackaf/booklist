@@ -1,21 +1,28 @@
+import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
-import { queryBooks, updateMultipleBooks, deleteBookById, updateById, insertObject } from "./dbUtils";
-import type { Book, BookDetails, BookSearch } from "./types";
-import escapeRegexp from "escape-string-regexp";
+import type { Book, BookDetails, BookSearch, SimilarBook } from "./types";
+import {
+  mySqlConnectionFactory,
+  getInsertLists,
+  runTransaction,
+  executeQueryFirst,
+  executeQuery,
+  executeCommand,
+  type TransactionItem
+} from "./dbUtils";
 
-const defaultBookFields = [
-  "_id",
+const defaultBookFields: (keyof Book)[] = [
+  "id",
   "title",
   "pages",
   "userId",
   "authors",
-  "tags",
-  "subjects",
   "isbn",
   "publisher",
   "publicationDate",
   "isRead",
+  "dateAdded",
   "mobileImage",
   "mobileImagePreview",
   "smallImage",
@@ -24,256 +31,452 @@ const defaultBookFields = [
   "mediumImagePreview"
 ];
 
-const compactBookFields = ["_id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
+const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
 
-const getFieldProjection = (fields: string[]) =>
-  fields.reduce<{ [k: string]: 1 }>((result, field) => {
-    result[field] = 1;
-    return result;
-  }, {});
+const getSort = (sortPack: any = { id: -1 }) => {
+  const [rawField, rawDir] = Object.entries(sortPack)[0];
+
+  if (rawField == "id") {
+    return rawDir === -1 ? "ORDER BY dateAdded DESC, id DESC" : "ORDER BY dateAdded, id";
+  }
+
+  const field = rawField === "title" ? "title" : "pages";
+  const dir = rawDir === -1 ? "DESC" : "ASC";
+  return `ORDER BY ${field} ${dir}`;
+};
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
-  userId = userId || "";
-
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
-
-  const httpStart = +new Date();
-
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
+  const pageSize = Math.min(searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE, 100);
+  const skip = (page - 1) * pageSize;
 
-  const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
-  const projection = getFieldProjection(fieldsToSelect);
+  try {
+    const conn = mySqlConnectionFactory.connection();
 
-  const $match: any = { userId };
-  let $lookup: any = null;
+    const start = +new Date();
 
-  const requiredOrs = [] as any[];
+    const filters = ["userId = ?"];
+    const args: any[] = [userId];
 
-  let pageSize = searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE;
-  if (pageSize > 100) {
-    pageSize = DEFAULT_BOOKS_PAGE_SIZE;
-  }
-
-  const withSubjectsLookup = subjects.length && searchChildSubjects;
-
-  if (search) {
-    $match.title = { $regex: escapeRegexp(search), $options: "i" };
-  }
-  if (publisher) {
-    $match.publisher = { $regex: escapeRegexp(publisher), $options: "i" };
-  }
-  if (author) {
-    $match.authors = { $regex: escapeRegexp(author), $options: "i" };
-  }
-  if (isRead != null) {
-    if (isRead) {
-      $match.isRead = true;
-    } else {
-      requiredOrs.push([{ isRead: false }, { isRead: { $exists: false } }]);
+    if (search) {
+      filters.push("title LIKE ?");
+      args.push(`%${search}%`);
     }
-  }
-  if (tags.length) {
-    $match.tags = { $in: tags };
-  }
-  if (noSubjects) {
-    requiredOrs.push([{ subjects: [] }, { subjects: { $exists: false } }]);
-  } else {
-    if (subjects.length && !searchChildSubjects) {
-      $match.subjects = { $in: subjects };
+    if (publisher) {
+      filters.push("publisher LIKE ?");
+      args.push(`%${publisher}%`);
     }
-    if (withSubjectsLookup) {
-      $lookup = {
-        from: "subjects",
-        let: { subjectsArray: "$subjects" },
-        pipeline: [
-          { $addFields: { subjectIdString: { $toString: "$_id" } } },
-          //
-          { $match: { $expr: { $in: ["$subjectIdString", { $ifNull: ["$$subjectsArray", []] }] } } }
-        ],
-        as: "subjectObjects"
-      };
-
-      requiredOrs.push([{ subjects: { $in: subjects } }, { "subjectObjects.path": { $regex: subjects.map(_id => `,${_id},`).join("|") } }]);
+    if (author) {
+      filters.push(`LOWER(authors->>"$") LIKE ?`);
+      args.push(`%${author.toLowerCase()}%`);
     }
-  }
-  if (requiredOrs.length) {
-    $match.$and = requiredOrs.map(orArray => ({ $or: orArray }));
-  }
-
-  return queryBooks<{ resultsCount: [{ count: number }]; books: Book[] }>({
-    pipeline: [
-      $lookup ? { $lookup } : null,
-      { $match },
-      { $project: { ...projection, ...(withSubjectsLookup ? { subjectObjects: 1 } : {}) } },
-      { $addFields: { dateAdded: { $toDate: "$_id" } } },
-      { $sort: sort ?? { _id: -1 } },
-      {
-        $facet: {
-          resultsCount: [{ $count: "count" }],
-          books: [{ $skip: (page - 1) * pageSize }, { $limit: pageSize }]
-        }
+    if (isRead != null) {
+      filters.push("isRead = ?");
+      args.push(isRead);
+    }
+    if (tags.length) {
+      filters.push("EXISTS (SELECT 1 FROM books_tags bt WHERE bt.book = b.id AND bt.tag IN (?))");
+      args.push(tags);
+    }
+    if (subjects.length) {
+      if (!searchChildSubjects) {
+        filters.push("EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id AND bs.subject IN (?))");
+        args.push(subjects);
+      } else {
+        const pathMatch = subjects.map(id => "s.path LIKE ?").join(" OR ");
+        filters.push(
+          `EXISTS (SELECT 1 FROM books_subjects bs JOIN subjects s ON bs.subject = s.id WHERE bs.book = b.id AND (bs.subject IN (?) OR ${pathMatch}))`
+        );
+        args.push(subjects, ...subjects.map(id => `%,${id},%`));
       }
-    ].filter(x => x)
-  })
-    .then(results => {
-      const [{ resultsCount, books }] = results;
-      const totalBooks = resultsCount?.[0]?.count ?? 0;
+    } else if (noSubjects) {
+      filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
+    }
 
-      const httpEnd = +new Date();
-      console.log("HTTP books time", httpEnd - httpStart);
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
+    const sortExpression = getSort(sort);
 
-      const arrayFieldsToInit = ["authors", "subjects", "tags"] as (keyof Book)[];
-      books.forEach(book => {
-        arrayFieldsToInit.forEach(arr => {
-          if (!Array.isArray(book[arr])) {
-            (book as any)[arr] = [] as string[];
-          }
-        });
+    const mainBooksProjection = `
+      SELECT 
+        ${fieldsToSelect.join(",")},
+        (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
+        (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects`;
+    const filterBody = `
+      FROM books b 
+      WHERE ${filters.join(" AND ")}`;
 
-        const date = new Date(book.dateAdded);
-        book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} ${sortExpression} LIMIT ?, ?`, args.concat(skip, pageSize)) as any;
+    const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
+
+    const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
+    const end = +new Date();
+
+    console.log(`MySQL books time for page ${page} pageSize ${pageSize} sort ${sortExpression.replace("ORDER BY ", "")} -->`, end - start);
+
+    const books: Book[] = booksResp.rows;
+    const totalBooks = countResp.rows[0].total;
+    const totalPages = Math.ceil(totalBooks / pageSize);
+
+    const arrayFieldsToInit = ["subjects", "tags"] as (keyof Book)[];
+    books.forEach(book => {
+      arrayFieldsToInit.forEach(arr => {
+        if (!Array.isArray(book[arr])) {
+          (book as any)[arr] = [] as string[];
+        }
       });
 
-      const totalPages = Math.ceil(totalBooks / pageSize);
+      book.isRead = (book.isRead as any) == 1;
 
-      return { books, totalBooks, page, totalPages };
-    })
-    .catch(err => {
-      console.log({ err });
+      const date = new Date(book.dateAdded);
+      book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     });
+
+    return { books, totalBooks, page, totalPages };
+  } catch (er) {
+    console.log("er", er);
+  }
 };
 
-export const getBookDetails = async (id: string) => {
-  const httpStart = +new Date();
+export const getBookDetails = async (id: string): Promise<BookDetails> => {
+  const editorialReviewsQuery = executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
 
-  return queryBooks<BookDetails>({
-    pipeline: [
-      { $match: { _id: { $oid: id } } },
-      {
-        $lookup: {
-          from: "bookSummaries",
-          localField: "similarItems",
-          foreignField: "isbn",
-          as: "similarBooks",
-          pipeline: [
-            {
-              $project: {
-                _id: 0,
-                title: 1,
-                authors: 1,
-                smallImage: 1,
-                smallImagePreview: 1,
-                asin: 1
-              }
-            }
-          ]
-        }
-      },
-      { $project: { editorialReviews: 1, similarBooks: 1 /*"$similarBooks.title": 1*/ } }
-    ]
-  })
-    .then(books => {
-      const httpEnd = +new Date();
-      console.log("HTTP books time", httpEnd - httpStart);
+  const similarBooksQuery = executeQuery<SimilarBook>(
+    "similar books",
+    `
+    SELECT sb.*
+    FROM books b
+    LEFT JOIN similar_books sb
+    ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
+    WHERE b.id = ? AND sb.id IS NOT NULL;
+    `,
+    [id]
+  );
 
-      return books[0];
-    })
-    .catch(err => {
-      console.log({ err });
-    });
+  const [book, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
+  const editorialReviews =
+    book.editorialReviews ??
+    []
+      .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
+      .map((er: any) => {
+        return {
+          content: er.content || er.Content,
+          source: er.source || er.Source
+        };
+      });
+
+  return { editorialReviews, similarBooks };
 };
 
-export const booksSubjectsDump = async (userId: string) => {
-  const httpStart = +new Date();
+export const aggregateBooksSubjects = async (userId: string) => {
+  const results = await executeQuery<{ count: string; subjects: any }>(
+    "subject books aggregate",
+    `
+    SELECT
+      COUNT(*) count,
+      agg.subjects
+    FROM books b
+    JOIN (
+        SELECT
+            bs.book,
+            JSON_ARRAYAGG(bs.subject) subjects
+        FROM books_subjects bs
+        JOIN subjects s
+        ON bs.subject = s.id
+        GROUP BY bs.book
+    ) agg
+    ON b.id = agg.book
+    WHERE b.userId = ?
+    GROUP BY agg.subjects
+    HAVING agg.subjects IS NOT NULL
+  `,
+    [userId]
+  );
 
-  return queryBooks({
-    pipeline: [
-      { $match: { userId, "subjects.0": { $exists: true } } },
-      { $group: { _id: "$subjects", count: { $count: {} } } },
-      { $sort: { _id: 1 } },
-      { $project: { _id: 0, subjects: "$_id", count: 1 } }
-    ]
-  })
-    .then(records => {
-      const httpEnd = +new Date();
-      console.log("HTTP books time", httpEnd - httpStart);
-
-      return records;
-    })
-    .catch(err => {
-      console.log({ err });
-    });
+  return results.map((r: any) => ({ ...r, count: +r.count }));
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  return insertObject("books", userId, book);
+  return runTransaction(
+    "insert book",
+    tx =>
+      tx.execute(
+        `
+      INSERT INTO books (
+        title,
+        pages,
+        authors,
+        isbn,
+        publisher,
+        publicationDate,
+        isRead,
+        mobileImage,
+        mobileImagePreview,
+        smallImage,
+        smallImagePreview,
+        mediumImage,
+        mediumImagePreview,
+        userId,
+        dateAdded
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        [
+          book.title,
+          book.pages ?? null,
+          JSON.stringify(book.authors ?? []),
+          book.isbn,
+          book.publisher,
+          book.publicationDate,
+          book.isRead ?? false,
+          book.mobileImage,
+          JSON.stringify(book.mobileImagePreview ?? null),
+          book.smallImage,
+          JSON.stringify(book.smallImagePreview ?? null),
+          book.mediumImage,
+          JSON.stringify(book.mediumImagePreview ?? null),
+          userId,
+          new Date()
+        ]
+      ),
+    tx => tx.execute("SELECT LAST_INSERT_ID() as id"),
+    async (tx, newId) => {
+      const bookId = +(newId!.rows[0] as any).id;
+
+      const result: ExecutedQuery[] = [];
+      if (book.subjects?.length) {
+        result.push(...(await syncBookSubjects(tx, bookId, book.subjects)));
+      }
+      if (book.tags?.length) {
+        result.push(...(await syncBookTags(tx, bookId, book.tags)));
+      }
+      return result;
+    }
+  );
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
-  const { _id, ...fields } = book;
+  const doImages = Object.hasOwn(book, "mobileImage");
 
-  return updateById("books", userId, _id!, { $set: { ...fields } });
+  const imageFields = doImages
+    ? [
+        book.mobileImage,
+        JSON.stringify(book.mobileImagePreview ?? null),
+        book.smallImage,
+        JSON.stringify(book.smallImagePreview ?? null),
+        book.mediumImage,
+        JSON.stringify(book.mediumImagePreview ?? null)
+      ]
+    : [];
+
+  return runTransaction(
+    "update book",
+    tx =>
+      tx.execute(
+        `
+        UPDATE books
+        SET 
+          title = ?,
+          pages = ?,
+          authors = ?,
+          isbn = ?,
+          publisher = ?,
+          publicationDate = ?,
+          isRead = ?${
+            doImages
+              ? `,
+          mobileImage = ?,
+          mobileImagePreview = ?,
+          smallImage = ?,
+          smallImagePreview = ?,
+          mediumImage = ?,
+          mediumImagePreview = ?`
+              : ""
+          }
+        WHERE id = ? AND userId = ?;`,
+        [
+          // core fields
+          book.title,
+          book.pages ?? null,
+          JSON.stringify(book.authors ?? []),
+          book.isbn,
+          book.publisher,
+          book.publicationDate,
+          book.isRead ?? false
+        ]
+          .concat(imageFields)
+          .concat(book.id, userId)
+      ),
+    tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
+    tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
+  );
+};
+
+const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
+  const tagPairs = tags.map(tagId => [bookId, tagId]);
+  const result: ExecutedQuery[] = [];
+
+  if (clearExisting) {
+    result.push(await tx.execute(`DELETE FROM books_tags WHERE book = ?`, [bookId]));
+  }
+  if (tags.length) {
+    result.push(
+      await tx.execute(
+        `
+        INSERT INTO books_tags (book, tag)
+        VALUES ${getInsertLists(tagPairs)}
+        `,
+        tagPairs
+      )
+    );
+  }
+  return result;
+};
+
+const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
+  const subjectPairs = subjects.map(subjectId => [bookId, subjectId]);
+  const result: ExecutedQuery[] = [];
+
+  if (clearExisting) {
+    result.push(await tx.execute(`DELETE FROM books_subjects WHERE book = ?`, [bookId]));
+  }
+  if (subjects.length) {
+    result.push(
+      await tx.execute(
+        `
+        INSERT INTO books_subjects (book, subject)
+        VALUES ${getInsertLists(subjectPairs)}
+        `,
+        subjectPairs
+      )
+    );
+  }
+
+  return result;
 };
 
 type BulkUpdate = {
-  _ids: string[];
+  ids: string[];
   add: string[];
   remove: string[];
 };
 
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
-  const { _ids, add, remove } = updates;
+  const { ids, add, remove } = updates;
 
-  if (add.length) {
-    await updateMultipleBooks(
-      userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      {
-        $addToSet: { subjects: { $each: add } }
-      }
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+
+  if (!addPairs.length && !removePairs.length) {
+    return;
+  }
+
+  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
+
+  if (addPairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs),
+      tx =>
+        tx.execute(
+          `
+          INSERT INTO books_subjects (book, subject)
+          SELECT DISTINCT tmp.book, tmp.subject
+          FROM tmp
+          JOIN books b
+          ON tmp.book = b.id
+          LEFT OUTER JOIN books_subjects existing
+          ON existing.book = tmp.book AND existing.subject = tmp.subject
+          WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
+          `,
+          [userId]
+        ),
+      tx => tx.execute(`DELETE FROM tmp`)
+    );
+  }
+  if (removePairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs),
+      tx =>
+        tx.execute(
+          `
+          DELETE FROM books_subjects
+          WHERE EXISTS (
+            SELECT 1
+            FROM tmp
+            WHERE books_subjects.book = tmp.book AND books_subjects.subject = tmp.subject
+          );
+          `
+        )
     );
   }
 
-  if (remove.length) {
-    await updateMultipleBooks(
-      userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      {
-        $pull: { subjects: { $in: remove } }
-      }
-    );
-  }
+  await runTransaction("update books' subjects", ...ops);
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
-  const { _ids, add, remove } = updates;
+  const { ids, add, remove } = updates;
 
-  if (add.length) {
-    await updateMultipleBooks(
-      userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      {
-        $addToSet: { tags: { $each: add } }
-      }
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+
+  if (!addPairs.length && !removePairs.length) {
+    return;
+  }
+
+  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, tag INT NOT NULL);`)];
+  if (addPairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(addPairs)};`, addPairs),
+      tx =>
+        tx.execute(
+          `
+          INSERT INTO books_tags (book, tag)
+          SELECT DISTINCT tmp.book, tmp.tag
+          FROM tmp
+          JOIN books b
+          ON tmp.book = b.id
+          LEFT OUTER JOIN books_tags existing
+          ON existing.book = tmp.book AND existing.tag = tmp.tag
+          WHERE b.userId = ? AND existing.book IS NULL AND existing.tag IS NULL
+          `,
+          [userId]
+        ),
+      tx => tx.execute(`DELETE FROM tmp`)
     );
   }
-  if (remove.length) {
-    await updateMultipleBooks(
-      userId,
-      { _id: { $in: _ids.map(_id => ({ $oid: _id })) } },
-      {
-        $pull: { tags: { $in: remove } }
-      }
+  if (removePairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(removePairs)};`, removePairs),
+      tx =>
+        tx.execute(
+          `
+          DELETE FROM books_tags
+          WHERE EXISTS (
+            SELECT 1
+            FROM tmp
+            WHERE books_tags.book = tmp.book AND books_tags.tag = tmp.tag
+          );
+          `
+        )
     );
   }
+
+  await runTransaction("update books' tags", ...ops);
 };
 
-export const updateBooksRead = async (userId: string, _ids: string[], read: boolean) => {
-  await updateMultipleBooks(userId, { _id: { $in: _ids.map(_id => ({ $oid: _id })) } }, { $set: { isRead: read } });
+export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
+  await executeCommand(
+    "update book read status",
+    `
+    UPDATE books
+    SET isRead = ?
+    WHERE userId = ? AND id IN (?)
+  `,
+    [read, userId, ids]
+  );
 };
 
-export const deleteBook = async (userId: string, _id: string) => {
-  await deleteBookById(userId, _id);
+export const deleteBook = async (userId: string, id: number) => {
+  await executeCommand("delete book", `DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
 };
