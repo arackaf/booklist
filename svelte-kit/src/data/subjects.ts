@@ -36,7 +36,6 @@ export const saveSubject = async (userId: string, id: string, subject: SubjectEd
 
 const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">) => {
   const conn = mySqlConnectionFactory.connection();
-  console.log({ newSubject: subject });
   await conn.execute(`INSERT INTO subjects (name, path, textColor, backgroundColor, userId) VALUES (?, ?, ?, ?, ?)`, [
     subject.name,
     subject.path || null,
