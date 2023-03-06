@@ -2,7 +2,15 @@ import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
 import type { Book, BookDetails, BookSearch, SimilarBook } from "./types";
-import { mySqlConnectionFactory, getInsertLists, runTransaction, executeQueryFirst, executeQuery, executeCommand } from "./dbUtils";
+import {
+  mySqlConnectionFactory,
+  getInsertLists,
+  runTransaction,
+  executeQueryFirst,
+  executeQuery,
+  executeCommand,
+  type TransactionItem
+} from "./dbUtils";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -358,13 +366,13 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
     return;
   }
 
-  const conn = mySqlConnectionFactory.connection();
-  await conn.transaction(async tx => {
-    const ops = [await tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
-    if (addPairs.length) {
-      ops.push(
-        await tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs),
-        await tx.execute(
+  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
+
+  if (addPairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs),
+      tx =>
+        tx.execute(
           `
           INSERT INTO books_subjects (book, subject)
           SELECT DISTINCT tmp.book, tmp.subject
@@ -377,13 +385,14 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
           `,
           [userId]
         ),
-        await tx.execute(`DELETE FROM tmp`)
-      );
-    }
-    if (removePairs.length) {
-      ops.push(
-        await tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs),
-        await tx.execute(
+      tx => tx.execute(`DELETE FROM tmp`)
+    );
+  }
+  if (removePairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs),
+      tx =>
+        tx.execute(
           `
           DELETE FROM books_subjects
           WHERE EXISTS (
@@ -393,11 +402,10 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
           );
           `
         )
-      );
-    }
+    );
+  }
 
-    return ops;
-  });
+  await runTransaction("update books' subjects", ...ops);
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
@@ -410,13 +418,12 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
     return;
   }
 
-  const conn = mySqlConnectionFactory.connection();
-  await conn.transaction(async tx => {
-    const ops = [await tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, tag INT NOT NULL);`)];
-    if (addPairs.length) {
-      ops.push(
-        await tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(addPairs)};`, addPairs),
-        await tx.execute(
+  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, tag INT NOT NULL);`)];
+  if (addPairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(addPairs)};`, addPairs),
+      tx =>
+        tx.execute(
           `
           INSERT INTO books_tags (book, tag)
           SELECT DISTINCT tmp.book, tmp.tag
@@ -429,13 +436,14 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
           `,
           [userId]
         ),
-        await tx.execute(`DELETE FROM tmp`)
-      );
-    }
-    if (removePairs.length) {
-      ops.push(
-        await tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(removePairs)};`, removePairs),
-        await tx.execute(
+      tx => tx.execute(`DELETE FROM tmp`)
+    );
+  }
+  if (removePairs.length) {
+    ops.push(
+      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(removePairs)};`, removePairs),
+      tx =>
+        tx.execute(
           `
           DELETE FROM books_tags
           WHERE EXISTS (
@@ -445,11 +453,10 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
           );
           `
         )
-      );
-    }
+    );
+  }
 
-    return ops;
-  });
+  await runTransaction("update books' tags", ...ops);
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
