@@ -11,7 +11,7 @@
   export let onHide: any;
   export let tags: Tag[];
   export let subjects: Subject[];
-  export let onSave: (_id: string, updates: UpdatesTo<Book>) => void = () => {};
+  export let onSave: (id: number, updates: UpdatesTo<Book>) => void = () => {};
   export let closeOnSave: boolean = false;
 
   let closeModal: any;
@@ -23,8 +23,8 @@
     }
   }
 
-  const syncUpdates = (_id: string, updates: UpdatesTo<Book>) => {
-    onSave(_id, updates);
+  const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
+    onSave(id, updates);
     if (closeOnSave) {
       onHide();
     }

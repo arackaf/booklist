@@ -7,7 +7,7 @@
   export let tags: Tag[];
   export let onSelect: (tag: Tag) => void;
   export let placeholder = "Tags";
-  export let currentlySelected: string[] = [];
+  export let currentlySelected: number[] = [];
 
   let search = "";
 
@@ -16,17 +16,17 @@
     search = "";
   };
 
-  type TagSelectedHash = { [_id: string]: true };
+  type TagSelectedHash = { [id: string]: true };
 
-  $: itemHash = currentlySelected.reduce<TagSelectedHash>((hash, _id) => ((hash[_id] = true), hash), {});
+  $: itemHash = currentlySelected.reduce<TagSelectedHash>((hash, id) => ((hash[id] = true), hash), {});
 
   $: eligible = filterTags(
-    tags.filter(s => !itemHash[s._id]),
+    tags.filter(s => !itemHash[s.id]),
     search
   );
 </script>
 
-{#each currentlySelected as _id}
-  <input type="hidden" name="tags" value={_id} />
+{#each currentlySelected as id}
+  <input type="hidden" name="tags" value={id} />
 {/each}
 <GenericLabelSelect {placeholder} bind:search options={() => eligible} onItemSelected={doSelect} />

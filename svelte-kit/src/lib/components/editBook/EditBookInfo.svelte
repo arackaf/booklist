@@ -22,11 +22,11 @@
     book = { ...book, ...updates };
   };
 
-  const addSubject = (subject: Subject) => updateBook({ subjects: book.subjects.concat(subject._id) });
-  const removeSubject = (subject: any) => updateBook({ subjects: book.subjects.filter((_id: string) => _id != subject._id) });
+  const addSubject = (subject: Subject) => updateBook({ subjects: book.subjects.concat(subject.id) });
+  const removeSubject = (subject: any) => updateBook({ subjects: book.subjects.filter((id: string) => id != subject.id) });
 
-  const addTag = (tag: any) => updateBook({ tags: book.tags.concat(tag._id) });
-  const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((_id: string) => _id != tag._id) });
+  const addTag = (tag: any) => updateBook({ tags: book.tags.concat(tag.id) });
+  const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((id: string) => id != tag.id) });
 
   let missingTitle = false;
 

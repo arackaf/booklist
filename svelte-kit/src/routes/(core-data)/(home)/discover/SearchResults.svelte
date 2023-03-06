@@ -5,7 +5,7 @@
 
   import SearchResult from "./SearchResult.svelte";
 
-  export let selectedBooksSet: Set<string>;
+  export let selectedBooksSet: Set<number>;
   export let books: any[];
   export let currentQuery: string;
   export let selectBook: (book: Book) => void;
@@ -29,7 +29,7 @@
     {#if books?.length}
       {#key currentQuery}
         <ul in:resultsIn|local out:resultsOut|local>
-          {#each books.filter(b => !selectedBooksSet.has(b._id)) as book (book._id)}
+          {#each books.filter(b => !selectedBooksSet.has(b.id)) as book (book.id)}
             <SearchResult {book} {selectBook} />
           {/each}
         </ul>

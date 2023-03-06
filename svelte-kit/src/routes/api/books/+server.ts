@@ -52,7 +52,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     };
   }
 
-  const books = await searchBooks(userId, packet);
+  const booksPacket = await searchBooks(userId, packet);
 
-  return json(books);
+  return json(booksPacket);
 }

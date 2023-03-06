@@ -1,16 +1,10 @@
 import { updateBook, updateBooksSubjects, updateBooksTags, updateBooksRead, deleteBook, insertBook } from "$data/books";
-import type { Tag } from "$data/types";
+import type { Book, Tag } from "$data/types";
 import { saveTag, deleteSingleTag } from "$data/tags";
 
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { removeEmpty, toJson } from "$lib/util/formDataHelpers";
 import { updateUxState } from "$lib/util/uxState";
-
-type Book = {
-  _id: string;
-  title: string;
-  authors: string[];
-};
 
 export const actions = {
   async setBooksView({ request, cookies }: any) {
@@ -31,15 +25,16 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "title", "isbn", "publisher", "publicationDate"],
-      numbers: ["pages"],
+      strings: ["title", "isbn", "publisher", "publicationDate"],
+      numbers: ["id", "pages"],
       optionals: ["mobileImage", "smallImage", "mediumImage"],
       optionalObjects: ["mobileImagePreview", "smallImagePreview", "mediumImagePreview"],
-      arrays: ["authors", "tags", "subjects"]
-    }) as Book;
+      arrays: ["authors"],
+      numberArrays: ["tags", "subjects"]
+    }) as unknown as Book;
     fields.authors = fields.authors.filter(a => a);
 
-    if (fields._id) {
+    if (fields.id) {
       await updateBook(session.userId, fields);
     } else {
       await insertBook(session.userId, fields);
@@ -59,7 +54,7 @@ export const actions = {
 
     const fields: Partial<Book> = removeEmpty(
       toJson(formData, {
-        strings: ["_id", "mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"]
+        strings: ["id", "mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"]
       })
     );
 
@@ -78,7 +73,7 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      arrays: ["_ids", "add", "remove"]
+      arrays: ["ids", "add", "remove"]
     }) as any;
 
     await updateBooksSubjects(session.userId, fields);
@@ -94,7 +89,7 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      arrays: ["_ids", "add", "remove"]
+      arrays: ["ids", "add", "remove"]
     }) as any;
 
     await updateBooksTags(session.userId, fields);
@@ -111,11 +106,11 @@ export const actions = {
 
     const fields = toJson(formData, {
       strings: ["read"],
-      arrays: ["_ids"]
+      numberArrays: ["ids"]
     }) as any;
 
     const setRead = fields.read === "true";
-    await updateBooksRead(session.userId, fields._ids, fields.read === "true");
+    await updateBooksRead(session.userId, fields.ids, fields.read === "true");
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
   },
@@ -126,9 +121,9 @@ export const actions = {
     }
 
     const formData: URLSearchParams = await request.formData();
-    const _id = formData.get("_id")!;
+    const id = parseInt(formData.get("id")!);
 
-    await deleteBook(session.userId, _id);
+    await deleteBook(session.userId, id);
 
     return { success: true };
   },
@@ -141,10 +136,10 @@ export const actions = {
     const formData: URLSearchParams = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["_id", "name", "backgroundColor", "textColor"]
+      strings: ["id", "name", "backgroundColor", "textColor"]
     }) as Tag;
 
-    await saveTag(session.userId, fields._id, fields);
+    await saveTag(session.userId, fields.id, fields);
   },
   async deleteTag({ request, locals }: any) {
     const session = await locals.getSession();
@@ -153,8 +148,8 @@ export const actions = {
     }
 
     const formData: URLSearchParams = await request.formData();
-    const _id = formData.get("_id")!;
+    const id = formData.get("id")!;
 
-    await deleteSingleTag(session.userId, _id);
+    await deleteSingleTag(session.userId, id);
   }
 };

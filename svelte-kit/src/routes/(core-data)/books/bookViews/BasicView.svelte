@@ -10,7 +10,7 @@
 <div>
   <div style="padding-bottom: 15px">
     <div style="border: 0" class="listGroup dockedToPanel">
-      {#each books as book (book._id)}
+      {#each books as book (book.id)}
         <BasicViewItem {book} {isPublic} />
       {/each}
     </div>

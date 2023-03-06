@@ -7,7 +7,7 @@
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
 
-  export let currentlySelected: string[];
+  export let currentlySelected: number[];
   export let onRemove: ((tag: Tag) => void) | null = null;
 
   export let tags: Tag[];
@@ -21,7 +21,7 @@
 </script>
 
 <svelte:component this={Component} tightest={true} {style}>
-  {#each currentlySelected.filter(_id => tagHash[_id]).map(_id => tagHash[_id]) as t}
+  {#each currentlySelected.filter(id => tagHash[id]).map(id => tagHash[id]) as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}

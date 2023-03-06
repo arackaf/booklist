@@ -8,13 +8,13 @@ export const sortDisplayLookup = {
   "title-desc": "Title Z-A",
   "pages-asc": "Pages, Low",
   "pages-desc": "Pages, High",
-  "_id-asc": "Added, Earliest",
-  "_id-desc": "Added, Most Recent"
+  "id-asc": "Added, Earliest",
+  "id-desc": "Added, Most Recent"
 };
 
 export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal];
 
-const DEFAULT_SORT = "_id-desc";
+const DEFAULT_SORT = "id-desc";
 
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;
@@ -29,10 +29,10 @@ export const searchState = derived(page, $page => {
   const [sortField, sortDirection] = sortString.split("-");
 
   const subjectHash = toHash($page.data.subjects);
-  const subjectsObjects = subjects.map(_id => subjectHash[_id]).filter(s => s);
+  const subjectsObjects = subjects.map(id => subjectHash[id]).filter(s => s);
 
   const tagHash = toHash($page.data.tags);
-  const tagObjects = tags.map(_id => tagHash[_id]).filter(s => s);
+  const tagObjects = tags.map(id => tagHash[id]).filter(s => s);
 
   const result = {
     page: parseInt(searchParams.get("page")!) || 1,
@@ -109,32 +109,32 @@ export const changeFilter = derived(page, $page => {
       return urlWithFilter(url, "sort", `${field}-${direction}`);
     },
 
-    addSubject(_id: string) {
+    addSubject(id: number) {
       const subjects = url.searchParams.getAll("subjects");
-      if (subjects.includes(_id)) {
+      if (subjects.includes(id + "")) {
         return null;
       }
 
-      return urlWithArrayFilter(url, "subjects", subjects.concat(_id));
+      return urlWithArrayFilter(url, "subjects", subjects.concat(id + ""));
     },
-    withoutSubject(_id: string) {
+    withoutSubject(id: number) {
       const subjects = url.searchParams.getAll("subjects");
-      const newSubjects = subjects.filter(s => s !== _id);
+      const newSubjects = subjects.filter(s => s !== id + "");
 
       return urlWithArrayFilter(url, "subjects", newSubjects);
     },
 
-    addTag(_id: string) {
+    addTag(id: number) {
       const tags = url.searchParams.getAll("tags");
-      if (tags.includes(_id)) {
+      if (tags.includes(id + "")) {
         return null;
       }
 
-      return urlWithArrayFilter(url, "tags", tags.concat(_id));
+      return urlWithArrayFilter(url, "tags", tags.concat(id + ""));
     },
-    withoutTag(_id: string) {
+    withoutTag(id: number) {
       const tags = url.searchParams.getAll("tags");
-      const newTags = tags.filter(s => s !== _id);
+      const newTags = tags.filter(s => s !== id + "");
 
       return urlWithArrayFilter(url, "tags", newTags);
     }

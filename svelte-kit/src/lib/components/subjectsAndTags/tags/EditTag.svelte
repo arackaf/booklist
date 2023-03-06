@@ -98,7 +98,7 @@
     {#if !deleteShowing}
       <form method="POST" action="?/saveTag" use:enhance={runSave}>
         <FlexRow>
-          <input type="hidden" name="_id" value={editingTag._id} />
+          <input type="hidden" name="id" value={editingTag.id} />
           <div class="col-xs-12 col-lg-6">
             <div class="form-group">
               <label for="tag-name">Name</label>
@@ -158,7 +158,7 @@
                 <i class={`far fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
               </Button>
               <Button disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
-              {#if editingTag._id}
+              {#if editingTag.id}
                 <Button disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
                   Delete
                   {originalName}
@@ -171,7 +171,7 @@
       </form>
     {:else}
       <form method="POST" action="?/deleteTag" use:enhance={runDelete}>
-        <input type="hidden" name="_id" value={editingTag._id} />
+        <input type="hidden" name="id" value={editingTag.id} />
         <div class="col-xs-12">
           <Stack>
             <div class="alert alert-danger alert-slim" style="align-self: flex-start">
