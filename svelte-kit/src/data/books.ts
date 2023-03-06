@@ -2,7 +2,7 @@ import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
 import type { Book, BookDetails, BookSearch, SimilarBook } from "./types";
-import { mySqlConnectionFactory, getInsertLists, runTransaction, executeQueryFirst, executeQuery } from "./dbUtils";
+import { mySqlConnectionFactory, getInsertLists, runTransaction, executeQueryFirst, executeQuery, executeCommand } from "./dbUtils";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -453,8 +453,8 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
-  const conn = mySqlConnectionFactory.connection();
-  conn.execute(
+  await executeCommand(
+    "update book read status",
     `
     UPDATE books
     SET isRead = ?
@@ -465,6 +465,5 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
 };
 
 export const deleteBook = async (userId: string, id: number) => {
-  const conn = mySqlConnectionFactory.connection();
-  conn.execute(`DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
+  await executeCommand("delete book", `DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
 };
