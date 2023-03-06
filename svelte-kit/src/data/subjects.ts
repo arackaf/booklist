@@ -70,6 +70,7 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
     newDescendantPathPiece = `${newSubjectPath || ","}${id},`;
 
     await runTransaction(
+      "update subject",
       tx =>
         tx.execute(
           `
@@ -106,6 +107,7 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
 
 export const deleteSubject = async (userId: string, id: number) => {
   await runTransaction(
+    "delete subject",
     tx =>
       tx.execute(
         `

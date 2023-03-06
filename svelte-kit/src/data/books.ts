@@ -192,6 +192,7 @@ export const aggregateBooksSubjects = async (userId: string) => {
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
   return runTransaction(
+    "insert book",
     tx =>
       tx.execute(
         `
@@ -262,6 +263,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
     : [];
 
   return runTransaction(
+    "update book",
     tx =>
       tx.execute(
         `

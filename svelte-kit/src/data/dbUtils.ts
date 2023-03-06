@@ -7,10 +7,11 @@ export const mySqlConnectionFactory = new Client({
 });
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
-export const runTransaction = async (...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
+export const runTransaction = async (description: string, ...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
+  const start = +new Date();
   const conn = mySqlConnectionFactory.connection();
 
-  return conn.transaction(async tx => {
+  const result = await conn.transaction(async tx => {
     const transactionItems: ExecutedQuery[] = [];
     for (const op of ops) {
       const result = await op(tx, transactionItems.length ? (transactionItems.at(-1) as ExecutedQuery) : null);
@@ -24,6 +25,10 @@ export const runTransaction = async (...ops: TransactionItem[]): ReturnType<Conn
 
     return transactionItems;
   });
+  const end = +new Date();
+  console.log("Transaction", description, end - start);
+
+  return result;
 };
 
 export type SubjectEditFields = {
