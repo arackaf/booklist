@@ -114,7 +114,13 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
     const end = +new Date();
 
-    console.log(`MySQL books time for page ${page} pageSize ${pageSize} sort ${sortExpression.replace("ORDER BY ", "")} -->`, end - start);
+    console.log(
+      `Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`,
+      end - start,
+      "query times (books, count):",
+      booksResp.time.toFixed(1) + ",",
+      countResp.time.toFixed(1)
+    );
 
     const books: Book[] = booksResp.rows;
     const totalBooks = countResp.rows[0].total;
