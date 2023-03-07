@@ -1,6 +1,6 @@
 const playwright = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
 
-//const fs = require("fs");
+const fs = require("fs");
 
 module.exports.handler = async () => {
   const browser = process.env.stage
@@ -24,11 +24,14 @@ module.exports.handler = async () => {
 
   await page.goto("https://www.amazon.com/dp/1492080519", {});
 
-  await page.waitForTimeout(1000);
+  for (let i = 1; i <= 15; i++) {
+    await page.evaluate(() => window.scrollTo(0, i * 700));
+    await page.waitForTimeout(1000);
+  }
+
   //for (let i = 0; i < 20; i++) {
 
   //}
-  await page.waitForTimeout(1000);
 
   const pageMarkup = await page.content();
   //fs.writeFileSync("./foo.htm", pageMarkup);
@@ -41,10 +44,8 @@ module.exports.handler = async () => {
   //const freqBoughtHeader = await page.textContent("Frequently bought together");
   const freqContainer = await page.locator(':text("Frequently bought together") + div');
 
-  const anchors = await freqContainer.locator("a").all();
-
-  for (const a of anchors) {
-    const href = await a.getAttribute("href");
+  const hrefs = await getHrefs(freqContainer);
+  for (const href of hrefs) {
     console.log({ href });
   }
 
@@ -60,8 +61,33 @@ module.exports.handler = async () => {
     if (headerEl == null) {
       console.log("nuttin here");
       continue;
+    } else {
+      console.log({ headerText: await headerEl.textContent() });
+      const hrefs = await getHrefs(carousel);
+      for (const href of hrefs) {
+        console.log({ href });
+      }
+
+      console.log(" ------------------------------ ");
+
+      if (hrefs.length) {
+        const nextPage = await carousel.locator("a.a-carousel-goto-nextpage");
+        // const nextPage = await carousel.locator("a.a-carousel-goto-nextpage").all();
+        console.log({ nextPage });
+        console.log({ click: nextPage.click });
+        if (nextPage) {
+          console.log("FOUND IT");
+
+          await nextPage.click({ force: true });
+          await page.waitForTimeout(5000);
+
+          const hrefs = await getHrefs(carousel);
+          for (const href of hrefs) {
+            console.log({ href });
+          }
+        }
+      }
     }
-    console.log({ headerText: await headerEl.textContent() });
     // console.log(await headerEl.innerHTML());
 
     // const parent = await headerEl.$("xpath=..");
@@ -88,6 +114,27 @@ module.exports.handler = async () => {
   // console.log({ cl2 });
   // const queryable = parse(pageMarkup);
 
-  //fs.writeFileSync("./foo.htm", pageMarkup);
+  fs.writeFileSync("./foo.htm", pageMarkup);
   await browser.close();
 };
+
+async function getHrefs(freqContainer) {
+  const result = [];
+  const anchors = await freqContainer.locator("a").all();
+
+  for (const a of anchors) {
+    const href = await a.getAttribute("href");
+
+    if (href) {
+      const match = href.match(/\/dp\/([a-zA-Z0-9]+)\//);
+
+      if (match) {
+        const isbnMaybe = match[1];
+        if (isbnMaybe.length >= 10 && [...isbnMaybe.slice(0, 9)].every(c => !isNaN(c))) {
+          result.push([href, match[1]]);
+        }
+      }
+    }
+  }
+  return result;
+}
