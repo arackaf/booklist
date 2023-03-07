@@ -1,6 +1,6 @@
 const playwright = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
 
-const fs = require("fs");
+// const fs = require("fs");
 
 module.exports.handler = async () => {
   const browser = process.env.stage
@@ -114,7 +114,7 @@ module.exports.handler = async () => {
   // console.log({ cl2 });
   // const queryable = parse(pageMarkup);
 
-  fs.writeFileSync("./foo.htm", pageMarkup);
+  // fs.writeFileSync("./foo.htm", pageMarkup);
   await browser.close();
 };
 
