@@ -2,7 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "module": "ESNext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "target": "ESNext"
   },
   "ts-node": {
     "esm": true
