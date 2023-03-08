@@ -33,15 +33,16 @@ module.exports.handler = async evt => {
   });
   mySqlConnection.connect();
 
+  const browser = process.env.stage
+    ? await await playwright.launchChromium({
+        headless: true
+      })
+    : await playwright.chromium.launch({
+        headless: true
+      });
+
   try {
     const { isbn } = evt;
-    const browser = process.env.stage
-      ? await await playwright.launchChromium({
-          headless: true
-        })
-      : await playwright.chromium.launch({
-          headless: true
-        });
 
     const page = await browser.newPage({
       userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
