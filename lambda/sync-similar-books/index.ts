@@ -1,21 +1,18 @@
-import type { Page } from "playwright";
-
-const playwrightReq = process.env.stage ? import("playwright-aws-lambda") : import("playwright");
-
 import mysql from "mysql";
+import type { Page } from "playwright";
+const playwright: any = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
 
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 
-import { isbn13To10 } from "../util/isbn13to10.js";
-import { getSecrets } from "../util/getSecrets.js";
+import { isbn13To10 } from "../util/isbn13to10";
+import { getSecrets } from "../util/getSecrets";
 
 const client = new LambdaClient({
   region: "us-east-1"
 });
 
 export const handler = async () => {
-  const playwright: any = await playwrightReq;
   const secrets = await getSecrets();
 
   const { host, user, password } = splitMysqlConnectionString(secrets["mysql-connection-live"]);

@@ -2,9 +2,10 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "outDir": "./build/",
-    "module": "ESNext",
-    "target": "es2017",
+    "module": "CommonJS",
+    "target": "ES2015",
     "allowJs": true,
+    "esModuleInterop": true,
     "moduleResolution": "node"
   }
 }
