@@ -66,7 +66,7 @@ export const handler = async () => {
       }
     }
 
-    const page = await browser.newPage({
+    const page: Page = await browser.newPage({
       userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
       extraHTTPHeaders: {
         accept:
@@ -79,7 +79,6 @@ export const handler = async () => {
 
     await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
 
-    const pageMarkup = await page.content();
     const title = await page.title();
     if (/page not found/i.test(title)) {
       console.log("Not found");
