@@ -33,6 +33,6 @@ provider:
 functions:
   sync:
     timeout: 500
-    handler: index.handler
+    handler: build/index.handler
     # events:
     #   - schedule: rate(1 minute)

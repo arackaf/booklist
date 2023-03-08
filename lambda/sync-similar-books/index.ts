@@ -1,4 +1,5 @@
-const { SecretsManager } = require("@aws-sdk/client-secrets-manager");
+import { SecretsManager } from "@aws-sdk/client-secrets-manager";
+import type { Page } from "playwright";
 
 const region = "us-east-1";
 const secretName = "MyLibrary";
@@ -7,18 +8,19 @@ const secretsClient = new SecretsManager({
   region
 });
 
-const playwright = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
+const playwrightReq = process.env.stage ? import("playwright-aws-lambda") : import("playwright");
 
-const mysql = require("mysql");
+import mysql from "mysql";
 
-const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
-const { toUtf8, fromUtf8 } = require("@aws-sdk/util-utf8");
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 
 const client = new LambdaClient({
   region: "us-east-1"
 });
 
-module.exports.handler = async () => {
+export const handler = async () => {
+  const playwright: any = await playwrightReq;
   const secrets = await getSecrets();
 
   const { host, user, password } = splitMysqlConnectionString(secrets["mysql-connection-live"]);
@@ -42,7 +44,7 @@ module.exports.handler = async () => {
       });
 
   try {
-    const books = await query(
+    const books = (await query(
       mySqlConnection,
       `    
       SELECT id, isbn
@@ -50,7 +52,7 @@ module.exports.handler = async () => {
       WHERE id = 1596 AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
       ORDER BY id DESC
       LIMIT 1`
-    );
+    )) as any[];
 
     if (!books.length || !books[0].isbn) {
       return;

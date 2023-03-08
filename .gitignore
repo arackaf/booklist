@@ -28,3 +28,4 @@ mysql/.dbeaver
 mysql/.project
 mysql/.idea
 mysql/data-import/dev.env
+lambda/sync-similar-books/build

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "outDir": "./.build/",
-    "module": "es6",
+    "outDir": "./build/",
+    "module": "ESNext",
     "target": "es2017",
     "allowJs": true,
     "moduleResolution": "node"
