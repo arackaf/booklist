@@ -2,7 +2,6 @@ const playwright = process.env.stage ? require("playwright-aws-lambda") : requir
 
 const mysql = require("mysql");
 
-console.log(mysql.createConnection);
 // const mySqlConnection = mysql.createConnection({
 //   host: process.env.MYSQL_HOST,
 //   user: process.env.MYSQL_USER,
@@ -11,8 +10,6 @@ console.log(mysql.createConnection);
 //     rejectUnauthorized: false
 //   }
 // });
-
-// const fs = require("fs");
 
 module.exports.handler = async () => {
   const browser = process.env.stage
@@ -41,110 +38,73 @@ module.exports.handler = async () => {
     await page.waitForTimeout(1000);
   }
 
-  //for (let i = 0; i < 20; i++) {
-
-  //}
-
-  const pageMarkup = await page.content();
-  //fs.writeFileSync("./foo.htm", pageMarkup);
-  //console.log(pageMarkup);
-
-  //const frequentlyBought = queryable.querySelectorAll("Frequently bought together");
-
-  //page.click()
-
-  //const freqBoughtHeader = await page.textContent("Frequently bought together");
-  // const freqContainer = await page.locator(':text("Frequently bought together") + div');
-
-  // const hrefs = await getHrefs(freqContainer);
-  // for (const href of hrefs) {
-  //   console.log({ href });
-  // }
-
-  // const XXX = await page.getByText("Products related to this item", { exact: false }).elementHandle();
   const allCarousels = await page.locator("[data-a-carousel-options]").all();
+
+  const allBookResults = new Map();
+
   for (const carousel of allCarousels) {
-    console.log("---------------------------------------");
     const carouselEl = await carousel.elementHandle();
     const headerEl = await carouselEl.$(".a-carousel-heading");
 
-    //("").first();
-    //const header = await headerEl.innerHTML();
     if (headerEl == null) {
-      console.log("nuttin here");
       continue;
     } else {
       console.log({ headerText: await headerEl.innerText() });
-      const results = await getResults(carousel);
-      for (const href of results) {
-        console.log({ href });
-      }
 
-      console.log(" ------------------------------ ");
+      const results = await processCarousel(page, carousel);
 
-      if (results.length) {
-        const nextPage = await carousel.locator("a.a-carousel-goto-nextpage");
-        // const nextPage = await carousel.locator("a.a-carousel-goto-nextpage").all();
-        console.log({ nextPage });
-        console.log({ click: nextPage.click });
-        if (nextPage) {
-          console.log("FOUND IT");
-
-          await nextPage.click({ force: true });
-          await page.waitForTimeout(5000);
-
-          const hrefs = await getResults(carousel);
-          for (const href of hrefs) {
-            console.log({ href });
-          }
+      for (const book of results) {
+        if (!allBookResults.has(book.isbn)) {
+          allBookResults.set(book.isbn, book);
         }
       }
     }
-    // console.log(await headerEl.innerHTML());
-
-    // const parent = await headerEl.$("xpath=..");
-    // const cl1 = await parent.getAttribute("class");
-    // console.log({ cl1 });
-
-    // const sib = await parent.$("& + *:first");
-    // const cl2 = await sib.getAttribute("class");
-
-    // console.log({ cl2 });
-    console.log("---------------------------------------");
   }
 
-  // const relatedContainer = await page.getByText("Products related", { exact: false }).all();
+  const allResults = [...allBookResults.values()];
+  console.log({ allResults });
 
-  // const el = await relatedContainer[0].elementHandle();
-  // const parent = await el.$("xpath=..");
-  // const cl = await parent.getAttribute("class");
-  // console.log({ cl });
-
-  // const sib = await parent.$(" + *:first");
-  // const cl2 = await sib.getAttribute("class");
-
-  // console.log({ cl2 });
-  // const queryable = parse(pageMarkup);
-
-  // fs.writeFileSync("./foo.htm", pageMarkup);
   await browser.close();
 };
 
+async function processCarousel(page, carousel) {
+  const results = await getResults(carousel);
+
+  console.log(" ------------------------------ ");
+
+  if (results.length) {
+    const nextPage = await carousel.locator("a.a-carousel-goto-nextpage");
+    // const nextPage = await carousel.locator("a.a-carousel-goto-nextpage").all();
+    if (nextPage) {
+      await nextPage.click({ force: true });
+      await page.waitForTimeout(5000);
+
+      const page2 = await getResults(carousel);
+      results.push(...page2);
+    }
+  }
+
+  return results;
+}
+
 async function getResults(carousel) {
   const result = [];
+  const resultsMap = new Map();
 
   const cards = await carousel.locator("li.a-carousel-card").all();
 
   for (const card of cards) {
     const bookInfo = await getBookInfo(card);
-    console.log({ bookInfo });
+    if (bookInfo && !resultsMap.get(bookInfo.isbn)) {
+      resultsMap.set(bookInfo.isbn, bookInfo);
+    }
   }
 
-  return result;
+  return [...resultsMap.values()];
 }
 
 async function getBookInfo(card) {
-  const coreBookData = await getIsbnAndImg(card);
+  const coreBookData = await getCoreData(card);
   if (!coreBookData) {
     return null;
   } else {
@@ -158,9 +118,10 @@ async function getBookInfo(card) {
   }
 }
 
-async function getIsbnAndImg(card) {
+async function getCoreData(card) {
   let isbn = "";
   let img = "";
+  let title = "";
 
   const anchors = await card.locator("a").all();
   for (const a of anchors) {
@@ -182,15 +143,19 @@ async function getIsbnAndImg(card) {
           if (imgMaybe) {
             const src = await imgMaybe.getAttribute("src");
 
-            console.log("before", src);
             const paths = src.split("/");
             paths[paths.length - 1] = paths[paths.length - 1].replace(/\..*(\..*)$/, (match, ext) => ext);
 
-            return { img: paths.join("/"), isbn };
+            img = paths.join("/");
+          } else if (!title) {
+            title = await a.innerText();
           }
         }
       }
     }
+  }
+  if (isbn && title && img) {
+    return { isbn, title: title.trim(), img };
   }
 }
 
