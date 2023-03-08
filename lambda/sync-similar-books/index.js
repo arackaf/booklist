@@ -2,6 +2,9 @@ const playwright = process.env.stage ? require("playwright-aws-lambda") : requir
 
 const mysql = require("mysql");
 
+const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+const { toUtf8, fromUtf8 } = require("@aws-sdk/util-utf8");
+
 // const mySqlConnection = mysql.createConnection({
 //   host: process.env.MYSQL_HOST,
 //   user: process.env.MYSQL_USER,
@@ -10,6 +13,10 @@ const mysql = require("mysql");
 //     rejectUnauthorized: false
 //   }
 // });
+
+const client = new LambdaClient({
+  region: "us-east-1"
+});
 
 module.exports.handler = async evt => {
   const { isbn } = evt;
@@ -62,6 +69,25 @@ module.exports.handler = async evt => {
   }
 
   const allResults = [...allBookResults.values()];
+  for (const book of allResults) {
+    const command = new InvokeCommand({
+      FunctionName: "process-book-cover-live-processCover",
+      Payload: fromUtf8(JSON.stringify({ url: book.img, userId: "similar-books" }))
+    });
+    const response = await client.send(command);
+
+    if (response.Payload) {
+      const respJson = JSON.parse(toUtf8(response.Payload));
+
+      delete book.img;
+      book.smallImage = respJson.smallImage;
+      book.smallImagePreview = respJson.smallImagePreview;
+      book.mobileImage = respJson.mobileImage;
+      book.mobileImagePreview = respJson.mobileImagePreview;
+    } else {
+      console.log("can't process");
+    }
+  }
   console.log({ allResults });
 
   await browser.close();
