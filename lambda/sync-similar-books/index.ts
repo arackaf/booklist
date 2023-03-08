@@ -1,12 +1,4 @@
-import { SecretsManager } from "@aws-sdk/client-secrets-manager";
 import type { Page } from "playwright";
-
-const region = "us-east-1";
-const secretName = "MyLibrary";
-
-const secretsClient = new SecretsManager({
-  region
-});
 
 const playwrightReq = process.env.stage ? import("playwright-aws-lambda") : import("playwright");
 
@@ -14,6 +6,9 @@ import mysql from "mysql";
 
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
+
+import { isbn13To10 } from "../util/isbn13to10.js";
+import { getSecrets } from "../util/getSecrets.js";
 
 const client = new LambdaClient({
   region: "us-east-1"
@@ -235,43 +230,10 @@ async function getCoreData(card) {
   }
 }
 
-function isbn13To10(isbn) {
-  if (!isbn.startsWith("978")) {
-    return null;
-  }
-
-  isbn = isbn.slice(3);
-  isbn = isbn.slice(0, isbn.length - 1);
-
-  let multiplyBy = 10;
-  let sum = 0;
-  for (const char of [...isbn]) {
-    if (isNaN(char)) {
-      return null;
-    }
-
-    sum += parseInt(char, 10) * multiplyBy;
-    multiplyBy--;
-  }
-  const checkDigit = 11 - (sum % 11);
-
-  return [...isbn, checkDigit].join("");
-}
-
 async function getAuthor(card) {
   const author = await card.locator(".a-size-small").all();
   for (const a of author) {
     return a.innerText();
-  }
-}
-
-async function getSecrets() {
-  try {
-    const result = await secretsClient.getSecretValue({ SecretId: secretName });
-    return JSON.parse(result.SecretString);
-  } catch (er) {
-    console.log("Error reading secrets", er);
-    throw er;
   }
 }
 

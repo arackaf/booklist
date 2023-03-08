@@ -33,6 +33,6 @@ provider:
 functions:
   sync:
     timeout: 500
-    handler: build/index.handler
+    handler: build/sync-similar-books/index.handler
     # events:
     #   - schedule: rate(1 minute)
