@@ -1,3 +1,3 @@
 const { handler } = require("./index");
 
-handler();
+handler({ isbn: "1492080519" });

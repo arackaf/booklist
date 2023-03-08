@@ -11,7 +11,8 @@ const mysql = require("mysql");
 //   }
 // });
 
-module.exports.handler = async () => {
+module.exports.handler = async evt => {
+  const { isbn } = evt;
   const browser = process.env.stage
     ? await await playwright.launchChromium({
         headless: true
@@ -31,7 +32,7 @@ module.exports.handler = async () => {
     }
   });
 
-  await page.goto("https://www.amazon.com/dp/1492080519", {});
+  await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
 
   for (let i = 1; i <= 15; i++) {
     await page.evaluate(() => window.scrollTo(0, i * 700));
@@ -49,9 +50,8 @@ module.exports.handler = async () => {
     if (headerEl == null) {
       continue;
     } else {
-      console.log({ headerText: await headerEl.innerText() });
-
       const results = await processCarousel(page, carousel);
+      console.log("Found", results.length, "in", (await headerEl.innerText()).replace(/\n/g, " "));
 
       for (const book of results) {
         if (!allBookResults.has(book.isbn)) {
@@ -69,8 +69,6 @@ module.exports.handler = async () => {
 
 async function processCarousel(page, carousel) {
   const results = await getResults(carousel);
-
-  console.log(" ------------------------------ ");
 
   if (results.length) {
     const nextPage = await carousel.locator("a.a-carousel-goto-nextpage");
