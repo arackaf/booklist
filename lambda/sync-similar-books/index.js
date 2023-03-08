@@ -54,19 +54,19 @@ module.exports.handler = async () => {
   //page.click()
 
   //const freqBoughtHeader = await page.textContent("Frequently bought together");
-  const freqContainer = await page.locator(':text("Frequently bought together") + div');
+  // const freqContainer = await page.locator(':text("Frequently bought together") + div');
 
-  const hrefs = await getHrefs(freqContainer);
-  for (const href of hrefs) {
-    console.log({ href });
-  }
+  // const hrefs = await getHrefs(freqContainer);
+  // for (const href of hrefs) {
+  //   console.log({ href });
+  // }
 
   // const XXX = await page.getByText("Products related to this item", { exact: false }).elementHandle();
   const allCarousels = await page.locator("[data-a-carousel-options]").all();
   for (const carousel of allCarousels) {
     console.log("---------------------------------------");
     const carouselEl = await carousel.elementHandle();
-    const headerEl = await carouselEl.$(".a-row.a-carousel-header-row");
+    const headerEl = await carouselEl.$(".a-carousel-heading");
 
     //("").first();
     //const header = await headerEl.innerHTML();
@@ -74,15 +74,15 @@ module.exports.handler = async () => {
       console.log("nuttin here");
       continue;
     } else {
-      console.log({ headerText: await headerEl.textContent() });
-      const hrefs = await getHrefs(carousel);
-      for (const href of hrefs) {
+      console.log({ headerText: await headerEl.innerText() });
+      const results = await getResults(carousel);
+      for (const href of results) {
         console.log({ href });
       }
 
       console.log(" ------------------------------ ");
 
-      if (hrefs.length) {
+      if (results.length) {
         const nextPage = await carousel.locator("a.a-carousel-goto-nextpage");
         // const nextPage = await carousel.locator("a.a-carousel-goto-nextpage").all();
         console.log({ nextPage });
@@ -93,7 +93,7 @@ module.exports.handler = async () => {
           await nextPage.click({ force: true });
           await page.waitForTimeout(5000);
 
-          const hrefs = await getHrefs(carousel);
+          const hrefs = await getResults(carousel);
           for (const href of hrefs) {
             console.log({ href });
           }
@@ -130,10 +130,39 @@ module.exports.handler = async () => {
   await browser.close();
 };
 
-async function getHrefs(freqContainer) {
+async function getResults(carousel) {
   const result = [];
-  const anchors = await freqContainer.locator("a").all();
 
+  const cards = await carousel.locator("li.a-carousel-card").all();
+
+  for (const card of cards) {
+    const bookInfo = await getBookInfo(card);
+    console.log({ bookInfo });
+  }
+
+  return result;
+}
+
+async function getBookInfo(card) {
+  const coreBookData = await getIsbnAndImg(card);
+  if (!coreBookData) {
+    return null;
+  } else {
+    // TODO get author
+    const author = await getAuthor(card);
+    if (author) {
+      return { ...coreBookData, author };
+    } else {
+      return null;
+    }
+  }
+}
+
+async function getIsbnAndImg(card) {
+  let isbn = "";
+  let img = "";
+
+  const anchors = await card.locator("a").all();
   for (const a of anchors) {
     const href = await a.getAttribute("href");
 
@@ -143,10 +172,31 @@ async function getHrefs(freqContainer) {
       if (match) {
         const isbnMaybe = match[1];
         if (isbnMaybe.length >= 10 && [...isbnMaybe.slice(0, 9)].every(c => !isNaN(c))) {
-          result.push([href, match[1]]);
+          if (!isbn) {
+            isbn = isbnMaybe;
+          } else if (isbn !== isbnMaybe) {
+            continue;
+          }
+
+          const imgMaybe = (await a.locator("img").all())[0];
+          if (imgMaybe) {
+            const src = await imgMaybe.getAttribute("src");
+
+            console.log("before", src);
+            const paths = src.split("/");
+            paths[paths.length - 1] = paths[paths.length - 1].replace(/\..*(\..*)$/, (match, ext) => ext);
+
+            return { img: paths.join("/"), isbn };
+          }
         }
       }
     }
   }
-  return result;
+}
+
+async function getAuthor(card) {
+  const author = await card.locator(".a-size-small").all();
+  for (const a of author) {
+    return a.innerText();
+  }
 }
