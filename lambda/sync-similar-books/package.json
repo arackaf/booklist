@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.282.0",
+    "@aws-sdk/client-secrets-manager": "^3.282.0",
     "@aws-sdk/util-utf8": "^3.254.0",
     "mysql": "^2.18.1",
     "playwright": "^1.31.2",
