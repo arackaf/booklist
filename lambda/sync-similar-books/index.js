@@ -53,13 +53,12 @@ module.exports.handler = async evt => {
     );
 
     if (!books.length || !books[0].isbn) {
-      mySqlConnection.end();
-      await browser.end();
       return;
     }
 
-    console.log(books);
-    const { isbn } = evt;
+    const { isbn } = books[0];
+    // const { isbn } = evt;
+    console.log(isbn);
 
     const page = await browser.newPage({
       userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
@@ -72,7 +71,15 @@ module.exports.handler = async evt => {
       }
     });
 
-    await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
+    await page.goto(`https://www.amazon.com/dp/978${isbn}`, {});
+
+    const pageMarkup = await page.content();
+    const title = await page.title();
+    if (/page not found/i.test(title)) {
+      console.log("Not found");
+      return;
+    }
+    console.log({ pageMarkup });
 
     for (let i = 1; i <= 15; i++) {
       await page.evaluate(() => window.scrollTo(0, i * 700));
@@ -127,8 +134,8 @@ module.exports.handler = async evt => {
   } finally {
     try {
       await browser?.close();
+      mySqlConnection?.end();
     } catch (er) {}
-    mySqlConnection?.end();
   }
 };
 
