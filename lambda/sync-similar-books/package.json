@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "publish": "tsc && sls deploy",
+    "tscw": "tsc -w",
     "local": "tsc && node ./build/local"
   },
   "author": "",
