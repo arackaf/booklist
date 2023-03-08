@@ -18,7 +18,7 @@ const client = new LambdaClient({
   region: "us-east-1"
 });
 
-module.exports.handler = async evt => {
+module.exports.handler = async () => {
   const secrets = await getSecrets();
 
   const { host, user, password } = splitMysqlConnectionString(secrets["mysql-connection-live"]);
@@ -56,9 +56,13 @@ module.exports.handler = async evt => {
       return;
     }
 
-    const { isbn } = books[0];
-    // const { isbn } = evt;
-    console.log(isbn);
+    let { isbn } = books[0];
+    if (isbn.length === 13) {
+      isbn = isbn13To10(isbn);
+      if (isbn == null) {
+        return;
+      }
+    }
 
     const page = await browser.newPage({
       userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
@@ -71,7 +75,7 @@ module.exports.handler = async evt => {
       }
     });
 
-    await page.goto(`https://www.amazon.com/dp/978${isbn}`, {});
+    await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
 
     const pageMarkup = await page.content();
     const title = await page.title();
@@ -79,11 +83,12 @@ module.exports.handler = async evt => {
       console.log("Not found");
       return;
     }
-    console.log({ pageMarkup });
 
     for (let i = 1; i <= 15; i++) {
-      await page.evaluate(() => window.scrollTo(0, i * 700));
-      await page.waitForTimeout(1000);
+      try {
+        await page.evaluate(() => window.scrollTo(0, i * 700));
+        await page.waitForTimeout(1000);
+      } catch (er) {}
     }
 
     const allCarousels = await page.locator("[data-a-carousel-options]").all();
@@ -227,6 +232,29 @@ async function getCoreData(card) {
   if (isbn && title && img) {
     return { isbn, title: title.trim(), img };
   }
+}
+
+function isbn13To10(isbn) {
+  if (!isbn.startsWith("978")) {
+    return null;
+  }
+
+  isbn = isbn.slice(3);
+  isbn = isbn.slice(0, isbn.length - 1);
+
+  let multiplyBy = 10;
+  let sum = 0;
+  for (const char of [...isbn]) {
+    if (isNaN(char)) {
+      return null;
+    }
+
+    sum += parseInt(char, 10) * multiplyBy;
+    multiplyBy--;
+  }
+  const checkDigit = 11 - (sum % 11);
+
+  return [...isbn, checkDigit].join("");
 }
 
 async function getAuthor(card) {
