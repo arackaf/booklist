@@ -1,3 +1,3 @@
-import { handler } from "./index.js";
+import { syncOneBook } from "./index.js";
 
-handler({ isbn: "1492080519" });
+syncOneBook({ isbn: "1492080519" });
