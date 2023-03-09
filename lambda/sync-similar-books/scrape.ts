@@ -83,13 +83,17 @@ async function processImages(books: any[]) {
     const response = await client.send(command);
 
     if (response.Payload) {
-      const respJson = JSON.parse(toUtf8(response.Payload));
+      try {
+        const respJson = JSON.parse(toUtf8(response.Payload));
 
-      delete book.img;
-      book.smallImage = respJson.smallImage;
-      book.smallImagePreview = respJson.smallImagePreview;
-      book.mobileImage = respJson.mobileImage;
-      book.mobileImagePreview = respJson.mobileImagePreview;
+        delete book.img;
+        book.smallImage = respJson.smallImage;
+        book.smallImagePreview = respJson.smallImagePreview;
+        book.mobileImage = respJson.mobileImage;
+        book.mobileImagePreview = respJson.mobileImagePreview;
+      } catch (er) {
+        console.log("Error syncing book cover");
+      }
     } else {
       console.log("can't process");
     }
