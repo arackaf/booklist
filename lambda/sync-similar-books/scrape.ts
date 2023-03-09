@@ -69,7 +69,6 @@ export async function getBookRelatedItems(isbn: string) {
     await processImages(allResults);
 
     return allResults;
-  } catch (er) {
   } finally {
     await browser?.close();
   }
