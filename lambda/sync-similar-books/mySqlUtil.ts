@@ -4,7 +4,8 @@ import { getSecrets } from "../util/getSecrets";
 export async function getMySqlConnection() {
   const secrets = await getSecrets();
 
-  const { host, user, password } = splitMysqlConnectionString(secrets["mysql-connection-live"]);
+  const stage = process.env.stage || "live";
+  const { host, user, password } = splitMysqlConnectionString(secrets[`mysql-connection-${stage}`]);
 
   const mySqlConnection = mysql.createConnection({
     host,
