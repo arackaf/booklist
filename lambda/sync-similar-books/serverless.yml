@@ -34,5 +34,5 @@ functions:
   sync:
     timeout: 500
     handler: build/sync-similar-books/index.syncOneBook
-    # events:
-    #   - schedule: rate(1 minute)
+    events:
+      - schedule: rate(1 minute)

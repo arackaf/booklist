@@ -183,7 +183,7 @@ async function getCoreData(card) {
     }
   }
   if (isbn && title && img) {
-    return { isbn, title: title.trim(), img };
+    return { isbn: isbn.toUpperCase(), title: title.trim(), img };
   }
 }
 

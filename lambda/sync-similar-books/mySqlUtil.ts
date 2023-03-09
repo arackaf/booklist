@@ -29,7 +29,7 @@ function splitMysqlConnectionString(connString) {
   return { host, user, password };
 }
 
-export function query(mySqlConnection, ...args) {
+export function query<T>(mySqlConnection, ...args): Promise<T[]> {
   return new Promise((res, rej) => {
     mySqlConnection.query(...args, (err, results) => {
       if (err) {
