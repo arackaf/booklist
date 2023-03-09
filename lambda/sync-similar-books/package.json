@@ -1,0 +1,23 @@
+{
+  "name": "sync-similar-books",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "tsc && sls deploy",
+    "tscw": "tsc -w",
+    "local": "node ./build/sync-similar-books/local"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-lambda": "^3.282.0",
+    "@aws-sdk/client-secrets-manager": "^3.282.0",
+    "@aws-sdk/util-utf8": "^3.254.0",
+    "mysql": "^2.18.1",
+    "playwright": "^1.31.2",
+    "playwright-aws-lambda": "^0.10.0",
+    "playwright-core": "^1.31.2"
+  }
+}
