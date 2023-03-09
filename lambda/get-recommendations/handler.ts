@@ -7,6 +7,7 @@ export const getRecommendations = async (evt: any) => {
 
     const { bookIds, userId, publicUserId } = evt;
 
+    console.log("Getting recommendations for", bookIds);
     const allBooksReq = await connection.execute("SELECT id, similarBooks FROM books WHERE id IN (?)", [bookIds]);
     const books: any[] = allBooksReq.rows;
 
@@ -31,6 +32,7 @@ export const getRecommendations = async (evt: any) => {
 
     const resultRecommendationsReq = await connection.execute("SELECT * FROM similar_books WHERE isbn IN (?)", [isbns]);
     const resultRecommendations: any[] = resultRecommendationsReq.rows;
+    console.log("Found", resultRecommendations.length, "potential matches");
 
     const resultRecommendationLookup = new Map(resultRecommendations.map(b => [b.isbn, b]));
     const isbnsOrdered = orderBy(
@@ -42,6 +44,7 @@ export const getRecommendations = async (evt: any) => {
     const potentialIsbns = potentialRecommendations.map((b: any) => b.isbn).filter((x: any) => x);
 
     if (![potentialIsbns].length) {
+      console.log("No results found");
       return {
         success: true,
         results: []
@@ -54,6 +57,7 @@ export const getRecommendations = async (evt: any) => {
     const matchingIsbns = new Set(matches.map(m => m.isbn).filter(x => x));
     const finalResults = potentialRecommendations.filter(m => !m.isbn || !matchingIsbns.has(m.isbn)).slice(0, 50);
 
+    console.log(finalResults.length, "final results");
     return {
       success: true,
       results: finalResults
