@@ -36,6 +36,8 @@ export const syncOneBook = async () => {
 
       if (!allResults || !allResults.length) {
         await bookSyncFailure(mySqlConnection, id, "No results");
+        console.log("Sync complete for", id, title, "No results found");
+        return;
       } else {
         await bookSyncSuccess(mySqlConnection, id, allResults);
       }
