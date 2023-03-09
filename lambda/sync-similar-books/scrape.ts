@@ -101,7 +101,6 @@ async function processCarousel(page, carousel) {
 
   if (results.length) {
     const nextPage = await carousel.locator("a.a-carousel-goto-nextpage");
-    // const nextPage = await carousel.locator("a.a-carousel-goto-nextpage").all();
     if (nextPage) {
       await nextPage.click({ force: true });
       await page.waitForTimeout(5000);
@@ -135,7 +134,6 @@ async function getBookInfo(card) {
   if (!coreBookData) {
     return null;
   } else {
-    // TODO get author
     const author = await getAuthor(card);
     if (author) {
       return { ...coreBookData, author };
