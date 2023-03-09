@@ -18,6 +18,7 @@ export const syncOneBook = async () => {
     )) as any[];
 
     if (!books.length) {
+      console.log("No books pending sync found");
       return;
     }
 
