@@ -18,6 +18,7 @@
 
   let selectedBooks: Book[] = [];
   let recommendationsLoading = false;
+  let recommendationsLoaded = false;
   let recommendations: Book[] = [];
 
   let searchModalOpen = false;
@@ -38,6 +39,7 @@
     const result = await ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] });
     recommendations = result.results ?? [];
     recommendationsLoading = false;
+    recommendationsLoaded = true;
   };
 </script>
 
@@ -67,7 +69,7 @@
     </div>
     <div class="col-xs-6">
       {#if recommendations.length}
-        <div transition:fade|local>
+        <div>
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
           <table class="table table-condensed table-striped">
             <tbody>
@@ -77,6 +79,8 @@
             </tbody>
           </table>
         </div>
+      {:else if recommendationsLoaded}
+        <div class="alert alert-warning">Nothing found</div>
       {/if}
     </div>
   </FlexRow>
