@@ -1,3 +1,3 @@
-import { syncOneBook } from "./index.js";
+import { syncNextBook } from "./index.js";
 
-syncOneBook({ isbn: "1492080519" });
+syncNextBook({ isbn: "1492080519" });

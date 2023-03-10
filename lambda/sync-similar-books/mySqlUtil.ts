@@ -20,6 +20,27 @@ export async function getMySqlConnection() {
   return mySqlConnection;
 }
 
+export async function getNextBookToSync() {
+  const mySqlConnection = await getMySqlConnection();
+
+  try {
+    const books =
+      ((await query(
+        mySqlConnection,
+        `    
+          SELECT id, title, isbn
+          FROM books
+          WHERE (similarBooksLastSync IS NULL OR DATEDIFF(NOW(), similarBooksLastSync) > 60) AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
+          ORDER BY id
+          LIMIT 1`
+      )) as any[]) || [];
+
+    return books[0];
+  } finally {
+    mySqlConnection?.end();
+  }
+}
+
 function splitMysqlConnectionString(connString) {
   connString = connString.replace("mysql://", "");
   connString = connString.replace(/\/.*$/, "");
