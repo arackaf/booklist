@@ -12,7 +12,7 @@
   let inputStyles = "width: 100px; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-radius: 0;";
 </script>
 
-<div>
+<div class="root">
   <AutoSuggest
     keyField="id"
     {options}
@@ -29,3 +29,9 @@
     </span>
   </AutoSuggest>
 </div>
+
+<style>
+  .root :global(.options-root) {
+    z-index: 9999;
+  }
+</style>
