@@ -1,5 +1,5 @@
 import type { Subject } from "./types";
-import { type SubjectEditFields, mySqlConnectionFactory, runTransaction, executeQuery, executeQueryFirst, executeCommand } from "./dbUtils";
+import { type SubjectEditFields, runTransaction, executeQuery, executeQueryFirst, executeCommand } from "./dbUtils";
 
 export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
   if (!userId) {

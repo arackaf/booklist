@@ -86,7 +86,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
         filters.push("EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id AND bs.subject IN (?))");
         args.push(subjects);
       } else {
-        const pathMatch = subjects.map(id => "s.path LIKE ?").join(" OR ");
+        const pathMatch = subjects.map(_ => "s.path LIKE ?").join(" OR ");
         filters.push(
           `EXISTS (SELECT 1 FROM books_subjects bs JOIN subjects s ON bs.subject = s.id WHERE bs.book = b.id AND (bs.subject IN (?) OR ${pathMatch}))`
         );

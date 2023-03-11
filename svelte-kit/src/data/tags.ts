@@ -1,4 +1,4 @@
-import { executeCommand, executeQuery, mySqlConnectionFactory } from "./dbUtils";
+import { executeCommand, executeQuery } from "./dbUtils";
 import type { Tag, TagEditFields } from "./types";
 
 export const allTags = async (userId: string = ""): Promise<Tag[]> => {

@@ -1,12 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import cn from "classnames";
   import { cssFromPreset } from "./buttonHelpers";
-
-  let active = true;
-  onMount(() => {
-    return () => (active = false);
-  });
 
   export let style = "";
   let className = "";
