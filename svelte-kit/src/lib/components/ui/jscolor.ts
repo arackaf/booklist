@@ -621,7 +621,7 @@ if (typeof window === "object" && !window.jscolor) {
         jsc.dispatchFineChange(thisObj);
       },
 
-      onDocumentPointerMove: function (_, target, controlName, _, offset) {
+      onDocumentPointerMove: function (_, target, controlName, _x, offset) {
         return function (e) {
           var thisObj = target._jscInstance;
           switch (controlName) {
@@ -644,7 +644,7 @@ if (typeof window === "object" && !window.jscolor) {
         };
       },
 
-      onDocumentPointerEnd: function (_, target, _, _) {
+      onDocumentPointerEnd: function (_, target, _x, _y) {
         return function () {
           var thisObj = target._jscInstance;
           jsc.detachGroupEvents("drag");
