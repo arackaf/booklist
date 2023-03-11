@@ -221,7 +221,7 @@ if (typeof window === "object" && !window.jscolor) {
         }
         if (document.createEvent) {
           var ev = document.createEvent("HTMLEvents");
-          ev.initEvent(evnt, true, true);
+          (ev as any).initEvent(evnt, true, true);
           el.dispatchEvent(ev);
         } else if (document.createEventObject) {
           var ev = document.createEventObject();
@@ -486,7 +486,6 @@ if (typeof window === "object" && !window.jscolor) {
         switch (thisObj.mode.charAt(1).toLowerCase()) {
           case "v":
             return "v";
-            break;
         }
         return "s";
       },
@@ -496,10 +495,8 @@ if (typeof window === "object" && !window.jscolor) {
           switch (thisObj.mode.charAt(2).toLowerCase()) {
             case "s":
               return "s";
-              break;
             case "v":
               return "v";
-              break;
           }
         }
         return null;
@@ -544,11 +541,11 @@ if (typeof window === "object" && !window.jscolor) {
         }
       },
 
-      onWindowResize: function (e) {
+      onWindowResize: function () {
         jsc.redrawPosition();
       },
 
-      onParentScroll: function (e) {
+      onParentScroll: function () {
         // hide the picker when one of the parent elements is scrolled
         if (jsc.picker && jsc.picker.owner) {
           jsc.picker.owner.hide();
@@ -624,7 +621,7 @@ if (typeof window === "object" && !window.jscolor) {
         jsc.dispatchFineChange(thisObj);
       },
 
-      onDocumentPointerMove: function (e, target, controlName, pointerType, offset) {
+      onDocumentPointerMove: function (_, target, controlName, _, offset) {
         return function (e) {
           var thisObj = target._jscInstance;
           switch (controlName) {
@@ -647,8 +644,8 @@ if (typeof window === "object" && !window.jscolor) {
         };
       },
 
-      onDocumentPointerEnd: function (e, target, controlName, pointerType) {
-        return function (e) {
+      onDocumentPointerEnd: function (_, target, _, _) {
+        return function () {
           var thisObj = target._jscInstance;
           jsc.detachGroupEvents("drag");
           jsc.releaseTarget();
@@ -1229,9 +1226,9 @@ if (typeof window === "object" && !window.jscolor) {
 
         this.toString = function () {
           return (
-            (0x100 | Math.round(this.rgb[0])).toString(16).substr(1) +
-            (0x100 | Math.round(this.rgb[1])).toString(16).substr(1) +
-            (0x100 | Math.round(this.rgb[2])).toString(16).substr(1)
+            ((0x100 | Math.round(this.rgb[0])).toString(16) as any).substr(1) +
+            ((0x100 | Math.round(this.rgb[1])).toString(16) as any).substr(1) +
+            ((0x100 | Math.round(this.rgb[2])).toString(16) as any).substr(1)
           );
         };
 
