@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  import Dropzone from "svelte-file-dropzone";
+  import Dropzone from "arackaf-svelte-file-dropzone/Dropzone.svelte";
 
   import FlowItems from "../layout/FlowItems.svelte";
 
@@ -74,6 +74,7 @@
   <div style="flex: 1; position: relative;">
     {#key uploading ? 1 : 0}
       <Dropzone
+        inputElement={null}
         accept={undefined}
         disabled={uploading}
         disableDefaultStyles={true}
