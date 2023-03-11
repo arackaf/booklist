@@ -35,7 +35,7 @@
     recommendationsLoading = true;
 
     const result = await ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] });
-    recommendations = result.results ?? [];
+    recommendations = result?.results ?? [];
     recommendationsLoading = false;
     recommendationsLoaded = true;
   };
