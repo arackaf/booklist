@@ -32,7 +32,10 @@
   }
 
   let navigating = false;
-  beforeNavigate(() => {
+  beforeNavigate(({ type }) => {
+    if (type === "leave") {
+      return;
+    }
     navigating = true;
   });
 
