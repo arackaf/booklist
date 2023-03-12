@@ -194,3 +194,53 @@ async function getAuthor(card) {
     return a.innerText();
   }
 }
+
+export async function getAuthorFromBookPage(isbn: string) {
+  const browser = process.env.stage
+    ? await playwright.launchChromium({
+        headless: true
+      })
+    : await playwright.chromium.launch({
+        headless: true
+      });
+  try {
+    const page: Page = await browser.newPage({
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
+      extraHTTPHeaders: {
+        accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      }
+    });
+
+    await page.goto(`https://www.amazon.com/dp/${isbn}`, { timeout: 120 * 1000 });
+
+    const title = await page.title();
+    if (/page not found/i.test(title)) {
+      console.log("Not found");
+      return null;
+    }
+
+    const allAuthorElements = await page.locator("span.author").all();
+
+    for (const author of allAuthorElements) {
+      console.log("Author Element");
+      const anchors = await author.locator("a.contributorNameID").all();
+
+      for (const anchor of anchors) {
+        const text = await anchor.innerText();
+        if (text && text.length) {
+          return text.trim();
+        }
+      }
+
+      console.log("----------");
+    }
+  } catch (er) {
+    console.log("Error", er);
+  } finally {
+    await browser?.close();
+  }
+}

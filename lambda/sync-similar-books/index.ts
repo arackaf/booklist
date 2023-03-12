@@ -1,6 +1,6 @@
 import { isbn13To10 } from "../util/isbn13to10";
-import { getMySqlConnection, getNextBookToSync } from "./mySqlUtil";
-import { getBookRelatedItems } from "./scrape";
+import { query, getMySqlConnection, getNextBookToSync } from "./mySqlUtil";
+import { getAuthorFromBookPage, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
 export const syncNextBook = async () => {
@@ -51,4 +51,47 @@ async function doSync(book: any) {
   } catch (err) {
     await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
   }
+}
+
+export async function doSyncAuthor() {
+  const mySqlConnection = await getMySqlConnection();
+  const [book] = await query<any>(
+    mySqlConnection,
+    `
+    SELECT id, isbn, title 
+    FROM similar_books
+    WHERE authors IS NULL OR (json_contains(authors, json_array(), '$') AND json_length(authors, '$') = 0) 
+    ORDER BY id 
+    LIMIT 1
+  `
+  );
+
+  let { id, isbn, title } = book;
+  try {
+    if (isbn.length === 13) {
+      isbn = isbn13To10(isbn);
+      if (isbn == null) {
+        console.log("Bad isbn");
+        return;
+      }
+    }
+
+    const author = await getAuthorFromBookPage(isbn);
+    if (author) {
+      try {
+        await query<any>(
+          mySqlConnection,
+          `
+          UPDATE similar_books
+          SET authors = ?
+          WHERE id = ? 
+          `,
+          [JSON.stringify([author]), id]
+        );
+        console.log("Updated", title, "with", author);
+      } catch (er) {
+        console.log("Error", er);
+      }
+    }
+  } catch (err) {}
 }
