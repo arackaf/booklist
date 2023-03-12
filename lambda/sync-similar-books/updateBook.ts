@@ -27,7 +27,7 @@ export async function bookSyncSuccess(connection: any, id: number, results: any[
     .filter(book => !isbnsToSkip.has(book.isbn))
     .map(book => [
       book.title,
-      JSON.stringify(book.authors),
+      JSON.stringify(book.author ? [book.author] : []),
       book.isbn,
       book.mobileImage || "",
       JSON.stringify(book.mobileImagePreview || null),
