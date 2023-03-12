@@ -70,8 +70,11 @@
                         <td>
                           <span style="font-weight: bold">{book.title}</span>
                           <br />
-                          {#if book.authors.length}<span style="font-style: italic">{book.authors.join(", ")}</span> <br />{/if}
-                          <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.asin}/?tag=zoomiec-20`}>
+                          {#if book.authors?.length}
+                            <span style="font-style: italic">{book.authors.join(", ")}</span>
+                            <br />
+                          {/if}
+                          <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
                             <i class="fab fa-amazon" />
                           </a>
                         </td>
