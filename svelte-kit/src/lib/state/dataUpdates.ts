@@ -18,12 +18,12 @@ export type UpdatesTo<T> = {
   arraySync?: Partial<ArraySyncs<T>>;
 };
 
-export const runUpdate = <T>(currentItems: Writable<T[]>, id: string | string[], updates: UpdatesTo<T>) => {
-  const ids: string[] = Array.isArray(id) ? id : [id];
+export const runUpdate = <T>(currentItems: Writable<T[]>, id: number | number[], updates: UpdatesTo<T>) => {
+  const ids: number[] = Array.isArray(id) ? id : [id];
   updateItems(currentItems, ids, updates);
 };
 
-export const updateItems = <T>(store: Writable<T[]>, ids: string[], updates: UpdatesTo<T>) => {
+export const updateItems = <T>(store: Writable<T[]>, ids: number[], updates: UpdatesTo<T>) => {
   const currentItems = get(store);
   const _idLookup = new Set(ids);
 

@@ -20,7 +20,7 @@
   $: subjects = $page.data.subjects;
   export let modifyingBooks: any[];
   export let isOpen: boolean;
-  export let onSave: (id: string | string[], updates: UpdatesTo<Book>) => void;
+  export let onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
   export let onHide: () => void;
 
   let addingSubjects: number[] = [];

@@ -17,6 +17,13 @@
   import type { PageData } from "./$types";
   import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
+  import type BookSearchModalType from "./SearchModal.svelte";
+  import type SubjectEditModalType from "./SubjectEditModal.svelte";
+  import type TagEditModalType from "./TagEditModal.svelte";
+  import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
+  import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
+  import type BookTagSetterType from "./BookTagSetter.svelte";
+
   export let data: PageData;
 
   $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags } = data);
@@ -27,12 +34,12 @@
 
   let modalsReady = false;
 
-  let BookSearchModal: any;
-  let SubjectEditModal: any;
-  let TagEditModal: any;
-  let EditBookModal: any;
-  let BookSubjectSetter: any;
-  let BookTagSetter: any;
+  let BookSearchModal: typeof BookSearchModalType;
+  let SubjectEditModal: typeof SubjectEditModalType;
+  let TagEditModal: typeof TagEditModalType;
+  let EditBookModal: typeof EditBookModalType;
+  let BookSubjectSetter: typeof BookSubjectSetterType;
+  let BookTagSetter: typeof BookTagSetterType;
 
   onMount(() => {
     Promise.all([
@@ -68,7 +75,7 @@
     editBookModalOpen = true;
   };
 
-  const onBooksUpdated = (id: string | string[], updates: UpdatesTo<Book>) => {
+  const onBooksUpdated = (id: number | number[], updates: UpdatesTo<Book>) => {
     runUpdate($page.data.books, id, updates);
   };
 
@@ -125,9 +132,10 @@
         {/if}
 
         {#if modalsReady}
-          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
+          <svelte:component this={BookSearchModal} isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
 
-          <EditBookModal
+          <svelte:component
+            this={EditBookModal}
             isOpen={editBookModalOpen}
             book={editingBook}
             onSave={onBooksUpdated}
@@ -137,22 +145,30 @@
             {tags}
           />
 
-          <BookSubjectSetter
+          <svelte:component
+            this={BookSubjectSetter}
             isOpen={booksSubjectsModalOpen}
             onSave={onBooksUpdated}
             onHide={() => (booksSubjectsModalOpen = false)}
             modifyingBooks={booksEditing}
           />
-          <BookTagSetter
+          <svelte:component
+            this={BookTagSetter}
             isOpen={booksTagsModalOpen}
             onSave={onBooksUpdated}
             onHide={() => (booksTagsModalOpen = false)}
             modifyingBooks={booksEditing}
           />
 
-          <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
+          <svelte:component
+            this={SubjectEditModal}
+            {colors}
+            {subjects}
+            isOpen={editSubjectsModalOpen}
+            onHide={() => (editSubjectsModalOpen = false)}
+          />
 
-          <TagEditModal {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+          <svelte:component this={TagEditModal} {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
         {/if}
       </div>
     </div>
