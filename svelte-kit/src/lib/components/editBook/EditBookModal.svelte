@@ -14,7 +14,6 @@
   export let onSave: (id: number, updates: UpdatesTo<Book>) => void = () => {};
   export let closeOnSave: boolean = false;
 
-  let closeModal: any;
   let resetBookEditTabs: () => null;
 
   $: {
@@ -31,7 +30,7 @@
   };
 </script>
 
-<Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false} bind:closeModal>
+<Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false}>
   {#key book}
     <EditBook bind:reset={resetBookEditTabs} {book} {syncUpdates} onCancel={onHide} {subjects} {tags} />
   {/key}

@@ -20,8 +20,6 @@
 
   $: book = viewingBook || ({} as Book);
 
-  let closeModal: () => void;
-
   const booksModuleContext: any = getContext("books-module-context");
   const { onBooksUpdated } = booksModuleContext;
 
@@ -34,7 +32,7 @@
   };
 </script>
 
-<Modal {isOpen} {onHide} standardFooter={false} bind:closeModal headerCaption={book.title} noClose={true} smallerHeader={true}>
+<Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title} noClose={true} smallerHeader={true}>
   {#if editing}
     <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} />
   {:else}
