@@ -9,6 +9,7 @@
   import { page } from "$app/stores";
   import { runDelete } from "$lib/state/dataUpdates";
   import { enhance } from "$app/forms";
+  import { selectionState } from "../state/selectionState";
 
   export let book: Book;
   export let isPublic: boolean;
@@ -29,6 +30,7 @@
       if (result.data.success) {
         runDelete($page.data.books, book.id);
         $page.data.totalBooks.update((x: number) => x - 1);
+        selectionState.unSelectBook(book.id);
       }
     };
   };

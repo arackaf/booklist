@@ -1,8 +1,5 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { page } from "$app/stores";
-
-  import type { Writable } from "svelte/store";
 
   import GridView from "./bookViews/GridView.svelte";
   import BasicView from "./bookViews/BasicView.svelte";
@@ -26,7 +23,7 @@
 
   export let data: PageData;
 
-  $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags } = data);
+  $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books } = data);
   let bookViewOverride: string | null = null;
   const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
 
@@ -53,11 +50,12 @@
       [BookSearchModal, SubjectEditModal, TagEditModal, EditBookModal, BookSubjectSetter, BookTagSetter] = results;
       modalsReady = true;
     });
-
-    selectionState.clear();
   });
 
-  $: books = $page.data.books as Writable<Book[]>;
+  $: {
+    let _ = books;
+    selectionState.clear();
+  }
 
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
@@ -76,7 +74,7 @@
   };
 
   const onBooksUpdated = (id: number | number[], updates: UpdatesTo<Book>) => {
-    runUpdate($page.data.books, id, updates);
+    runUpdate(books, id, updates);
   };
 
   let booksSubjectsModalOpen = false;

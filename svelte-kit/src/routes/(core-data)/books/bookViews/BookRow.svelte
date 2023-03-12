@@ -50,6 +50,7 @@
       if (result.data.success) {
         runDelete($page.data.books, id);
         $page.data.totalBooks.update((x: number) => x - 1);
+        selectionState.unSelectBook(id);
       }
     };
   };
