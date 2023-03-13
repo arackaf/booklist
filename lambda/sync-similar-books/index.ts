@@ -50,6 +50,8 @@ async function doSync(book: any) {
     return allResults;
   } catch (err) {
     await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
+  } finally {
+    mySqlConnection?.end();
   }
 }
 
@@ -67,6 +69,7 @@ export async function doSyncAuthor() {
   );
 
   let { id, isbn, title } = book;
+  console.log({ id, isbn, title });
   try {
     if (isbn.length === 13) {
       isbn = isbn13To10(isbn);
@@ -77,21 +80,23 @@ export async function doSyncAuthor() {
     }
 
     const author = await getAuthorFromBookPage(isbn);
-    if (author) {
-      try {
-        await query<any>(
-          mySqlConnection,
-          `
+
+    try {
+      await query<any>(
+        mySqlConnection,
+        `
           UPDATE similar_books
           SET authors = ?
-          WHERE id = ? 
+          WHERE id = ?
           `,
-          [JSON.stringify([author]), id]
-        );
-        console.log("Updated", title, "with", author);
-      } catch (er) {
-        console.log("Error", er);
-      }
+        [JSON.stringify([author || "<>"]), id]
+      );
+      console.log("Updated", id, " - ", title, "with", author);
+    } catch (er) {
+      console.log("Error", er);
     }
-  } catch (err) {}
+  } catch (err) {
+  } finally {
+    mySqlConnection?.end();
+  }
 }

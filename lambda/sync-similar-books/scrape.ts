@@ -215,7 +215,8 @@ export async function getAuthorFromBookPage(isbn: string) {
       }
     });
 
-    await page.goto(`https://www.amazon.com/dp/${isbn}`, { timeout: 120 * 1000 });
+    await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
+    await page.waitForTimeout(4000);
 
     const title = await page.title();
     if (/page not found/i.test(title)) {
@@ -227,11 +228,25 @@ export async function getAuthorFromBookPage(isbn: string) {
 
     for (const author of allAuthorElements) {
       console.log("Author Element");
-      const anchors = await author.locator("a.contributorNameID").all();
+      const innerHtml = await author.innerHTML();
+      console.log("Author Element innerHTML", innerHtml);
+
+      const totalText = await author.innerText();
+      console.log({ totalText });
+      let anchors = await author.locator("a.contributorNameID").all();
+
+      console.log({ anchors_length: anchors.length });
+
+      if (!anchors.length) {
+        console.log("Nothing with 'contributorNameID' found, settling for regular anchors");
+        anchors = await author.locator("a").all();
+      }
 
       for (const anchor of anchors) {
         const text = await anchor.innerText();
+        console.log({ text });
         if (text && text.length) {
+          console.log("Returning:", `'${text.trim()}'`);
           return text.trim();
         }
       }
