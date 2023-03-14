@@ -194,3 +194,78 @@ async function getAuthor(card) {
     return a.innerText();
   }
 }
+
+export async function getAuthorFromBookPage(isbn: string) {
+  const REAL_BROWSER = false;
+
+  const browser = process.env.stage
+    ? await playwright.launchChromium({
+        headless: !REAL_BROWSER
+      })
+    : await playwright.chromium.launch({
+        headless: !REAL_BROWSER
+      });
+  try {
+    const page: Page = await browser.newPage({
+      userAgent: "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+      extraHTTPHeaders: {
+        accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      }
+    });
+
+    await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
+    await page.waitForTimeout(REAL_BROWSER ? 14000 : 4000);
+    const robot = await page.getByText("Sorry, we just need to make sure you're not a robot").all();
+
+    if (robot.length) {
+      console.log("ROBOT");
+      return -1;
+    }
+
+    const title = await page.title();
+    if (/page not found/i.test(title)) {
+      console.log("Not found");
+      return null;
+    }
+
+    const allAuthorElements = await page.locator("span.author").all();
+
+    for (const author of allAuthorElements) {
+      console.log("Author Element");
+      const innerHtml = await author.innerHTML();
+      console.log("Author Element innerHTML", innerHtml);
+
+      const totalText = await author.innerText();
+      console.log({ totalText });
+      let anchors = await author.locator("a.contributorNameID").all();
+
+      console.log({ anchors_length: anchors.length });
+
+      if (!anchors.length) {
+        console.log("Nothing with 'contributorNameID' found, settling for regular anchors");
+        anchors = await author.locator("a").all();
+      }
+
+      for (const anchor of anchors) {
+        const text = await anchor.innerText();
+        console.log({ text });
+        if (text && text.length) {
+          console.log("================================");
+          console.log("Returning:", `'${text.trim()}'`);
+          console.log("================================");
+          return text.trim();
+        }
+      }
+
+      console.log("----------");
+    }
+  } catch (er) {
+    console.log("Error", er);
+  } finally {
+    await browser?.close();
+  }
+}
