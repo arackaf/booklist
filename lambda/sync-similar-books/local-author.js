@@ -1,3 +1,8 @@
 import { doSyncAuthor } from "./index.js";
 
-doSyncAuthor();
+(async function () {
+  for (;;) {
+    await doSyncAuthor();
+    break;
+  }
+})();

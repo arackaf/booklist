@@ -67,7 +67,7 @@ export async function doSyncAuthor() {
       AND 
       (authors IS NULL OR (json_contains(authors, json_array(), '$') AND json_length(authors, '$') = 0)) 
     ORDER BY id 
-    LIMIT 15, 1
+    LIMIT 1
   `
   );
 

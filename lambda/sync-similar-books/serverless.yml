@@ -39,5 +39,3 @@ functions:
   fix-authors:
     timeout: 500
     handler: build/sync-similar-books/index.doSyncAuthor
-    events:
-      - schedule: rate(1 minute)
