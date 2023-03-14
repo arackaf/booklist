@@ -196,12 +196,14 @@ async function getAuthor(card) {
 }
 
 export async function getAuthorFromBookPage(isbn: string) {
+  const REAL_BROWSER = false;
+
   const browser = process.env.stage
     ? await playwright.launchChromium({
-        headless: true
+        headless: !REAL_BROWSER
       })
     : await playwright.chromium.launch({
-        headless: true
+        headless: !REAL_BROWSER
       });
   try {
     const page: Page = await browser.newPage({
@@ -216,7 +218,7 @@ export async function getAuthorFromBookPage(isbn: string) {
     });
 
     await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
-    await page.waitForTimeout(4000);
+    await page.waitForTimeout(REAL_BROWSER ? 14000 : 4000);
     const robot = await page.getByText("Sorry, we just need to make sure you're not a robot").all();
 
     if (robot.length) {
