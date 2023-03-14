@@ -217,6 +217,12 @@ export async function getAuthorFromBookPage(isbn: string) {
 
     await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
     await page.waitForTimeout(4000);
+    const robot = await page.getByText("Sorry, we just need to make sure you're not a robot").all();
+
+    if (robot.length) {
+      console.log("ROBOT");
+      return -1;
+    }
 
     const title = await page.title();
     if (/page not found/i.test(title)) {
@@ -246,7 +252,9 @@ export async function getAuthorFromBookPage(isbn: string) {
         const text = await anchor.innerText();
         console.log({ text });
         if (text && text.length) {
+          console.log("================================");
           console.log("Returning:", `'${text.trim()}'`);
+          console.log("================================");
           return text.trim();
         }
       }

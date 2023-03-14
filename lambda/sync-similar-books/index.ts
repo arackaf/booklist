@@ -62,9 +62,12 @@ export async function doSyncAuthor() {
     `
     SELECT id, isbn, title 
     FROM similar_books
-    WHERE authors IS NULL OR (json_contains(authors, json_array(), '$') AND json_length(authors, '$') = 0) 
+    WHERE 
+      (authorsLastManualSync IS NULL OR DATEDIFF(NOW(), authorsLastManualSync) > 60) 
+      AND 
+      (authors IS NULL OR (json_contains(authors, json_array(), '$') AND json_length(authors, '$') = 0)) 
     ORDER BY id 
-    LIMIT 1
+    LIMIT 15, 1
   `
   );
 
@@ -86,10 +89,10 @@ export async function doSyncAuthor() {
         mySqlConnection,
         `
           UPDATE similar_books
-          SET authors = ?
+          SET authors = ?, authorsLastManualSync = ?
           WHERE id = ?
           `,
-        [JSON.stringify([author || "<>"]), id]
+        [JSON.stringify([author || "<>"]), new Date(), id]
       );
       console.log("Updated", id, " - ", title, "with", author);
     } catch (er) {
