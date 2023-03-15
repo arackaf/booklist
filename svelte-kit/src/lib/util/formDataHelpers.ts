@@ -22,31 +22,31 @@ type Options = {
   numberArrays?: string[];
 };
 
-export const toJson = (params: URLSearchParams, options: Options) => {
+export const toJson = (params: FormData, options: Options) => {
   const result: Lookup = {};
 
   options.strings?.forEach(k => {
-    result[k] = params.get(k) ?? "";
+    result[k] = params.get(k)?.toString() ?? "";
   });
   options.numbers?.forEach(k => {
     const val = params.get(k);
     if (val == null || val === "") {
       result[k] = null;
     } else {
-      result[k] = parseInt(val) || null;
+      result[k] = parseInt(val.toString()) || null;
     }
   });
   options.optionals?.forEach(k => {
     const val = params.get(k);
     if (val != null) {
-      result[k] = val;
+      result[k] = val.toString();
     }
   });
   options.optionalObjects?.forEach(k => {
     const val = params.get(k);
     if (val) {
       try {
-        result[k] = JSON.parse(val);
+        result[k] = JSON.parse(val.toString());
       } catch (er) {
         result[k] = null;
       }
@@ -54,7 +54,7 @@ export const toJson = (params: URLSearchParams, options: Options) => {
   });
 
   options.arrays?.forEach(k => {
-    result[k] = params.getAll(k);
+    result[k] = params.getAll(k).map(val => val.toString());
   });
 
   options.numberArrays?.forEach(k => {

@@ -7,22 +7,23 @@ import { removeEmpty, toJson } from "$lib/util/formDataHelpers";
 import { updateUxState } from "$lib/util/uxState";
 
 export const actions = {
-  async setBooksView({ request, cookies }: any) {
-    const formData: URLSearchParams = await request.formData();
+  async setBooksView({ request, cookies }) {
+    const formData: FormData = await request.formData();
 
     const view = formData.get("view");
     updateUxState(cookies, { bkVw: view });
   },
-  async reloadBooks({ cookies }: any) {
+  async reloadBooks({ cookies }) {
     updateCacheCookie(cookies, BOOKS_CACHE);
   },
-  async saveBook({ request, cookies, locals }: any) {
+  async saveBook({ request, cookies, locals }) {
     const session = await locals.getSession();
+
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
       strings: ["title", "isbn", "publisher", "publicationDate"],
@@ -63,7 +64,7 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: fields } };
   },
-  async setBooksSubjects({ request, locals }: any) {
+  async setBooksSubjects({ request, cookies, locals }: any) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
@@ -80,7 +81,7 @@ export const actions = {
 
     return { success: true };
   },
-  async setBooksTags({ request, locals }: any) {
+  async setBooksTags({ request, cookies, locals }: any) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
@@ -97,7 +98,7 @@ export const actions = {
 
     return { success: true };
   },
-  async setBooksRead({ request, locals }: any) {
+  async setBooksRead({ request, cookies, locals }: any) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
@@ -116,7 +117,7 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
   },
-  async deleteBook({ request, locals }: any) {
+  async deleteBook({ request, cookies, locals }: any) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
