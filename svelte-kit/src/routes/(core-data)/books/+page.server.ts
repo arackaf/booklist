@@ -59,7 +59,6 @@ export const actions = {
     );
 
     await updateBook(session.userId, fields);
-
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: fields } };
@@ -77,6 +76,7 @@ export const actions = {
     }) as any;
 
     await updateBooksSubjects(session.userId, fields);
+    updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true };
   },
@@ -93,6 +93,7 @@ export const actions = {
     }) as any;
 
     await updateBooksTags(session.userId, fields);
+    updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true };
   },
@@ -111,6 +112,7 @@ export const actions = {
 
     const setRead = fields.read === "true";
     await updateBooksRead(session.userId, fields.ids, fields.read === "true");
+    updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
   },
@@ -124,6 +126,7 @@ export const actions = {
     const id = parseInt(formData.get("id")!);
 
     await deleteBook(session.userId, id);
+    updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true };
   },
