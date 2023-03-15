@@ -16,25 +16,34 @@
   if (disabled) {
     stylesToAdd = disabledStyles + stylesToAdd;
   }
-
-  $: element = href != null ? "a" : "span";
 </script>
 
-<svelte:element
-  this={element}
-  {href}
-  on:click={onClick ? () => onClick?.(item) : null}
-  on:keypress={() => {}}
-  style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
-  class={"label label-default disabled noselect " + extraClasses}
-  class:disabled
->
-  {#if $$slots.default}
-    <slot />
-  {:else}
-    {item.name}
-  {/if}
-</svelte:element>
+{#if href}
+  <a
+    {href}
+    style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
+    class={"label label-default disabled noselect " + extraClasses}
+    class:disabled
+  >
+    {#if $$slots.default}
+      <slot />
+    {:else}
+      {item.name}
+    {/if}
+  </a>
+{:else}
+  <span
+    style="cursor: {onClick ? 'pointer' : 'default'}; background-color: {item.backgroundColor}; color: {item.textColor || 'white'}; {stylesToAdd}"
+    class={"label label-default disabled noselect " + extraClasses}
+    class:disabled
+  >
+    {#if $$slots.default}
+      <slot />
+    {:else}
+      {item.name}
+    {/if}
+  </span>
+{/if}
 
 <style>
   a {
