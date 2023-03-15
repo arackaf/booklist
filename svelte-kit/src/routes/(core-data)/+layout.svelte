@@ -12,7 +12,7 @@
   import type { Book } from "$data/types";
   import ScanToasterContent from "$lib/components/ui/ScanToasterContent.svelte";
 
-  export let data: any;
+  export let data;
 
   $: ({ loggedIn, userId } = data);
 

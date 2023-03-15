@@ -1,12 +1,10 @@
 <script lang="ts">
   import "./index.scss";
 
-  import type { Writable } from "svelte/store";
-
   import Button from "$lib/components/buttons/Button.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 
-  export let data: { scans: Writable<any>; nextPageKey: Writable<string> };
+  export let data;
 
   $: ({ scans, nextPageKey } = data);
 

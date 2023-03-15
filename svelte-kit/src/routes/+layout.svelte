@@ -12,7 +12,7 @@
 
   import { NUM_THEMES } from "$lib/util/constants";
 
-  export let data: any;
+  export let data;
 
   $: ({ showMobile, uxState } = data);
   $: ({ theme, wbg: whiteBg } = uxState);

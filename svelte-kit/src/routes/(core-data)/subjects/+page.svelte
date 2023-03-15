@@ -15,7 +15,7 @@
   import SubjectDisplay from "./SubjectDisplay.svelte";
   import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
-  export let data: any;
+  export let data;
 
   $: ({ subjects, colors } = data);
   $: rootSubjects = stackAndGetTopLevelSubjects(subjects);

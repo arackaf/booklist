@@ -1,10 +1,9 @@
 <script lang="ts">
-  import type { DynamoUser } from "$data/types";
   import FlexRow from "$lib/components/layout/FlexRow.svelte";
 
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
 
-  export let data: { user: DynamoUser };
+  export let data;
   $: ({ user } = data);
 </script>
 

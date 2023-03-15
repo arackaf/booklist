@@ -3,7 +3,6 @@
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import type { PageData } from "./$types";
 
   import { NUM_THEMES } from "$lib/util/constants";
 
@@ -12,7 +11,7 @@
 
   const themeNames = Array.from({ length: NUM_THEMES }, (_, i) => `scheme${i + 1}`);
 
-  export let data: PageData;
+  export let data;
   $: ({ uxState } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 

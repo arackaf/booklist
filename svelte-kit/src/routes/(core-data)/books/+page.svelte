@@ -11,7 +11,6 @@
   import type { Book } from "$data/types";
   import { selectedBooksLookup, selectionState } from "./state/selectionState";
 
-  import type { PageData } from "./$types";
   import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
   import type BookSearchModalType from "./SearchModal.svelte";
@@ -21,7 +20,7 @@
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
 
-  export let data: PageData;
+  export let data;
 
   $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books } = data);
   let bookViewOverride: string | null = null;

@@ -10,7 +10,7 @@
   import SearchModal from "./SearchModal.svelte";
   import type { Book } from "$data/types";
 
-  export let data: any;
+  export let data;
 
   $: ({ subjects: allSubjects, tags: allTags } = data);
 

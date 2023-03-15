@@ -8,7 +8,7 @@
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
 
-  export let data: any;
+  export let data;
 
   $: ({ subjects: allSubjects, tags } = data);
 
