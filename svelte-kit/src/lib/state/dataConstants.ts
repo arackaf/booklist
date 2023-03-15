@@ -1,5 +1,5 @@
 import type { Book } from "$data/types";
-import { writable, type Writable } from "svelte/store";
+import { writable } from "svelte/store";
 
 export const DEFAULT_BOOKS_PAGE_SIZE = 50;
 

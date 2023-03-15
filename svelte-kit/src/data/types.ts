@@ -102,6 +102,7 @@ type EditorialReview = {
 
 export type SimilarBook = {
   title: string;
+  isbn: string;
   authors: string[];
   // this type only has smallImage, but we'll add the other two to avoid unnecessary errors with the BookCover component
   mobileImage: string | null;

@@ -53,8 +53,9 @@
   });
 
   $: {
-    let _ = books;
-    selectionState.clear();
+    if ($books) {
+      selectionState.clear();
+    }
   }
 
   let filterModalOpen = false;
