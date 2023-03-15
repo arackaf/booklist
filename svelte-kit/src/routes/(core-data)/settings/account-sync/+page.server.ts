@@ -7,7 +7,8 @@ export const load = async ({ locals }) => {
   await ensureLoggedIn({ locals });
 
   const session = await locals.getSession();
-  const { legacySync } = session;
+
+  const { legacySync } = session!;
 
   return {
     legacySync
