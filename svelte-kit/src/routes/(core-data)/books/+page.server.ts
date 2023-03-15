@@ -45,13 +45,13 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: fields } };
   },
-  async saveBookCovers({ request, cookies, locals }: any) {
+  async saveBookCovers({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
 
     const fields: Partial<Book> = removeEmpty(
       toJson(formData, {
@@ -64,13 +64,13 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: fields } };
   },
-  async setBooksSubjects({ request, cookies, locals }: any) {
+  async setBooksSubjects({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
       arrays: ["ids", "add", "remove"]
@@ -81,13 +81,13 @@ export const actions = {
 
     return { success: true };
   },
-  async setBooksTags({ request, cookies, locals }: any) {
+  async setBooksTags({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
       arrays: ["ids", "add", "remove"]
@@ -98,13 +98,13 @@ export const actions = {
 
     return { success: true };
   },
-  async setBooksRead({ request, cookies, locals }: any) {
+  async setBooksRead({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
       strings: ["read"],
@@ -117,27 +117,27 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
   },
-  async deleteBook({ request, cookies, locals }: any) {
+  async deleteBook({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
-    const id = parseInt(formData.get("id")!);
+    const formData: FormData = await request.formData();
+    const id = parseInt(formData.get("id")!.toString());
 
     await deleteBook(session.userId, id);
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true };
   },
-  async saveTag({ request, locals }: any) {
+  async saveTag({ request, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
       numbers: ["id"],
@@ -146,15 +146,15 @@ export const actions = {
 
     await saveTag(session.userId, fields.id, fields);
   },
-  async deleteTag({ request, locals }: any) {
+  async deleteTag({ request, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
     }
 
-    const formData: URLSearchParams = await request.formData();
+    const formData: FormData = await request.formData();
     const id = formData.get("id")!;
 
-    await deleteSingleTag(session.userId, id);
+    await deleteSingleTag(session.userId, parseInt(id.toString()));
   }
 };

@@ -46,6 +46,6 @@ const updateSingleTag = async (userId: string, id: number, updates: TagEditField
   );
 };
 
-export const deleteSingleTag = async (userId: string, id: string) => {
+export const deleteSingleTag = async (userId: string, id: number) => {
   return executeCommand("delete tag", `DELETE FROM tags WHERE id = ? AND userId = ?`, [id, userId]);
 };
