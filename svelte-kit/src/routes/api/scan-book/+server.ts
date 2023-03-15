@@ -5,10 +5,10 @@ import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 
 import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, SCAN_BOOK_LAMBDA } from "$env/static/private";
 
-export async function POST({ locals, request }: any) {
+export async function POST({ locals, request }) {
   const session = await locals.getSession();
   if (!session) {
-    return { success: false };
+    return json({ success: false });
   }
 
   const reqBody = await request.json();

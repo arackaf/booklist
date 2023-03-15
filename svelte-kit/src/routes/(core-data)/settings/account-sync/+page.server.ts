@@ -16,12 +16,12 @@ export const load = async ({ locals }) => {
 };
 
 export const actions = {
-  async attemptSync({ request, locals }: any) {
+  async attemptSync({ request, locals }) {
     try {
-      const session = await locals.getSession();
+      const session = (await locals.getSession())!;
       const { userId } = session;
 
-      const formData: URLSearchParams = await request.formData();
+      const formData: FormData = await request.formData();
 
       const fields = toJson(formData, {
         strings: ["email", "password"]

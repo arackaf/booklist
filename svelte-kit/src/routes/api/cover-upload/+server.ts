@@ -17,15 +17,15 @@ function getExtension(name: string) {
   return name.slice(ext);
 }
 
-export async function POST({ locals, request }: any) {
+export async function POST({ locals, request }) {
   const session = await locals.getSession();
   if (!session) {
     return json({ error: true });
   }
 
   const reqBody = await request.formData();
-  const file = reqBody.get("fileUploaded");
-  const filename = reqBody.get("filename");
+  const file = reqBody.get("fileUploaded") as any;
+  const filename = reqBody.get("filename")!.toString();
 
   const extension = getExtension(filename) || ".jpg";
   const uploadKey = `upload-staging/${v4()}${extension}`;

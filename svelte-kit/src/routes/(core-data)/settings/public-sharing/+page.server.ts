@@ -2,12 +2,12 @@ import { createUser, getUser, updateUser } from "$data/user";
 import { ensureLoggedIn } from "$lib/util/authCheck";
 import { toJson } from "$lib/util/formDataHelpers";
 
-export const load = async ({ locals, depends }: any) => {
+export const load = async ({ locals, depends }) => {
   depends("user:settings");
 
   await ensureLoggedIn({ locals });
 
-  const session = await locals.getSession();
+  const session = (await locals.getSession())!;
   const { userId } = session;
 
   let user = await getUser(userId);
@@ -29,8 +29,8 @@ type UserSettingsPacket = {
 };
 
 export const actions = {
-  async updateSettings({ request, locals }: any) {
-    const session = await locals.getSession();
+  async updateSettings({ request, locals }) {
+    const session = (await locals.getSession())!;
     const { userId } = session;
 
     if (!userId) {

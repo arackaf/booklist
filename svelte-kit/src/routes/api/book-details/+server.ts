@@ -1,7 +1,7 @@
 import { getBookDetails } from "$data/books";
 import { json } from "@sveltejs/kit";
 
-export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; setHeaders: any; locals: any }) {
+export async function GET({ url, setHeaders, locals }) {
   const session = await locals.getSession();
   if (!session) {
     return json({});

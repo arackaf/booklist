@@ -3,7 +3,7 @@ import { json } from "@sveltejs/kit";
 
 const getScanResultPk = (userId: string) => `User#${userId}#ScanResult`;
 
-export async function GET({ url, locals }: { url: URL; locals: any }) {
+export async function GET({ url, locals }) {
   const session = await locals.getSession();
   if (!session) {
     return json({});

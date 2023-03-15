@@ -4,7 +4,7 @@ import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
 
-export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any; request: any; setHeaders: any; locals: any }) {
+export async function GET({ url, setHeaders, locals }) {
   const session = await locals.getSession();
   let userId = session?.userId;
 
@@ -52,7 +52,7 @@ export async function GET({ url, setHeaders, locals }: { url: URL; cookies: any;
     };
   }
 
-  const booksPacket = await searchBooks(userId, packet);
+  const booksPacket = await searchBooks(userId!, packet);
 
   return json(booksPacket);
 }

@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import { labelColors } from "$data/labelColors";
 
-export async function GET({ setHeaders }: { setHeaders: any }) {
+export async function GET({ setHeaders }) {
   setHeaders({
     "cache-control": "max-age=86400"
   });
