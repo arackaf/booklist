@@ -3,7 +3,7 @@ import { ensureLoggedIn } from "$lib/util/authCheck";
 
 import { toJson } from "$lib/util/formDataHelpers";
 
-export const load = async ({ locals }: any) => {
+export const load = async ({ locals }) => {
   await ensureLoggedIn({ locals });
 
   const session = await locals.getSession();
