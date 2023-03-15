@@ -5,7 +5,7 @@ import { ensureAnyUser } from "$lib/util/authCheck";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 import type { Book } from "$data/types";
 
-export async function load({ url, parent, fetch, depends }: any) {
+export async function load({ url, parent, fetch, depends }) {
   depends("reload:books");
 
   await ensureAnyUser({ parent, url });
