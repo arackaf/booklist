@@ -19,12 +19,18 @@
   import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
+  import { searchState } from "./state/searchState";
 
   export let data;
 
   $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books } = data);
   let bookViewOverride: string | null = null;
   const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
+
+  let hasBooks: boolean;
+  $: {
+    hasBooks = hasBooks || !!$books.length;
+  }
 
   $: bookViewToUse = bookViewOverride || defaultBookView;
 
@@ -110,7 +116,7 @@
         {#if !$books.length}
           <div>
             <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
-            {#if !hasPublicId}
+            {#if !hasPublicId && !hasBooks && $searchState.activeFilterCount === 0}
               <div class="alert alert-warning" style="margin-top: 20px">
                 If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
                 <a href="/settings/account-sync">here</a>
