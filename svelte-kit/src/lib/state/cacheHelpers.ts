@@ -3,7 +3,7 @@ import { getCookieLookup } from "./cookieHelpers";
 
 export const BOOKS_CACHE = "books-cache";
 
-export const updateCacheCookie = (cookies: any, name: string, value = +new Date()) => {
+export const updateCacheCookie = (cookies: any, name: string, value: any = +new Date()) => {
   cookies.set(name, value, { path: "/", maxAge: ONE_YEAR_SECONDS, httpOnly: false });
 };
 
