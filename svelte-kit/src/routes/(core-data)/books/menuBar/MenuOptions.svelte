@@ -9,7 +9,6 @@
   import { selectedBooksLookup } from "../state/selectionState";
   export let isPublic: boolean;
   export let closeMobileMenu: () => void = () => {};
-  export let bookViewToUse: string;
 
   let bulkReadSaving: boolean;
   let bulkUnReadSaving: boolean;

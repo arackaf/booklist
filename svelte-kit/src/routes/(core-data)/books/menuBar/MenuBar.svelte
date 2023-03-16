@@ -35,7 +35,8 @@
 <div class="books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {bookViewToUse} {isPublic} {closeMobileMenu} />
+      <MenuOptions {isPublic} {closeMobileMenu} />
+      <BookViews {bookViewToUse} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
@@ -72,7 +73,7 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions {isPublic} {bookViewToUse} />
+          <MenuOptions {isPublic} />
         </div>
       </div>
       <div class="menu-bar-desktop btn-group margin-right">
