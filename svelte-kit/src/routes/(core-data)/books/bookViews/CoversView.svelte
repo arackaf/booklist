@@ -45,6 +45,7 @@
   .covers-list {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     flex-wrap: wrap;
     margin: -15px;
     max-width: 1200px;
