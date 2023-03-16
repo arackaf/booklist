@@ -46,9 +46,13 @@ header {
 
       .button-container {
         margin-top: 5px;
-        > * {
+        & button {
           margin: 5px;
         }
+      }
+
+      form {
+        display: contents;
       }
 
       button {
