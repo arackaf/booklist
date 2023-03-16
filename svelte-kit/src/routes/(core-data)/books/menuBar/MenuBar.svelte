@@ -10,6 +10,7 @@
   import { searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
+  import BookViews from "./BookViews.svelte";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
@@ -52,7 +53,7 @@
         <PublicBooksHeader />
       {/if}
       <PagingButtons />
-      <div style="margin-right: 5px">
+      <div class="margin-right">
         <div class="menu-bar-desktop btn-group">
           <form action="/books" on:formdata={onFormData}>
             <!-- svelte-ignore a11y-autofocus -->
@@ -73,6 +74,9 @@
           </form>
           <MenuOptions {isPublic} {bookViewToUse} />
         </div>
+      </div>
+      <div class="menu-bar-desktop btn-group margin-right">
+        <BookViews {bookViewToUse} />
       </div>
 
       <ActiveSearchFilters />
