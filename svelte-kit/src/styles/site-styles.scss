@@ -328,8 +328,13 @@ body,
 input,
 select,
 reach-portal,
-a {
+a,
+button,
+button[type="submit"] {
   color: var(--neutral-text);
+}
+button[type="submit"] {
+  font-weight: normal;
 }
 
 footer {
