@@ -14,7 +14,7 @@
   $: pageLastHref = $changeFilter.pageTo(totalPages, totalPages);
 </script>
 
-<div style="display: flex; margin-right: 5px; align-items: center">
+<div style="display: flex; align-items: center" class="margin-right">
   <div class="btn-group">
     <svelte:element this={canPageOne ? "a" : "span"} href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge">
       <span class="sr">Go to page 1</span>

@@ -3,13 +3,12 @@
   import { invalidate } from "$app/navigation";
   import { getContext } from "svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
-  import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
+
   import { endSaving, startSaving } from "../state/booksReadSavingState";
 
   import { selectedBooksLookup } from "../state/selectionState";
   export let isPublic: boolean;
   export let closeMobileMenu: () => void = () => {};
-  export let bookViewToUse: string;
 
   let bulkReadSaving: boolean;
   let bulkUnReadSaving: boolean;
@@ -25,13 +24,8 @@
     };
   };
 
-  const uiViewChange = ({ data }: any) => {
-    overrideBookView(data.get("view"));
-    return async () => {};
-  };
-
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags, overrideBookView } = booksModuleContext;
+  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
 
   $: selectedBooksIds = Object.keys($selectedBooksLookup).map(s => +s);
   $: selectedBooksCount = selectedBooksIds.length;
@@ -82,31 +76,9 @@
   {/if}
 
   <form method="POST" action="?/reloadBooks" use:enhance={reload}>
-    <button class="btn btn-default" type="submit" disabled={reloading}>
+    <button class="btn btn-default last-child" type="submit" disabled={reloading}>
       <span>Reload Books</span>
       <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
-    </button>
-  </form>
-  <hr />
-  <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
-    <input type="hidden" name="view" value={GRID_VIEW} />
-    <button class="btn btn-default" class:active={bookViewToUse == GRID_VIEW}>
-      <span>Main View</span>
-      <i class="fal fa-fw fa-table" />
-    </button>
-  </form>
-  <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
-    <input type="hidden" name="view" value={COVERS_LIST} />
-    <button class="btn btn-default" class:active={bookViewToUse == COVERS_LIST}>
-      <span>Covers View</span>
-      <i class="fas fa-fw fa-th" />
-    </button>
-  </form>
-  <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
-    <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-    <button class="btn btn-default last-child" class:active={bookViewToUse == BASIC_LIST_VIEW}>
-      <span>Mobile View</span>
-      <i class="fal fa-fw fa-list" />
     </button>
   </form>
   <hr />

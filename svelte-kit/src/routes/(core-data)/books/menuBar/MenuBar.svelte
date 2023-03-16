@@ -10,6 +10,7 @@
   import { searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
+  import BookViews from "./BookViews.svelte";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
@@ -34,7 +35,8 @@
 <div class="books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {bookViewToUse} {isPublic} {closeMobileMenu} />
+      <MenuOptions {isPublic} {closeMobileMenu} />
+      <BookViews {bookViewToUse} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
@@ -52,7 +54,7 @@
         <PublicBooksHeader />
       {/if}
       <PagingButtons />
-      <div style="margin-right: 5px">
+      <div class="margin-right">
         <div class="menu-bar-desktop btn-group">
           <form action="/books" on:formdata={onFormData}>
             <!-- svelte-ignore a11y-autofocus -->
@@ -71,8 +73,11 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions {isPublic} {bookViewToUse} />
+          <MenuOptions {isPublic} />
         </div>
+      </div>
+      <div class="menu-bar-desktop btn-group margin-right">
+        <BookViews {bookViewToUse} />
       </div>
 
       <ActiveSearchFilters />
