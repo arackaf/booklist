@@ -2,7 +2,7 @@ import { createUser, getUser, updateUser } from "$data/user";
 import { ensureLoggedIn } from "$lib/util/authCheck";
 import { toJson } from "$lib/util/formDataHelpers";
 
-export const load = async ({ locals, depends }) => {
+export const load = async ({ locals, depends, url }) => {
   depends("user:settings");
 
   await ensureLoggedIn({ locals });
@@ -16,9 +16,13 @@ export const load = async ({ locals, depends }) => {
     await createUser(userId);
   }
   user = await getUser(userId, true);
+  const isPublic = user?.isPublic ?? false;
+  const publicLink = isPublic ? `${url.protocol}//${url.host}/books?user=${userId}` : "";
 
   return {
-    user
+    user,
+    isPublic,
+    publicLink
   };
 };
 

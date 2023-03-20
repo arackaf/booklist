@@ -8,8 +8,10 @@
   import Stack from "$lib/components/layout/Stack.svelte";
 
   export let user: DynamoUser;
+  export let isPublic: boolean;
+  export let publicLink: string;
 
-  let { isPublic, publicName, publicBooksHeader, userId } = user;
+  let { publicName, publicBooksHeader } = user;
 
   let local_isPublic: boolean;
   let local_publicName: string;
@@ -42,8 +44,6 @@
       invalidate("user:settings");
     };
   };
-
-  $: publicLink = typeof window === "object" && isPublic ? `${window.location.protocol}//${window.location.host}/books?user=${userId}` : "";
 </script>
 
 <form method="post" action="?/updateSettings" use:enhance={update}>
