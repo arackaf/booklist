@@ -13,27 +13,15 @@
 
   let { publicName, publicBooksHeader } = user;
 
-  let local_isPublic: boolean;
-  let local_publicName: string;
-  let local_publicBooksHeader: string;
-
-  $: {
-    local_isPublic = isPublic;
-    local_publicName = publicName;
-    local_publicBooksHeader = publicBooksHeader;
-  }
-
+  let showForm = isPublic;
   let error = false;
   let saving = false;
 
-  $: {
-    if (local_publicName) {
-      error = false;
-    }
-  }
+  const update = ({ cancel, data }: { cancel: any; data: FormData }) => {
+    const isPublic = !!data.get("isPublic");
+    const publicName = data.get("publicName")?.toString();
 
-  const update = ({ cancel }: any) => {
-    if (local_isPublic && !local_publicName) {
+    if (isPublic && !publicName) {
       error = true;
       return cancel();
     }
@@ -43,6 +31,12 @@
       saving = false;
       invalidate("user:settings");
     };
+  };
+
+  const nameChange = (evt: any) => {
+    if (evt.target.value) {
+      error = false;
+    }
   };
 </script>
 
@@ -60,17 +54,17 @@
     <div class="checkbox-group">
       <label class="checkbox">
         Allow your book collection to be viewed publicly?
-        <input name="isPublic" bind:checked={local_isPublic} disabled={saving} style="margin-left: 5px" type="checkbox" />
+        <input name="isPublic" bind:checked={showForm} disabled={saving} style="margin-left: 5px" type="checkbox" />
       </label>
     </div>
 
     <div style="margin-left: 20px">
       <FlexRow>
-        {#if local_isPublic}
+        {#if showForm}
           <div class="col-xs-12">
             <div class="form-group">
               <label for="public-name">Publicly display your name as</label>
-              <input id="public-name" name="publicName" class:error bind:value={local_publicName} disabled={saving} placeholder="Public name" />
+              <input id="public-name" name="publicName" value={publicName} class:error on:change={nameChange} disabled={saving} placeholder="Name" />
             </div>
           </div>
           <div class="col-xs-12">
@@ -79,10 +73,10 @@
               <input
                 id="public-header"
                 name="publicBooksHeader"
-                bind:value={local_publicBooksHeader}
+                value={publicBooksHeader}
                 disabled={saving}
                 class="form-control"
-                placeholder="Book header"
+                placeholder="Header"
               />
             </div>
           </div>
