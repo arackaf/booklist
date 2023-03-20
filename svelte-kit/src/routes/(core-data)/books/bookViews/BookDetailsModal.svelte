@@ -10,6 +10,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
+  import { isbn13To10 } from "$lib/util/isbn13to10";
 
   export let viewingBook: Book | null;
   export let subjects: Subject[];
@@ -19,6 +20,7 @@
   export let isPublic: boolean;
 
   $: book = viewingBook || ({} as Book);
+  $: isbn10 = book.isbn?.length === 10 ? book.isbn : isbn13To10(book.isbn);
 
   const booksModuleContext: any = getContext("books-module-context");
   const { onBooksUpdated } = booksModuleContext;
@@ -72,10 +74,10 @@
         </FlowItems>
         {#if book.isbn}
           <FlowItems tighter={true}>
-            <a target="_new" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
+            <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
               <i class="fab fa-amazon" />
             </a>
-            <a target="_new" href={`https://www.goodreads.com/book/isbn/${book.isbn}`}>
+            <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
               <i class="fab fa-goodreads-g" />
             </a>
           </FlowItems>
