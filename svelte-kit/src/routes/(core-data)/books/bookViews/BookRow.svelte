@@ -13,6 +13,7 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import { runDelete } from "$lib/state/dataUpdates";
+  import { isbn13To10 } from "$lib/util/isbn13to10";
 
   import { changeFilter } from "../state/searchState";
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
@@ -29,7 +30,9 @@
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
 
-  $: ({ id } = book);
+  $: ({ id, isbn } = book);
+
+  $: isbn10 = isbn?.length === 10 ? isbn : isbn13To10(isbn);
 
   let readSaving: boolean;
   $: multiReadSaving = $booksReadSaving[id] == "1";
@@ -93,12 +96,12 @@
           </button>
         {/if}
 
-        {#if book.isbn}
+        {#if isbn10}
           <a
             style="padding-top: 1px; {hoverOverride}"
             target="_new"
             class="gridHoverFilter"
-            href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
+            href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
           >
             <i class={`fab fa-amazon fa-fw`} />
           </a>
