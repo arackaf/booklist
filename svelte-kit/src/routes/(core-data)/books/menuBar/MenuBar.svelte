@@ -56,10 +56,8 @@
       <PagingButtons />
       <div class="margin-right">
         <div class="menu-bar-desktop btn-group">
-          <form action="/books" on:formdata={onFormData}>
-            <!-- svelte-ignore a11y-autofocus -->
+          <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
             <input
-              autofocus
               autocomplete="off"
               bind:this={quickSearchEl}
               value={$searchState.search}
