@@ -41,7 +41,6 @@
     "@popperjs/core": "^2.11.6",
     "@sveltejs/kit": "^1.12.0",
     "@types/toastify-js": "^1.11.1",
-    "arackaf-svelte-file-dropzone": "^0.0.10",
     "blueimp-md5": "2.3.0",
     "classnames": "^2.3.2",
     "d3-array": "1.2.0",
@@ -55,7 +54,7 @@
     "npm": "^9.2.0",
     "sass": "^1.56.1",
     "svelte": "^3.55.0",
-    "svelte-file-dropzone": "^1.0.0",
+    "svelte-file-dropzone": "2.0.0-beta1",
     "svelte-helpers": "0.2.26",
     "toastify-js": "^1.11.1",
     "uuid": "7.0.3"

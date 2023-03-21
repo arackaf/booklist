@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  import Dropzone from "arackaf-svelte-file-dropzone/Dropzone.svelte";
+  import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
 
   import FlowItems from "../layout/FlowItems.svelte";
 
