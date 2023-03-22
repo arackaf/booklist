@@ -7,8 +7,10 @@ export type PopperOptions = { position: Position; data: Data; drilldown: any; re
 
 class TooltipHoverState {
   #isDead: boolean = true;
+  #isDying: boolean = true;
   #overBar: boolean = false;
   #overtooltip: boolean = false;
+  #cancellationToken: any = null;
 
   #popper: PopperInstance | null = null;
   #div: HTMLDivElement | null = null;
@@ -17,16 +19,32 @@ class TooltipHoverState {
     this.#isDead = false;
     this.#popper = popper;
     this.#div = div;
+    this.#div?.classList.add("exists");
+
+    requestAnimationFrame(() => {
+      this.#div?.classList.add("show");
+    });
   }
 
   hoverTooltip = () => {
+    this.resurrectIfNeeded();
     this.#overtooltip = true;
     this.#overBar = false;
   };
   hoverBar = () => {
+    this.resurrectIfNeeded();
     this.#overBar = true;
     this.#overtooltip = false;
   };
+
+  resurrectIfNeeded() {
+    if (this.#isDying) {
+      clearTimeout(this.#cancellationToken);
+      this.#cancellationToken = null;
+      this.#isDying = false;
+      this.#div?.classList.add("show");
+    }
+  }
 
   leaveTooltip = () => {
     this.#overtooltip = false;
@@ -49,11 +67,18 @@ class TooltipHoverState {
   isDead = () => this.#isDead;
 
   destroy() {
-    this.#popper?.destroy();
-    if (this.#div) {
-      this.#div.parentElement?.removeChild(this.#div);
-    }
-    this.#isDead = true;
+    this.#isDying = true;
+    this.#div?.classList.remove("show");
+
+    this.#cancellationToken = setTimeout(() => {
+      if (this.#isDying) {
+        this.#popper?.destroy();
+        if (this.#div) {
+          this.#div.parentElement?.removeChild(this.#div);
+        }
+        this.#isDead = true;
+      }
+    }, 200);
   }
 }
 
@@ -98,8 +123,6 @@ export const tooltip = (node: any, props: PopperOptions) => {
         }
       ]
     });
-
-    div.classList.add("show");
 
     tooltipMabager.activate(popper, div);
 
