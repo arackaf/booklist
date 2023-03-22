@@ -15,12 +15,15 @@
   export let style: string = "";
   export let href: ((s: Subject) => string | null) | null = null;
 
+  let className = "";
+  export { className as class };
+
   $: Component = vertical ? Stack : FlowItems;
 
   $: subjectHash = toHash(subjects);
 </script>
 
-<svelte:component this={Component} tightest={true} {style}>
+<svelte:component this={Component} tightest={true} {style} class={className}>
   {#each currentlySelected.filter(id => subjectHash[id]).map(id => subjectHash[id]) as s}
     {#if onRemove}
       <RemovableLabelDisplay item={s} doRemove={() => onRemove?.(s)} />

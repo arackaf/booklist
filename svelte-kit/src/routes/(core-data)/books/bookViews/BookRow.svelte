@@ -126,7 +126,8 @@
   </td>
   <td>
     <DisplaySelectedSubjects
-      style="align-items: start"
+      class="margin-top-sm"
+      style="align-items: start;"
       vertical={true}
       currentlySelected={book.subjects}
       {subjects}
@@ -134,10 +135,17 @@
     />
   </td>
   <td>
-    <DisplaySelectedTags style="align-items: start" vertical={true} currentlySelected={book.tags} {tags} href={t => $changeFilter.addTag(t.id)} />
+    <DisplaySelectedTags
+      class="margin-top-sm"
+      style="align-items: start;"
+      vertical={true}
+      currentlySelected={book.tags}
+      {tags}
+      href={t => $changeFilter.addTag(t.id)}
+    />
   </td>
   <td>
-    <div style="margin-top: {!isPublic ? '3' : '0'}px">
+    <div class="margin-top-sm">
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
           <ActionButton

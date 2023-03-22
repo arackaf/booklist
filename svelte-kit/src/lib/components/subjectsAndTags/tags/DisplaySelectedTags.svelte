@@ -15,12 +15,15 @@
   export let style: string = "";
   export let href: ((s: Tag) => string | null) | null = null;
 
+  let className = "";
+  export { className as class };
+
   $: Component = vertical ? Stack : FlowItems;
 
   $: tagHash = toHash(tags);
 </script>
 
-<svelte:component this={Component} tightest={true} {style}>
+<svelte:component this={Component} tightest={true} {style} class={className}>
   {#each currentlySelected.filter(id => tagHash[id]).map(id => tagHash[id]) as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
