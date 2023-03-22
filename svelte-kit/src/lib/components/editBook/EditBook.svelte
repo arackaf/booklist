@@ -38,12 +38,12 @@
     };
   }
 
-  let resetCovers: () => void;
   let init: () => void;
+  let setTab: (tab: string) => void;
+  let resetCovers: () => void;
 
-  let tabsInst: any;
   export const reset = () => {
-    tabsInst.setTab("basic");
+    setTab("basic");
     resetCovers();
     init();
   };
@@ -51,7 +51,7 @@
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <input type="hidden" name="id" value={book?.id ?? null} />
-  <Tabs bind:this={tabsInst} defaultTab="basic">
+  <Tabs bind:setTab defaultTab="basic">
     <TabHeaders>
       <TabHeader tabName="basic">Book info</TabHeader>
       <TabHeader tabName="covers">Covers</TabHeader>
