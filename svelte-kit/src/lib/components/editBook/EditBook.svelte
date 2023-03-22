@@ -39,11 +39,13 @@
   }
 
   let resetCovers: () => void;
+  let init: () => void;
 
   let tabsInst: any;
   export const reset = () => {
     tabsInst?.setTab("basic");
     resetCovers?.();
+    init?.();
   };
 </script>
 
@@ -57,7 +59,7 @@
     <TabContents>
       <TabContent tabName="basic">
         {#if book}
-          <EditBookInfo bind:validate={basicInfoValid} {saving} {book} {subjects} {tags} />
+          <EditBookInfo bind:validate={basicInfoValid} bind:init {saving} {book} {subjects} {tags} />
         {/if}
       </TabContent>
       <TabContent tabName="covers">
