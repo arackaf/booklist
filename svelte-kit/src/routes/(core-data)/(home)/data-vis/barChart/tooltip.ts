@@ -10,6 +10,7 @@ class TooltipHoverState {
   #isDying: boolean = true;
   #overBar: boolean = false;
   #overtooltip: boolean = false;
+  #cancellationToken: any = null;
 
   #popper: PopperInstance | null = null;
   #div: HTMLDivElement | null = null;
@@ -28,13 +29,24 @@ class TooltipHoverState {
   }
 
   hoverTooltip = () => {
+    this.resurrectIfNeeded();
     this.#overtooltip = true;
     this.#overBar = false;
   };
   hoverBar = () => {
+    this.resurrectIfNeeded();
     this.#overBar = true;
     this.#overtooltip = false;
   };
+
+  resurrectIfNeeded() {
+    if (this.#isDying) {
+      clearTimeout(this.#cancellationToken);
+      this.#cancellationToken = null;
+      this.#isDying = false;
+      this.#div?.classList.add("show");
+    }
+  }
 
   leaveTooltip = () => {
     this.#overtooltip = false;
@@ -60,7 +72,7 @@ class TooltipHoverState {
     this.#isDying = true;
     this.#div?.classList.remove("show");
 
-    setTimeout(() => {
+    this.#cancellationToken = setTimeout(() => {
       if (this.#isDying) {
         this.#popper?.destroy();
         if (this.#div) {
