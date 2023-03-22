@@ -11,15 +11,12 @@
   export let headerCaption = "";
   export let deferStateChangeOnClose = false;
   export let standardFooter = true;
-  export let onModalMount: (() => void) | null = null;
   export let noClose = false;
   export let smallerHeader = false;
 
   const dispatch = createEventDispatcher();
 
   function onMount() {
-    // TODO: remove
-    onModalMount?.();
     dispatch("mount");
   }
 </script>

@@ -107,7 +107,7 @@
   };
 </script>
 
-<Modal onModalMount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal on:mount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
     <FlexRow>

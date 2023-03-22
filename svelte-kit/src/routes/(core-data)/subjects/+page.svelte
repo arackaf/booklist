@@ -52,7 +52,7 @@
 
   <Modal
     isOpen={editModalOpen}
-    onModalMount={resetEditSubject}
+    on:mount={resetEditSubject}
     onHide={() => (editModalOpen = false)}
     headerCaption={"Edit Subject"}
     standardFooter={false}
