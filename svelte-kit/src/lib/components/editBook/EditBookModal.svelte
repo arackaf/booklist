@@ -16,12 +16,6 @@
 
   let editBookInst: EditBook;
 
-  $: {
-    if (isOpen) {
-      editBookInst.reset();
-    }
-  }
-
   const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     onSave(id, updates);
     if (closeOnSave) {
@@ -30,7 +24,7 @@
   };
 </script>
 
-<Modal headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false}>
+<Modal on:mount={() => editBookInst.reset()} headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false}>
   {#key book}
     <EditBook bind:this={editBookInst} {book} {syncUpdates} onCancel={onHide} {subjects} {tags} />
   {/key}

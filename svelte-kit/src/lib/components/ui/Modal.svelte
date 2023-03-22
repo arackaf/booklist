@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import Modal from "svelte-helpers/Modal.svelte";
   import "$styles/modal-overrides.scss";
 
@@ -13,9 +14,17 @@
   export let onModalMount: (() => void) | null = null;
   export let noClose = false;
   export let smallerHeader = false;
+
+  const dispatch = createEventDispatcher();
+
+  function onMount() {
+    // TODO: remove
+    onModalMount?.();
+    dispatch("mount");
+  }
 </script>
 
-<Modal on:close={onHide} on:mount={() => onModalMount?.()} open={isOpen} {deferStateChangeOnClose}>
+<Modal on:close={onHide} on:mount={onMount} open={isOpen} {deferStateChangeOnClose}>
   <div>
     {#if headerCaption}
       <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {noClose} />

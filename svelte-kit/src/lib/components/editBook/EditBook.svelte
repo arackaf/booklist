@@ -43,9 +43,9 @@
 
   let tabsInst: any;
   export const reset = () => {
-    tabsInst?.setTab("basic");
-    resetCovers?.();
-    init?.();
+    tabsInst.setTab("basic");
+    resetCovers();
+    init();
   };
 </script>
 
