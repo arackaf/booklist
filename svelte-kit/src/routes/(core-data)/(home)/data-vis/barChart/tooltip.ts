@@ -7,6 +7,7 @@ export type PopperOptions = { position: Position; data: Data; drilldown: any; re
 
 class TooltipHoverState {
   #isDead: boolean = true;
+  #isDying: boolean = true;
   #overBar: boolean = false;
   #overtooltip: boolean = false;
 
@@ -17,6 +18,13 @@ class TooltipHoverState {
     this.#isDead = false;
     this.#popper = popper;
     this.#div = div;
+    requestAnimationFrame(() => {
+      this.#div?.classList.add("exists");
+
+      requestAnimationFrame(() => {
+        this.#div?.classList.add("show");
+      });
+    });
   }
 
   hoverTooltip = () => {
@@ -49,11 +57,18 @@ class TooltipHoverState {
   isDead = () => this.#isDead;
 
   destroy() {
-    this.#popper?.destroy();
-    if (this.#div) {
-      this.#div.parentElement?.removeChild(this.#div);
-    }
-    this.#isDead = true;
+    this.#isDying = true;
+    this.#div?.classList.remove("show");
+
+    setTimeout(() => {
+      if (this.#isDying) {
+        this.#popper?.destroy();
+        if (this.#div) {
+          this.#div.parentElement?.removeChild(this.#div);
+        }
+        this.#isDead = true;
+      }
+    }, 200);
   }
 }
 
@@ -99,9 +114,8 @@ export const tooltip = (node: any, props: PopperOptions) => {
       ]
     });
 
-    div.classList.add("show");
-
     tooltipMabager.activate(popper, div);
+    requestAnimationFrame(() => {});
 
     const contentDiv = div.firstElementChild!;
     contentDiv.addEventListener("mouseenter", tooltipMabager.hoverTooltip);

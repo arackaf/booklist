@@ -27,8 +27,13 @@
 <style>
   :global(.popper-tooltip) {
     display: none;
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+  }
+  :global(.popper-tooltip.exists) {
+    display: block;
   }
   :global(.popper-tooltip.show) {
-    display: block;
+    opacity: 1;
   }
 </style>
