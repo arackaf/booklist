@@ -25,11 +25,6 @@
       initialRenderFinished = true;
     });
   }
-
-  onMount(() => {
-    const div = document.createElement("div");
-    div.classList.add("popper-tooltip");
-  });
 </script>
 
 <g use:tooltip={{ position, data, drilldown, removeBar }}>
