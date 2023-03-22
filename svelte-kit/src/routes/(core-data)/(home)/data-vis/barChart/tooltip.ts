@@ -19,12 +19,10 @@ class TooltipHoverState {
     this.#isDead = false;
     this.#popper = popper;
     this.#div = div;
-    requestAnimationFrame(() => {
-      this.#div?.classList.add("exists");
+    this.#div?.classList.add("exists");
 
-      requestAnimationFrame(() => {
-        this.#div?.classList.add("show");
-      });
+    requestAnimationFrame(() => {
+      this.#div?.classList.add("show");
     });
   }
 
