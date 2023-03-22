@@ -24,6 +24,7 @@
   export let tags: Tag[];
   export let allSubjects: Subject[];
 
+  let titleEl: HTMLInputElement;
   let localSearchValues: UnwrapReadable<typeof searchState> = {} as any;
 
   let localSubjects = [] as any[];
@@ -31,12 +32,11 @@
   let noSubjects: boolean;
   let key = 1;
 
-  $: {
-    if (isOpen) {
-      key++;
-      syncSearchState();
-    }
-  }
+  const onOpen = () => {
+    syncSearchState();
+    titleEl?.focus();
+  };
+
   function syncSearchState() {
     localSearchValues = { ...get(searchState) };
     localSubjects = localSearchValues.subjects;
@@ -69,14 +69,14 @@
   };
 </script>
 
-<Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
+<Modal on:mount={onOpen} on:closed={() => key++} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
   {#key key}
     <form action="/books" on:formdata={onFormData} on:submit={onHide}>
       <FlexRow>
         <div class="col-xs-6">
           <div class="form-group">
-            <label for="book_search_title">Title</label>
-            <input id="book_search_title" name="search" value={localSearchValues.search} placeholder="Search title" class="form-control" />
+            <label for="search_title">Title</label>
+            <input id="search_title" name="search" bind:this={titleEl} value={localSearchValues.search} placeholder="Title" class="form-control" />
           </div>
         </div>
         <div class="col-xs-6">

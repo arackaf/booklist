@@ -21,7 +21,7 @@
   }
 </script>
 
-<Modal on:close={onHide} on:mount={onMount} open={isOpen} {deferStateChangeOnClose}>
+<Modal on:mount={onMount} on:close={onHide} on:closed={() => dispatch("closed")} open={isOpen} {deferStateChangeOnClose}>
   <div>
     {#if headerCaption}
       <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {noClose} />
