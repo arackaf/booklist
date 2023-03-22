@@ -125,7 +125,6 @@ export const tooltip = (node: any, props: PopperOptions) => {
     });
 
     tooltipMabager.activate(popper, div);
-    requestAnimationFrame(() => {});
 
     const contentDiv = div.firstElementChild!;
     contentDiv.addEventListener("mouseenter", tooltipMabager.hoverTooltip);
