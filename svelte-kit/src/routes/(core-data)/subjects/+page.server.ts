@@ -12,7 +12,8 @@ export const actions = {
     const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
-      strings: ["id", "name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"]
+      numbers: ["id"],
+      strings: ["name", "parentId", "path", "backgroundColor", "textColor", "originalParentId"]
     }) as SubjectEditFields & { id: string };
 
     await saveSubject(session.userId, fields.id, fields);

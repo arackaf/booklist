@@ -28,7 +28,7 @@
     editModalOpen = true;
   };
 
-  const newSubject = () => ({ id: "", name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
+  const newSubject = () => ({ id: 0, name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
 
   let resetEditSubject: () => void;
 
