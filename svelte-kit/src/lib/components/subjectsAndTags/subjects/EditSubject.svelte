@@ -137,7 +137,7 @@
             <div class="form-group">
               <label for="subject-parent">Parent</label>
               <select id="subject-parent" bind:value={editingSubject.parentId} name="parentId" class="form-control">
-                <option value="">No Parent</option>
+                <option value={0}>No Parent</option>
                 {#each eligibleParents as s}
                   <option value={s.id}>{s.name}</option>
                 {/each}
