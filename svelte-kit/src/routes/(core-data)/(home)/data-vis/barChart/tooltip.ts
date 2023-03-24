@@ -90,7 +90,8 @@ export type Data = {
 };
 
 export const tooltip = (node: any, props: PopperOptions) => {
-  const { position, data, drilldown, removeBar } = props;
+  const { data, drilldown, removeBar } = props;
+  let { position } = props;
 
   const tooltipMabager = new TooltipHoverState();
 
@@ -147,6 +148,9 @@ export const tooltip = (node: any, props: PopperOptions) => {
   return {
     destroy() {
       tooltipMabager.destroy();
+    },
+    update(props: any) {
+      position = props.position;
     }
   };
 };
