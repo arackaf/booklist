@@ -27,7 +27,7 @@
       {#if !isPublic}
         <th style="text-align: center; width: 25px;">
           <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
-            <i class={"fal " + (!!allBooksSelected ? "fa-check-square" : "fa-square")} />
+            <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")} />
           </button>
         </th>
       {/if}

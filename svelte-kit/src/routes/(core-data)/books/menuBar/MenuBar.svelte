@@ -48,7 +48,7 @@
         aria-label="Open mobile menu"
         on:click={() => (mobileMenuOpen = true)}
       >
-        <i class="far fa-bars" />
+        <i class="far fa-fw fa-bars" />
       </button>
       {#if isPublic}
         <PublicBooksHeader />

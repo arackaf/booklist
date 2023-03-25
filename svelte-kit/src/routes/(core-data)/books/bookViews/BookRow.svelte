@@ -65,7 +65,7 @@
   {#if !isPublic}
     <td>
       <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(id)}>
-        <i class={"fal " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")} />
+        <i class={"fal fa-fw " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")} />
       </button>
     </td>
   {/if}
