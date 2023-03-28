@@ -123,7 +123,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     );
 
     const books: Book[] = booksResp.rows;
-    const totalBooks = countResp.rows[0].total;
+    const totalBooks = parseInt(countResp.rows[0].total);
     const totalPages = Math.ceil(totalBooks / pageSize);
 
     const arrayFieldsToInit = ["subjects", "tags"] as (keyof Book)[];
