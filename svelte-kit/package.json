@@ -54,7 +54,7 @@
     "d3-selection": "1.1.0",
     "d3-transition": "1.1.0",
     "escape-string-regexp": "^5.0.0",
-    "i": "^0.3.7",
+    "firebase-admin": "^11.5.0",
     "lodash.debounce": "^4.0.8",
     "npm": "^9.2.0",
     "sass": "^1.56.1",
