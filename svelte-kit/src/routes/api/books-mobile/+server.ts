@@ -3,8 +3,7 @@ import { json } from "@sveltejs/kit";
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { getUserIdFromToken } from "../../(core-data)/subjects/fireBaseAuth.js";
-import { getUserSync } from "$data/legacyUser.js";
+import { getUserIdFromToken } from "$lib/util/fireBaseAuth.js";
 
 export async function GET({ url, setHeaders }) {
   setHeaders({
@@ -13,16 +12,11 @@ export async function GET({ url, setHeaders }) {
 
   const token = url.searchParams.get("token");
 
-  if (!token) {
-    return json(EMPTY_BOOKS_RESULTS);
-  }
-
-  let userId = await getUserIdFromToken(token);
+  const userId = await getUserIdFromToken(token);
 
   if (!userId) {
     return json(EMPTY_BOOKS_RESULTS);
   }
-  userId = (await getUserSync(userId)) || userId;
 
   const page = parseInt(url.searchParams.get("page")!) || 1;
   const search = url.searchParams.get("search") || "";
