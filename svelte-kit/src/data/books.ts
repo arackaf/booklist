@@ -32,18 +32,7 @@ const defaultBookFields: (keyof Book)[] = [
 ];
 
 const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
-const iosBookFields = [
-  "id",
-  "title",
-  "authors",
-  "isbn",
-  "publisher",
-  "isRead",
-  "smallImage",
-  "smallImagePreview",
-  "mediumImage",
-  "mediumImagePreview"
-];
+const iosBookFields = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
 
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
