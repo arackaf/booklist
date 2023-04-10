@@ -2,15 +2,27 @@ import { json } from "@sveltejs/kit";
 
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
-import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
+import { getUserIdFromToken } from "../../(core-data)/subjects/fireBaseAuth.js";
+import { getUserSync } from "$data/legacyUser.js";
 
-export async function GET({ url, setHeaders, locals }) {
-  const session = await locals.getSession();
-  let userId = session?.userId;
-
+export async function GET({ url, setHeaders }) {
   setHeaders({
     "cache-control": "max-age=60"
   });
+
+  const token = url.searchParams.get("token");
+
+  if (!token) {
+    return json(EMPTY_BOOKS_RESULTS);
+  }
+
+  let userId = await getUserIdFromToken(token);
+
+  if (!userId) {
+    return json(EMPTY_BOOKS_RESULTS);
+  }
+  userId = (await getUserSync(userId)) || userId;
 
   const page = parseInt(url.searchParams.get("page")!) || 1;
   const search = url.searchParams.get("search") || "";
