@@ -5,12 +5,13 @@ import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 import { getUserIdFromToken } from "$lib/util/fireBaseAuth.js";
 
-export async function GET({ url, setHeaders }) {
+export async function POST({ request, url, setHeaders }) {
   setHeaders({
     "cache-control": "max-age=60"
   });
 
-  const token = url.searchParams.get("token");
+  const body = await request.json();
+  const token = body.token;
 
   const userId = await getUserIdFromToken(token);
 
