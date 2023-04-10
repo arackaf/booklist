@@ -5,6 +5,10 @@ import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 import { getUserIdFromToken } from "$lib/util/fireBaseAuth.js";
 
+export const config = {
+  runtime: "nodejs18.x"
+};
+
 export async function POST({ request, url, setHeaders }) {
   setHeaders({
     "cache-control": "max-age=60"
