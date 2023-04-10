@@ -32,6 +32,18 @@ const defaultBookFields: (keyof Book)[] = [
 ];
 
 const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
+const iosBookFields = [
+  "id",
+  "title",
+  "authors",
+  "isbn",
+  "publisher",
+  "isRead",
+  "smallImage",
+  "smallImagePreview",
+  "mediumImage",
+  "mediumImagePreview"
+];
 
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
@@ -96,7 +108,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
 
-    const fieldsToSelect = resultSet === "compact" ? compactBookFields : defaultBookFields;
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : resultSet === "ios" ? iosBookFields : defaultBookFields;
     const sortExpression = getSort(sort);
 
     const mainBooksProjection = `

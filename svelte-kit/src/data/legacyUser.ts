@@ -35,16 +35,23 @@ export async function lookupUser(email: string, password: string) {
   }
 }
 
+const legacyUserCache = new Map<string, string>();
+
 export async function syncUser(newId: string, legacyId: string) {
   const userSync = {
     pk: getUserAliasKey(newId),
     sk: legacyId
   };
 
+  legacyUserCache.set(newId, legacyId);
   db.put(getPutPacket(userSync));
 }
 
-export async function getUserSync(userId: string) {
+export async function getUserSync(userId: string): Promise<string | null> {
+  if (legacyUserCache.has(userId)) {
+    console.log("Legacy user cache hit");
+    return legacyUserCache.get(userId)!;
+  }
   const key = getUserAliasKey(userId);
 
   try {
@@ -54,8 +61,10 @@ export async function getUserSync(userId: string) {
       })
     );
 
-    console.log({ syncEntry });
-    return syncEntry;
+    if (syncEntry) {
+      legacyUserCache.set(userId, syncEntry.sk);
+    }
+    return syncEntry?.sk;
   } catch (er) {
     console.log("Error getting user sync", er);
     return null;
