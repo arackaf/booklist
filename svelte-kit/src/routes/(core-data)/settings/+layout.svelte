@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
+  import { page } from "$app/stores";
   import { SectionNav, SectionNavItem } from "$lib/components/section-nav";
+
+  $: ({ isPublic } = $page.data);
 </script>
 
 <section>
@@ -8,8 +11,8 @@
       <div class="panel-body" style="position: relative">
         <SectionNav>
           <SectionNavItem href="/settings/theme">Theme</SectionNavItem>
-          <SectionNavItem href="/settings/public-sharing">Public sharing</SectionNavItem>
-          <SectionNavItem href="/settings/account-sync">Sync old login</SectionNavItem>
+          <SectionNavItem disabled={isPublic} href="/settings/public-sharing">Public sharing</SectionNavItem>
+          <SectionNavItem disabled={isPublic} href="/settings/account-sync">Sync old login</SectionNavItem>
         </SectionNav>
         <slot />
       </div>

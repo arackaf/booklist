@@ -2,12 +2,19 @@
   import { page } from "$app/stores";
 
   export let href: string;
+  export let disabled: boolean = false;
 
   $: active = href === $page.url.pathname;
 </script>
 
-<div class="section-nav-item" class:active>
-  <svelte:element this={active ? "span" : "a"} href={active ? null : href}>
+<div class="section-nav-item" class:active class:disabled>
+  <svelte:element this={active || disabled ? "span" : "a"} href={active || disabled ? null : href}>
     <slot />
   </svelte:element>
 </div>
+
+<style>
+  .disabled {
+    cursor: not-allowed;
+  }
+</style>
