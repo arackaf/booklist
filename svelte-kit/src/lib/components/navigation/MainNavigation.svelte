@@ -41,7 +41,7 @@
 <header class="master-nav">
   <nav class="nav">
     <div class={`nav-header hidden-xs ${isHome ? "active" : ""}`}>
-      <ModuleLink href="/">
+      <ModuleLink href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
@@ -52,7 +52,7 @@
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
       {#if loggedIn || isPublic}
-        <NavBarItem href="/scan" style="position: relative;" label={"Scan books"}>
+        <NavBarItem disabled={isPublic} href="/scan" style="position: relative;" label={"Scan books"}>
           <span class="hidden-xs">Book entry</span>
           <i class="visible-xs fal fa-fw fa-scanner" />
           {#if pendingCount}
