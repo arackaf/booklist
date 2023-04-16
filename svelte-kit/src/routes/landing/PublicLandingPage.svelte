@@ -5,7 +5,7 @@
 <section>
   <div style="margin-left: auto; margin-right: auto; max-width: 1200px">
     <div>
-      <div class="panel-body" style="position: relative">
+      <div style="position: relative">
         <div style="display: flex">
           <div style="max-width: 800px; margin-top: 25px; margin-left: auto; margin-right: auto">
             Welcome to

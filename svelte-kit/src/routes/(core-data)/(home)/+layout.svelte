@@ -3,9 +3,9 @@
 </script>
 
 <section>
-  <div style="margin-left: auto; margin-right: auto; max-width: var(--content-max-width)">
+  <div style="max-width: var(--content-max-width)">
     <div>
-      <div class="panel-body" style="position: relative">
+      <div>
         <SectionNav>
           <SectionNavItem href="/"><span><i class="far fa-chart-bar margin-right-sm" />Explore</span></SectionNavItem>
           <SectionNavItem href="/discover">Discover</SectionNavItem>
