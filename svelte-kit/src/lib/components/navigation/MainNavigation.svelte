@@ -13,12 +13,10 @@
   import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
 
-  $: ({ loggedIn, isPublic } = $page.data);
+  $: ({ loggedIn, isPublic, isAdminUser } = $page.data);
 
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
-
-  let isAdminUser = false;
 
   const homeModules = new Set(["/", "/discover", "/recent-scans"]);
   $: isHome = homeModules.has(pathname);
@@ -84,7 +82,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn && isAdminUser}
-        <NavBarItem href="/admin" label={"Admin"}>
+        <NavBarItem href="/admin/similar-items" label={"Admin"}>
           <span class="hidden-xs">Admin</span>
           <i class="visible-xs fal fa-fw fa-users-cog" />
         </NavBarItem>
