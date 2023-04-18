@@ -127,4 +127,4 @@ export type BookWithSimilarItems = {
   title: string;
   authors: string[];
   similarBooks: SimilarBook[];
-};
+} & BookImages;

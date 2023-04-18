@@ -1,14 +1,19 @@
 //import type {  } from "./types";
 import { executeQuery } from "./dbUtils";
+import type { BookWithSimilarItems } from "./types";
 
-export const getBooksWithSimilarBooks = async (): Promise<any> => {
-  const editorialReviewsQuery = await executeQuery<any>(
-    "books with similar books",
+const LIMIT = 50;
+
+export const getBooksWithSimilarBooks = async () => {
+  const eligibleBooks = await executeQuery<BookWithSimilarItems>(
+    "books that might have similar books",
     `
-  SELECT * FROM books LIMIT 1;
-  SELECT * FROM books LIMIT 1;
-  `
+      SELECT id, title, authors, isbn, smallImage, smallImagePreview
+      FROM books 
+      WHERE CHAR_LENGTH(isbn) = 10 OR (CHAR_LENGTH(isbn) = 13 AND isbn LIKE '978%')
+      LIMIT 50;
+    `
   );
 
-  return editorialReviewsQuery;
+  return eligibleBooks;
 };

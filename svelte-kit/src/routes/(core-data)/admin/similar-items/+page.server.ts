@@ -1,9 +1,7 @@
 import { getBooksWithSimilarBooks } from "$data/similar-books";
 
 export const load = async () => {
-  const data = await getBooksWithSimilarBooks();
+  const books = await getBooksWithSimilarBooks();
 
-  console.log(data);
-
-  return {};
+  return { books };
 };
