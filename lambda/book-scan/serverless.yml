@@ -4,7 +4,7 @@ frameworkVersion: "3"
 provider:
   name: aws
   runtime: nodejs18.x
-  stage: live
+  stage: dev
   environment:
     stage: ${self:provider.stage}
     STAGE: ${self:provider.stage}
