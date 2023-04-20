@@ -14,39 +14,12 @@ provider:
       statements:
         - Effect: Allow
           Action:
-            - dynamodb:Query
-            - dynamodb:Scan
             - dynamodb:GetItem
-            - dynamodb:PutItem
-            - dynamodb:UpdateItem
-            - dynamodb:DeleteItem
-            - dynamodb:DescribeStream
-            - dynamodb:ConditionCheckItem
           Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
-        - Effect: Allow
-          Action:
-            - dynamodb:Query
-            - dynamodb:Scan
-            - dynamodb:GetItem
-            - dynamodb:PutItem
-            - dynamodb:UpdateItem
-            - dynamodb:DeleteItem
-            - dynamodb:DescribeStream
-            - dynamodb:ConditionCheckItem
-          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}/index/*"
-        - Effect: "Allow"
-          Action:
-            - "secretsmanager:GetSecretValue"
-          Resource: "arn:aws:secretsmanager:us-east-1:*"
         - Effect: "Allow"
           Action:
             - "s3:*"
           Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
-        - Effect: Allow
-          Action:
-            - "execute-api:ManageConnections"
-          Resource:
-            - "arn:aws:execute-api:*:*:**/@connections/*"
 
 functions:
   processCover:

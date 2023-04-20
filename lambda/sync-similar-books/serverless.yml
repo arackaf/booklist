@@ -16,19 +16,14 @@ provider:
           Action:
             - lambda:InvokeFunction
           Resource: "arn:aws:lambda:us-east-1:*:function:process-book-cover*"
-        - Effect: "Allow"
+        - Effect: Allow
           Action:
-            - "secretsmanager:GetSecretValue"
-          Resource: "arn:aws:secretsmanager:us-east-1:*"
+            - dynamodb:GetItem
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
         - Effect: "Allow"
           Action:
             - "s3:*"
           Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
-        - Effect: Allow
-          Action:
-            - "execute-api:ManageConnections"
-          Resource:
-            - "arn:aws:execute-api:*:*:**/@connections/*"
 
 functions:
   sync:
