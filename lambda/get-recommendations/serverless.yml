@@ -5,7 +5,6 @@ frameworkVersion: "3"
 provider:
   name: aws
   runtime: nodejs18.x
-  lambdaHashingVersion: 20201221
   stage: dev
   environment:
     stage: ${self:provider.stage}
@@ -14,10 +13,10 @@ provider:
   iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: Allow
           Action:
-            - "secretsmanager:GetSecretValue"
-          Resource: "arn:aws:secretsmanager:us-east-1:*"
+            - dynamodb:GetItem
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
 
 functions:
   getRecommendations:
