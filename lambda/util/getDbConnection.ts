@@ -6,7 +6,7 @@ import { IS_DEV } from "./environment";
 export const getConnection = async () => {
   const secrets = await getSecrets();
 
-  const connectionString = secrets[IS_DEV ? "mysql-connection-dev" : "mysql-connection-live"];
+  const connectionString = secrets["mysql-connection"];
 
   const mySqlConnectionFactory = new Client({
     url: connectionString
