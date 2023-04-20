@@ -1,16 +1,9 @@
-import { SecretsManager } from "@aws-sdk/client-secrets-manager";
-
-const region = "us-east-1";
-const secretName = "MyLibrary";
-
-const secretsClient = new SecretsManager({
-  region
-});
+import { db, getGetPacket } from "./dynamoHelpers";
 
 export const getSecrets = async () => {
   try {
-    const result = await secretsClient.getSecretValue({ SecretId: secretName });
-    return JSON.parse(result.SecretString);
+    const secretsPacket = await db.get(getGetPacket("#SECRETS", "#SECRETS"));
+    return secretsPacket.value;
   } catch (er) {
     console.log("Error reading secrets", er);
     throw er;

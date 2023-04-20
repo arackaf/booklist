@@ -4,7 +4,7 @@ frameworkVersion: "3"
 provider:
   name: aws
   runtime: nodejs18.x
-  stage: live
+  stage: dev
   environment:
     stage: ${self:provider.stage}
     STAGE: ${self:provider.stage}
@@ -38,10 +38,6 @@ provider:
           Action:
             - lambda:InvokeFunction
           Resource: "arn:aws:lambda:us-east-1:*:function:process-book-cover*"
-        - Effect: "Allow"
-          Action:
-            - "secretsmanager:GetSecretValue"
-          Resource: "arn:aws:secretsmanager:us-east-1:*"
         - Effect: "Allow"
           Action:
             - "s3:*"
