@@ -10,10 +10,12 @@
     <BookCover size="small" {book} />
   </td>
   <td>
-    {book.title}
+    <span class="book-title">
+      {book.title}
+    </span>
     {#if book.authors && book.authors.length}
       <br />
-      <span style="fontStyle: italic">{book.authors.join(", ")}</span>
+      <span class="book-author">{book.authors.join(", ")}</span>
       <br />
       {#if book.isbn}
         <a target="_new" class="margin-right" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>

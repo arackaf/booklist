@@ -36,8 +36,8 @@
         <BookCover size="small" {book} />
       </div>
       <div style="flex: 1">
-        <div>{book.title}</div>
-        {#if book.authors && book.authors.length}<span style="font-style: italic">{book.authors.join(", ")}</span>{/if}
+        <div class="book-title">{book.title}</div>
+        {#if book.authors && book.authors.length}<span class="book-author">{book.authors.join(", ")}</span>{/if}
       </div>
     </FlowItems>
     <hr />

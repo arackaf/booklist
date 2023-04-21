@@ -43,8 +43,8 @@
     </div>
     <div style="overflow: hidden">
       <div style="display: flex; flex-direction: column; height: 100%">
-        <div class="listGroupItemHeading bookTitle">{book.title}</div>
-        <span class="listGroupItemText bookAuthor">{book.authors.length ? book.authors.join(", ") : ""}</span>
+        <div class="listGroupItemHeading book-title">{book.title}</div>
+        <span class="listGroupItemText book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
         <FlowItems style="margin-top: auto;" class="padding-top-xs">
           {#if !isPublic}
             <button class="btn btn-xxs btn-light btn-square-icon" aria-label="Edit book" on:click={() => editBook(book)}>
