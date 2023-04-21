@@ -77,9 +77,9 @@
   <td>
     <Stack>
       <Stack tightest={true}>
-        <div class="bookTitle">{book.title}</div>
+        <div class="book-title">{book.title}</div>
         {#if book.authors}
-          <div class="bookAuthor">{book.authors.join(", ")}</div>
+          <div class="book-author">{book.authors.join(", ")}</div>
         {/if}
       </Stack>
 

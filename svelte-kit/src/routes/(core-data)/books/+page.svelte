@@ -178,16 +178,3 @@
     </div>
   </div>
 </section>
-
-<style>
-  :global(.bookTitle) {
-    font-size: 15px;
-    font-weight: normal;
-  }
-
-  :global(.bookAuthor) {
-    font-size: 14px;
-    font-weight: normal;
-    color: var(--neutral-light-text);
-  }
-</style>

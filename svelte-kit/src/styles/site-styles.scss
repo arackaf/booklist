@@ -695,3 +695,14 @@ canvas.book-preview {
   position: absolute;
   width: 1px;
 }
+
+.book-title {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.book-author {
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--neutral-light-text);
+}

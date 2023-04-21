@@ -42,9 +42,9 @@
 
         <Stack style="flex: 1; justify-content: space-between">
           <div>
-            <div>{book.title}</div>
+            <div class="book-title">{book.title}</div>
             {#if book.authors && book.authors.length}
-              <div style="font-style: italic; font-size: 14px">{book.authors.join(", ")}</div>
+              <div class="book-author">{book.authors.join(", ")}</div>
             {/if}
           </div>
           <button
