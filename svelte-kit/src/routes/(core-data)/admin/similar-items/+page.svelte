@@ -10,11 +10,28 @@
 <section>
   <div class="list">
     {#each books as b}
-      <div class="book">
+      <div class="entry">
         <BookCover size="small" book={b} preview={b.smallImagePreview} />
-        <span>{b.title}</span>
-        <span>{b.authors}</span>
+        <div class="book-info">
+          <span class="book-title">{b.title}</span>
+          <span>{b.authors}</span>
+        </div>
       </div>
     {/each}
   </div>
 </section>
+
+<style>
+  .entry {
+    display: flex;
+    border: 1px solid var(--neutral-border);
+    border-radius: 5px;
+    padding: 15px;
+  }
+
+  .book-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+  }
+</style>
