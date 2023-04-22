@@ -15,7 +15,7 @@
     {#each books as book}
       <div class="entry">
         <BookCover size="small" {book} preview={book.smallImagePreview} />
-        <div class="book-info">
+        <div class="book-title-author">
           <span class="book-title no-overflow">{book.title}</span>
           <span class="book-author">{book.authors}</span>
         </div>
@@ -37,7 +37,7 @@
     margin-bottom: 10px;
   }
 
-  .book-info {
+  .book-title-author {
     display: flex;
     flex-direction: column;
     margin-left: 5px;
