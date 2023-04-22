@@ -38,6 +38,19 @@
     gap: 10px;
     margin-bottom: 10px;
   }
+  @media (max-width: 1200px) {
+    div.book-data {
+      flex: 2;
+    }
+  }
+  @media (max-width: 1000px) {
+    .entry {
+      flex-direction: column;
+    }
+    div.book-data {
+      flex: 1;
+    }
+  }
 
   .book-data {
     gap: 10px;

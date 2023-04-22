@@ -1,5 +1,5 @@
 import { executeQuery } from "./dbUtils";
-import type { BookWithSimilarItems } from "./types";
+import type { BookWithSimilarItems, SimilarBook } from "./types";
 
 const LIMIT = 50;
 
@@ -16,4 +16,20 @@ export const getBooksWithSimilarBooks = async () => {
   );
 
   return eligibleBooks;
+};
+
+export const getSimilarBooksForBook = async (id: number) => {
+  const similarBooks = await executeQuery<SimilarBook>(
+    "similar books for book",
+    `
+      SELECT sb.*
+      FROM books b
+      LEFT JOIN similar_books sb
+      ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
+      WHERE b.id = ? AND sb.id IS NOT NULL;
+    `,
+    [id]
+  );
+
+  return similarBooks;
 };
