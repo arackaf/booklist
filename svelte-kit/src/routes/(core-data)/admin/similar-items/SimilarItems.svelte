@@ -63,6 +63,10 @@
   .similar-books-container {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    max-height: 300px;
+    overflow-y: scroll;
   }
 
   .book-title-author {
