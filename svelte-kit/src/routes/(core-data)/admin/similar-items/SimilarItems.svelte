@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
+  import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   export let book: BookWithSimilarItems;
 
@@ -12,16 +13,15 @@
   async function expand() {
     if (expanded) {
       expanded = false;
-      return;
     } else if (similarBooks.length) {
       expanded = true;
-      return;
-    }
-    const resultsResp = await fetch("/api/similar-books?id=" + book.id);
-    const similarBooksFound = await resultsResp.json();
+    } else {
+      const resultsResp = await fetch("/api/similar-books?id=" + book.id);
+      const similarBooksFound = await resultsResp.json();
 
-    similarBooks = similarBooksFound;
-    expanded = true;
+      similarBooks = similarBooksFound;
+      expanded = true;
+    }
   }
 </script>
 
@@ -32,11 +32,11 @@
     </span>
     <button on:click={expand}>Get</button>
   </div>
-  {#if expanded}
+  <SlideAnimate open={expanded}>
     {#each similarBooks as book}
       {book.title}
     {/each}
-  {/if}
+  </SlideAnimate>
 {:else}
   no
 {/if}
