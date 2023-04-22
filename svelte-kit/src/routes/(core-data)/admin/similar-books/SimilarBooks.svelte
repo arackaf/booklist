@@ -2,6 +2,7 @@
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
+  import BookDisplay from "./BookDisplay.svelte";
 
   export let book: BookWithSimilarItems;
 
@@ -45,13 +46,7 @@
   <SlideAnimate open={expanded}>
     <div class="similar-books-container">
       {#each similarBooks as book}
-        <div class="book-data">
-          <BookCover size="mobile" {book} preview={book.smallImagePreview} />
-          <div class="book-title-author">
-            <span class="book-title no-overflow">{book.title}</span>
-            <span class="book-author">{book.authors}</span>
-          </div>
-        </div>
+        <BookDisplay {book} />
       {/each}
     </div>
   </SlideAnimate>
@@ -69,20 +64,6 @@
     overflow-y: scroll;
   }
 
-  .book-title-author {
-    display: flex;
-    flex-direction: column;
-    margin-left: 5px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .book-data {
-    display: flex;
-    gap: 10px;
-    min-width: 0;
-    flex: 1;
-  }
   .alert {
     width: 50%;
   }

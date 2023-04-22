@@ -94,12 +94,18 @@ type EditorialReview = {
   content: string;
 };
 
+export type MinimalBookInfo = {
+  title: string;
+  isbn: string;
+  authors: string[];
+} & BookImages;
+
 export type SimilarBook = {
   title: string;
   isbn: string;
   authors: string[];
   asin: string;
-} & BookImages; // this type only has smallImage, but we'll add the other two to avoid unnecessary errors with the BookCover component
+} & BookImages;
 
 export type BookDetails = {
   editorialReviews: EditorialReview[];
@@ -125,6 +131,7 @@ export type DynamoUser = {
 export type BookWithSimilarItems = {
   id: number;
   title: string;
+  isbn: string;
   authors: string[];
   similarBooks: string[] | null;
 } & BookImages;
