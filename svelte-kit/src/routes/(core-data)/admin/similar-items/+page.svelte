@@ -38,6 +38,14 @@
     gap: 10px;
     margin-bottom: 10px;
   }
+
+  .book-data {
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
+
   @media (max-width: 1200px) {
     div.book-data {
       flex: 2;
@@ -52,13 +60,6 @@
     }
   }
 
-  .book-data {
-    gap: 10px;
-    display: flex;
-    min-width: 0;
-    flex: 1;
-  }
-
   .book-title-author {
     display: flex;
     flex-direction: column;
@@ -69,5 +70,8 @@
 
   .similar-items {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 </style>

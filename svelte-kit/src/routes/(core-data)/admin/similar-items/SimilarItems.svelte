@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
+  import BookCover from "$lib/components/ui/BookCover.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   export let book: BookWithSimilarItems;
@@ -42,15 +43,33 @@
     </button>
   </div>
   <SlideAnimate open={expanded}>
-    {#each similarBooks as book}
-      {book.title}
-    {/each}
+    <div class="similar-books-container">
+      {#each similarBooks as book}
+        <div class="book-data">
+          <BookCover size="mobile" {book} preview={book.smallImagePreview} />
+          <div class="book-title-author">
+            <span class="book-title no-overflow">{book.title}</span>
+            <span class="book-author">{book.authors}</span>
+          </div>
+        </div>
+      {/each}
+    </div>
   </SlideAnimate>
 {:else}
   no
 {/if}
 
 <style>
+  .similar-books-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .book-data {
+    display: flex;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
   .alert {
     width: 50%;
   }
