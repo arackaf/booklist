@@ -64,6 +64,15 @@
     display: flex;
     flex-direction: column;
   }
+
+  .book-title-author {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    flex: 1;
+    min-width: 0;
+  }
+
   .book-data {
     display: flex;
     gap: 10px;
