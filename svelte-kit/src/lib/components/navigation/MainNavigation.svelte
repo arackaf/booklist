@@ -82,7 +82,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn && isAdminUser}
-        <NavBarItem href="/admin/similar-items" label={"Admin"}>
+        <NavBarItem href="/admin/similar-books" label={"Admin"}>
           <span class="hidden-xs">Admin</span>
           <i class="visible-xs fal fa-fw fa-users-cog" />
         </NavBarItem>

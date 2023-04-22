@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import SimilarItems from "./SimilarItems.svelte";
+  import SimilarItems from "./SimilarBooks.svelte";
 
   export let data;
 
