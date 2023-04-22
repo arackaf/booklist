@@ -1,23 +1,26 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import SimilarItems from "./SimilarItems.svelte";
 
   export let data;
 
   $: ({ books } = data);
+
+  $: console.log({ books });
 </script>
 
 <section>
   <div class="list">
-    {#each books as b}
+    {#each books as book}
       <div class="entry">
-        <BookCover size="small" book={b} preview={b.smallImagePreview} />
+        <BookCover size="small" {book} preview={book.smallImagePreview} />
         <div class="book-info">
-          <span class="book-title no-overflow">{b.title}</span>
-          <span class="book-author">{b.authors}</span>
+          <span class="book-title no-overflow">{book.title}</span>
+          <span class="book-author">{book.authors}</span>
         </div>
         <div class="similar-items">
-          <div class="book-title">Unweaving the Rainbow: Science, Delusion and the Appetite for Wonder</div>
+          <SimilarItems {book} />
         </div>
       </div>
     {/each}
