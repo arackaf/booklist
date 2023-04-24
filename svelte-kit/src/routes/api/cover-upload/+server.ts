@@ -1,12 +1,9 @@
+import { json } from "@sveltejs/kit";
+import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, PROCESS_COVER_LAMBDA } from "$env/static/private";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
 
-import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
-import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-
-import { json } from "@sveltejs/kit";
-
-import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, PROCESS_COVER_LAMBDA } from "$env/static/private";
+import { invokeLambda } from "$lib/lambda-utils.js";
 
 function getExtension(name: string) {
   const ext = name.lastIndexOf(".");
@@ -31,14 +28,6 @@ export async function POST({ locals, request }) {
   const uploadKey = `upload-staging/${v4()}${extension}`;
 
   try {
-    const client = new LambdaClient({
-      region: "us-east-1",
-      credentials: {
-        accessKeyId: AMAZON_ACCESS_KEY,
-        secretAccessKey: AMAZON_SECRET_KEY
-      }
-    });
-
     const s3 = new S3Client({
       region: "us-east-1",
       credentials: {
@@ -62,20 +51,9 @@ export async function POST({ locals, request }) {
       });
 
     const url = `https://s3.amazonaws.com/my-library-cover-uploads/${uploadKey}`;
+    const respJson = await invokeLambda(PROCESS_COVER_LAMBDA, { url, userId: session.userId });
 
-    const command = new InvokeCommand({
-      FunctionName: PROCESS_COVER_LAMBDA,
-      Payload: fromUtf8(JSON.stringify({ url, userId: session.userId }))
-    });
-    const response = await client.send(command);
-
-    if (response.Payload) {
-      const respJson = JSON.parse(toUtf8(response.Payload));
-
-      return json(respJson);
-    } else {
-      return json({ error: true });
-    }
+    return json(respJson);
   } catch (er) {
     console.log("Error invoking lambda", er);
     return json({ error: true });
