@@ -51,7 +51,9 @@
     </div>
   </SlideAnimate>
 {:else}
-  no
+  <div class="alert alert-warning">
+    None found. Last attempt {book.similarBooksLastSync}
+  </div>
 {/if}
 
 <style>

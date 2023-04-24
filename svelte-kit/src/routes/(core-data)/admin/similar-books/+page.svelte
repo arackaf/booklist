@@ -1,12 +1,10 @@
 <script lang="ts">
   import BookDisplay from "./BookDisplay.svelte";
-  import SimilarItems from "./SimilarBooks.svelte";
+  import SimilarBooks from "./SimilarBooks.svelte";
 
   export let data;
 
   $: ({ books } = data);
-
-  $: console.log({ books });
 </script>
 
 <section>
@@ -15,7 +13,7 @@
       <div class="entry">
         <BookDisplay {book} />
         <div class="similar-items">
-          <SimilarItems {book} />
+          <SimilarBooks {book} />
         </div>
       </div>
     {/each}

@@ -134,4 +134,5 @@ export type BookWithSimilarItems = {
   isbn: string;
   authors: string[];
   similarBooks: string[] | null;
+  similarBooksLastSync: Date;
 } & BookImages;
