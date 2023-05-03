@@ -3,6 +3,10 @@ import { ADMIN_USER, SYNC_BOOK_RECOMMENDATIONS_LAMBDA } from "$env/static/privat
 import { invokeLambda } from "$lib/lambda-utils.js";
 import { redirect } from "@sveltejs/kit";
 
+export const config = {
+  runtime: "nodejs18.x"
+};
+
 export const load = async ({ parent }) => {
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
