@@ -1,5 +1,5 @@
 import { getBooksWithSimilarBooks } from "$data/similar-books";
-import { SYNC_BOOK_RECOMMENDATIONS_LAMBDA } from "$env/static/private";
+import { ADMIN_USER, SYNC_BOOK_RECOMMENDATIONS_LAMBDA } from "$env/static/private";
 import { invokeLambda } from "$lib/lambda-utils.js";
 import { redirect } from "@sveltejs/kit";
 
@@ -14,7 +14,12 @@ export const load = async ({ parent }) => {
 };
 
 export const actions = {
-  async updateRecommended({ request }) {
+  async updateRecommended({ request, locals }) {
+    const session = await locals.getSession();
+    if (session?.userId !== ADMIN_USER) {
+      return {};
+    }
+
     const formData: FormData = await request.formData();
 
     const id = parseInt(formData.get("id")?.toString()!, 10);
