@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from "$app/forms";
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
@@ -28,6 +29,15 @@
       loading = false;
     }
   }
+
+  function attemptUpdate() {
+    return async ({ result, update }: any) => {
+      console.log({ result });
+      update().then(() => {
+        console.log("updated");
+      });
+    };
+  }
 </script>
 
 {#if hasSimilarBooks}
@@ -54,7 +64,10 @@
   <div class="alert alert-warning">
     None found. Last attempt {book.similarBooksLastSync}
   </div>
-  <ActionButton style="align-self: flex-start" class="margin-top" preset="primary-sm">Attempt sync</ActionButton>
+  <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
+    <input type="hidden" name="id" value={book.id} />
+    <ActionButton type="submit" style="align-self: flex-start" class="margin-top" preset="primary-sm">Attempt sync</ActionButton>
+  </form>
 {/if}
 
 <style>
