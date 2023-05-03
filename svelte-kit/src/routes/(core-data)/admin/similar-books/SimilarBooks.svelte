@@ -3,6 +3,7 @@
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
+  import { isbn13To10 } from "$lib/util/isbn13to10";
   import BookDisplay from "./BookDisplay.svelte";
 
   export let book: BookWithSimilarItems;
@@ -13,6 +14,8 @@
   let loading = false;
   let expanded = false;
   let similarBooks: SimilarBook[] = [];
+
+  $: isbn10 = isbn13To10(book.isbn);
 
   async function expand() {
     if (expanded) {
@@ -30,11 +33,14 @@
     }
   }
 
+  let isRunning = false;
   function attemptUpdate() {
+    isRunning = true;
     return async ({ result, update }: any) => {
       console.log({ result });
       update().then(() => {
         console.log("updated");
+        isRunning = false;
       });
     };
   }
@@ -60,13 +66,13 @@
       {/each}
     </div>
   </SlideAnimate>
-{:else}
+{:else if isbn10}
   <div class="alert alert-warning">
     None found. Last attempt {book.similarBooksLastSync}
   </div>
   <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
     <input type="hidden" name="id" value={book.id} />
-    <ActionButton type="submit" style="align-self: flex-start" class="margin-top" preset="primary-sm">Attempt sync</ActionButton>
+    <ActionButton {isRunning} type="submit" style="align-self: flex-start" class="margin-top" preset="primary-sm">Attempt sync</ActionButton>
   </form>
 {/if}
 

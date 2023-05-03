@@ -10,6 +10,7 @@
   <div class="book-title-author">
     <span class="book-title no-overflow">{book.title}</span>
     <span class="book-author">{book.authors}</span>
+    <span class="book-author">{book.isbn}</span>
   </div>
 </div>
 

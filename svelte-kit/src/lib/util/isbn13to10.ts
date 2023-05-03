@@ -1,5 +1,8 @@
 export function isbn13To10(isbn: string) {
-  if (isbn == null || !isbn.startsWith("978")) {
+  if (isbn?.length === 10) {
+    return isbn;
+  }
+  if (isbn == null || isbn.length !== 13 || !isbn.startsWith("978")) {
     return null;
   }
 
