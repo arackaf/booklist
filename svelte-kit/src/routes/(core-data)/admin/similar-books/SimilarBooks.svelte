@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import BookDisplay from "./BookDisplay.svelte";
 
@@ -54,6 +54,7 @@
   <div class="alert alert-warning">
     None found. Last attempt {book.similarBooksLastSync}
   </div>
+  <ActionButton style="align-self: flex-start" class="margin-top" preset="primary-sm">Attempt sync</ActionButton>
 {/if}
 
 <style>

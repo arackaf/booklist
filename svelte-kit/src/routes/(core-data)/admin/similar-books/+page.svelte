@@ -12,7 +12,7 @@
     {#each books as book}
       <div class="entry">
         <BookDisplay {book} />
-        <div class="similar-items">
+        <div class="similar-books">
           <SimilarBooks {book} />
         </div>
       </div>
@@ -36,7 +36,7 @@
     }
   }
 
-  .similar-items {
+  .similar-books {
     flex: 1;
     display: flex;
     flex-direction: column;
