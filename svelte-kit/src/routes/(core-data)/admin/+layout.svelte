@@ -5,7 +5,7 @@
 
 <TabbedPage>
   <svelte:fragment slot="nav">
-    <SectionNavItem href="/admin/similar-items">Similar Items</SectionNavItem>
+    <SectionNavItem href="/admin/similar-books">Similar Items</SectionNavItem>
     <SectionNavItem href="/admin/users">Users</SectionNavItem>
   </svelte:fragment>
   <slot />

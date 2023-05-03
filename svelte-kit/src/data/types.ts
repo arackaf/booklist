@@ -32,6 +32,15 @@ export type PreviewPacket = { w: number; h: number; b64: string };
 
 export type BookSubjectStack = { subjects: number[]; count: number };
 
+export type BookImages = {
+  mobileImage: string | null;
+  mobileImagePreview: string | PreviewPacket | null;
+  smallImage: string | null;
+  smallImagePreview: string | PreviewPacket | null;
+  mediumImage: string | null;
+  mediumImagePreview: string | PreviewPacket | null;
+};
+
 export type Book = {
   id: number;
   title: string;
@@ -44,25 +53,10 @@ export type Book = {
   authors: string[];
   tags: number[];
   subjects: number[];
-  mobileImage: string | null;
-  mobileImagePreview: string | PreviewPacket | null;
-  smallImage: string | null;
-  smallImagePreview: string | PreviewPacket | null;
-  mediumImage: string | null;
-  mediumImagePreview: string | PreviewPacket | null;
   dateAdded: string;
   userId: string;
   editorialReviews: any;
-};
-
-export type BookImages = {
-  mobileImage: string | null;
-  mobileImagePreview: string | PreviewPacket | null;
-  smallImage: string | null;
-  smallImagePreview: string | PreviewPacket | null;
-  mediumImage: string | null;
-  mediumImagePreview: string | PreviewPacket | null;
-};
+} & BookImages;
 
 export type BookCoversEdits = Partial<
   Pick<Book, "mobileImage" | "mobileImagePreview" | "smallImage" | "smallImagePreview" | "mediumImage" | "mediumImagePreview">
@@ -100,20 +94,18 @@ type EditorialReview = {
   content: string;
 };
 
+export type MinimalBookInfo = {
+  title: string;
+  isbn: string;
+  authors: string[];
+} & BookImages;
+
 export type SimilarBook = {
   title: string;
   isbn: string;
   authors: string[];
-  // this type only has smallImage, but we'll add the other two to avoid unnecessary errors with the BookCover component
-  mobileImage: string | null;
-  mobileImagePreview: string | PreviewPacket | null;
-  smallImage: string | null;
-  smallImagePreview: string | PreviewPacket | null;
-  mediumImage: string | null;
-  mediumImagePreview: string | PreviewPacket | null;
-
   asin: string;
-};
+} & BookImages;
 
 export type BookDetails = {
   editorialReviews: EditorialReview[];
@@ -135,3 +127,12 @@ export type DynamoUser = {
   publicName: string;
   publicBooksHeader: string;
 };
+
+export type BookWithSimilarItems = {
+  id: number;
+  title: string;
+  isbn: string;
+  authors: string[];
+  similarBooks: string[] | null;
+  similarBooksLastSync: Date;
+} & BookImages;

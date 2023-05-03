@@ -20,6 +20,26 @@ export async function getMySqlConnection() {
   return mySqlConnection;
 }
 
+export async function getBook(id: number) {
+  const mySqlConnection = await getMySqlConnection();
+
+  try {
+    const books =
+      ((await query(
+        mySqlConnection,
+        `    
+          SELECT id, title, isbn
+          FROM books
+          WHERE id = ?`,
+        [id]
+      )) as any[]) || [];
+
+    return books[0];
+  } finally {
+    mySqlConnection?.end();
+  }
+}
+
 export async function getNextBookToSync() {
   const mySqlConnection = await getMySqlConnection();
 

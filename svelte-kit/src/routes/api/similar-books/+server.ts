@@ -1,5 +1,5 @@
-import { getBookDetails } from "$data/books";
 import { json } from "@sveltejs/kit";
+import { getSimilarBooksForBook } from "$data/similar-books.js";
 
 export async function GET({ url, setHeaders, locals }) {
   const session = await locals.getSession();
@@ -7,12 +7,12 @@ export async function GET({ url, setHeaders, locals }) {
     return json({});
   }
 
+  const id = parseInt(url.searchParams.get("id") || "", 10) || 0;
+  const results = await getSimilarBooksForBook(id);
+
   setHeaders({
     "cache-control": "max-age=3600"
   });
 
-  const id = url.searchParams.get("id") || "";
-  const bookDetails = await getBookDetails(id);
-
-  return json(bookDetails);
+  return json(results);
 }

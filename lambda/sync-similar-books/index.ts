@@ -1,8 +1,22 @@
 import { isbn13To10 } from "../util/isbn13to10";
-import { query, getMySqlConnection, getNextBookToSync } from "./mySqlUtil";
+import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
 import { getAuthorFromBookPage, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
+export const syncBook = async ({ id }) => {
+  console.log("Id sent", id);
+  const book = await getBook(id);
+
+  console.log("book found", { book });
+  if (book) {
+    try {
+      await doSync(book);
+      console.log("Done with sync");
+    } catch (er) {
+      console.log("Error", er);
+    }
+  }
+};
 export const syncNextBook = async () => {
   try {
     const book = await getNextBookToSync();

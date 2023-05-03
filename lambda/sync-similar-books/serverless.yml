@@ -31,6 +31,9 @@ functions:
     handler: build/sync-similar-books/index.syncNextBook
     events:
       - schedule: rate(1 minute)
+  sync-book:
+    timeout: 500
+    handler: build/sync-similar-books/index.syncBook
   fix-authors:
     timeout: 500
     handler: build/sync-similar-books/index.doSyncAuthor
