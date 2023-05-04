@@ -1,10 +1,9 @@
 import { redirect } from "@sveltejs/kit";
-import { ADMIN_USER, SYNC_BOOK_RECOMMENDATIONS_LAMBDA } from "$env/static/private";
+import { ADMIN_USER } from "$env/static/private";
 
 import { differenceInMinutes, differenceInHours, differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarYears } from "date-fns";
 
 import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
-import { invokeLambda } from "$lib/lambda-utils.js";
 
 export const load = async ({ parent }) => {
   const parentParams = await parent();
