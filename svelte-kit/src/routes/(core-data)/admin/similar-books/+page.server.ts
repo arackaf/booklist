@@ -27,7 +27,7 @@ export const load = async ({ parent }) => {
     const minutes = differenceInMinutes(now, lastSync);
 
     if (minutes < 5) {
-      book.similarBooksLastSyncDisplay = "Just now";
+      book.similarBooksLastSyncDisplay = "just now";
     } else if (hours < 1) {
       book.similarBooksLastSyncDisplay = `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
     } else if (days < 1) {
