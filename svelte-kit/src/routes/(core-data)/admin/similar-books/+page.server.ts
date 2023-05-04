@@ -3,7 +3,7 @@ import { ADMIN_USER, SYNC_BOOK_RECOMMENDATIONS_LAMBDA } from "$env/static/privat
 
 import { differenceInMinutes, differenceInHours, differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarYears } from "date-fns";
 
-import { getBooksWithSimilarBooks } from "$data/similar-books";
+import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
 import { invokeLambda } from "$lib/lambda-utils.js";
 
 export const load = async ({ parent }) => {
@@ -54,11 +54,7 @@ export const actions = {
     const formData: FormData = await request.formData();
 
     const id = parseInt(formData.get("id")?.toString()!, 10);
-    console.log({ id });
-
-    const result = await invokeLambda(SYNC_BOOK_RECOMMENDATIONS_LAMBDA, { id });
-
-    console.log({ result });
+    await clearSync(id);
 
     return { success: true };
   }

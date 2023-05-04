@@ -1,4 +1,4 @@
-import { executeQuery } from "./dbUtils";
+import { executeCommand, executeQuery } from "./dbUtils";
 import type { BookWithSimilarItems, SimilarBook } from "./types";
 
 const LIMIT = 50;
@@ -16,6 +16,18 @@ export const getBooksWithSimilarBooks = async () => {
   );
 
   return eligibleBooks;
+};
+
+export const clearSync = async (id: number) => {
+  const eligibleBooks = await executeCommand(
+    "clear sync",
+    `
+      UPDATE books
+      SET similarBooksLastSync = NULL
+      WHERE id = ?;
+    `,
+    [id]
+  );
 };
 
 export const getSimilarBooksForBook = async (id: number) => {
