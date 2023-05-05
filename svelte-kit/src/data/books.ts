@@ -118,7 +118,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     console.log(
       `Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`,
       end - start,
-      "query times (books, count):",
+      "query time (books, count):",
       booksResp.time.toFixed(1) + ",",
       countResp.time.toFixed(1)
     );

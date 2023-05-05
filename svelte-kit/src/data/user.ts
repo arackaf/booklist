@@ -7,7 +7,11 @@ export async function getUser(userId: string, consistentRead: boolean = false): 
   const userKey = getUserKey(userId);
 
   try {
+    let start = +new Date();
     let userFound: DynamoUser | null = (await db.get(getGetPacket(userKey, userKey, { ConsistentRead: consistentRead }))) as DynamoUser;
+    let end = +new Date();
+
+    console.log("Public user lookup time:", end - start);
 
     return userFound ?? null;
   } catch (loginErr) {
