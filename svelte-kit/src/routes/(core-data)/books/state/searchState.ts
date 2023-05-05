@@ -16,6 +16,11 @@ export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal]
 
 const DEFAULT_SORT = "id-desc";
 
+export const publicUser = derived(page, $page => {
+  const searchParams = $page.url.searchParams;
+  return searchParams.get("user") || "";
+});
+
 export const searchState = derived(page, $page => {
   const searchParams = $page.url.searchParams;
 

@@ -7,7 +7,7 @@
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
   import MenuOptions from "./MenuOptions.svelte";
-  import { searchState } from "../state/searchState";
+  import { publicUser, searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import BookViews from "./BookViews.svelte";
@@ -57,6 +57,9 @@
       <div class="margin-right">
         <div class="menu-bar-desktop btn-group">
           <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
+            {#if $publicUser}
+              <input type="hidden" name="user" value={$publicUser} />
+            {/if}
             <input
               autocomplete="off"
               bind:this={quickSearchEl}

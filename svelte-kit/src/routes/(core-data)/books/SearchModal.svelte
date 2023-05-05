@@ -8,7 +8,7 @@
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
 
-  import { searchState, sortDisplayLookup } from "./state/searchState";
+  import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -17,6 +17,7 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { get } from "svelte/store";
+  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};
@@ -72,6 +73,9 @@
 <Modal on:mount={onOpen} on:closed={() => key++} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
   {#key key}
     <form action="/books" on:formdata={onFormData} on:submit={onHide}>
+      {#if $publicUser}
+        <input type="hidden" name="user" value={$publicUser} />
+      {/if}
       <FlexRow>
         <div class="col-xs-6">
           <div class="form-group">
