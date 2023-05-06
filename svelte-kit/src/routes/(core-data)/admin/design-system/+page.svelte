@@ -1,3 +1,7 @@
+<script>
+  import Button from "$lib/components/ui/Button/Button.svelte";
+</script>
+
 <div class="buttons">
   <div>
     <h1>Old</h1>
@@ -5,7 +9,7 @@
   </div>
   <div>
     <h1>New</h1>
-    <button class="btn btn-primary">Button</button>
+    <Button>Button</Button>
   </div>
 </div>
 
