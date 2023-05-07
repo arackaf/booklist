@@ -69,7 +69,7 @@
 <div use:scrollInitial bind:this={rootElement}>
   <div class="chart-container" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
-      <h4 style="display: inline">{header}</h4>
+      <h4 style="display: inline" class="text-xl font-semibold">{header}</h4>
       {#if excludedCount}
         <span style="margin-left: 10px">
           Excluding:
