@@ -58,7 +58,7 @@
           </button>
         </Stack>
       </FlowItems>
-      <hr />
+      <hr class="my-2" />
     </Stack>
   </div>
 </li>

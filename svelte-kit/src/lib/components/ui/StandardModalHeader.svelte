@@ -8,11 +8,8 @@
 </script>
 
 <div class="standard-modal-header">
-  {#if smaller}
-    <h5 class="modal-title">{caption}</h5>
-  {:else}
-    <h4 class="modal-title">{caption}</h4>
-  {/if}
+  <h1 class:text-base={smaller} class:text-xl={!smaller} class="modal-title text-base">{caption}</h1>
+
   {#if !noClose}
     <!-- TODO: -->
     <button style="margin-left: auto; display: flex;" class="close raw-button" on:click={closeModal}>
@@ -20,4 +17,4 @@
     </button>
   {/if}
 </div>
-<hr />
+<hr class="my-3" />

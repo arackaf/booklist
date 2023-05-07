@@ -48,7 +48,10 @@
         <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
         <FlowItems pushLast={true}>
-          <button class="btn btn-default" on:click={openModal}> <i class="fal fa-search" /> Search your books </button>
+          <button class="btn btn-default" on:click={openModal}>
+            <i class="fal fa-search" />
+            <span>Search your books</span>
+          </button>
 
           {#if selectedBooks.length}
             <button on:click={getRecommendations} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">

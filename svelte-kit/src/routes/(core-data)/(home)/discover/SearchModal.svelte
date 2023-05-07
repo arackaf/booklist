@@ -194,7 +194,7 @@
                 <i class="fal fa-angle-double-right" />
               </button>
             </FlowItems>
-            <hr />
+            <hr class="my-2" />
           {/if}
         </div>
         <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />

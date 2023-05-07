@@ -9,6 +9,11 @@
 @import "./responsive-visibility";
 @import "./book-covers";
 
+hr {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 :root {
   --animation-duration: 300ms;
 
@@ -520,7 +525,6 @@ div.responsive-radios {
 .form-group,
 .form-label {
   font-size: 14px;
-  font-weight: bold;
 }
 .form-group label,
 .form-label {

@@ -3,6 +3,9 @@
   align-items: center;
   justify-content: center;
 }
+.btn > i + * {
+  margin-left: 5px;
+}
 
 .btn {
   margin: 0;

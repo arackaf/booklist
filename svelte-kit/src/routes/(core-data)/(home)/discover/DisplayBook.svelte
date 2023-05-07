@@ -40,6 +40,6 @@
         {#if book.authors && book.authors.length}<span class="book-author">{book.authors.join(", ")}</span>{/if}
       </div>
     </FlowItems>
-    <hr />
+    <hr class="my-2" />
   </div>
 </div>
