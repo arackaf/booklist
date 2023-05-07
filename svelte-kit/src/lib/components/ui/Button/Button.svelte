@@ -1,11 +1,18 @@
 <script lang="ts">
-  export let primary = true;
+  export let type: "primary" | "danger" | "default" = "default";
+  export let disabled: boolean;
+
+  $: isPrimary = type === "primary";
 </script>
 
 <button
-  class:bg-primary-5={primary}
-  class:text-primary-10={primary}
-  class="m-0 rounded py-1.5 px-3 text-base focus:shadow-md transition-[box-shadow] focus:shadow-[var(--primary-7)]"
+  class:bg-primary-5={isPrimary}
+  class:text-primary-10={isPrimary}
+  class:focus:shadow-primary-7={isPrimary}
+  class:border-primary-5={isPrimary}
+  class:cursor-not-allowed={disabled}
+  class="m-0 rounded py-1.5 px-3 text-base focus:shadow-md border-2 transition-[box-shadow]"
+  {disabled}
 >
   <slot />
 </button>
