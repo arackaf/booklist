@@ -4,7 +4,7 @@
 
   export let options: any;
   export let placeholder = "";
-  export let inputProps = {};
+  export let inputProps = { class: "text-sm" };
   export let search = "";
   export let onItemSelected: (option: any, inputEl: HTMLInputElement) => void;
   export let noFiltering = false;
