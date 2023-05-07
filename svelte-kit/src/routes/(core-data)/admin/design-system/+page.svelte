@@ -19,7 +19,7 @@
     <button class="btn btn-primary">Button</button>
   </div>
   <div>
-    <Button type="primary">Button</Button>
+    <Button foo="text-3xl" type="primary">Button</Button>
   </div>
 
   <h1>Disabled</h1>
