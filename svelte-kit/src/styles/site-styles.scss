@@ -588,12 +588,12 @@ div.radio input {
 input.form-control,
 select.form-control,
 div.radio input,
-button {
+button.btn {
   transition: box-shadow 0.15s linear;
 }
 input.form-control:focus,
 select.form-control:focus,
-button:focus {
+button.btn:focus {
   box-shadow: 0 0 6px var(--primary-7);
 }
 button.btn-xs:focus {
