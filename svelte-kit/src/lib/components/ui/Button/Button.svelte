@@ -5,7 +5,7 @@
 <button
   class:bg-primary-5={primary}
   class:text-primary-10={primary}
-  class="m-0 rounded py-1.5 px-3 text-base focus:shadow-lg transition-[box-shadow] focus:shadow-indigo-500/50"
+  class="m-0 rounded py-1.5 px-3 text-base focus:shadow-md transition-[box-shadow] focus:shadow-[var(--primary-7)]"
 >
   <slot />
 </button>
