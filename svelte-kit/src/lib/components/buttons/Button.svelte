@@ -13,3 +13,9 @@
 <button class={cssFromPreset(preset, className)} {style} on:click={onClick} {disabled} {...$$restProps}>
   <slot />
 </button>
+
+<style>
+  button {
+    box-shadow: none;
+  }
+</style>
