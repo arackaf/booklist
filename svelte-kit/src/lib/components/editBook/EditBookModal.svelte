@@ -13,6 +13,7 @@
   export let subjects: Subject[];
   export let onSave: (id: number, updates: UpdatesTo<Book>) => void = () => {};
   export let closeOnSave: boolean = false;
+  export let header: string;
 
   let editBookInst: EditBook;
 
@@ -24,7 +25,7 @@
   };
 </script>
 
-<Modal on:mount={() => editBookInst.reset()} headerCaption={`Edit: ${book?.title}`} {isOpen} {onHide} standardFooter={false}>
+<Modal on:mount={() => editBookInst.reset()} headerCaption={header} {isOpen} {onHide} standardFooter={false}>
   {#key book}
     <EditBook bind:this={editBookInst} {book} {syncUpdates} onCancel={onHide} {subjects} {tags} />
   {/key}

@@ -95,6 +95,7 @@
       {tags}
       onSave={() => (editingBook = defaultEmptyBook())}
       onHide={() => (enteringBook = false)}
+      header={"Enter book"}
     />
   </FlowItems>
 </section>
