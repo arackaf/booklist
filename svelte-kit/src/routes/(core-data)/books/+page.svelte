@@ -147,6 +147,7 @@
             onHide={stopEditingBook}
             {subjects}
             {tags}
+            header={`Edit: ${editingBook?.title}`}
           />
 
           <svelte:component
