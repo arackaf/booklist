@@ -53,7 +53,7 @@
   {#if !$nextPageKey}
     <div>
       {#if $scans.length}
-        <hr />
+        <hr class="my-3" />
       {/if}
       <div class="alert alert-info">{noResultsMessage}</div>
     </div>

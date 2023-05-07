@@ -65,7 +65,7 @@
       onComplete={closeEditModal}
       onCancelEdit={closeEditModal}
     />
-    <hr />
+    <hr class="my-3" />
     <Button onClick={closeEditModal}>Close</Button>
   </Modal>
 </section>
