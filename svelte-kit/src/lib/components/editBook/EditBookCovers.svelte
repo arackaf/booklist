@@ -54,7 +54,7 @@
 
 <div>
   <CurrentCovers {book} />
-  <hr />
+  <hr class="my-3" />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
