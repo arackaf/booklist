@@ -16,9 +16,8 @@
       {book.title}
     </BookTitle>
     {#if book.authors && book.authors.length}
-      <br />
       <BookAuthor>{book.authors.join(", ")}</BookAuthor>
-      <br />
+
       {#if book.isbn}
         <a target="_new" class="margin-right" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
           <i class="fab fa-amazon" />
