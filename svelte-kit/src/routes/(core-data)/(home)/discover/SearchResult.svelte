@@ -3,6 +3,8 @@
   import { quadIn } from "svelte/easing";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
+  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import type { Book } from "$data/types";
@@ -42,9 +44,9 @@
 
         <Stack style="flex: 1; justify-content: space-between">
           <div>
-            <div class="book-title">{book.title}</div>
+            <BookTitle>{book.title}</BookTitle>
             {#if book.authors && book.authors.length}
-              <div class="book-author">{book.authors.join(", ")}</div>
+              <BookAuthor>{book.authors.join(", ")}</BookAuthor>
             {/if}
           </div>
           <button

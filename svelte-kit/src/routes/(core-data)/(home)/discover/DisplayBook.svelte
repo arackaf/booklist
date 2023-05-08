@@ -1,11 +1,12 @@
 <script lang="ts">
   import { quadIn, quadOut } from "svelte/easing";
-  // @ts-ignore
   import { springIn } from "svelte-helpers/spring-transitions";
+  import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
-  import type { Book } from "$data/types";
+  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
+  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
 
   export let book: Book;
   export let unselectBook: (book: Book) => void;
@@ -36,8 +37,12 @@
         <BookCover size="small" {book} />
       </div>
       <div style="flex: 1">
-        <div class="book-title">{book.title}</div>
-        {#if book.authors && book.authors.length}<span class="book-author">{book.authors.join(", ")}</span>{/if}
+        <BookTitle>{book.title}</BookTitle>
+        {#if book.authors && book.authors.length}
+          <BookAuthor>
+            {book.authors.join(", ")}
+          </BookAuthor>
+        {/if}
       </div>
     </FlowItems>
     <hr class="my-2" />

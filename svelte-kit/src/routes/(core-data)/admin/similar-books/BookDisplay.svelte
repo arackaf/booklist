@@ -2,15 +2,23 @@
   import type { MinimalBookInfo } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
+  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
   export let book: MinimalBookInfo;
 </script>
 
 <div class="book-data">
   <BookCover size="small" {book} preview={book.smallImagePreview} />
   <div class="book-title-author">
-    <span class="book-title no-overflow">{book.title}</span>
-    <span class="book-author">{book.authors}</span>
-    <span class="book-author">{book.isbn}</span>
+    <BookTitle truncate={true}>{book.title}</BookTitle>
+    <BookAuthor>
+      <div>
+        {book.authors}
+      </div>
+      <div>
+        {book.isbn}
+      </div>
+    </BookAuthor>
   </div>
 </div>
 

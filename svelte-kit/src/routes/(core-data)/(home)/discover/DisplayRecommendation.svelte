@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Book } from "$data/types";
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
+  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
 
   export let book: Book;
 </script>
@@ -10,12 +12,12 @@
     <BookCover size="small" {book} />
   </td>
   <td>
-    <span class="book-title">
+    <BookTitle>
       {book.title}
-    </span>
+    </BookTitle>
     {#if book.authors && book.authors.length}
       <br />
-      <span class="book-author">{book.authors.join(", ")}</span>
+      <BookAuthor>{book.authors.join(", ")}</BookAuthor>
       <br />
       {#if book.isbn}
         <a target="_new" class="margin-right" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
