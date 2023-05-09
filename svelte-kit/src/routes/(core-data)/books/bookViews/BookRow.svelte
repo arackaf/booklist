@@ -13,7 +13,7 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
-  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
   import { runDelete } from "$lib/state/dataUpdates";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
@@ -81,7 +81,7 @@
       <Stack tightest={true}>
         <BookTitle>{book.title}</BookTitle>
         {#if book.authors}
-          <BookAuthor class="text-sm/4 text-neutral-500">{book.authors.join(", ")}</BookAuthor>
+          <SubTitleText class="text-sm/4 text-neutral-500">{book.authors.join(", ")}</SubTitleText>
         {/if}
       </Stack>
 

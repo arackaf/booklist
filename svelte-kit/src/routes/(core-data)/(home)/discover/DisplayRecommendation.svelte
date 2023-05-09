@@ -2,7 +2,7 @@
   import type { Book } from "$data/types";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
-  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
   export let book: Book;
 </script>
@@ -16,7 +16,7 @@
       {book.title}
     </BookTitle>
     {#if book.authors && book.authors.length}
-      <BookAuthor>{book.authors.join(", ")}</BookAuthor>
+      <SubTitleText>{book.authors.join(", ")}</SubTitleText>
 
       {#if book.isbn}
         <a target="_new" class="margin-right my-auto" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>

@@ -6,7 +6,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
-  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
   export let book: Book;
   export let unselectBook: (book: Book) => void;
@@ -39,9 +39,9 @@
       <div style="flex: 1">
         <BookTitle>{book.title}</BookTitle>
         {#if book.authors && book.authors.length}
-          <BookAuthor>
+          <SubTitleText>
             {book.authors.join(", ")}
-          </BookAuthor>
+          </SubTitleText>
         {/if}
       </div>
     </FlowItems>

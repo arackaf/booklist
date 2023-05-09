@@ -4,7 +4,7 @@
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
-  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
   import type { Book } from "$data/types";
@@ -46,7 +46,7 @@
           <div>
             <BookTitle>{book.title}</BookTitle>
             {#if book.authors && book.authors.length}
-              <BookAuthor>{book.authors.join(", ")}</BookAuthor>
+              <SubTitleText>{book.authors.join(", ")}</SubTitleText>
             {/if}
           </div>
           <button

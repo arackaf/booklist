@@ -5,7 +5,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
-  import BookAuthor from "$lib/components/ui/BookDisplay/BookAuthor.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
   import { page } from "$app/stores";
   import { runDelete } from "$lib/state/dataUpdates";
@@ -45,7 +45,7 @@
     <div style="overflow: hidden">
       <div style="display: flex; flex-direction: column; height: 100%">
         <span class="text-sm leading-[normal] truncate">{book.title}</span>
-        <BookAuthor>{book.authors.length ? book.authors.join(", ") : ""}</BookAuthor>
+        <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
         <FlowItems style="margin-top: auto;" class="padding-top-xs">
           {#if !isPublic}
             <button class="btn btn-xxs btn-light btn-square-icon" aria-label="Edit book" on:click={() => editBook(book)}>
