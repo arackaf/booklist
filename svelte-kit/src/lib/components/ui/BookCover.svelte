@@ -37,7 +37,7 @@
   }
 </script>
 
-<div {style}>
+<div style={style + sizingStyle}>
   {#if previewString}
     <span class="preview" style={`background: url('${previewString}') no-repeat; background-size: cover; ${sizingStyle}`} />
   {/if}
@@ -52,7 +52,7 @@
 
 <style>
   div {
-    display: inline-grid;
+    display: grid;
     grid-template-areas: "content";
     overflow: hidden;
   }
