@@ -4,7 +4,6 @@
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
@@ -35,8 +34,8 @@
       <div class="min-w-[60px]">
         <BookCover size="small" {book} />
       </div>
-      <div class="flex-1 flex flex-col">
-        <BookTitle>{book.title}</BookTitle>
+      <div class="flex-1 flex flex-col min-w-0">
+        <BookTitle truncate={true}>{book.title}</BookTitle>
         {#if book.authors && book.authors.length}
           <SubTitleText>
             {book.authors.join(", ")}

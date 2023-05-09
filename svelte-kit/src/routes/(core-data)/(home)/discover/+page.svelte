@@ -43,7 +43,7 @@
 
 <div class="margin-top">
   <FlexRow>
-    <div class="col-xs-6">
+    <div class="col-xs-6 min-w-0">
       <Stack loosest={true}>
         <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 

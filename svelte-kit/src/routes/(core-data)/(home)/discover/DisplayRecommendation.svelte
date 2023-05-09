@@ -11,7 +11,7 @@
   <div class="min-w-[60px]">
     <BookCover size="small" {book} />
   </div>
-  <div class="flex flex-col flex-1">
+  <div class="flex flex-col flex-1 min-w-0">
     <BookTitle truncate={true}>
       {book.title}
     </BookTitle>
