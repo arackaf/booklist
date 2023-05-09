@@ -68,17 +68,14 @@
         </div>
       </Stack>
     </div>
-    <div class="col-xs-6">
+    <div class="col-xs-6 min-w-0">
       {#if recommendations.length}
         <div>
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
-          <table class="table table-condensed table-striped">
-            <tbody>
-              {#each recommendations as book (book.id)}
-                <DisplayRecommendation {book} />
-              {/each}
-            </tbody>
-          </table>
+
+          {#each recommendations as book (book.id)}
+            <DisplayRecommendation {book} />
+          {/each}
         </div>
       {:else if recommendationsLoaded}
         <div class="alert alert-warning">Nothing found</div>
