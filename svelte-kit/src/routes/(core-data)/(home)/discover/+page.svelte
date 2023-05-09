@@ -73,9 +73,11 @@
         <div>
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
 
-          {#each recommendations as book (book.id)}
-            <DisplayRecommendation {book} />
-          {/each}
+          <div class="flex flex-col gap-2">
+            {#each recommendations as book (book.id)}
+              <DisplayRecommendation {book} />
+            {/each}
+          </div>
         </div>
       {:else if recommendationsLoaded}
         <div class="alert alert-warning">Nothing found</div>
