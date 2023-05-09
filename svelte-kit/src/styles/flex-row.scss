@@ -207,15 +207,15 @@
   @include flow-layout(2px);
 }
 
-.flex-row {
+.old-flex-row {
   @include flow-layout(10px);
   @include flex-row-layout(10px);
 }
-.flex-row.tighter {
+.old-flex-row.tighter {
   @include flow-layout(5px);
   @include flex-row-layout(5px);
 }
-.flex-row.tightest {
+.old-flex-row.tightest {
   @include flow-layout(2px);
   @include flex-row-layout(2px);
 }
