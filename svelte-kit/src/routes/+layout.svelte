@@ -4,6 +4,8 @@
 
   import "toastify-js/src/toastify.css";
 
+  import "../app.css";
+
   import { beforeNavigate, afterNavigate } from "$app/navigation";
 
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";

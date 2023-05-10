@@ -4,7 +4,9 @@
   export let href: string;
   export let disabled: boolean = false;
 
-  $: active = href === $page.url.pathname;
+  $: targetPathname = href.replace(/\?.*/, "");
+
+  $: active = targetPathname === $page.url.pathname;
 </script>
 
 <div class="section-nav-item" class:active class:disabled>

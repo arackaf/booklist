@@ -1,11 +1,11 @@
 <script lang="ts">
   import { quadIn, quadOut } from "svelte/easing";
-  // @ts-ignore
   import { springIn } from "svelte-helpers/spring-transitions";
+  import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
-  import type { Book } from "$data/types";
+  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
   export let book: Book;
   export let unselectBook: (book: Book) => void;
@@ -30,16 +30,22 @@
 
 <div style="overflow: hidden">
   <div in:slideIn|local out:slideOut|local>
-    <FlowItems>
-      <div><button on:click={() => unselectBook(book)} style="cursor: pointer" class="btn btn-xs btn-danger"> Remove </button></div>
-      <div style="min-width: 70px">
+    <div class="flex flex-row">
+      <div class="min-w-[60px]">
         <BookCover size="small" {book} />
       </div>
-      <div style="flex: 1">
-        <div class="book-title">{book.title}</div>
-        {#if book.authors && book.authors.length}<span class="book-author">{book.authors.join(", ")}</span>{/if}
+      <div class="flex-1 flex flex-col min-w-0">
+        <BookTitle truncate={true}>{book.title}</BookTitle>
+        {#if book.authors && book.authors.length}
+          <SubTitleText>
+            {book.authors.join(", ")}
+          </SubTitleText>
+        {/if}
+        <div class="mt-auto">
+          <button on:click={() => unselectBook(book)} style="cursor: pointer" class="btn btn-xs btn-danger">Remove</button>
+        </div>
       </div>
-    </FlowItems>
-    <hr />
+    </div>
+    <hr class="my-2" />
   </div>
 </div>

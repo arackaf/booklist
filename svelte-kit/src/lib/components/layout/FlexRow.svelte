@@ -11,7 +11,7 @@
   export let xsFlowReverse = false;
 </script>
 
-<div {style} class={cn('flex-row', className || "", { tighter, tightest, ['xs-pull-reverse']: xsFlowReverse })}>
+<div {style} class={cn("old-flex-row", className || "", { tighter, tightest, ["xs-pull-reverse"]: xsFlowReverse })}>
   <div style={containerStyle}>
     <slot />
   </div>

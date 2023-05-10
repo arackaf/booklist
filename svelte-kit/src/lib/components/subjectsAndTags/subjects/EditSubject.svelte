@@ -178,10 +178,7 @@
           </div>
           <div class="col-xs-12">
             <FlowItems pushLast={true}>
-              <Button disabled={saving} preset="primary-xs">
-                Save
-                <i class={`far fa-fw ${saving ? "fa-spinner fa-spin" : "fa-save"}`} />
-              </Button>
+              <Button disabled={saving} preset="primary-xs">Save</Button>
               <Button type="button" disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
               {#if editingSubject.id}
                 <Button type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>

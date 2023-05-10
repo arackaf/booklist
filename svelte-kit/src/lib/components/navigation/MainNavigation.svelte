@@ -13,7 +13,7 @@
   import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
 
-  $: ({ loggedIn, isPublic, isAdminUser } = $page.data);
+  $: ({ loggedIn, hasPublicId, isAdminUser } = $page.data);
 
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
@@ -49,8 +49,8 @@
       <NavBarItem active={isHome} class="visible-xs" href="/" style="margin-top: '2px';" label={"Home"}>
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
-      {#if loggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="/scan" style="position: relative;" label={"Scan books"}>
+      {#if loggedIn || hasPublicId}
+        <NavBarItem disabled={hasPublicId} href="/scan" style="position: relative;" label={"Scan books"}>
           <span class="hidden-xs">Book entry</span>
           <i class="visible-xs fal fa-fw fa-scanner" />
           {#if pendingCount}
@@ -63,19 +63,19 @@
           {/if}
         </NavBarItem>
       {/if}
-      {#if loggedIn || isPublic}
+      {#if loggedIn || hasPublicId}
         <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
           <span class="hidden-xs">Books</span>
           <i class="visible-xs fal fa-fw fa-books" />
         </NavBarItem>
       {/if}
-      {#if loggedIn || isPublic}
-        <NavBarItem disabled={isPublic} href="/subjects" label={"Manage subjects"}>
+      {#if loggedIn || hasPublicId}
+        <NavBarItem disabled={hasPublicId} href="/subjects" label={"Manage subjects"}>
           <span class="hidden-xs">Subjects</span>
           <i class="visible-xs fal fa-fw fa-sitemap" />
         </NavBarItem>
       {/if}
-      {#if loggedIn || isPublic}
+      {#if loggedIn || hasPublicId}
         <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
           <span class="hidden-xs">Settings</span>
           <i class="visible-xs fal fa-fw fa-cogs" />

@@ -5,7 +5,7 @@
   export const closeModal = getContext("svelte-helpers-modal").closeModal;
 </script>
 
-<hr />
+<hr class="my-3" />
 {#if $$slots.default}
   <slot />
 {:else}

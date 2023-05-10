@@ -12,6 +12,8 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
   import { runDelete } from "$lib/state/dataUpdates";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
@@ -77,9 +79,9 @@
   <td>
     <Stack>
       <Stack tightest={true}>
-        <div class="book-title">{book.title}</div>
+        <BookTitle>{book.title}</BookTitle>
         {#if book.authors}
-          <div class="book-author">{book.authors.join(", ")}</div>
+          <SubTitleText class="text-sm/4 text-neutral-500">{book.authors.join(", ")}</SubTitleText>
         {/if}
       </Stack>
 
@@ -162,17 +164,25 @@
   </td>
   <td>
     {#if book.publisher}
-      <div>{book.publisher}</div>
+      <div class="text-sm truncate max-w-[150px]">{book.publisher}</div>
     {/if}
     {#if book.publicationDate}
-      <div>{book.publicationDate}</div>
+      <div class="text-sm">{book.publicationDate}</div>
     {/if}
     {#if book.isbn}
-      <div>{book.isbn}</div>
+      <div class="text-sm">{book.isbn}</div>
     {/if}
   </td>
-  <td>{book.pages == null ? "" : book.pages}</td>
-  <td>{book.dateAddedDisplay}</td>
+  <td>
+    <span class="text-sm">
+      {book.pages == null ? "" : book.pages}
+    </span>
+  </td>
+  <td>
+    <span class="text-sm">
+      {book.dateAddedDisplay}
+    </span>
+  </td>
 </tr>
 {#if expanded}
   <BookRowDetails {isPublic} id={book.id} bind:detailsLoading />

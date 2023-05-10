@@ -1,4 +1,13 @@
 .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn > i + * {
+  margin-left: 5px;
+}
+
+.btn {
   margin: 0;
   border: var(--default-border-width) solid var(--neutral-border);
   background-color: white;
@@ -107,10 +116,12 @@
   &.btn-xs {
     font-size: 12px;
     padding: 3px 6px;
+    line-height: normal;
   }
   &.btn-xxs {
     font-size: 11px;
     padding: 2px 5px;
+    line-height: normal;
   }
 
   &.btn-square-icon {
@@ -128,7 +139,6 @@
   display: flex;
 
   input.form-control:focus,
-  button:focus,
   button.btn:focus,
   button.btn-xs:focus {
     box-shadow: none;

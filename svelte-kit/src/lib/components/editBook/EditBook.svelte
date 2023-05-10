@@ -70,7 +70,7 @@
     </TabContents>
   </Tabs>
 
-  <hr />
+  <hr class="my-3" />
   <FlowItems>
     <ActionButton type="submit" style="min-width: 10ch" isRunning={saving} finishedText="Saved" text="Save" preset="primary" runningText="Saving" />
     <Button disabled={saving} style="margin-left: auto;" type="button" onClick={onCancel}>Cancel</Button>

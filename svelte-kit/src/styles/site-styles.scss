@@ -9,6 +9,11 @@
 @import "./responsive-visibility";
 @import "./book-covers";
 
+hr {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 :root {
   --animation-duration: 300ms;
 
@@ -520,7 +525,6 @@ div.responsive-radios {
 .form-group,
 .form-label {
   font-size: 14px;
-  font-weight: bold;
 }
 .form-group label,
 .form-label {
@@ -588,12 +592,12 @@ div.radio input {
 input.form-control,
 select.form-control,
 div.radio input,
-button {
+button.btn {
   transition: box-shadow 0.15s linear;
 }
 input.form-control:focus,
 select.form-control:focus,
-button:focus {
+button.btn:focus {
   box-shadow: 0 0 6px var(--primary-7);
 }
 button.btn-xs:focus {
@@ -694,17 +698,6 @@ canvas.book-preview {
   padding: 0;
   position: absolute;
   width: 1px;
-}
-
-.book-title {
-  font-size: 15px;
-  font-weight: normal;
-}
-
-.book-title.no-overflow {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .book-author {

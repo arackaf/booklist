@@ -28,11 +28,11 @@
   <div class="overlay-holder">
     {#if books?.length}
       {#key currentQuery}
-        <ul in:resultsIn|local out:resultsOut|local>
+        <div in:resultsIn|local out:resultsOut|local class="flex flex-col min-w-0">
           {#each books.filter(b => !selectedBooksSet.has(b.id)) as book (book.id)}
             <SearchResult {book} {selectBook} />
           {/each}
-        </ul>
+        </div>
       {/key}
     {/if}
   </div>

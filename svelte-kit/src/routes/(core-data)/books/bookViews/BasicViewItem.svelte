@@ -5,6 +5,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
   import { page } from "$app/stores";
   import { runDelete } from "$lib/state/dataUpdates";
@@ -43,8 +44,8 @@
     </div>
     <div style="overflow: hidden">
       <div style="display: flex; flex-direction: column; height: 100%">
-        <div class="listGroupItemHeading book-title">{book.title}</div>
-        <span class="listGroupItemText book-author">{book.authors.length ? book.authors.join(", ") : ""}</span>
+        <span class="text-sm leading-[normal] truncate">{book.title}</span>
+        <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
         <FlowItems style="margin-top: auto;" class="padding-top-xs">
           {#if !isPublic}
             <button class="btn btn-xxs btn-light btn-square-icon" aria-label="Edit book" on:click={() => editBook(book)}>
@@ -72,18 +73,6 @@
 </div>
 
 <style>
-  :global(.listGroupItemHeading) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-  }
-
-  :global(.listGroupItemHeading),
-  :global(.listGroupItemText) {
-    margin: 0;
-  }
-
   :global(.listGroupItem) {
     border-bottom: var(--default-border-width) solid var(--neutral-border);
     padding-top: 5px;

@@ -43,12 +43,15 @@
 
 <div class="margin-top">
   <FlexRow>
-    <div class="col-xs-6">
+    <div class="col-xs-6 min-w-0">
       <Stack loosest={true}>
         <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
         <FlowItems pushLast={true}>
-          <button class="btn btn-default" on:click={openModal}> <i class="fal fa-search" /> Search your books </button>
+          <button class="btn btn-default" on:click={openModal}>
+            <i class="fal fa-search" />
+            <span>Search your books</span>
+          </button>
 
           {#if selectedBooks.length}
             <button on:click={getRecommendations} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">
@@ -65,17 +68,16 @@
         </div>
       </Stack>
     </div>
-    <div class="col-xs-6">
+    <div class="col-xs-6 min-w-0">
       {#if recommendations.length}
         <div>
           <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
-          <table class="table table-condensed table-striped">
-            <tbody>
-              {#each recommendations as book (book.id)}
-                <DisplayRecommendation {book} />
-              {/each}
-            </tbody>
-          </table>
+
+          <div class="flex flex-col gap-2">
+            {#each recommendations as book (book.id)}
+              <DisplayRecommendation {book} />
+            {/each}
+          </div>
         </div>
       {:else if recommendationsLoaded}
         <div class="alert alert-warning">Nothing found</div>
