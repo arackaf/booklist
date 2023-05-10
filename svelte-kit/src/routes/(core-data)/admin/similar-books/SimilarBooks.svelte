@@ -36,10 +36,8 @@
   let isRunning = false;
   function attemptUpdate() {
     isRunning = true;
-    return async ({ result, update }: any) => {
-      console.log({ result });
+    return async ({ update }: any) => {
       update().then(() => {
-        console.log("updated");
         isRunning = false;
       });
     };
