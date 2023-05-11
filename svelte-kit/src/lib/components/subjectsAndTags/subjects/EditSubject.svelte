@@ -188,26 +188,24 @@
 {:else}
   <form method="POST" action="/subjects?/deleteSubject" use:enhance={runDelete}>
     <input type="hidden" name="id" value={editingSubject.id} />
-    <div>
-      <Stack>
-        <div class="alert alert-danger alert-slim" style="align-self: flex-start">
-          <FlowItems tighter={true}>
-            <span>Delete {editingSubject.name}?</span>
-            {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
-          </FlowItems>
+    <div class="flex flex-col gap-3">
+      <div class="alert alert-danger alert-slim">
+        <div class="flex flex-row gap-2">
+          <span>Delete {editingSubject.name}?</span>
+          {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
         </div>
+      </div>
 
-        <FlowItems>
-          <Button disabled={deleting} preset="danger-xs">
-            {#if deleting}
-              <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
-            {:else}
-              <span>Delete it!</span>
-            {/if}
-          </Button>
-          <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
-        </FlowItems>
-      </Stack>
+      <div class="flex flex-row gap-3">
+        <Button disabled={deleting} preset="danger-xs">
+          {#if deleting}
+            <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
+          {:else}
+            <span>Delete it!</span>
+          {/if}
+        </Button>
+        <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+      </div>
     </div>
   </form>
 {/if}
