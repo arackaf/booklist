@@ -33,8 +33,8 @@
 </script>
 
 <form method="post" action="?/attemptSync" use:enhance={execute}>
-  <FlexRow>
-    <div class="col-md-6 col-sm-12">
+  <div class="flex flex-row">
+    <div class="basis-full lg:basis-1/2">
       <Stack>
         {#if legacySync}
           <div class="alert alert-info">You've already sync'd your account</div>
@@ -66,5 +66,5 @@
         {/if}
       </Stack>
     </div>
-  </FlexRow>
+  </div>
 </form>

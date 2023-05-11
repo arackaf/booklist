@@ -46,19 +46,19 @@
     <Stack loosest={true}>
       <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
-      <FlowItems pushLast={true}>
+      <div class="flex flex-row">
         <button class="btn btn-default" on:click={openModal}>
           <i class="fal fa-search" />
           <span>Search your books</span>
         </button>
 
         {#if selectedBooks.length}
-          <button on:click={getRecommendations} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">
+          <button on:click={getRecommendations} disabled={recommendationsLoading} class="btn btn-primary ml-auto">
             {#if recommendationsLoading}<i class="far fa-fw fa-spin fa-spinner" />{/if}
             Get Recommendations
           </button>
         {/if}
-      </FlowItems>
+      </div>
 
       <div>
         {#each selectedBooks as book (book.id)}
