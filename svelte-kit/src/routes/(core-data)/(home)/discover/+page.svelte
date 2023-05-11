@@ -41,48 +41,46 @@
   };
 </script>
 
-<div class="margin-top">
-  <FlexRow>
-    <div class="col-xs-6 min-w-0">
-      <Stack loosest={true}>
-        <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
+<div class="flex flex-row gap-3">
+  <div class="basis-1/2 min-w-0">
+    <Stack loosest={true}>
+      <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
-        <FlowItems pushLast={true}>
-          <button class="btn btn-default" on:click={openModal}>
-            <i class="fal fa-search" />
-            <span>Search your books</span>
+      <FlowItems pushLast={true}>
+        <button class="btn btn-default" on:click={openModal}>
+          <i class="fal fa-search" />
+          <span>Search your books</span>
+        </button>
+
+        {#if selectedBooks.length}
+          <button on:click={getRecommendations} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">
+            {#if recommendationsLoading}<i class="far fa-fw fa-spin fa-spinner" />{/if}
+            Get Recommendations
           </button>
+        {/if}
+      </FlowItems>
 
-          {#if selectedBooks.length}
-            <button on:click={getRecommendations} disabled={recommendationsLoading} style="margin-left: auto" class="btn btn-primary">
-              {#if recommendationsLoading}<i class="far fa-fw fa-spin fa-spinner" />{/if}
-              Get Recommendations
-            </button>
-          {/if}
-        </FlowItems>
+      <div>
+        {#each selectedBooks as book (book.id)}
+          <DisplayBook {book} {unselectBook} />
+        {/each}
+      </div>
+    </Stack>
+  </div>
+  <div class="basis-1/2 min-w-0">
+    {#if recommendations.length}
+      <div>
+        <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
 
-        <div>
-          {#each selectedBooks as book (book.id)}
-            <DisplayBook {book} {unselectBook} />
+        <div class="flex flex-col gap-2">
+          {#each recommendations as book (book.id)}
+            <DisplayRecommendation {book} />
           {/each}
         </div>
-      </Stack>
-    </div>
-    <div class="col-xs-6 min-w-0">
-      {#if recommendations.length}
-        <div>
-          <div style="font-weight: bold; margin-bottom: 5px">Similar books found</div>
-
-          <div class="flex flex-col gap-2">
-            {#each recommendations as book (book.id)}
-              <DisplayRecommendation {book} />
-            {/each}
-          </div>
-        </div>
-      {:else if recommendationsLoaded}
-        <div class="alert alert-warning">Nothing found</div>
-      {/if}
-    </div>
-  </FlexRow>
-  <SearchModal isOpen={searchModalOpen} onHide={closeModal} {allSubjects} {allTags} {selectedBooksSet} {selectBook} />
+      </div>
+    {:else if recommendationsLoaded}
+      <div class="alert alert-warning">Nothing found</div>
+    {/if}
+  </div>
 </div>
+<SearchModal isOpen={searchModalOpen} onHide={closeModal} {allSubjects} {allTags} {selectedBooksSet} {selectBook} />
