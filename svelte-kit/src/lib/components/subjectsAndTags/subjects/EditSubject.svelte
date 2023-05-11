@@ -7,11 +7,9 @@
 
   import type { Color, Subject } from "$data/types";
 
-  import Stack from "$lib/components/layout/Stack.svelte";
   import FlexRow from "$lib/components/layout/FlexRow.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
@@ -171,17 +169,17 @@
         </div>
       </div>
       <div class="col-xs-12">
-        <FlowItems pushLast={true}>
+        <div class="flex flex-row gap-3">
           <Button disabled={saving} preset="primary-xs">Save</Button>
           <Button type="button" disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
           {#if editingSubject.id}
-            <Button type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+            <Button class="ml-auto" type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
               Delete
               {originalName}
               <i class="fal fa-fw fa-trash-alt" />
             </Button>
           {/if}
-        </FlowItems>
+        </div>
       </div>
     </FlexRow>
   </form>
