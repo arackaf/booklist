@@ -45,43 +45,47 @@
         </div>
       </div>
       <Stack tighter={true} style="padding-left: 10px">
-        {#if book.publisher || book.publicationDate}
-          <FlowItems tightest={true}>
-            <span>{book.publisher}</span>
-            <span>{book.publicationDate}</span>
-          </FlowItems>
-        {/if}
-        <FlowItems>
-          <div class="overlay-holder">
-            <span>Tags:</span>
-            <span style="visibility: hidden">Subjects:</span>
-          </div>
-          {#if book?.tags?.length}
-            <DisplaySelectedTags {tags} currentlySelected={book.tags || []} />
-          {:else}
-            <span style="fontStyle: italic">None</span>
+        <div class="flex flex-col mb-1">
+          {#if book.publisher || book.publicationDate}
+            <FlowItems tightest={true}>
+              <span>{book.publisher}</span>
+              <span>{book.publicationDate}</span>
+            </FlowItems>
           {/if}
-        </FlowItems>
-        <FlowItems>
-          <div class="overlay-holder">
-            <span>Subjects:</span>
-          </div>
-          {#if book?.subjects?.length}
-            <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
-          {:else}
-            <span style="fontStyle: italic">None</span>
-          {/if}
-        </FlowItems>
-        {#if book.isbn}
-          <FlowItems tighter={true}>
-            <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
-              <i class="fab fa-amazon" />
-            </a>
-            <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
-              <i class="fab fa-goodreads-g" />
-            </a>
+          <FlowItems>
+            <div class="overlay-holder">
+              <span>Tags:</span>
+              <span style="visibility: hidden">Subjects:</span>
+            </div>
+            {#if book?.tags?.length}
+              <DisplaySelectedTags {tags} currentlySelected={book.tags || []} />
+            {:else}
+              <span style="fontStyle: italic">None</span>
+            {/if}
           </FlowItems>
-        {/if}
+          <FlowItems>
+            <div class="overlay-holder">
+              <span>Subjects:</span>
+            </div>
+            {#if book?.subjects?.length}
+              <div class="flex items-center">
+                <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
+              </div>
+            {:else}
+              <span style="fontStyle: italic">None</span>
+            {/if}
+          </FlowItems>
+          {#if book.isbn}
+            <FlowItems tighter={true}>
+              <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
+                <i class="fab fa-amazon" />
+              </a>
+              <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
+                <i class="fab fa-goodreads-g" />
+              </a>
+            </FlowItems>
+          {/if}
+        </div>
 
         {#if !isPublic}
           <div style="margin-top: auto">

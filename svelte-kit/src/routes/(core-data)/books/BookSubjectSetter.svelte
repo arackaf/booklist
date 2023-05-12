@@ -93,14 +93,14 @@
             <div class="col-xs-3">
               <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
             </div>
-            <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
+            <div class="col-xs-9 flex items-center">
               <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
             </div>
 
             <div class="col-xs-3">
               <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
             </div>
-            <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
+            <div class="col-xs-9 flex items-center">
               <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
             </div>
 
