@@ -99,14 +99,14 @@
     </div>
 
     <div class="col-xs-12">
-      <FlexRow>
-        <div class="col-sm-3 col-xs-12">
+      <div class="flex flex-row">
+        <div class="basis-full md:basis-1/4">
           <SelectAvailableTags {tags} currentlySelected={book.tags} onSelect={addTag} />
         </div>
-        <div class="col-sm-9 col-xs-12">
+        <div class="basis-full md:basis-3/4">
           <DisplaySelectedTags {tags} currentlySelected={book.tags} onRemove={removeTag} />
         </div>
-      </FlexRow>
+      </div>
     </div>
 
     <div class="col-xs-12">
