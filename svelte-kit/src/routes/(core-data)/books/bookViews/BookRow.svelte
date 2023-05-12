@@ -127,24 +127,21 @@
     </Stack>
   </td>
   <td>
-    <DisplaySelectedSubjects
-      data-class="margin-top-sm"
-      data-style="align-items: start;"
-      vertical={true}
-      currentlySelected={book.subjects}
-      {subjects}
-      href={s => $changeFilter.addSubject(s.id)}
-    />
+    <div class="mt-1">
+      <DisplaySelectedSubjects vertical={true} currentlySelected={book.subjects} {subjects} href={s => $changeFilter.addSubject(s.id)} />
+    </div>
   </td>
   <td>
-    <DisplaySelectedTags
-      class="margin-top-sm"
-      style="align-items: start;"
-      vertical={true}
-      currentlySelected={book.tags}
-      {tags}
-      href={t => $changeFilter.addTag(t.id)}
-    />
+    <div class="mt-1">
+      <DisplaySelectedTags
+        class=""
+        style="align-items: start;"
+        vertical={true}
+        currentlySelected={book.tags}
+        {tags}
+        href={t => $changeFilter.addTag(t.id)}
+      />
+    </div>
   </td>
   <td>
     <div class="margin-top-sm">

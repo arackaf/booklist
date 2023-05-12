@@ -15,7 +15,7 @@
   $: subjectHash = toHash(subjects);
 </script>
 
-<div class="flex gap-1" class:flex-col={vertical} class:flex-wrap={!vertical}>
+<div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
   {#each currentlySelected.filter(id => subjectHash[id]).map(id => subjectHash[id]) as s}
     {#if onRemove}
       <RemovableLabelDisplay item={s} doRemove={() => onRemove?.(s)} />
