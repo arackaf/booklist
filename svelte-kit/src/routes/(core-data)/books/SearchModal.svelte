@@ -137,7 +137,7 @@
           <div class="col-sm-3 col-xs-12">
             <SelectAvailableSubjects subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
           </div>
-          <div class="col-sm-9 col-xs-12">
+          <div class="col-sm-9 col-xs-12 flex items-center">
             <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
           </div>
 

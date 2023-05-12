@@ -148,7 +148,7 @@
       <div class="col-xs-3">
         <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
       </div>
-      <div class="col-xs-9">
+      <div class="col-xs-9 flex items-center">
         <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
       </div>
 

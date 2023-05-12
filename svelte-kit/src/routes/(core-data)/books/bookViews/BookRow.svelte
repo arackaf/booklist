@@ -128,8 +128,8 @@
   </td>
   <td>
     <DisplaySelectedSubjects
-      class="margin-top-sm"
-      style="align-items: start;"
+      data-class="margin-top-sm"
+      data-style="align-items: start;"
       vertical={true}
       currentlySelected={book.subjects}
       {subjects}

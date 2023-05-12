@@ -114,7 +114,7 @@
         <div class="basis-full md:basis-1/4">
           <SelectAvailableSubjects {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
         </div>
-        <div class="basis-full md:basis-3/4">
+        <div class="basis-full md:basis-3/4 flex items-center">
           <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
         </div>
       </div>
