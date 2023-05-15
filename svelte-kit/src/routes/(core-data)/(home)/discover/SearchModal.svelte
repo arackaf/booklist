@@ -110,15 +110,15 @@
 <Modal on:mount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
-    <FlexRow>
-      <div class="col-xs-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+      <div>
         <div class="form-group">
           <label for="discover-title-search-id">Title</label>
           <input id="discover-title-search-id" bind:this={titleEl} name="search" placeholder="Search title" class="form-control" />
         </div>
       </div>
 
-      <div class="col-xs-6">
+      <div>
         <Stack>
           <span class="form-label">Is read?</span>
           <FlowItems class="radio">
@@ -138,25 +138,29 @@
         </Stack>
       </div>
 
-      <div class="col-xs-3">
-        <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
-      </div>
-      <div class="col-xs-9">
-        <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
-      </div>
-
-      <div class="col-xs-3">
-        <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
-      </div>
-      <div class="col-xs-9 flex items-center">
-        <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+      <div class="md:col-span-2 flex flex-row">
+        <div class="basis-full md:basis-1/4">
+          <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
+        </div>
+        <div class="basis-full md:basis-3/4">
+          <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+        </div>
       </div>
 
-      <div class="col-xs-6">
+      <div class="md:col-span-2 flex flex-row">
+        <div class="basis-full md:basis-1/4">
+          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
+        </div>
+        <div class="basis-full md:basis-3/4">
+          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+        </div>
+      </div>
+
+      <div class="md:col-span-2">
         <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
       </div>
 
-      <div class="col-xs-12">
+      <div class="md:col-span-2">
         <FlexRow>
           <ActionIconButton class="btn btn-default" disabled={loading}>
             <i class:fa-spin={loading} class:fa-spinner={loading} class:fa-search={!loading} class="fal fa-fw" />
@@ -176,7 +180,7 @@
         </FlexRow>
       </div>
 
-      <div class="col-xs-12">
+      <div class="md:col-span-2">
         <div>
           {#if totalBooks}
             <FlowItems tightest={true} containerStyle="align-items: center; font-size: 14px">
@@ -199,7 +203,7 @@
         </div>
         <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
       </div>
-    </FlexRow>
+    </div>
   </form>
 </Modal>
 
