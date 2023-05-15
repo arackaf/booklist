@@ -89,6 +89,7 @@
     currentQuery = search;
     ({ page, totalPages, books, totalBooks } = result);
     loading = false;
+    active = true;
   }
 
   const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
@@ -151,7 +152,7 @@
         <div class="basis-full md:basis-1/4">
           <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
         </div>
-        <div class="basis-full md:basis-3/4">
+        <div class="basis-full md:basis-3/4 flex items-center">
           <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
         </div>
       </div>
@@ -161,7 +162,7 @@
       </div>
 
       <div class="md:col-span-2">
-        <FlexRow>
+        <div class="flex flex-row gap-3">
           <ActionIconButton class="btn btn-default" disabled={loading}>
             <i class:fa-spin={loading} class:fa-spinner={loading} class:fa-search={!loading} class="fal fa-fw" />
           </ActionIconButton>
@@ -177,7 +178,7 @@
               <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-warning alert-slimmer">No results</div>
             {/if}
           </div>
-        </FlexRow>
+        </div>
       </div>
 
       <div class="md:col-span-2">
