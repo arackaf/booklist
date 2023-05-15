@@ -53,8 +53,8 @@
 </script>
 
 <fieldset disabled={saving}>
-  <FlexRow>
-    <div class="col-xs-6">
+  <div class="grid grid-cols-2 gap-x-5 gap-y-4">
+    <div>
       <div class={"form-group"}>
         <label for="book-edit-title">Title</label>
         <input
@@ -70,35 +70,35 @@
       </div>
     </div>
 
-    <div class="col-xs-6">
+    <div>
       <div class="form-group">
         <label for="book-edit-isbn">ISBN</label>
         <input id="book-edit-isbn" name="isbn" class="form-control" value={book.isbn} placeholder="ISBN" />
       </div>
     </div>
 
-    <div class="col-xs-6">
+    <div>
       <div class="form-group">
         <label for="book-edit-pages">Pages</label>
         <input id="book-edit-pages" name="pages" class="form-control" value={book.pages} type="number" placeholder="Number of pages" />
       </div>
     </div>
 
-    <div class="col-xs-6">
+    <div>
       <div class="form-group">
         <label for="book-edit-publisher">Publisher</label>
         <input id="book-edit-publisher" name="publisher" class="form-control" value={book.publisher} placeholder="Publisher" />
       </div>
     </div>
 
-    <div class="col-xs-6">
+    <div>
       <div class="form-group">
         <label for="book-edit-published">Published</label>
         <input id="book-edit-published" name="publicationDate" class="form-control" value={book.publicationDate} placeholder="Publication date" />
       </div>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-span-2">
       <div class="flex flex-row">
         <div class="basis-full md:basis-1/4">
           <SelectAvailableTags {tags} currentlySelected={book.tags} onSelect={addTag} />
@@ -109,7 +109,7 @@
       </div>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-span-2">
       <div class="flex flex-row">
         <div class="basis-full md:basis-1/4">
           <SelectAvailableSubjects {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
@@ -120,16 +120,19 @@
       </div>
     </div>
 
-    {#each book.authors || [] as author, index (index)}
-      <div class="col-xs-4">
-        <div class="form-group">
-          <label for={`book-edit-author-${index}`}>Author</label>
-          <input id={`book-edit-author-${index}`} value={author} class="form-control" name="authors" placeholder={`Author ${index + 1}`} />
+    <div class="col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
+      {#each book.authors || [] as author, index (index)}
+        <div>
+          <div class="form-group">
+            <label for={`book-edit-author-${index}`}>Author</label>
+            <input id={`book-edit-author-${index}`} value={author} class="form-control" name="authors" placeholder={`Author ${index + 1}`} />
+          </div>
         </div>
-      </div>
-    {/each}
-    <div class="col-xs-12">
+      {/each}
+    </div>
+
+    <div class="col-span-2">
       <Button type="button" disabled={saving} onClick={addAuthor} preset="default-xs"><i class="far fa-fw fa-plus" />Add author</Button>
     </div>
-  </FlexRow>
+  </div>
 </fieldset>
