@@ -102,11 +102,11 @@
   <div />
 {:else if !deleteShowing}
   <form method="POST" action="/subjects?/saveSubject" use:enhance={runSave}>
-    <FlexRow>
-      <input type="hidden" name="id" value={editingSubject.id} />
-      <input type="hidden" name="path" value={editingSubject.path} />
-      <input type="hidden" name="originalParentId" value={originalParentId} />
-      <div class="col-xs-12 col-lg-6">
+    <input type="hidden" name="id" value={editingSubject.id} />
+    <input type="hidden" name="path" value={editingSubject.path} />
+    <input type="hidden" name="originalParentId" value={originalParentId} />
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+      <div>
         <div class="form-group">
           <label for="subject-name">Name</label>
           <input
@@ -129,7 +129,7 @@
           </div>
         </div>
       </div>
-      <div class="col-xs-12 col-lg-6">
+      <div>
         <div class="form-group">
           <label for="subject-parent">Parent</label>
           <select id="subject-parent" bind:value={editingSubject.parentId} name="parentId" class="form-control">
@@ -140,7 +140,7 @@
           </select>
         </div>
       </div>
-      <div class="col-xs-12 col-sm-6">
+      <div>
         <div class="form-group">
           <span>Label Color</span>
           <ColorsPalette
@@ -156,7 +156,7 @@
           <input type="hidden" name="backgroundColor" value={editingSubject.backgroundColor} />
         </div>
       </div>
-      <div class="col-xs-12 col-sm-6">
+      <div>
         <div class="form-group">
           <span>Text Color</span>
           <ColorsPalette currentColor={editingSubject.textColor} colors={textColors} onColorChosen={color => (editingSubject.textColor = color)} />
@@ -168,7 +168,7 @@
           <input type="hidden" name="textColor" value={editingSubject.textColor} />
         </div>
       </div>
-      <div class="col-xs-12">
+      <div class="md:col-span-2">
         <div class="flex flex-row gap-3">
           <Button disabled={saving} preset="primary-xs">Save</Button>
           <Button type="button" disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
@@ -181,7 +181,7 @@
           {/if}
         </div>
       </div>
-    </FlexRow>
+    </div>
   </form>
 {:else}
   <form method="POST" action="/subjects?/deleteSubject" use:enhance={runDelete}>
