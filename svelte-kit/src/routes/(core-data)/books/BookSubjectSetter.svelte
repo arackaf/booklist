@@ -89,22 +89,22 @@
           {#each removingSubjects as s}
             <input type="hidden" name="remove" value={s} />
           {/each}
-          <div class="grid grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
             </div>
-            <div class="col-span-3 flex items-center">
+            <div class="md:col-span-3 flex items-center">
               <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
             </div>
 
             <div>
               <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
             </div>
-            <div class="col-span-3 flex items-center">
+            <div class="md:col-span-3 flex items-center">
               <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
             </div>
 
-            <div class="col-span-4">
+            <div class="md:col-span-4">
               <Button type="button" onClick={resetSubjects} preset="default-xs">Reset subjects</Button>
             </div>
           </div>

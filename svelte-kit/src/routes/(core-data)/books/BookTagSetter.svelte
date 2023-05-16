@@ -89,22 +89,22 @@
           {#each removingTags as t}
             <input type="hidden" name="remove" value={t} />
           {/each}
-          <div class="grid grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
             </div>
-            <div class="col-span-3 flex items-center">
+            <div class="md:col-span-3 flex items-center">
               <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
             </div>
 
             <div>
               <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
             </div>
-            <div class="col-span-3 flex items-center">
+            <div class="md:col-span-3 flex items-center">
               <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
             </div>
 
-            <div class="col-span-4">
+            <div class="md:col-span-4">
               <Button type="button" onClick={resetTags} preset="default-xs">Reset tags</Button>
             </div>
           </div>
