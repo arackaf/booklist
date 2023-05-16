@@ -121,20 +121,20 @@
       <div>
         <Stack>
           <span class="form-label">Is read?</span>
-          <FlowItems class="radio">
-            <FlowItems tightest={true} vCenter={true}>
+          <div class="flex flex-row gap-4 items-center radio">
+            <div class="flex flex-row items-center gap-1">
               <input type="radio" checked value="" name="is-read" id="isReadE" />
               <label for="isReadE">Either</label>
-            </FlowItems>
-            <FlowItems tightest={true} vCenter={true}>
+            </div>
+            <div class="flex flex-row items-center gap-1">
               <input type="radio" value="true" name="is-read" id="isReadY" />
               <label for="isReadY">Yes</label>
-            </FlowItems>
-            <FlowItems tightest={true} vCenter={true}>
+            </div>
+            <div class="flex flex-row items-center gap-1">
               <input type="radio" value="false" name="is-read" id="isReadN" />
               <label for="isReadN">No</label>
-            </FlowItems>
-          </FlowItems>
+            </div>
+          </div>
         </Stack>
       </div>
 
@@ -183,21 +183,21 @@
       <div class="md:col-span-2">
         <div>
           {#if totalBooks}
-            <FlowItems tightest={true} containerStyle="align-items: center; font-size: 14px">
+            <div class="flex flex-row gap-1 items-center">
               <button type="button" on:click={pageOne} disabled={!canPageDown} class="btn btn-default">
                 <i class="fal fa-angle-double-left" />
               </button>
               <button type="button" on:click={pageDown} disabled={!canPageDown} class="btn btn-default">
                 <i class="fal fa-angle-left" />
               </button>
-              <span style="padding-left: 3px; padding-right: 3px"> {page} of {totalPages} </span>
+              <span class="text-sm mx-1">{page} of {totalPages}</span>
               <button type="button" on:click={pageUp} disabled={!canPageUp} class="btn btn-default">
                 <i class="fal fa-angle-right" />
               </button>
               <button type="button" on:click={pageLast} disabled={!canPageUp} class="btn btn-default">
                 <i class="fal fa-angle-double-right" />
               </button>
-            </FlowItems>
+            </div>
             <hr class="my-2" />
           {/if}
         </div>
