@@ -27,8 +27,8 @@
 {#if bookDetails}
   <tr>
     <td colSpan={isPublic ? 8 : 9} style="border-top: 0; padding-left: 50px; padding-top: 0; padding-bottom: 15px;">
-      <FlexRow class="detailsRow">
-        <div class="col-xs-6">
+      <div class="detailsRow grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div>
           {#if !editorialReviews || !editorialReviews.length}
             <h4>No editorial reviews for this book</h4>
           {:else}
@@ -51,7 +51,7 @@
           {/if}
         </div>
 
-        <div class="col-xs-6">
+        <div>
           {#if !similarBooks || !similarBooks.length}
             <h4>No similar items found for this book</h4>
           {:else}
@@ -86,7 +86,7 @@
             </div>
           {/if}
         </div>
-      </FlexRow>
+      </div>
     </td>
   </tr>
 {/if}

@@ -18,6 +18,7 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { get } from "svelte/store";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};
@@ -76,26 +77,26 @@
       {#if $publicUser}
         <input type="hidden" name="user" value={$publicUser} />
       {/if}
-      <FlexRow>
-        <div class="col-xs-6">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
           <div class="form-group">
             <label for="search_title">Title</label>
             <input id="search_title" name="search" bind:this={titleEl} value={localSearchValues.search} placeholder="Title" class="form-control" />
           </div>
         </div>
-        <div class="col-xs-6">
+        <div>
           <div class="form-group">
             <label for="book_search_pub">Publisher</label>
             <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
           </div>
         </div>
-        <div class="col-xs-6">
+        <div>
           <div class="form-group">
             <label for="book_search_auth">Author</label>
             <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
           </div>
         </div>
-        <Stack class="col-xs-6">
+        <Stack>
           <Stack tighter={true} style="flex: 1">
             <label for="__" class="form-label">Is Read?</label>
             <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
@@ -114,7 +115,7 @@
             </FlowItems>
           </Stack>
         </Stack>
-        <div class="col-xs-6">
+        <div>
           <div class="form-group">
             <label for="book_search_sort">Sort</label>
             <select id="book_search_sort" name="sort" value={localSearchValues.sortPacket} class="form-control">
@@ -124,24 +125,20 @@
             </select>
           </div>
         </div>
-        <div class="col-xs-6" />
+        <div />
 
-        <div class="col-sm-3 col-xs-12">
-          <SelectAvailableTags {tags} currentlySelected={localTags} onSelect={selectTag} />
-        </div>
-        <div class="col-sm-9 col-xs-12">
-          <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
-        </div>
+        <SelectAndDisplayContainer>
+          <SelectAvailableTags slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
+          <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
+        </SelectAndDisplayContainer>
 
         {#if !noSubjects}
-          <div class="col-sm-3 col-xs-12">
-            <SelectAvailableSubjects subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-          </div>
-          <div class="col-sm-9 col-xs-12 flex items-center">
-            <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-          </div>
+          <SelectAndDisplayContainer>
+            <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+            <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          </SelectAndDisplayContainer>
 
-          <div class="col-xs-12">
+          <div class="col-span-2">
             <label class="checkbox">
               <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
               Also search child subjects
@@ -149,13 +146,13 @@
           </div>
         {/if}
 
-        <div class="col-xs-12">
+        <div class="col-span-2">
           <label class="checkbox">
             <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
             Search books with no subjects set
           </label>
         </div>
-      </FlexRow>
+      </div>
 
       <div class="margin-top-med">
         <Button text="Filter" preset="primary">Search</Button>
