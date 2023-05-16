@@ -49,7 +49,7 @@
       </div>
     {/if}
 
-    <hr style="width: 100%" />
+    <hr style="width: 100%" class="mt-2 mb-0" />
 
     <div class="checkbox-group">
       <label class="checkbox">
@@ -59,15 +59,15 @@
     </div>
 
     <div style="margin-left: 20px">
-      <FlexRow>
+      <div class="flex flex-col gap-4">
         {#if showForm}
-          <div class="col-xs-12">
+          <div>
             <div class="form-group">
               <label for="public-name">Publicly display your name as</label>
               <input id="public-name" name="publicName" value={publicName} class:error on:change={nameChange} disabled={saving} placeholder="Name" />
             </div>
           </div>
-          <div class="col-xs-12">
+          <div>
             <div class="form-group">
               <label for="public-header">Publicly display your collection as</label>
               <input
@@ -81,10 +81,10 @@
             </div>
           </div>
         {/if}
-        <div class="col-xs-12">
+        <div>
           <ActionButton isRunning={saving} style="min-width: 12ch" text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
         </div>
-      </FlexRow>
+      </div>
     </div>
   </Stack>
 </form>
