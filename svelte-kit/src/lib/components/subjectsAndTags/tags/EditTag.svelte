@@ -8,7 +8,6 @@
   import type { Color, Tag } from "$data/types";
 
   import Stack from "$lib/components/layout/Stack.svelte";
-  import FlexRow from "$lib/components/layout/FlexRow.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
@@ -167,7 +166,7 @@
 {:else}
   <form method="POST" action="?/deleteTag" use:enhance={runDelete}>
     <input type="hidden" name="id" value={editingTag.id} />
-    <div class="col-xs-12">
+    <div>
       <Stack>
         <div class="alert alert-danger alert-slim" style="align-self: flex-start">
           <FlowItems tighter={true}><span>Delete {originalName}?</span></FlowItems>

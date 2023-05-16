@@ -1,6 +1,4 @@
 <script lang="ts">
-  import FlexRow from "$lib/components/layout/FlexRow.svelte";
-
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
 
   export let data;

@@ -7,7 +7,6 @@
 
   import type { Color, Subject } from "$data/types";
 
-  import FlexRow from "$lib/components/layout/FlexRow.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import Button from "$lib/components/buttons/Button.svelte";

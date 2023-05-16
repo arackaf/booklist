@@ -4,7 +4,6 @@
   import Button from "$lib/components/buttons/Button.svelte";
 
   import Modal from "$lib/components/ui/Modal.svelte";
-  import FlexRow from "$lib/components/layout/FlexRow.svelte";
   import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Stack from "$lib/components/layout/Stack.svelte";
 

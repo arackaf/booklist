@@ -8,7 +8,6 @@
 
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  import FlexRow from "../layout/FlexRow.svelte";
 
   export let book: any;
   export let tags: Tag[];

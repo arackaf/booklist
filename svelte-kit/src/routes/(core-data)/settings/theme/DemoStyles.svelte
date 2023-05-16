@@ -1,7 +1,3 @@
-<script lang="ts">
-  import FlexRow from "$lib/components/layout/FlexRow.svelte";
-</script>
-
 <div class="demo-root">
   <div data-reach-dialog-content class="mock-modal">
     <h4>Book Search</h4>
