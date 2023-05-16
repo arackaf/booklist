@@ -96,23 +96,21 @@
           </div>
         </div>
         <Stack>
-          <Stack tighter={true} style="flex: 1">
-            <label for="__" class="form-label">Is Read?</label>
-            <FlowItems class="radio" style="display: flex; flex: 1; align-items: center;">
-              <FlowItems tightest={true} vCenter={true}>
-                <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
-                <label for="isReadE">Either</label>
-              </FlowItems>
-              <FlowItems tightest={true} vCenter={true}>
-                <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
-                <label for="isReadY">Yes</label>
-              </FlowItems>
-              <FlowItems tightest={true} vCenter={true}>
-                <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
-                <label for="isReadN">No</label>
-              </FlowItems>
-            </FlowItems>
-          </Stack>
+          <label for="__" class="form-label">Is Read?</label>
+          <div class="flex flex-row gap-4 items-center radio">
+            <div class="flex flex-row items-center gap-1">
+              <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
+              <label for="isReadE">Either</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
+              <label for="isReadY">Yes</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
+              <label for="isReadN">No</label>
+            </div>
+          </div>
         </Stack>
         <div>
           <div class="form-group">
