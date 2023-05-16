@@ -89,25 +89,25 @@
           {#each removingTags as t}
             <input type="hidden" name="remove" value={t} />
           {/each}
-          <FlexRow>
-            <div class="col-xs-3">
+          <div class="grid grid-cols-4 gap-4">
+            <div>
               <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
             </div>
-            <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
+            <div class="col-span-3 flex items-center">
               <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
             </div>
 
-            <div class="col-xs-3">
+            <div>
               <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
             </div>
-            <div class="col-xs-9" style="display: flex; flex-wrap: wrap">
+            <div class="col-span-3 flex items-center">
               <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
             </div>
 
-            <div class="col-xs-12">
+            <div class="col-span-4">
               <Button type="button" onClick={resetTags} preset="default-xs">Reset tags</Button>
             </div>
-          </FlexRow>
+          </div>
         </TabContent>
         <TabContent tabName="books">
           <Stack style="font-size: 14px">
