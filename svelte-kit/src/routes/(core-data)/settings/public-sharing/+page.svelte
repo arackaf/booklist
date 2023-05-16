@@ -8,13 +8,13 @@
 </script>
 
 <div>
-  <FlexRow>
-    <div class="col-md-6 col-sm-12" style="position: relative; min-height: 200px">
+  <div class="flex flex-row">
+    <div class="basis-full lg:basis-1/2" style="position: relative; min-height: 200px">
       {#if user}
         <EditPublicUserSettings {user} {isPublic} {publicLink} />
       {:else}
         <div class="alert alert-danger">An error occured</div>
       {/if}
     </div>
-  </FlexRow>
+  </div>
 </div>
