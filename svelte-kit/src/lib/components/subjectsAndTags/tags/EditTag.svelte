@@ -149,17 +149,17 @@
         </div>
       </div>
       <div class="md:col-span-2">
-        <FlowItems pushLast={true}>
+        <div class="flex flex-row gap-2">
           <Button disabled={saving} preset="primary-xs">Save</Button>
           <Button disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
           {#if editingTag.id}
-            <Button disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+            <Button disabled={saving} preset="danger-xs" class="ml-auto" onClick={() => (deleteShowing = true)}>
               Delete
               {originalName}
               <i class="fal fa-fw fa-trash-alt" />
             </Button>
           {/if}
-        </FlowItems>
+        </div>
       </div>
     </div>
   </form>
