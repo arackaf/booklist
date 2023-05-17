@@ -4,8 +4,6 @@
 
   import Modal from "$lib/components/ui/Modal.svelte";
   import EditBook from "$lib/components/editBook/EditBook.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
@@ -38,35 +36,31 @@
   {#if editing}
     <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} />
   {:else}
-    <div style="display: flex; align-items: top">
+    <div class="flex flex-row gap-3">
       <div>
         <div>
           <BookCover size="medium" {book} />
         </div>
       </div>
-      <Stack tighter={true} style="padding-left: 10px">
-        <div class="flex flex-col mb-1">
-          {#if book.publisher || book.publicationDate}
-            <FlowItems tightest={true}>
-              <span>{book.publisher}</span>
-              <span>{book.publicationDate}</span>
-            </FlowItems>
-          {/if}
-          <FlowItems>
-            <div class="overlay-holder">
-              <span>Tags:</span>
-              <span style="visibility: hidden">Subjects:</span>
-            </div>
+      <div class="flex flex-col gap-1">
+        {#if book.publisher || book.publicationDate}
+          <div class="flex flex-row gap-2">
+            <span>{book.publisher}</span>
+            <span>{book.publicationDate}</span>
+          </div>
+        {/if}
+        <div class="grid grid-cols-4 gap-x-4 gap-y-1">
+          <span>Tags:</span>
+
+          <div class="col-span-3">
             {#if book?.tags?.length}
               <DisplaySelectedTags {tags} currentlySelected={book.tags || []} />
             {:else}
               <span style="fontStyle: italic">None</span>
             {/if}
-          </FlowItems>
-          <FlowItems>
-            <div class="overlay-holder">
-              <span>Subjects:</span>
-            </div>
+          </div>
+          <span>Subjects:</span>
+          <div class="col-span-3">
             {#if book?.subjects?.length}
               <div class="flex items-center">
                 <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
@@ -74,25 +68,27 @@
             {:else}
               <span style="fontStyle: italic">None</span>
             {/if}
-          </FlowItems>
-          {#if book.isbn}
-            <FlowItems tighter={true}>
-              <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
-                <i class="fab fa-amazon" />
-              </a>
-              <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
-                <i class="fab fa-goodreads-g" />
-              </a>
-            </FlowItems>
-          {/if}
+          </div>
         </div>
-
-        {#if !isPublic}
-          <div style="margin-top: auto">
-            <button class="btn btn-xs" on:click={() => (editing = true)}>Edit book <i class="fal fa-pencil-alt" /></button>
+        {#if book.isbn}
+          <div class="flex flex-row gap-4">
+            <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
+              <i class="fab fa-amazon" />
+            </a>
+            <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
+              <i class="fab fa-goodreads-g" />
+            </a>
           </div>
         {/if}
-      </Stack>
+        {#if !isPublic}
+          <div style="margin-top: auto">
+            <button class="btn btn-xs flex flex-row gap-2" on:click={() => (editing = true)}>
+              <span>Edit book</span>
+              <i class="fal fa-pencil-alt" />
+            </button>
+          </div>
+        {/if}
+      </div>
     </div>
   {/if}
 </Modal>
