@@ -9,7 +9,6 @@
 
   import ActionButton from "../buttons/ActionButton.svelte";
   import Button from "../buttons/Button.svelte";
-  import FlowItems from "../layout/FlowItems.svelte";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
 
   export let book: Book;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { BookImages } from "$data/types";
-  import FlowItems from "../layout/FlowItems.svelte";
+
   import UploadResult from "./UploadResult.svelte";
 
   export let error: boolean;
@@ -16,9 +16,15 @@
     <div class="alert alert-danger margin-top">An error occured</div>
   {/if}
 {:else}
-  <FlowItems>
-    <UploadResult packet={uploadResults} size="mobile" {error} />
-    <UploadResult packet={uploadResults} size="small" {error} />
-    <UploadResult packet={uploadResults} size="medium" {error} />
-  </FlowItems>
+  <div class="flex flex-row mt-3">
+    <div class="flex-1">
+      <UploadResult packet={uploadResults} size="mobile" {error} />
+    </div>
+    <div class="flex-1">
+      <UploadResult packet={uploadResults} size="small" {error} />
+    </div>
+    <div class="flex-1">
+      <UploadResult packet={uploadResults} size="medium" {error} />
+    </div>
+  </div>
 {/if}

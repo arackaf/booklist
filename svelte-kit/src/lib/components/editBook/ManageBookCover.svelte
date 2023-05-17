@@ -3,8 +3,6 @@
 
   import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
 
-  import FlowItems from "../layout/FlowItems.svelte";
-
   export let onResults: (results: any) => void;
   export let onError: () => void;
 
