@@ -70,31 +70,31 @@
   };
 </script>
 
-<FlowItems pushLast={true}>
-  <div style="flex: 1; position: relative;">
-    {#key uploading ? 1 : 0}
-      <Dropzone
-        inputElement={null}
-        accept={undefined}
-        disabled={uploading}
-        disableDefaultStyles={true}
-        multiple={false}
-        on:drop={onDrop}
-        on:dragenter={() => (dragging = true)}
-        on:dragleave={() => (dragging = false)}
-        containerClasses="dropzone-container"
-        containerStyles={dropAddedStyles}
-      >
-        <div style="padding: 15px">Click or drag to upload</div>
-      </Dropzone>
-    {/key}
-    {#if uploadError}
-      <div style="display: inline-block; margin-top: 2px; margin-bottom: 2px" class="label label-danger">{uploadError}</div>
-    {/if}
-  </div>
+<form on:submit|preventDefault={doRemoteSave}>
+  <div class="flex flex-row gap-4">
+    <div class="flex-1" style="position: relative;">
+      {#key uploading ? 1 : 0}
+        <Dropzone
+          inputElement={null}
+          accept={undefined}
+          disabled={uploading}
+          disableDefaultStyles={true}
+          multiple={false}
+          on:drop={onDrop}
+          on:dragenter={() => (dragging = true)}
+          on:dragleave={() => (dragging = false)}
+          containerClasses="dropzone-container"
+          containerStyles={dropAddedStyles}
+        >
+          <div style="padding: 15px">Click or drag to upload</div>
+        </Dropzone>
+      {/key}
+      {#if uploadError}
+        <div style="display: inline-block; margin-top: 2px; margin-bottom: 2px" class="label label-danger">{uploadError}</div>
+      {/if}
+    </div>
 
-  <form on:submit|preventDefault={doRemoteSave}>
-    <div style="flex: 1">
+    <div class="flex-1">
       <div class="btn-group">
         <input bind:value={remoteUrl} disabled={uploading} style="min-width: 200px" class="form-control" placeholder="New Cover URL" tabIndex={-1} />
         <button class="btn btn-default" disabled={!remoteUrl || uploading}>
@@ -102,8 +102,8 @@
         </button>
       </div>
     </div>
-  </form>
-</FlowItems>
+  </div>
+</form>
 
 <style>
   :global(.dropzone-container) {

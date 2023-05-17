@@ -71,8 +71,8 @@
   </Tabs>
 
   <hr class="my-3" />
-  <FlowItems>
+  <div class="flex flex-row">
     <ActionButton type="submit" style="min-width: 10ch" isRunning={saving} finishedText="Saved" text="Save" preset="primary" runningText="Saving" />
-    <Button disabled={saving} style="margin-left: auto;" type="button" onClick={onCancel}>Cancel</Button>
-  </FlowItems>
+    <Button disabled={saving} class="ml-auto" type="button" onClick={onCancel}>Cancel</Button>
+  </div>
 </form>
