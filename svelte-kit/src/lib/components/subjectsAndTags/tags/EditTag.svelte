@@ -7,10 +7,8 @@
 
   import type { Color, Tag } from "$data/types";
 
-  import Stack from "$lib/components/layout/Stack.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
 
   export let tag: Tag;
@@ -153,9 +151,8 @@
           <Button disabled={saving} preset="primary-xs">Save</Button>
           <Button disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
           {#if editingTag.id}
-            <Button disabled={saving} preset="danger-xs" class="ml-auto" onClick={() => (deleteShowing = true)}>
-              Delete
-              {originalName}
+            <Button disabled={saving} preset="danger-xs" class="ml-auto flex flex-row gap-1" onClick={() => (deleteShowing = true)}>
+              <span>Delete {originalName}</span>
               <i class="fal fa-fw fa-trash-alt" />
             </Button>
           {/if}
@@ -166,22 +163,23 @@
 {:else}
   <form method="POST" action="?/deleteTag" use:enhance={runDelete}>
     <input type="hidden" name="id" value={editingTag.id} />
-    <div>
-      <Stack>
-        <div class="alert alert-danger alert-slim" style="align-self: flex-start">
-          <FlowItems tighter={true}><span>Delete {originalName}?</span></FlowItems>
+
+    <div class="flex flex-col gap-4">
+      <div class="alert alert-danger alert-slim" style="align-self: flex-start">
+        <div>
+          <span>Delete {originalName}?</span>
         </div>
-        <FlowItems>
-          <Button disabled={deleting} preset="danger-xs">
-            {#if deleting}
-              <span> Deleting <i class="far fa-spinner fa-spin" /></span>
-            {:else}
-              <span>Delete it!</span>
-            {/if}
-          </Button>
-          <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
-        </FlowItems>
-      </Stack>
+      </div>
+      <div class="flex flex-row gap-4">
+        <Button disabled={deleting} preset="danger-xs">
+          {#if deleting}
+            <span> Deleting <i class="far fa-spinner fa-spin" /></span>
+          {:else}
+            <span>Delete it!</span>
+          {/if}
+        </Button>
+        <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+      </div>
     </div>
   </form>
 {/if}
