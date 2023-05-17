@@ -81,11 +81,11 @@
       <Stack tightest={true}>
         <BookTitle>{book.title}</BookTitle>
         {#if book.authors}
-          <SubTitleText class="text-sm/4 text-neutral-500">{book.authors.join(", ")}</SubTitleText>
+          <SubTitleText>{book.authors.join(", ")}</SubTitleText>
         {/if}
       </Stack>
 
-      <FlowItems vCenter={true} tighter={true} containerStyle="min-height: 35px">
+      <div class="flex flex-row gap-2 items-center">
         {#if detailsLoading}
           <span><i class="far fa-fw fa-spin fa-spinner" /></span>
         {:else if expanded}
@@ -123,7 +123,7 @@
           </form>
         {/if}
         {#if pendingDelete}<button disabled={deleting} on:click={() => (pendingDelete = false)} class="btn btn-xs"> Cancel </button>{/if}
-      </FlowItems>
+      </div>
     </Stack>
   </td>
   <td>
