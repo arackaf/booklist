@@ -14,7 +14,6 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { get } from "svelte/store";
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   export let isOpen = false;
@@ -74,7 +73,7 @@
       {#if $publicUser}
         <input type="hidden" name="user" value={$publicUser} />
       {/if}
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
         <div>
           <div class="form-group">
             <label for="search_title">Title</label>
@@ -95,7 +94,7 @@
         </div>
         <div class="flex flex-col">
           <label for="__" class="form-label">Is Read?</label>
-          <div class="flex-1 flex flex-row gap-4 items-center radio">
+          <div class="flex-1 flex flex-row gap-4 items-center radio mt-1 md:mt-0">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
@@ -120,20 +119,19 @@
             </select>
           </div>
         </div>
-        <div />
 
-        <SelectAndDisplayContainer>
+        <SelectAndDisplayContainer isEmpty={!localTags.length}>
           <SelectAvailableTags slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
           <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
         </SelectAndDisplayContainer>
 
         {#if !noSubjects}
-          <SelectAndDisplayContainer>
+          <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
             <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
             <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
           </SelectAndDisplayContainer>
 
-          <div class="col-span-2">
+          <div class="md:col-span-2">
             <label class="checkbox">
               <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
               Also search child subjects
@@ -141,7 +139,7 @@
           </div>
         {/if}
 
-        <div class="col-span-2">
+        <div class="md:col-span-2">
           <label class="checkbox">
             <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
             Search books with no subjects set

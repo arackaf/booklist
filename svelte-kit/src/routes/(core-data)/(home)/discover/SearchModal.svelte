@@ -17,6 +17,7 @@
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
   import SearchResults from "./SearchResults.svelte";
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
@@ -136,23 +137,15 @@
         </div>
       </div>
 
-      <div class="md:col-span-2 flex flex-row">
-        <div class="basis-full md:basis-1/4">
-          <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
-        </div>
-        <div class="basis-full md:basis-3/4">
-          <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
-        </div>
-      </div>
+      <SelectAndDisplayContainer isEmpty={!tags.length}>
+        <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
+        <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+      </SelectAndDisplayContainer>
 
-      <div class="md:col-span-2 flex flex-row">
-        <div class="basis-full md:basis-1/4">
-          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
-        </div>
-        <div class="basis-full md:basis-3/4 flex items-center">
-          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
-        </div>
-      </div>
+      <SelectAndDisplayContainer isEmpty={!subjects.length}>
+        <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
+        <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+      </SelectAndDisplayContainer>
 
       <div class="md:col-span-2">
         <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>

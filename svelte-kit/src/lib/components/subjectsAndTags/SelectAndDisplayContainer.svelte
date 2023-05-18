@@ -1,4 +1,10 @@
-<div class="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-0">
+<script lang="ts">
+  export let isEmpty: boolean;
+
+  $: verticalGap = isEmpty ? "gap-0" : "gap-2";
+</script>
+
+<div class={`grid grid-cols-1 ${verticalGap} md:grid-cols-4 md:col-span-2 md:gap-0`}>
   <div>
     <slot name="select" />
   </div>
