@@ -19,11 +19,15 @@
 
 <form bind:this={formEl} method="POST" action="?/setTheme" use:enhance={setTheme}>
   <input type="hidden" name="theme" value={name} />
-  <Stack on:click={() => formEl.requestSubmit()} class={classNames("theme-chooser-item", { active: theme == name })} tightest={true}>
+  <div
+    on:keypress={() => {}}
+    on:click={() => formEl.requestSubmit()}
+    class={classNames("theme-chooser-item flex flex-col", { active: theme == name })}
+  >
     <div class={classNames(name, "theme-chooser")}>
       {#each arrayOfTen as val}
         <div style={`background-color: var(--primary-${val})`} />
       {/each}
     </div>
-  </Stack>
+  </div>
 </form>
