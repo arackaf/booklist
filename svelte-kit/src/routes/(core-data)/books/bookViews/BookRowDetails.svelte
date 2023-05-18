@@ -37,12 +37,12 @@
                   {#if index > 0}
                     <hr style="border: 2px solid #eee" />
                   {/if}
-                  <Stack>
-                    <h4>{review.source || "<unknown source>"}</h4>
+                  <div class="flex flex-col">
+                    <span class="text-base">{review.source || "<unknown source>"}</span>
                     <div>
                       {@html review.content}
                     </div>
-                  </Stack>
+                  </div>
                 </div>
               {/each}
               <br />
@@ -55,8 +55,8 @@
             <h4>No similar items found for this book</h4>
           {:else}
             <div>
-              <Stack>
-                <h4>Similar Books</h4>
+              <div class="flex flex-col">
+                <span class="text-base">Similar Books</span>
                 <table class="table table-condensed" style="backgroundColor: transparent">
                   <tbody>
                     {#each similarBooks as book}
@@ -81,7 +81,7 @@
                     {/each}
                   </tbody>
                 </table>
-              </Stack>
+              </div>
             </div>
           {/if}
         </div>
