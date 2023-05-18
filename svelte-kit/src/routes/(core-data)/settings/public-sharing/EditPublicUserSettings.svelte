@@ -40,15 +40,16 @@
 </script>
 
 <form method="post" action="?/updateSettings" use:enhance={update}>
-  <Stack looser={true}>
+  <div class="flex flex-col gap-4">
     {#if publicLink}
-      <div>
-        Your collection is currently public, viewable{" "}
-        <a target="_blank" rel="noreferrer" href={publicLink}> here </a>
+      <div class="flex flex-col">
+        <div>
+          Your collection is currently public, viewable{" "}
+          <a target="_blank" rel="noreferrer" href={publicLink}> here </a>
+        </div>
+        <hr style="width: 100%" class="mt-2 mb-0" />
       </div>
     {/if}
-
-    <hr style="width: 100%" class="mt-2 mb-0" />
 
     <div class="checkbox-group">
       <label class="checkbox">
@@ -85,5 +86,5 @@
         </div>
       </div>
     </div>
-  </Stack>
+  </div>
 </form>
