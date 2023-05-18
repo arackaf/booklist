@@ -4,7 +4,6 @@
   import type { DynamoUser } from "$data/types";
 
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
 
   export let user: DynamoUser;
   export let isPublic: boolean;

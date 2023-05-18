@@ -4,8 +4,6 @@
   import Button from "$lib/components/buttons/Button.svelte";
 
   import Modal from "$lib/components/ui/Modal.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
 
   import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";

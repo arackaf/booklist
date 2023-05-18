@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { BookDetails } from "$data/types";
 
-  import Stack from "$lib/components/layout/Stack.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import { onMount } from "svelte";
 

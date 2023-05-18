@@ -1,7 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import classNames from "classnames";
-  import Stack from "$lib/components/layout/Stack.svelte";
   import { invalidate } from "$app/navigation";
 
   export let name: string;

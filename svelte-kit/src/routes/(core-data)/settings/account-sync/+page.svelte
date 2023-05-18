@@ -4,7 +4,6 @@
   import { enhance } from "$app/forms";
 
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
   import { invalidateAll } from "$app/navigation";
 
   export let data;
