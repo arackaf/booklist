@@ -34,7 +34,7 @@
 <form method="post" action="?/attemptSync" use:enhance={execute}>
   <div class="flex flex-row">
     <div class="basis-full lg:basis-1/2">
-      <Stack>
+      <div class="flex flex-col gap-4">
         {#if legacySync}
           <div class="alert alert-info">You've already sync'd your account</div>
         {:else if success}
@@ -63,7 +63,7 @@
             <div class="alert alert-danger">Could not find an account with that email and password</div>
           </div>
         {/if}
-      </Stack>
+      </div>
     </div>
   </div>
 </form>
