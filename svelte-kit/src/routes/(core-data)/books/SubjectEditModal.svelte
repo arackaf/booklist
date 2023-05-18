@@ -38,20 +38,20 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Subjects">
-  <Stack>
+  <div class="flex flex-col gap-3">
     {#if !deleteShowing}
-      <FlowItems pushLast={true} xsFlowReverse={true}>
+      <div class="flex flex-col-reverse sm:flex-row gap-5">
         <SelectAvailableSubjects {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
 
-        <Button onClick={newSubject} preset="info-xs">
+        <Button class="sm:ml-auto flex flex-row gap-1" onClick={newSubject} preset="info-xs">
           <span>Add new subject </span>
           <i class="far fa-fw fa-plus-square" />
         </Button>
-      </FlowItems>
+      </div>
     {/if}
 
     {#if editingSubject}
       <EditSubject {colors} allSubjects={subjects} bind:deleteShowing subject={editingSubject} onComplete={cancelEdit} onCancelEdit={cancelEdit} />
     {/if}
-  </Stack>
+  </div>
 </Modal>

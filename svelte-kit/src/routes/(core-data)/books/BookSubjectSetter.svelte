@@ -118,11 +118,11 @@
       </TabContents>
     </Tabs>
     <StandardModalFooter bind:closeModal>
-      <FlowItems pushLast={true}>
+      <div class="flex flex-row">
         <ActionButton isRunning={saving} style="min-width: 10ch" preset="primary" text="Save" runningText="Saving" finishedText="Saved" />
 
-        <Button type="button" style="min-width: 10ch" preset="" onClick={closeModal}>Cancel</Button>
-      </FlowItems>
+        <Button type="button" class="ml-auto" style="min-width: 10ch" preset="" onClick={closeModal}>Cancel</Button>
+      </div>
     </StandardModalFooter>
   </form>
 </Modal>

@@ -27,20 +27,20 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Tags" deferStateChangeOnClose={true}>
-  <Stack>
+  <div class="flex flex-col gap-3">
     {#if !deleteShowing}
-      <FlowItems pushLast={true} xsFlowReverse={true}>
+      <div class="flex flex-col-reverse sm:flex-row gap-5">
         <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
-        <Button onClick={newTag} preset="info-xs">
+        <Button class="sm:ml-auto flex flex-row gap-1" onClick={newTag} preset="info-xs">
           <span>Add new tag </span>
           <i class="far fa-fw fa-plus-square" />
         </Button>
-      </FlowItems>
+      </div>
     {/if}
 
     {#if editingTag}
       <EditTag {colors} bind:deleteShowing tag={editingTag} onComplete={cancelEdit} onCancelEdit={cancelEdit} />
     {/if}
-  </Stack>
+  </div>
 </Modal>
