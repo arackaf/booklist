@@ -7,8 +7,6 @@
   import type { Book, Subject, Tag } from "$data/types";
 
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
@@ -77,54 +75,56 @@
     </div>
   </td>
   <td>
-    <Stack>
-      <Stack tightest={true}>
-        <BookTitle>{book.title}</BookTitle>
-        {#if book.authors}
-          <SubTitleText>{book.authors.join(", ")}</SubTitleText>
-        {/if}
-      </Stack>
+    <div>
+      <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-1">
+          <BookTitle>{book.title}</BookTitle>
+          {#if book.authors}
+            <SubTitleText>{book.authors.join(", ")}</SubTitleText>
+          {/if}
+        </div>
 
-      <div class="flex flex-row gap-2 items-center">
-        {#if detailsLoading}
-          <span><i class="far fa-fw fa-spin fa-spinner" /></span>
-        {:else if expanded}
-          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = false)}>
-            <i class={`far fa-minus fa-fw`} />
-          </button>
-        {:else}
-          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = true)}>
-            <i class={`far fa-plus fa-fw`} />
-          </button>
-        {/if}
+        <div class="flex flex-row gap-2 items-center mt-auto flex-1">
+          {#if detailsLoading}
+            <span><i class="far fa-fw fa-spin fa-spinner" /></span>
+          {:else if expanded}
+            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = false)}>
+              <i class={`far fa-minus fa-fw`} />
+            </button>
+          {:else}
+            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (expanded = true)}>
+              <i class={`far fa-plus fa-fw`} />
+            </button>
+          {/if}
 
-        {#if isbn10}
-          <a
-            style="padding-top: 1px; {hoverOverride}"
-            target="_new"
-            class="gridHoverFilter"
-            href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
-          >
-            <i class={`fab fa-amazon fa-fw`} />
-          </a>
-        {/if}
-        {#if !isPublic}
-          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => editBook(book)}>
-            <i class="fal fa-pencil-alt fa-fw" />
-          </button>
-          <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (pendingDelete = true)}>
-            <i class={`fal fa-trash-alt fa-fw`} />
-          </button>
-        {/if}
-        {#if pendingDelete}
-          <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
-            <input type="hidden" name="id" value={id} />
-            <ActionButton text="Confirm Delete" runningText="Deleting" isRunning={deleting} preset="danger-xs">Confirm Delete</ActionButton>
-          </form>
-        {/if}
-        {#if pendingDelete}<button disabled={deleting} on:click={() => (pendingDelete = false)} class="btn btn-xs"> Cancel </button>{/if}
+          {#if isbn10}
+            <a
+              style="padding-top: 1px; {hoverOverride}"
+              target="_new"
+              class="gridHoverFilter"
+              href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
+            >
+              <i class={`fab fa-amazon fa-fw`} />
+            </a>
+          {/if}
+          {#if !isPublic}
+            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => editBook(book)}>
+              <i class="fal fa-pencil-alt fa-fw" />
+            </button>
+            <button style={hoverOverride} class="raw-button gridHoverFilter" on:click={() => (pendingDelete = true)}>
+              <i class={`fal fa-trash-alt fa-fw`} />
+            </button>
+          {/if}
+          {#if pendingDelete}
+            <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
+              <input type="hidden" name="id" value={id} />
+              <ActionButton text="Confirm Delete" runningText="Deleting" isRunning={deleting} preset="danger-xs">Confirm Delete</ActionButton>
+            </form>
+          {/if}
+          {#if pendingDelete}<button disabled={deleting} on:click={() => (pendingDelete = false)} class="btn btn-xs"> Cancel </button>{/if}
+        </div>
       </div>
-    </Stack>
+    </div>
   </td>
   <td>
     <div class="mt-1">

@@ -95,9 +95,9 @@
             <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
           </div>
         </div>
-        <Stack>
+        <div class="flex flex-col">
           <label for="__" class="form-label">Is Read?</label>
-          <div class="flex flex-row gap-4 items-center radio">
+          <div class="flex-1 flex flex-row gap-4 items-center radio">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
@@ -111,7 +111,7 @@
               <label for="isReadN">No</label>
             </div>
           </div>
-        </Stack>
+        </div>
         <div>
           <div class="form-group">
             <label for="book_search_sort">Sort</label>
