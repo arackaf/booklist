@@ -3,7 +3,6 @@
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import ActionButton from "$lib/components/buttons/ActionButton.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
@@ -46,7 +45,7 @@
       <div style="display: flex; flex-direction: column; height: 100%">
         <span class="text-sm leading-[normal] truncate">{book.title}</span>
         <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
-        <FlowItems style="margin-top: auto;" class="padding-top-xs">
+        <div class="flex flex-row mt-auto pt-2">
           {#if !isPublic}
             <button class="btn btn-xxs btn-light btn-square-icon" aria-label="Edit book" on:click={() => editBook(book)}>
               <i class="fal fa-fw fa-pencil-alt" />
@@ -66,7 +65,7 @@
           {#if pendingDelete}
             <button on:click={() => (pendingDelete = false)} disabled={deleting} class="margin-left btn btn-xxs no-border"> Cancel </button>
           {/if}
-        </FlowItems>
+        </div>
       </div>
     </div>
   </div>
