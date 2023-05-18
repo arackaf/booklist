@@ -1,7 +1,5 @@
 <script lang="ts">
   import type { Tag } from "$data/types";
-  import Stack from "$lib/components/layout/Stack.svelte";
-  import FlowItems from "../../layout/FlowItems.svelte";
   import { toHash } from "$lib/state/helpers";
 
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
@@ -12,18 +10,12 @@
 
   export let tags: Tag[];
   export let vertical: boolean = false;
-  export let style: string = "";
   export let href: ((s: Tag) => string | null) | null = null;
-
-  let className = "";
-  export { className as class };
-
-  $: Component = vertical ? Stack : FlowItems;
 
   $: tagHash = toHash(tags);
 </script>
 
-<svelte:component this={Component} tightest={true} {style} class={className}>
+<div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
   {#each currentlySelected.filter(id => tagHash[id]).map(id => tagHash[id]) as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
@@ -31,4 +23,4 @@
       <LabelDisplay item={t} href={href != null ? href(t) : null} />
     {/if}
   {/each}
-</svelte:component>
+</div>

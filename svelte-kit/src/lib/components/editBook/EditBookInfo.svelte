@@ -102,7 +102,7 @@
         <div class="basis-full md:basis-1/4">
           <SelectAvailableTags {tags} currentlySelected={book.tags} onSelect={addTag} />
         </div>
-        <div class="basis-full md:basis-3/4">
+        <div class="basis-full md:basis-3/4 flex items-center">
           <DisplaySelectedTags {tags} currentlySelected={book.tags} onRemove={removeTag} />
         </div>
       </div>

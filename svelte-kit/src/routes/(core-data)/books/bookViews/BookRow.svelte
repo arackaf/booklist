@@ -133,14 +133,7 @@
   </td>
   <td>
     <div class="mt-1">
-      <DisplaySelectedTags
-        class=""
-        style="align-items: start;"
-        vertical={true}
-        currentlySelected={book.tags}
-        {tags}
-        href={t => $changeFilter.addTag(t.id)}
-      />
+      <DisplaySelectedTags vertical={true} currentlySelected={book.tags} {tags} href={t => $changeFilter.addTag(t.id)} />
     </div>
   </td>
   <td>
