@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.form-group {
+  @apply flex flex-col gap-1;
+}
