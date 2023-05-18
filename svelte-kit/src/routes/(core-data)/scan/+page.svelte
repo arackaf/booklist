@@ -50,8 +50,8 @@
 </script>
 
 <section>
-  <FlowItems pushLast={true} xsFlowReverse={true}>
-    <div style="flex: 1">
+  <div class="flex flex-col-reverse md:grid md:grid-cols-2 gap-2">
+    <div>
       <div style="display: flex; align-items: center">
         <h4 style="margin-top: 0; margin-bottom: 0; font-size: 16px">
           Enter your books here
@@ -88,14 +88,14 @@
       {/each}
     </div>
     <ScanResults />
-    <EditBookModal
-      isOpen={enteringBook}
-      book={editingBook}
-      subjects={allSubjects}
-      {tags}
-      onSave={() => (editingBook = defaultEmptyBook())}
-      onHide={() => (enteringBook = false)}
-      header={"Enter book"}
-    />
-  </FlowItems>
+  </div>
+  <EditBookModal
+    isOpen={enteringBook}
+    book={editingBook}
+    subjects={allSubjects}
+    {tags}
+    onSave={() => (editingBook = defaultEmptyBook())}
+    onHide={() => (enteringBook = false)}
+    header={"Enter book"}
+  />
 </section>

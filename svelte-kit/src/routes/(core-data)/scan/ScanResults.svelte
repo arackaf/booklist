@@ -43,7 +43,7 @@
   });
 </script>
 
-<div style="flex: 1">
+<div>
   <div>
     {#if pending}
       <span class="label label-info">
