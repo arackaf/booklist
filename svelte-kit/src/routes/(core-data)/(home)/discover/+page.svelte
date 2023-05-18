@@ -1,6 +1,4 @@
 <script lang="ts">
-  import Stack from "$lib/components/layout/Stack.svelte";
-
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
   import DisplayBook from "./DisplayBook.svelte";
@@ -41,7 +39,7 @@
 
 <div class="flex flex-row gap-3">
   <div class="basis-1/2 min-w-0">
-    <Stack loosest={true}>
+    <div class="flex flex-col gap-5">
       <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
       <div class="flex flex-row">
@@ -63,7 +61,7 @@
           <DisplayBook {book} {unselectBook} />
         {/each}
       </div>
-    </Stack>
+    </div>
   </div>
   <div class="basis-1/2 min-w-0">
     {#if recommendations.length}

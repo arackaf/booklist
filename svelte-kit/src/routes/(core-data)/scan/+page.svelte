@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Book } from "$data/types";
 
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
