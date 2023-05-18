@@ -3,8 +3,6 @@
   import Modal from "$lib/components/ui/Modal.svelte";
 
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import type { Color, Subject } from "$data/types";
 

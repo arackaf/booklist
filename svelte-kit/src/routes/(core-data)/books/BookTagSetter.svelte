@@ -13,8 +13,6 @@
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import Stack from "$lib/components/layout/Stack.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   $: tags = $page.data.tags;
@@ -109,11 +107,11 @@
           </div>
         </TabContent>
         <TabContent tabName="books">
-          <Stack style="font-size: 14px">
+          <div class="flex flex-col gap-2 text-sm">
             {#each modifyingBooks as book (book.id)}
               <div>{book.title}</div>
             {/each}
-          </Stack>
+          </div>
         </TabContent>
       </TabContents>
     </Tabs>

@@ -5,8 +5,6 @@
   import Modal from "$lib/components/ui/Modal.svelte";
 
   import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
 
   export let isOpen = false;
