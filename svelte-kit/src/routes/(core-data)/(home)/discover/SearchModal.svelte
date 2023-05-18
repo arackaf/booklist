@@ -10,8 +10,6 @@
 
   import Modal from "$lib/components/ui/Modal.svelte";
   import ActionIconButton from "$lib/components/buttons/ActionIconButton.svelte";
-  import Stack from "$lib/components/layout/Stack.svelte";
-  import FlowItems from "$lib/components/layout/FlowItems.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
@@ -118,10 +116,10 @@
         </div>
       </div>
 
-      <div>
-        <Stack>
+      <div class="flex">
+        <div class="flex flex-col">
           <span class="form-label">Is read?</span>
-          <div class="flex flex-row gap-4 items-center radio">
+          <div class="flex-1 flex flex-row gap-4 items-center radio">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked value="" name="is-read" id="isReadE" />
               <label for="isReadE">Either</label>
@@ -135,7 +133,7 @@
               <label for="isReadN">No</label>
             </div>
           </div>
-        </Stack>
+        </div>
       </div>
 
       <div class="md:col-span-2 flex flex-row">
