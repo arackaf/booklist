@@ -1,10 +1,12 @@
 <script>
+  import ActionButtonOld from "$lib/components/buttons/ActionButton.svelte";
   import ActionIconButton from "$lib/components/buttons/ActionIconButton.svelte";
+  import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
 
   let running = false;
-  function clickIconButton() {
+  function clickButton() {
     running = true;
     setTimeout(() => {
       running = false;
@@ -32,16 +34,26 @@
     <Button type="primary">Button</Button>
   </div>
 
+  <h1>ActionButton</h1>
+  <div />
+
+  <div>
+    <ActionButtonOld onClick={clickButton} runningText="Searching" isRunning={running}>Search</ActionButtonOld>
+  </div>
+  <div>
+    <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
+  </div>
+
   <h1>Icon Button</h1>
   <div />
 
   <div>
-    <ActionIconButton onClick={clickIconButton} class="btn btn-default" disabled={running}>
-      <i class:fa-spin={running} class:fa-spinner={running} class:fa-search={!running} class="fal fa-fw" />
-    </ActionIconButton>
+    <button class="btn btn-default">
+      <i class="fal fa-fw fa-search" />
+    </button>
   </div>
   <div>
-    <IconButton on:click={clickIconButton} class="btn btn-default" disabled={running}>
+    <IconButton class="btn btn-default">
       <i class="fal fa-fw fa-search" />
     </IconButton>
   </div>

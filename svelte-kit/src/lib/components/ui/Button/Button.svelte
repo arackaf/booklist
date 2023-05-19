@@ -22,6 +22,7 @@
   class="m-0 rounded border py-1.5 px-3 text-base focus:shadow-md transition-[box-shadow]"
   class:cursor-not-allowed={disabled}
   {disabled}
+  on:click
 >
   <slot />
 </button>
