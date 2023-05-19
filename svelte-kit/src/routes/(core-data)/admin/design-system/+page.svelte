@@ -1,5 +1,15 @@
 <script>
+  import ActionIconButton from "$lib/components/buttons/ActionIconButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
+  import IconButton from "$lib/components/ui/Button/IconButton.svelte";
+
+  let running = false;
+  function clickIconButton() {
+    running = true;
+    setTimeout(() => {
+      running = false;
+    }, 500);
+  }
 </script>
 
 <div class="buttons">
@@ -20,6 +30,30 @@
   </div>
   <div>
     <Button type="primary">Button</Button>
+  </div>
+
+  <h1>Icon Button</h1>
+  <div />
+
+  <div>
+    <ActionIconButton onClick={clickIconButton} class="btn btn-default" disabled={running}>
+      <i class:fa-spin={running} class:fa-spinner={running} class:fa-search={!running} class="fal fa-fw" />
+    </ActionIconButton>
+  </div>
+  <div>
+    <IconButton on:click={clickIconButton} class="btn btn-default" disabled={running}>
+      <i class="fal fa-fw fa-search" />
+    </IconButton>
+  </div>
+
+  <h1>Default</h1>
+  <div />
+
+  <div>
+    <button class="btn">Button</button>
+  </div>
+  <div>
+    <Button>Button</Button>
   </div>
 
   <h1>Disabled</h1>
