@@ -9,7 +9,6 @@
   import type { Book, Subject, Tag } from "$data/types";
 
   import Modal from "$lib/components/ui/Modal.svelte";
-  import ActionIconButton from "$lib/components/buttons/ActionIconButton.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
@@ -18,6 +17,7 @@
 
   import SearchResults from "./SearchResults.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
@@ -153,9 +153,7 @@
 
       <div class="md:col-span-2">
         <div class="flex flex-row gap-3">
-          <ActionIconButton class="btn btn-default" disabled={loading}>
-            <i class:fa-spin={loading} class:fa-spinner={loading} class:fa-search={!loading} class="fal fa-fw" />
-          </ActionIconButton>
+          <ActionButton running={loading}>Search</ActionButton>
 
           <div class="msg-holder">
             {#if noAvailableBooks}

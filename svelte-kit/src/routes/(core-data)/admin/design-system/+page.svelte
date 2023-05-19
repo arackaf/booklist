@@ -1,6 +1,5 @@
 <script>
   import ActionButtonOld from "$lib/components/buttons/ActionButton.svelte";
-  import ActionIconButton from "$lib/components/buttons/ActionIconButton.svelte";
   import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
