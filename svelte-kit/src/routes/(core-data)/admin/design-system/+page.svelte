@@ -44,6 +44,16 @@
     <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
 
+  <div>
+    <ActionButtonOld onClick={clickButton} runningText="Searching" isRunning={running}>Search</ActionButtonOld>
+  </div>
+  <div>
+    <ActionButtonNew {running} on:click={clickButton}>
+      Search
+      <span slot="running">Searching</span>
+    </ActionButtonNew>
+  </div>
+
   <h1>Icon Button</h1>
   <div />
 
@@ -103,6 +113,6 @@
   .buttons {
     display: grid;
     gap: 15px;
-    grid-template-columns: min-content min-content;
+    grid-template-columns: 120px 120px;
   }
 </style>
