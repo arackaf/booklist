@@ -1,9 +1,11 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
+
   import BookDisplay from "./BookDisplay.svelte";
 
   export let book: BookWithSimilarItems;
@@ -71,9 +73,7 @@
     </div>
     <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
       <input type="hidden" name="id" value={book.id} />
-      <ActionButton {isRunning} runningText="Re-attempt " type="submit" style="align-self: flex-start" class="margin-top" preset="primary-sm"
-        >Re-attempt</ActionButton
-      >
+      <ActionButton type="submit" running={isRunning} class="mt-3">Re-attempt</ActionButton>
     </form>
   {:else}
     <div class="alert alert-info">Sync pending</div>

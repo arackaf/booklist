@@ -332,8 +332,7 @@ input,
 select,
 reach-portal,
 a,
-button,
-button[type="submit"]:not(.text-primary-10) {
+button {
   color: var(--neutral-text);
 }
 button[type="submit"] {
