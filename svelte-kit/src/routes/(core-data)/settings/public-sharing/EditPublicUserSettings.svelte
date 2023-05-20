@@ -3,7 +3,7 @@
   import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
   export let user: DynamoUser;
   export let isPublic: boolean;
@@ -81,7 +81,7 @@
           </div>
         {/if}
         <div>
-          <ActionButton isRunning={saving} style="min-width: 12ch" text="Save" runningText="Saving" finishedText="Saved" preset="primary" />
+          <ActionButton running={saving} theme="primary">Save</ActionButton>
         </div>
       </div>
     </div>
