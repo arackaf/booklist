@@ -3,7 +3,7 @@
 
   import { enhance } from "$app/forms";
 
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import { invalidateAll } from "$app/navigation";
 
   export let data;
@@ -53,7 +53,7 @@
             <label for="password">New password</label>
             <input name="password" type="password" class="form-control" id="password" />
           </div>
-          <ActionButton isRunning={running} style="align-self: flex-start; min-width: 10ch;" text="Sync" runningText="Syncing" preset="primary" />
+          <ActionButton class="self-start" {running} theme="primary">Sync</ActionButton>
         {/if}
 
         {#if notFound}
