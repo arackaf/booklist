@@ -3,7 +3,8 @@
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
 
   import { page } from "$app/stores";
@@ -13,6 +14,8 @@
 
   export let book: Book;
   export let isPublic: boolean;
+
+  let showActions = false;
 
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
@@ -34,39 +37,48 @@
       }
     };
   };
+
+  function itemClicked(evt: any) {
+    const elClicked = evt.target.tagName;
+    if (elClicked === "I" || elClicked === "BUTTON") {
+      return;
+    }
+
+    showActions = !showActions;
+  }
 </script>
 
-<div class="listGroupItem">
+<div class="listGroupItem" on:click={itemClicked} on:keypress={() => {}}>
   <div style="display: flex">
     <div style="margin-right: 5px; min-width: 55px">
       <BookCover size="mobile" {book} />
     </div>
     <div style="overflow: hidden">
-      <div style="display: flex; flex-direction: column; height: 100%">
-        <span class="text-sm leading-[normal] truncate">{book.title}</span>
-        <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
-        <div class="flex flex-row mt-auto pt-2">
-          {#if !isPublic}
-            <button class="btn btn-xxs btn-light btn-square-icon" aria-label="Edit book" on:click={() => editBook(book)}>
-              <i class="fal fa-fw fa-pencil-alt" />
-            </button>
-            <button class="btn btn-xxs btn-light btn-square-icon margin-left" aria-label="Delete book" on:click={() => (pendingDelete = true)}>
-              <i class="far fa-fw fa-trash" />
-            </button>
-          {/if}
-          {#if pendingDelete}
-            <form method="POST" action="?/deleteBook" use:enhance={deleteBook} style="display: flex;">
-              <input type="hidden" name="id" value={book.id} />
-              <ActionButton isRunning={deleting} text="Confirm Delete" runningText="Deleting" class="margin-left btn btn-xxs btn-danger no-border">
-                Confirm Delete
-              </ActionButton>
-            </form>
-          {/if}
-          {#if pendingDelete}
-            <button on:click={() => (pendingDelete = false)} disabled={deleting} class="margin-left btn btn-xxs no-border"> Cancel </button>
+      <form method="POST" action="?/deleteBook" use:enhance={deleteBook} style="display: flex;">
+        <input type="hidden" name="id" value={book.id} />
+        <div style="display: flex; flex-direction: column; height: 100%">
+          <span class="text-sm leading-[normal] truncate">{book.title}</span>
+          <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
+          {#if showActions}
+            <div class="flex flex-row gap-2 mt-auto pt-2">
+              {#if !isPublic}
+                <Button type="button" theme="primary" size="sm" icon={true} aria-label="Edit book" on:click={() => editBook(book)}>
+                  <i class="fal fa-fw fa-pencil-alt" />
+                </Button>
+                <Button type="button" size="sm" icon={true} aria-label="Delete book" on:click={() => (pendingDelete = true)}>
+                  <i class="far fa-fw fa-trash" />
+                </Button>
+              {/if}
+              {#if pendingDelete}
+                <ActionButton running={deleting} size="sm" theme="danger">Confirm Delete</ActionButton>
+              {/if}
+              {#if pendingDelete}
+                <Button type="button" size="sm" on:click={() => (pendingDelete = false)} disabled={deleting}>Cancel</Button>
+              {/if}
+            </div>
           {/if}
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>

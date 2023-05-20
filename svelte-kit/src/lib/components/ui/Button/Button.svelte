@@ -15,7 +15,7 @@
   $: isDanger = theme === "danger";
 
   $: paddingTop = size === "default" ? "py-1.5" : "py-1";
-  $: paddingSide = icon ? paddingTop : size === "default" ? "px-3" : "px-1.5";
+  $: paddingSide = icon ? (size === "default" ? "px-1.5" : "px-1") : size === "default" ? "px-3" : "px-1.5";
   $: fontSize = size === "default" ? "text-base" : "text-xs leading-3";
 
   $: addedClasses = [paddingTop, paddingSide, fontSize, className].join(" ");
