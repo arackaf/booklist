@@ -58,7 +58,7 @@
   });
 
   $: {
-    if ($books) {
+    if (books) {
       selectionState.clear();
     }
   }
