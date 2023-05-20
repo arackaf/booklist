@@ -73,7 +73,7 @@
     </div>
     <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
       <input type="hidden" name="id" value={book.id} />
-      <ActionButton type="submit" running={isRunning} class="mt-3">Re-attempt</ActionButton>
+      <ActionButton theme="primary" type="submit" running={isRunning} class="mt-3">Re-attempt</ActionButton>
     </form>
   {:else}
     <div class="alert alert-info">Sync pending</div>
