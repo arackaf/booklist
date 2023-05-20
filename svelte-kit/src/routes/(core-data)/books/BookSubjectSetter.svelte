@@ -7,7 +7,7 @@
   import Modal from "$lib/components/ui/Modal.svelte";
   import StandardModalFooter from "$lib/components/ui/StandardModalFooter.svelte";
   import Button from "$lib/components/buttons/Button.svelte";
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
@@ -117,7 +117,7 @@
     </Tabs>
     <StandardModalFooter bind:closeModal>
       <div class="flex flex-row">
-        <ActionButton isRunning={saving} style="min-width: 10ch" preset="primary" text="Save" runningText="Saving" finishedText="Saved" />
+        <ActionButton running={saving} theme="primary">Save</ActionButton>
 
         <Button type="button" class="ml-auto" style="min-width: 10ch" preset="" onClick={closeModal}>Cancel</Button>
       </div>
