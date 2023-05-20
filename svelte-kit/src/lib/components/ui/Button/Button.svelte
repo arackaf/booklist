@@ -1,12 +1,12 @@
 <script lang="ts">
-  export let type: "primary" | "danger" | "default" = "default";
+  export let theme: "primary" | "danger" | "default" = "default";
   export let disabled: boolean = false;
   export let icon: boolean = false;
 
   let className = "";
   export { className as class };
 
-  $: isPrimary = type === "primary";
+  $: isPrimary = theme === "primary";
 
   $: defaultButton = !isPrimary;
 </script>
@@ -27,6 +27,7 @@
   class:opacity-50={disabled}
   {disabled}
   on:click
+  {...$$restProps}
 >
   <slot />
 </button>
