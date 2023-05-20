@@ -6,7 +6,8 @@
 
   import type { Book, Subject, Tag } from "$data/types";
 
-  import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
@@ -118,10 +119,12 @@
           {#if pendingDelete}
             <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
               <input type="hidden" name="id" value={id} />
-              <ActionButton text="Confirm Delete" runningText="Deleting" isRunning={deleting} preset="danger-xs">Confirm Delete</ActionButton>
+              <ActionButton running={deleting} theme="danger" size="sm">Confirm Delete</ActionButton>
             </form>
           {/if}
-          {#if pendingDelete}<button disabled={deleting} on:click={() => (pendingDelete = false)} class="btn btn-xs"> Cancel </button>{/if}
+          {#if pendingDelete}
+            <Button size="sm" disabled={deleting} on:click={() => (pendingDelete = false)}>Cancel</Button>
+          {/if}
         </div>
       </div>
     </div>
@@ -141,13 +144,18 @@
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
           <ActionButton
-            baseWidth="10ch"
-            text={book.isRead ? "Read" : "Set read"}
-            isRunning={readSaving || multiReadSaving}
-            runningText="Saving"
-            icon={book.isRead ? "far fa-fw fa-check" : null}
+            size="sm"
+            running={readSaving || multiReadSaving}
+            theme={book.isRead ? "success" : "default"}
             preset={book.isRead ? "success-xs" : "default-xs"}
-          />
+          >
+            <span>
+              {book.isRead ? "Read" : "Set read"}
+            </span>
+            {#if book.isRead}
+              <i class="far fa-fw fa-check" />
+            {/if}
+          </ActionButton>
         </BookReadSetter>
       {:else if !!book.isRead}<span class="label label-success"> Read <i class="far fa-fw fa-check" /> </span>{/if}
     </div>

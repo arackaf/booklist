@@ -4,12 +4,15 @@
   let className = "";
   export { className as class };
 
-  export let theme: "primary" | "danger" | "default" = "default";
+  const { className: ignore, ...rest } = $$restProps;
+
+  export let size: "default" | "sm" = "default";
+  export let theme: "primary" | "success" | "danger" | "default" = "default";
   export let disabled: boolean = false;
   export let running: boolean;
 </script>
 
-<Button class={"grid grid-cols-1 grid-rows-1 " + className} on:click {theme} disabled={disabled || running} {...$$restProps}>
+<Button on:click class={"grid grid-cols-1 grid-rows-1 " + className} {size} {theme} disabled={disabled || running} {...rest}>
   <div class="col-start-1 col-end-2 row-start-1 row-end-2" class:invisible={running}>
     <slot />
   </div>

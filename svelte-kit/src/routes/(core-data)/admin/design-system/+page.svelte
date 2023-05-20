@@ -1,7 +1,9 @@
-<script>
-  import ActionButtonOld from "$lib/components/buttons/ActionButton.svelte";
+<script lang="ts">
+  import FakeActionButtonOld from "$lib/components/buttons/Button.svelte";
+
   import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
+
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
 
   let running = false;
@@ -30,21 +32,51 @@
     <button class="btn btn-primary">Button</button>
   </div>
   <div>
-    <Button type="primary">Button</Button>
+    <Button theme="primary">Button</Button>
+  </div>
+
+  <h1>Success</h1>
+  <div />
+
+  <div>
+    <button class="btn btn-success">Button</button>
+  </div>
+  <div>
+    <Button theme="success">Button</Button>
+  </div>
+
+  <h1>Danger</h1>
+  <div />
+
+  <div>
+    <button class="btn btn-danger">Button</button>
+  </div>
+  <div>
+    <Button type="primary" theme="danger">Button</Button>
   </div>
 
   <h1>ActionButton</h1>
   <div />
 
   <div>
-    <ActionButtonOld onClick={clickButton} runningText="Searching" isRunning={running}>Search</ActionButtonOld>
+    <FakeActionButtonOld onClick={clickButton} disabled={running}>Search</FakeActionButtonOld>
   </div>
   <div>
     <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
 
+  <h1>ActionButton</h1>
+  <div />
+
   <div>
-    <ActionButtonOld onClick={clickButton} runningText="Searching" isRunning={running}>Search</ActionButtonOld>
+    <FakeActionButtonOld onClick={clickButton} disabled={running}>Search</FakeActionButtonOld>
+  </div>
+  <div>
+    <ActionButtonNew theme="primary" {running} on:click={clickButton}>Search</ActionButtonNew>
+  </div>
+
+  <div>
+    <FakeActionButtonOld onClick={clickButton} disabled={running}>Search</FakeActionButtonOld>
   </div>
   <div>
     <ActionButtonNew {running} on:click={clickButton}>
@@ -75,6 +107,26 @@
   </div>
   <div>
     <Button>Button</Button>
+  </div>
+
+  <h1>sm</h1>
+  <div />
+
+  <div>
+    <button class="btn btn-xs">Button</button>
+  </div>
+  <div>
+    <Button size="sm">Buttoning</Button>
+  </div>
+
+  <h1>danger-sm</h1>
+  <div />
+
+  <div>
+    <button class="btn btn-xs btn-danger">Button</button>
+  </div>
+  <div>
+    <Button size="sm" theme="danger">Buttoning</Button>
   </div>
 
   <h1>Disabled</h1>
