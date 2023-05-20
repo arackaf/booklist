@@ -7,7 +7,8 @@
   import EditBookCovers from "./EditBookCovers.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
 
-  import ActionButton from "../buttons/ActionButton.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+
   import Button from "../buttons/Button.svelte";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
 
@@ -71,7 +72,7 @@
 
   <hr class="my-3" />
   <div class="flex flex-row">
-    <ActionButton type="submit" style="min-width: 10ch" isRunning={saving} finishedText="Saved" text="Save" preset="primary" runningText="Saving" />
+    <ActionButton theme="primary" type="submit" running={saving} preset="primary">Save</ActionButton>
     <Button disabled={saving} class="ml-auto" type="button" onClick={onCancel}>Cancel</Button>
   </div>
 </form>
