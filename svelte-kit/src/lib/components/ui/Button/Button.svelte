@@ -1,6 +1,6 @@
 <script lang="ts">
   export let theme: "primary" | "success" | "danger" | "default" = "default";
-  export let size: "default" | "sm" = "default";
+  export let size: "default" | "med" | "sm" = "default";
   export let disabled: boolean = false;
   export let icon: boolean = false;
 
@@ -16,7 +16,7 @@
 
   $: paddingTop = size === "default" ? "py-1.5" : "py-1";
   $: paddingSide = icon ? (size === "default" ? "px-1.5" : "px-1") : size === "default" ? "px-3" : "px-1.5";
-  $: fontSize = size === "default" ? "text-base" : "text-xs leading-3";
+  $: fontSize = size === "default" ? "text-base" : size === "med" ? "text-sm" : "text-xs leading-3";
 
   $: addedClasses = [paddingTop, paddingSide, fontSize, className].join(" ");
 </script>
@@ -38,11 +38,11 @@
   class:border-neutral-400={defaultButton}
   class:text-neutral-700={defaultButton}
   class:leading-none={icon}
-  class:focus:shadow-md={size === "default"}
-  class:focus:shadow-sm={size !== "default"}
-  class={`m-0 rounded border lead transition-[box-shadow,opacity] ${addedClasses}`}
+  class:focus:shadow-md={size === "default" || size === "med"}
+  class:focus:shadow-sm={size === "sm"}
   class:cursor-not-allowed={disabled}
   class:opacity-50={disabled}
+  class={`m-0 rounded border lead transition-[box-shadow,opacity] ${addedClasses}`}
   {disabled}
   on:click
   {...rest}

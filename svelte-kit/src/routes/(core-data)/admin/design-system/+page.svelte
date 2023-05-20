@@ -109,6 +109,14 @@
     <Button>Button</Button>
   </div>
 
+  <h1>Med</h1>
+  <div />
+
+  <div>n/a</div>
+  <div>
+    <Button size="med">Button</Button>
+  </div>
+
   <h1>sm</h1>
   <div />
 

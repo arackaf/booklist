@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
 
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
@@ -41,8 +41,8 @@
       <div class="flex flex-col-reverse sm:flex-row gap-5">
         <SelectAvailableSubjects {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
 
-        <Button class="sm:ml-auto flex flex-row gap-1" onClick={newSubject} preset="info-xs">
-          <span>Add new subject </span>
+        <Button size="med" theme="primary" on:click={newSubject} class="flex flex-row gap-1 items-center self-start sm:ml-auto">
+          <span>New subject </span>
           <i class="far fa-fw fa-plus-square" />
         </Button>
       </div>

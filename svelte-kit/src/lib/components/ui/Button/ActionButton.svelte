@@ -6,7 +6,7 @@
 
   const { className: ignore, ...rest } = $$restProps;
 
-  export let size: "default" | "sm" = "default";
+  export let size: "default" | "med" | "sm" = "default";
   export let theme: "primary" | "success" | "danger" | "default" = "default";
   export let disabled: boolean = false;
   export let running: boolean;

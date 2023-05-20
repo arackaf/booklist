@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
   import { getContext } from "svelte";
-  import Button from "../buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
-  export const closeModal = getContext("svelte-helpers-modal").closeModal;
+  export const closeModal = (getContext("svelte-helpers-modal") as any).closeModal;
 </script>
 
 <hr class="my-3" />
 {#if $$slots.default}
   <slot />
 {:else}
-  <Button onClick={closeModal}>Close</Button>
+  <Button on:click={closeModal}>Close</Button>
 {/if}
