@@ -9,7 +9,7 @@ export function isbn13To10(isbn: string) {
   isbn = isbn.slice(3);
   isbn = isbn.slice(0, isbn.length - 1);
 
-  let multiplyBy = 10;
+  let multiplyBy = 1;
   let sum = 0;
   for (const char of [...isbn]) {
     if (isNaN(parseInt(char))) {
@@ -17,9 +17,9 @@ export function isbn13To10(isbn: string) {
     }
 
     sum += parseInt(char, 10) * multiplyBy;
-    multiplyBy--;
+    multiplyBy++;
   }
-  const checkDigit = 11 - (sum % 11);
+  const checkDigit = sum % 11;
 
   return [...isbn, checkDigit == 10 ? "X" : checkDigit].join("");
 }
