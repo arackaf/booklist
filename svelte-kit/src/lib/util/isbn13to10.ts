@@ -21,5 +21,5 @@ export function isbn13To10(isbn: string) {
   }
   const checkDigit = 11 - (sum % 11);
 
-  return [...isbn, checkDigit].join("");
+  return [...isbn, checkDigit == 10 ? "X" : checkDigit].join("");
 }
