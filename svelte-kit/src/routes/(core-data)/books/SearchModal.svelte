@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Subject, Tag, UnwrapReadable } from "$data/types";
 
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
   import Modal from "$lib/components/ui/Modal.svelte";
 
@@ -148,7 +148,7 @@
       </div>
 
       <div class="margin-top-med">
-        <Button text="Filter" preset="primary">Search</Button>
+        <Button theme="primary" text="Filter">Search</Button>
       </div>
     </form>
   {/key}
