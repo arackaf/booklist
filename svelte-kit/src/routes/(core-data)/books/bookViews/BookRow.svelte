@@ -143,12 +143,7 @@
     <div class="margin-top-sm">
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
-          <ActionButton
-            size="sm"
-            running={readSaving || multiReadSaving}
-            theme={book.isRead ? "success" : "default"}
-            preset={book.isRead ? "success-xs" : "default-xs"}
-          >
+          <ActionButton size="sm" running={readSaving || multiReadSaving} theme={book.isRead ? "success" : "default"}>
             <span>
               {book.isRead ? "Read" : "Set read"}
             </span>

@@ -72,7 +72,7 @@
 
   <hr class="my-3" />
   <div class="flex flex-row">
-    <ActionButton theme="primary" type="submit" running={saving} preset="primary">Save</ActionButton>
+    <ActionButton theme="primary" type="submit" running={saving}>Save</ActionButton>
     <Button disabled={saving} class="ml-auto" type="button" on:click={onCancel}>Cancel</Button>
   </div>
 </form>
