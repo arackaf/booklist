@@ -6,7 +6,7 @@
 
   import Modal from "$lib/components/ui/Modal.svelte";
   import StandardModalFooter from "$lib/components/ui/StandardModalFooter.svelte";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
@@ -102,7 +102,7 @@
             </div>
 
             <div class="md:col-span-4">
-              <Button type="button" onClick={resetSubjects} preset="default-xs">Reset subjects</Button>
+              <Button size="sm" type="button" on:click={resetSubjects}>Reset subjects</Button>
             </div>
           </div>
         </TabContent>
@@ -119,7 +119,7 @@
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
 
-        <Button type="button" class="ml-auto" style="min-width: 10ch" preset="" onClick={closeModal}>Cancel</Button>
+        <Button type="button" class="ml-auto" on:click={closeModal}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>
