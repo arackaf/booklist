@@ -7,7 +7,7 @@
   import { quadIn } from "svelte/easing";
   import { scale } from "svelte/transition";
 
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
@@ -37,7 +37,7 @@
 
 <section class="flush-bottom subjectsRoot">
   <div>
-    <Button class="margin-bottom" preset="primary" onClick={() => editSubject(newSubject())}>New Subject</Button>
+    <Button class="mb-4" theme="primary" on:click={() => editSubject(newSubject())}>New Subject</Button>
   </div>
 
   <div class="contentRoot">
@@ -66,7 +66,7 @@
       onCancelEdit={closeEditModal}
     />
     <hr class="my-3" />
-    <Button onClick={closeEditModal}>Close</Button>
+    <Button on:click={closeEditModal}>Close</Button>
   </Modal>
 </section>
 
