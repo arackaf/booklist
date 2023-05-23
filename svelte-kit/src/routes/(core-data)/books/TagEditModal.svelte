@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Color, Tag } from "$data/types";
 
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
 
   import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
@@ -30,7 +30,7 @@
       <div class="flex flex-col-reverse sm:flex-row gap-5">
         <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
-        <Button class="sm:ml-auto flex flex-row gap-1" onClick={newTag} preset="info-xs">
+        <Button size="med" class="sm:ml-auto flex flex-row gap-1 self-start items-center" on:click={newTag}>
           <span>Add new tag </span>
           <i class="far fa-fw fa-plus-square" />
         </Button>
