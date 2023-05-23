@@ -9,7 +9,8 @@
 
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
-  import Button from "$lib/components/buttons/Button.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
   export let tag: Tag;
   export let colors: Color[];
@@ -148,10 +149,17 @@
       </div>
       <div class="md:col-span-2">
         <div class="flex flex-row gap-2">
-          <Button disabled={saving} preset="primary-xs">Save</Button>
-          <Button disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+          <Button size="sm" theme="primary" disabled={saving}>Save</Button>
+          <Button size="sm" disabled={saving} on:click={onCancelEdit}>Cancel</Button>
           {#if editingTag.id}
-            <Button disabled={saving} preset="danger-xs" class="ml-auto flex flex-row gap-1" onClick={() => (deleteShowing = true)}>
+            <Button
+              size="sm"
+              theme="danger"
+              type="button"
+              disabled={saving}
+              class="ml-auto flex flex-row gap-1"
+              on:click={() => (deleteShowing = true)}
+            >
               <span>Delete {originalName}</span>
               <i class="fal fa-fw fa-trash-alt" />
             </Button>
@@ -171,14 +179,8 @@
         </div>
       </div>
       <div class="flex flex-row gap-4">
-        <Button disabled={deleting} preset="danger-xs">
-          {#if deleting}
-            <span> Deleting <i class="far fa-spinner fa-spin" /></span>
-          {:else}
-            <span>Delete it!</span>
-          {/if}
-        </Button>
-        <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+        <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
+        <Button size="sm" disabled={deleting} on:click={() => (deleteShowing = false)}>Cancel</Button>
       </div>
     </div>
   </form>
