@@ -1,7 +1,7 @@
 <script lang="ts">
   import "./index.scss";
 
-  import Button from "$lib/components/buttons/Button.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 
   export let data;
@@ -46,7 +46,7 @@
 
       {#if $nextPageKey}
         <div />
-        <Button preset="info" disabled={loading} onClick={loadNextScans}>Load More</Button>
+        <ActionButton theme="primary" running={loading} on:click={loadNextScans}>Load More</ActionButton>
       {/if}
     </div>
   </div>
