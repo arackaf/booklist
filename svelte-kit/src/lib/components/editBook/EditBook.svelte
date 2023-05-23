@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import type { Book, Subject, Tag } from "$data/types";
 
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import EditBookCovers from "./EditBookCovers.svelte";
@@ -9,7 +10,6 @@
 
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
-  import Button from "../buttons/Button.svelte";
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
 
   export let book: Book;
@@ -73,6 +73,6 @@
   <hr class="my-3" />
   <div class="flex flex-row">
     <ActionButton theme="primary" type="submit" running={saving} preset="primary">Save</ActionButton>
-    <Button disabled={saving} style="margin-left: auto" class="ml-auto" type="button" onClick={onCancel}>Cancel</Button>
+    <Button disabled={saving} class="ml-auto" type="button" on:click={onCancel}>Cancel</Button>
   </div>
 </form>

@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
 
-  import Button from "../buttons/Button.svelte";
-
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
@@ -131,7 +130,7 @@
     </div>
 
     <div class="col-span-2">
-      <Button type="button" disabled={saving} onClick={addAuthor} preset="default-xs"><i class="far fa-fw fa-plus" />Add author</Button>
+      <Button size="sm" type="button" disabled={saving} on:click={addAuthor}><i class="far fa-fw fa-plus" />Add author</Button>
     </div>
   </div>
 </fieldset>
