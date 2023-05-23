@@ -1,6 +1,4 @@
 <script lang="ts">
-  import FakeActionButtonOld from "$lib/components/buttons/Button.svelte";
-
   import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
 
@@ -59,7 +57,7 @@
   <div />
 
   <div>
-    <FakeActionButtonOld onClick={clickButton} disabled={running}>Search</FakeActionButtonOld>
+    <button class="btn" on:click={clickButton} disabled={running}>Search</button>
   </div>
   <div>
     <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
@@ -69,14 +67,14 @@
   <div />
 
   <div>
-    <FakeActionButtonOld onClick={clickButton} disabled={running}>Search</FakeActionButtonOld>
+    <button class="btn" on:click={clickButton} disabled={running}>Search</button>
   </div>
   <div>
     <ActionButtonNew theme="primary" {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
 
   <div>
-    <FakeActionButtonOld onClick={clickButton} disabled={running}>Search</FakeActionButtonOld>
+    <button class="btn" on:click={clickButton} disabled={running}>Search</button>
   </div>
   <div>
     <ActionButtonNew {running} on:click={clickButton}>
