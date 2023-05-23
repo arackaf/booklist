@@ -7,9 +7,10 @@
 
   import type { Color, Subject } from "$data/types";
 
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
-  import Button from "$lib/components/buttons/Button.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
 
@@ -169,10 +170,10 @@
       </div>
       <div class="md:col-span-2">
         <div class="flex flex-row gap-3">
-          <Button disabled={saving} preset="primary-xs">Save</Button>
-          <Button type="button" disabled={saving} preset="default-xs" onClick={onCancelEdit}>Cancel</Button>
+          <Button size="sm" theme="primary" disabled={saving}>Save</Button>
+          <Button size="sm" type="button" disabled={saving} on:click={onCancelEdit}>Cancel</Button>
           {#if editingSubject.id}
-            <Button class="ml-auto" type="button" disabled={saving} preset="danger-xs" onClick={() => (deleteShowing = true)}>
+            <Button size="sm" theme="danger" class="ml-auto" type="button" disabled={saving} on:click={() => (deleteShowing = true)}>
               Delete
               {originalName}
               <i class="fal fa-fw fa-trash-alt" />
@@ -194,14 +195,8 @@
       </div>
 
       <div class="flex flex-row gap-3">
-        <Button disabled={deleting} preset="danger-xs">
-          {#if deleting}
-            <span>Deleting <i class="far fa-spinner fa-spin" /> </span>
-          {:else}
-            <span>Delete it!</span>
-          {/if}
-        </Button>
-        <Button disabled={deleting} onClick={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+        <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
+        <Button size="sm" type="button" disabled={deleting} on:click={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
       </div>
     </div>
   </form>
