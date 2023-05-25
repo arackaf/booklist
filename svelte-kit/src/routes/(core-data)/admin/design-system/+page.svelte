@@ -3,6 +3,7 @@
   import Button from "$lib/components/ui/Button/Button.svelte";
 
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   let running = false;
   function clickButton() {
@@ -21,6 +22,26 @@
   <div>
     <h1>New</h1>
     <hr />
+  </div>
+
+  <h1>Input</h1>
+  <div />
+
+  <div class="form-group">
+    <input class="form-control" />
+  </div>
+  <div>
+    <Input />
+  </div>
+
+  <h1>Input error</h1>
+  <div />
+
+  <div class="form-group">
+    <input class="form-control error" />
+  </div>
+  <div>
+    <Input error={true} />
   </div>
 
   <h1>Primary</h1>
