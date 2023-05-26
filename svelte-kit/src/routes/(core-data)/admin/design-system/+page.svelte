@@ -33,9 +33,7 @@
     <input id="fc" class="form-control" />
   </div>
   <div>
-    <InputGroup>
-      <label slot="label" for="fc2">Title</label>
-
+    <InputGroup labelText="Title">
       <Input slot="input" id="fc2" />
     </InputGroup>
   </div>
