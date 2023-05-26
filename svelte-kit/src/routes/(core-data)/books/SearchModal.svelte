@@ -15,6 +15,8 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { get } from "svelte/store";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};
@@ -31,6 +33,7 @@
   let key = 1;
 
   const onOpen = () => {
+    key++;
     syncSearchState();
     titleEl?.focus();
   };
@@ -75,16 +78,22 @@
       {/if}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
         <div>
-          <div class="form-group">
+          <InputGroup labelText="Title">
+            <Input bind:titleEl slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
+          </InputGroup>
+          <!-- <div class="form-group">
             <label for="search_title">Title</label>
             <input id="search_title" name="search" bind:this={titleEl} value={localSearchValues.search} placeholder="Title" class="form-control" />
-          </div>
+          </div> -->
         </div>
         <div>
-          <div class="form-group">
+          <InputGroup labelText="Publisher">
+            <Input slot="input" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+          </InputGroup>
+          <!-- <div class="form-group">
             <label for="book_search_pub">Publisher</label>
             <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
-          </div>
+          </div> -->
         </div>
         <div>
           <div class="form-group">
