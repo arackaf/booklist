@@ -2,8 +2,9 @@
   import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
 
-  import IconButton from "$lib/components/ui/Button/IconButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import IconButton from "$lib/components/ui/Button/IconButton.svelte";
 
   let running = false;
   function clickButton() {
@@ -22,6 +23,21 @@
   <div>
     <h1>New</h1>
     <hr />
+  </div>
+
+  <h1>Input Group</h1>
+  <div />
+
+  <div class="form-group">
+    <label for="fc">Title</label>
+    <input id="fc" class="form-control" />
+  </div>
+  <div>
+    <InputGroup>
+      <label slot="label" for="fc2">Title</label>
+
+      <Input slot="input" id="fc2" />
+    </InputGroup>
   </div>
 
   <h1>Input</h1>
