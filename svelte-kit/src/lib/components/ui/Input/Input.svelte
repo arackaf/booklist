@@ -5,6 +5,8 @@
   export { className as class };
 
   const { className: ignore, ...rest } = $$restProps;
+
+  export let titleEl: HTMLElement = null as any;
 </script>
 
 <input
@@ -13,6 +15,7 @@
   class:focus:shadow-md={!error}
   class:focus:shadow-sm={error}
   class:focus:shadow-danger-7={error}
-  class="bg-white text-neutral-600 border rounded h-9 py-1 px-3 text-base block w-full transition-box-shadow {className}"
+  class="bg-white text-neutral-600 border rounded h-8 py-1 px-3 text-base block w-full transition-box-shadow {className}"
+  bind:this={titleEl}
   {...rest}
 />
