@@ -77,30 +77,18 @@
         <input type="hidden" name="user" value={$publicUser} />
       {/if}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-        <div>
-          <InputGroup labelText="Title">
-            <Input bind:titleEl slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
-          </InputGroup>
-          <!-- <div class="form-group">
-            <label for="search_title">Title</label>
-            <input id="search_title" name="search" bind:this={titleEl} value={localSearchValues.search} placeholder="Title" class="form-control" />
-          </div> -->
-        </div>
-        <div>
-          <InputGroup labelText="Publisher">
-            <Input slot="input" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
-          </InputGroup>
-          <!-- <div class="form-group">
-            <label for="book_search_pub">Publisher</label>
-            <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
-          </div> -->
-        </div>
-        <div>
-          <div class="form-group">
-            <label for="book_search_auth">Author</label>
-            <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
-          </div>
-        </div>
+        <InputGroup labelText="Title">
+          <Input bind:titleEl slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
+        </InputGroup>
+
+        <InputGroup labelText="Publisher">
+          <Input slot="input" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+        </InputGroup>
+
+        <InputGroup labelText="Author">
+          <Input slot="input" name="author" value={localSearchValues.author} placeholder="Author" />
+        </InputGroup>
+
         <div class="flex flex-col">
           <label for="__" class="form-label">Is Read?</label>
           <div class="flex-1 flex flex-row gap-4 items-center radio mt-1 md:mt-0">
