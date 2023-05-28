@@ -93,23 +93,15 @@
           <label for="isReadE" class="text-sm">Is Read?</label>
           <div class="flex-1 flex flex-row gap-4 items-center mt-1 md:mt-0">
             <div class="flex flex-row items-center gap-1">
-              <input type="radio" class="focus:shadow-md" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
+              <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
             </div>
             <div class="flex flex-row items-center gap-1">
-              <input
-                type="radio"
-                data-class="focus:ring-2 focus:ring-blue-500 outline-none"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                checked={localSearchValues.isRead === "true"}
-                name="is-read"
-                id="isReadY"
-                value="true"
-              />
+              <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
               <label for="isReadY">Yes</label>
             </div>
             <div class="flex flex-row items-center gap-1">
-              <input type="radio" class="focus:shadow-md" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
+              <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
               <label for="isReadN">No</label>
             </div>
           </div>

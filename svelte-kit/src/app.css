@@ -7,16 +7,19 @@
 }
 
 input[type="radio"] {
-  @apply border border-neutral-400 rounded-full w-4 h-4 appearance-none outline-none relative;
+  @apply w-4 h-4 appearance-none border border-neutral-400 rounded-full outline-none relative;
+}
+
+input[type="radio"]:focus {
+  @apply ring-2 ring-[var(--primary-7)] border-[var(--primary-7)];
 }
 
 input[type="radio"]:before {
-  @apply absolute top-1/2 left-1/2 block w-3/4 h-3/4;
+  @apply absolute top-1/2 left-1/2 block w-3/4 h-3/4 rounded-full content-[""];
 
   transform: translate(-50%, -50%);
-  content: "";
-  border-radius: 50%;
 }
+
 input[type="radio"]:checked:before {
-  background: green;
+  @apply bg-[var(--primary-5)];
 }
