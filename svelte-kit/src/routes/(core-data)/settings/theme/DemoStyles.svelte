@@ -20,7 +20,7 @@
       <div>
         <div class="flex flex-col gap-2">
           <InputGroup labelText="Publisher">
-            <Input slot="input" placeholder="Publisher" class="form-control" value="Basic Books" />
+            <Input slot="input" placeholder="Publisher" value="Basic Books" />
           </InputGroup>
 
           <div class="alert alert-success margin-bottom">Looks good to me!</div>
