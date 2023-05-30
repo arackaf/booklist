@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { ajaxUtil } from "$lib/util/ajaxUtil";
   import { createEventDispatcher, onMount } from "svelte";
+
+  import { ajaxUtil } from "$lib/util/ajaxUtil";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let focused: boolean;
   export let selected: boolean;
@@ -60,7 +62,7 @@
   <div>
     <label for="entry-item-{idx}" class="control-label" style="margin-right: 5px"> ISBN </label>
   </div>
-  <input id="entry-item-{idx}" on:focus={onFocus} style="max-width: 250px" class="form-control" bind:this={inputEl} on:keydown={keyDown} />
+  <Input id="entry-item-{idx}" on:focus={onFocus} style="max-width: 250px" bind:inputEl on:keydown={keyDown} />
   {#if queuing}<span class="label label-default margin-left">Queuing</span>{/if}
   {#if queued}<span class="label label-success margin-left">Queued</span>{/if}
 </div>
