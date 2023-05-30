@@ -4,6 +4,8 @@
   import type { DynamoUser } from "$data/types";
 
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 
   export let user: DynamoUser;
   export let isPublic: boolean;
@@ -60,25 +62,13 @@
     <div style="margin-left: 20px">
       <div class="flex flex-col gap-4">
         {#if showForm}
-          <div>
-            <div class="form-group">
-              <label for="public-name">Publicly display your name as</label>
-              <input id="public-name" name="publicName" value={publicName} class:error on:change={nameChange} disabled={saving} placeholder="Name" />
-            </div>
-          </div>
-          <div>
-            <div class="form-group">
-              <label for="public-header">Publicly display your collection as</label>
-              <input
-                id="public-header"
-                name="publicBooksHeader"
-                value={publicBooksHeader}
-                disabled={saving}
-                class="form-control"
-                placeholder="Header"
-              />
-            </div>
-          </div>
+          <InputGroup labelText="Publicly display your name as">
+            <Input slot="input" name="publicName" value={publicName} {error} on:change={nameChange} disabled={saving} placeholder="Name" />
+          </InputGroup>
+
+          <InputGroup labelText="Publicly display your collection as">
+            <Input slot="input" name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
+          </InputGroup>
         {/if}
         <div>
           <ActionButton running={saving} theme="primary">Save</ActionButton>
