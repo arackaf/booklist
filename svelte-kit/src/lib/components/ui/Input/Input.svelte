@@ -6,7 +6,7 @@
 
   const { className: ignore, ...rest } = $$restProps;
 
-  export let titleEl: HTMLElement = null as any;
+  export let titleEl: HTMLInputElement = null as any;
 </script>
 
 <input

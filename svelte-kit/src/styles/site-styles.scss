@@ -583,12 +583,8 @@ div.toast-notification h4 {
   box-shadow: none;
 }
 
-div.radio input {
-  border-radius: 6px;
-}
 input.form-control,
 select.form-control,
-div.radio input,
 button.btn {
   transition: box-shadow 0.15s linear;
 }
@@ -603,25 +599,6 @@ button.btn-xs:focus {
 .btn-group button:focus,
 .btn-group input:focus {
   box-shadow: 0 0 2px var(--primary-7);
-}
-div.radio input {
-  position: relative;
-  width: 15px;
-  height: 15px;
-}
-div.radio input:focus {
-  background-color: transparent;
-
-  &::before {
-    content: "";
-    box-shadow: 0 0 8px var(--primary-7);
-    width: 15px;
-    height: 15px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    border-radius: 15px;
-  }
 }
 
 button::-moz-focus-inner {

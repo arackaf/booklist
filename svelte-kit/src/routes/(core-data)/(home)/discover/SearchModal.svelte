@@ -19,6 +19,8 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
@@ -111,17 +113,14 @@
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div>
-        <div class="form-group">
-          <label for="discover-title-search-id">Title</label>
-          <input id="discover-title-search-id" bind:this={titleEl} name="search" placeholder="Search title" class="form-control" />
-        </div>
-      </div>
+      <InputGroup labelText="Title">
+        <Input slot="input" bind:titleEl name="search" placeholder="Search title" />
+      </InputGroup>
 
       <div class="flex">
         <div class="flex flex-col">
           <span class="form-label">Is read?</span>
-          <div class="flex-1 flex flex-row gap-4 items-center radio">
+          <div class="flex-1 flex flex-row gap-4 items-center">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked value="" name="is-read" id="isReadE" />
               <label for="isReadE">Either</label>
