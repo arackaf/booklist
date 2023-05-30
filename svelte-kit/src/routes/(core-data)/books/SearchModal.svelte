@@ -37,7 +37,9 @@
   const onOpen = () => {
     key++;
     syncSearchState();
-    titleEl?.focus();
+    setTimeout(() => {
+      titleEl?.focus();
+    });
   };
 
   function syncSearchState() {
@@ -80,7 +82,7 @@
       {/if}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
         <InputGroup labelText="Title">
-          <Input bind:titleEl slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
+          <Input bind:inputEl={titleEl} slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
         </InputGroup>
 
         <InputGroup labelText="Publisher">

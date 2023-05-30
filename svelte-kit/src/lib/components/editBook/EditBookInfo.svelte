@@ -60,7 +60,7 @@
         name="title"
         error={missingTitle}
         bind:value={book.title}
-        bind:titleEl
+        bind:inputEl={titleEl}
         on:input={titleKeyDown}
         placeholder="Title (required)"
       />
