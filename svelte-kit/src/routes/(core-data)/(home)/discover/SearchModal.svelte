@@ -119,7 +119,7 @@
 
       <div class="flex">
         <div class="flex flex-col">
-          <span class="form-label">Is read?</span>
+          <span class="text-sm">Is read?</span>
           <div class="flex-1 flex flex-row gap-4 items-center">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked value="" name="is-read" id="isReadE" />

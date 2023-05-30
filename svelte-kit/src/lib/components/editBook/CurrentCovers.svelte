@@ -8,17 +8,17 @@
 
 <div class="flex flex-row">
   <div class="flex-1 flex flex-col">
-    <span class="form-label">Mobile</span>
+    <span class="text-sm">Mobile</span>
     <BookCover size="mobile" {book} />
   </div>
 
   <div class="flex-1 flex flex-col">
-    <span class="form-label">Standard</span>
+    <span class="text-sm">Standard</span>
     <BookCover size="small" {book} />
   </div>
 
   <div class="flex-1 flex flex-col">
-    <span class="form-label">Full</span>
+    <span class="text-sm">Full</span>
     <BookCover size="medium" {book} />
   </div>
 </div>
