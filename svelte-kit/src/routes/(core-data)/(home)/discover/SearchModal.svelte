@@ -11,6 +11,8 @@
 
   import Modal from "$lib/components/ui/Modal.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
@@ -19,8 +21,6 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;

@@ -2,6 +2,8 @@
   import type { Book, Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/ui/Button/Button.svelte";
+  import Input from "../ui/Input/Input.svelte";
+  import InputGroup from "../ui/Input/InputGroup.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
@@ -52,49 +54,33 @@
 
 <fieldset disabled={saving}>
   <div class="grid grid-cols-2 gap-x-5 gap-y-4">
-    <div>
-      <div class={"form-group"}>
-        <label for="book-edit-title">Title</label>
-        <input
-          id="book-edit-title"
-          class="form-control"
-          name="title"
-          class:error={missingTitle}
-          value={book.title}
-          bind:this={titleEl}
-          on:input={titleKeyDown}
-          placeholder="Title (required)"
-        />
-      </div>
-    </div>
+    <InputGroup labelText="Title">
+      <Input
+        slot="input"
+        name="title"
+        error={missingTitle}
+        bind:value={book.title}
+        bind:titleEl
+        on:input={titleKeyDown}
+        placeholder="Title (required)"
+      />
+    </InputGroup>
 
-    <div>
-      <div class="form-group">
-        <label for="book-edit-isbn">ISBN</label>
-        <input id="book-edit-isbn" name="isbn" class="form-control" value={book.isbn} placeholder="ISBN" />
-      </div>
-    </div>
+    <InputGroup labelText="ISBN">
+      <Input slot="input" name="isbn" bind:value={book.isbn} placeholder="ISBN" />
+    </InputGroup>
 
-    <div>
-      <div class="form-group">
-        <label for="book-edit-pages">Pages</label>
-        <input id="book-edit-pages" name="pages" class="form-control" value={book.pages} type="number" placeholder="Number of pages" />
-      </div>
-    </div>
+    <InputGroup labelText="Pages">
+      <Input slot="input" name="pages" bind:value={book.pages} type="number" placeholder="Number of pages" />
+    </InputGroup>
 
-    <div>
-      <div class="form-group">
-        <label for="book-edit-publisher">Publisher</label>
-        <input id="book-edit-publisher" name="publisher" class="form-control" value={book.publisher} placeholder="Publisher" />
-      </div>
-    </div>
+    <InputGroup labelText="Publisher">
+      <Input slot="input" name="publisher" bind:value={book.publisher} placeholder="Publisher" />
+    </InputGroup>
 
-    <div>
-      <div class="form-group">
-        <label for="book-edit-published">Published</label>
-        <input id="book-edit-published" name="publicationDate" class="form-control" value={book.publicationDate} placeholder="Publication date" />
-      </div>
-    </div>
+    <InputGroup labelText="Published">
+      <Input slot="input" name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
+    </InputGroup>
 
     <div class="col-span-2">
       <div class="flex flex-row">
@@ -120,12 +106,9 @@
 
     <div class="col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
       {#each book.authors || [] as author, index (index)}
-        <div>
-          <div class="form-group">
-            <label for={`book-edit-author-${index}`}>Author</label>
-            <input id={`book-edit-author-${index}`} value={author} class="form-control" name="authors" placeholder={`Author ${index + 1}`} />
-          </div>
-        </div>
+        <InputGroup labelText="Author">
+          <Input slot="input" name="authors" value={author} placeholder={`Author ${index + 1}`} />
+        </InputGroup>
       {/each}
     </div>
 
