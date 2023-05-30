@@ -23,3 +23,12 @@ input[type="radio"]:before {
 input[type="radio"]:checked:before {
   @apply bg-[var(--primary-5)];
 }
+
+select {
+  appearance: none;
+
+  background-image: url(/chevron-down.svg);
+  background-position: right 8px top 50%;
+  background-size: 15px;
+  background-repeat: no-repeat;
+}
