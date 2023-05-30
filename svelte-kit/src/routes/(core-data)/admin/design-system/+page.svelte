@@ -30,13 +30,7 @@
   <h1>Select Group</h1>
   <div />
 
-  <div class="form-group">
-    <label for="fc">Title</label>
-    <select id="fc" class="form-control">
-      <option value="a">A</option>
-      <option value="b">Hello World Hello World</option>
-    </select>
-  </div>
+  <div />
   <div>
     <SelectGroup labelText="Title">
       <Select slot="select">
@@ -46,13 +40,7 @@
     </SelectGroup>
   </div>
 
-  <div class="form-group">
-    <label for="fc">Title</label>
-    <select id="fc" class="form-control">
-      <option value="a">A</option>
-      <option value="b">B</option>
-    </select>
-  </div>
+  <div />
   <div>
     <select class="border rounded w-36">
       <option value="a">A</option>
@@ -63,10 +51,7 @@
   <h1>Input Group</h1>
   <div />
 
-  <div class="form-group">
-    <label for="fc">Title</label>
-    <input id="fc" class="form-control" />
-  </div>
+  <div />
   <div>
     <InputGroup labelText="Title">
       <Input slot="input" id="fc2" />
@@ -76,9 +61,7 @@
   <h1>Input</h1>
   <div />
 
-  <div class="form-group">
-    <input class="form-control" />
-  </div>
+  <div />
   <div>
     <Input />
   </div>
@@ -86,9 +69,7 @@
   <h1>Input error</h1>
   <div />
 
-  <div class="form-group">
-    <input class="form-control error" />
-  </div>
+  <div />
   <div>
     <Input error={true} />
   </div>

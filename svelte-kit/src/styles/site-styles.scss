@@ -466,7 +466,6 @@ label {
   display: flex;
 }
 
-.form-group input,
 input.form-control,
 select.form-control {
   border: var(--default-border-width) solid var(--neutral-border);
@@ -519,18 +518,14 @@ div.responsive-radios {
   }
 }
 
-.form-group,
 .form-label {
   font-size: 14px;
 }
-.form-group label,
+
 .form-label {
   display: block;
 }
-.form-group input {
-  width: 100%;
-  display: block;
-}
+
 .checkbox-group {
   font-size: 14px;
   font-weight: bold;

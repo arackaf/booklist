@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.form-group {
-  @apply flex flex-col gap-1;
-}
-
 input[type="radio"] {
   @apply relative w-4 h-4 appearance-none border border-neutral-400 rounded-full outline-none;
 }
