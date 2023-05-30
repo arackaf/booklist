@@ -7,6 +7,7 @@
   import { endSaving, startSaving } from "../state/booksReadSavingState";
 
   import { selectedBooksLookup } from "../state/selectionState";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   export let isPublic: boolean;
   export let closeMobileMenu: () => void = () => {};
 
@@ -58,28 +59,28 @@
 {#if !selectedBooksCount}
   <hr />
 
-  <button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="btn btn-default">
+  <Button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="h-8 connect-left connect-right">
     <span>Set Filters</span>
     <i class="fal fa-fw fa-filter" />
-  </button>
+  </Button>
   <hr />
   {#if !isPublic}
-    <button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="btn btn-default">
+    <Button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="h-8 connect-left connect-right">
       <span>Edit Subjects</span>
       <i class="fal fa-fw fa-sitemap" />
-    </button>
-    <button title="Edit tags" on:click={mobileHandler(editTags, true)} class="btn btn-default">
+    </Button>
+    <Button title="Edit tags" on:click={mobileHandler(editTags, true)} class="h-8 connect-left connect-right">
       <span>Edit Tags</span>
       <i class="fal fa-fw fa-tags" />
-    </button>
+    </Button>
     <hr />
   {/if}
 
   <form method="POST" action="?/reloadBooks" use:enhance={reload}>
-    <button class="btn btn-default last-child" type="submit" disabled={reloading}>
+    <Button class="h-8 connect-left" type="submit" disabled={reloading}>
       <span>Reload Books</span>
       <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
-    </button>
+    </Button>
   </form>
   <hr />
 {:else if !isPublic}

@@ -28,3 +28,11 @@ select {
   background-size: 15px;
   background-repeat: no-repeat;
 }
+
+.connect-left {
+  @apply rounded-tl-none rounded-bl-none;
+}
+
+.connect-right {
+  @apply border-r-0 rounded-tr-none rounded-br-none;
+}

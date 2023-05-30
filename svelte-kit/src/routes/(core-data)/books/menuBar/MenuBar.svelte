@@ -56,7 +56,7 @@
       {/if}
       <PagingButtons />
       <div class="margin-right">
-        <div class="menu-bar-desktop btn-group">
+        <div class="menu-bar-desktop flex">
           <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
             {#if $publicUser}
               <input type="hidden" name="user" value={$publicUser} />
