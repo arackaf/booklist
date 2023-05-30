@@ -5,6 +5,8 @@
 
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import { invalidateAll } from "$app/navigation";
+  import Input from "$lib/components/ui/Input/Input.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 
   export let data;
 
@@ -45,14 +47,14 @@
             <br />
             Just enter your email address and password, and your current account will become sync'd with your old one
           </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input name="email" class="form-control" id="email" />
-          </div>
-          <div class="form-group">
-            <label for="password">New password</label>
-            <input name="password" type="password" class="form-control" id="password" />
-          </div>
+          <InputGroup labelText="Email">
+            <Input slot="input" name="email" />
+          </InputGroup>
+
+          <InputGroup labelText="New password">
+            <Input slot="input" type="password" name="password" />
+          </InputGroup>
+
           <ActionButton class="self-start" {running} theme="primary">Sync</ActionButton>
         {/if}
 
