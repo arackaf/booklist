@@ -11,6 +11,8 @@
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let tag: Tag;
   export let colors: Color[];
@@ -28,7 +30,7 @@
   let originalName = "";
 
   onMount(() => {
-    inputEl.focus({ preventScroll: true });
+    inputEl?.focus({ preventScroll: true });
 
     return () => {
       deleteShowing = false;
@@ -53,7 +55,7 @@
   }
 
   export const reset = () => {
-    inputEl.focus();
+    inputEl?.focus();
     deleteShowing = false;
   };
 
@@ -96,18 +98,13 @@
     <input type="hidden" name="id" value={editingTag.id} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div class="md:col-span-2">
-        <div class="form-group">
-          <label for="tag-name">Name</label>
-          <input
-            id="tag-name"
-            bind:this={inputEl}
-            bind:value={editingTag.name}
-            name="name"
-            placeholder="Tag name"
-            class={cn("form-control", { error: missingName })}
-          />
+        <div>
+          <InputGroup labelText="Name">
+            <Input slot="input" error={missingName} bind:inputEl bind:value={editingTag.name} name="name" placeholder="Tag name" />
+          </InputGroup>
+
           {#if missingName}
-            <span style="margin-top: 5px; display: inline-block;" class="label label-danger">Tags need names!</span>
+            <div style="margin-top: 5px; display: inline-block;" class="label label-danger">Tags need names!</div>
             <br />
           {/if}
           <div
@@ -120,8 +117,8 @@
       </div>
 
       <div>
-        <div class="form-group">
-          <span>Label Color</span>
+        <div class="flex flex-col">
+          <span class="text-sm">Label Color</span>
           <ColorsPalette
             currentColor={editingTag.backgroundColor}
             colors={colors.map(c => c.backgroundColor)}
@@ -136,8 +133,8 @@
         </div>
       </div>
       <div>
-        <div class="form-group">
-          <span>Text Color</span>
+        <div class="flex flex-col">
+          <span class="text-sm">Text Color</span>
           <ColorsPalette currentColor={editingTag.textColor} colors={textColors} onColorChosen={color => (editingTag.textColor = color)} />
           <CustomColorPicker
             labelStyle="margin-left: 3px"
