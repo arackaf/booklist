@@ -85,25 +85,25 @@
   <hr />
 {:else if !isPublic}
   <hr />
-  <button title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)} class={"btn btn-default"}>
+  <Button class="h-8 connect-left connect-right" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
     <span>Add / Remove Subjects</span>
     <i class="fal fa-fw fa-sitemap" />
-  </button>
-  <button title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)} class="btn btn-default">
+  </Button>
+  <Button class="h-8 connect-left connect-right" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
     <span>Add / Remove Tags</span>
     <i class="fal fa-fw fa-tags" />
-  </button>
+  </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
-    <button title="Set read" class="btn btn-default" disabled={bulkReadSaving || bulkUnReadSaving}>
+    <Button class="h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Read</span>
       <i class="fal fa-fw fa-eye" />
-    </button>
+    </Button>
   </BookReadSetter>
   <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
-    <button title="Set un-read" class="btn btn-default put-line-through last-child" disabled={bulkReadSaving || bulkUnReadSaving}>
+    <Button class="h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Un-Read</span>
       <i class="fal fa-fw fa-eye-slash" />
-    </button>
+    </Button>
   </BookReadSetter>
   <hr />
 {/if}
