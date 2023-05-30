@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import cn from "classnames";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
@@ -11,8 +10,8 @@
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 
   export let tag: Tag;
   export let colors: Color[];
