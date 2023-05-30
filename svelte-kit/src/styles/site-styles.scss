@@ -466,32 +466,6 @@ label {
   display: flex;
 }
 
-input.form-control,
-select.form-control {
-  border: var(--default-border-width) solid var(--neutral-border);
-  padding: 6px 12px;
-  border-radius: var(--default-border-radius);
-  height: 34px;
-  background-color: white;
-  width: 100%;
-  // width: calc(100% - 24px);
-
-  &.error {
-    border-color: var(--danger-5);
-    &:focus {
-      box-shadow: 0 0 6px var(--danger-7);
-    }
-  }
-}
-input.form-control,
-select.form-control {
-  font-size: 14px;
-
-  @media (max-width: 600px) {
-    font-size: 16px;
-  }
-}
-
 @media (max-width: 600px) {
   input {
     font-size: 16px;
@@ -565,26 +539,17 @@ div.toast-notification h4 {
   z-index: 999999999;
 }
 
-.btn-group input {
-  -webkit-appearance: none;
-  box-shadow: none;
-}
-
-input.form-control,
-select.form-control,
 button.btn {
   transition: box-shadow 0.15s linear;
 }
-input.form-control:focus,
-select.form-control:focus,
+
 button.btn:focus {
   box-shadow: 0 0 6px var(--primary-7);
 }
 button.btn-xs:focus {
   box-shadow: 0 0 3px var(--primary-7);
 }
-.btn-group button:focus,
-.btn-group input:focus {
+.btn-group button:focus {
   box-shadow: 0 0 2px var(--primary-7);
 }
 

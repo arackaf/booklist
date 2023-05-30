@@ -12,6 +12,10 @@
 </script>
 
 <input
+  on:blur
+  on:change
+  on:input
+  on:keydown
   class:border-neutral-400={!error}
   class:border-danger-5={error}
   class:focus:shadow-md={!error}
@@ -20,8 +24,5 @@
   class="bg-white text-neutral-600 border rounded h-8 py-1 px-3 text-base block w-full transition-box-shadow {className}"
   bind:this={inputEl}
   bind:value
-  on:change
-  on:input
-  on:keydown
   {...rest}
 />

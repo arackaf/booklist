@@ -11,6 +11,7 @@
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import BookViews from "./BookViews.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
@@ -60,13 +61,13 @@
             {#if $publicUser}
               <input type="hidden" name="user" value={$publicUser} />
             {/if}
-            <input
+            <Input
               autocomplete="off"
-              bind:this={quickSearchEl}
+              bind:inputEl={quickSearchEl}
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="form-control search-input tiny-orphan first-child"
+              class="search-input tiny-orphan first-child rounded-tr-none rounded-br-none border-r-0 shadow-none"
               placeholder="Title search"
             />
             <QuickFormFiller />

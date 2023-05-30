@@ -138,7 +138,6 @@
 .btn-group {
   display: flex;
 
-  input.form-control:focus,
   button.btn:focus,
   button.btn-xs:focus {
     box-shadow: none;
@@ -161,7 +160,6 @@
     background-color: var(--primary-8);
   }
 
-  input.form-control,
   .btn {
     height: 32px;
   }
@@ -173,8 +171,7 @@
   }
 
   form > .btn,
-  .btn,
-  input.form-control {
+  .btn {
     border-right-width: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
