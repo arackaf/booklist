@@ -9,6 +9,10 @@
 
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Select from "$lib/components/ui/Select/Select.svelte";
+  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
 
@@ -62,7 +66,7 @@
   }
 
   export const reset = () => {
-    inputEl.focus();
+    inputEl?.focus();
     deleteShowing = false;
   };
 
@@ -107,42 +111,32 @@
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div>
-        <div class="form-group">
-          <label for="subject-name">Name</label>
-          <input
-            id="subject-name"
-            bind:this={inputEl}
-            bind:value={editingSubject.name}
-            name="name"
-            placeholder="Subject name"
-            class={cn("form-control", { error: missingName })}
-          />
-          {#if missingName}
-            <span style="margin-top: 5px; display: inline-block;" class="label label-danger"> Subjects need names! </span>
-            <br />
-          {/if}
-          <div
-            class="label label-default"
-            style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
-          >
-            {editingSubject.name.trim() || "<label preview>"}
-          </div>
+        <InputGroup labelText="Name">
+          <Input slot="input" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
+        </InputGroup>
+        {#if missingName}
+          <div style="margin-top: 5px; display: inline-block;" class="label label-danger">Subjects need names!</div>
+          <br />
+        {/if}
+        <div
+          class="label label-default"
+          style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
+        >
+          {editingSubject.name.trim() || "<label preview>"}
         </div>
       </div>
+      <SelectGroup labelText="Parent">
+        <Select slot="select" bind:value={editingSubject.parentId} name="parentId">
+          <option value={0}>No Parent</option>
+          {#each eligibleParents as s}
+            <option value={s.id}>{s.name}</option>
+          {/each}
+        </Select>
+      </SelectGroup>
+
       <div>
-        <div class="form-group">
-          <label for="subject-parent">Parent</label>
-          <select id="subject-parent" bind:value={editingSubject.parentId} name="parentId" class="form-control">
-            <option value={0}>No Parent</option>
-            {#each eligibleParents as s}
-              <option value={s.id}>{s.name}</option>
-            {/each}
-          </select>
-        </div>
-      </div>
-      <div>
-        <div class="form-group">
-          <span>Label Color</span>
+        <div class="flex flex-col">
+          <span class="text-sm">Label Color</span>
           <ColorsPalette
             currentColor={editingSubject.backgroundColor}
             colors={colors.map(c => c.backgroundColor)}
@@ -157,8 +151,8 @@
         </div>
       </div>
       <div>
-        <div class="form-group">
-          <span>Text Color</span>
+        <div class="flex flex-col">
+          <span class="text-sm">Text Color</span>
           <ColorsPalette currentColor={editingSubject.textColor} colors={textColors} onColorChosen={color => (editingSubject.textColor = color)} />
           <CustomColorPicker
             labelStyle="margin-left: 3px"

@@ -7,6 +7,8 @@
   const { className: ignore, ...rest } = $$restProps;
 
   export let titleEl: HTMLElement = null as any;
+
+  export let value: string | number = "";
 </script>
 
 <select
@@ -17,6 +19,7 @@
   class:focus:shadow-danger-7={error}
   class="bg-white text-neutral-600 border rounded h-8 py-1 px-3 text-base block w-full transition-box-shadow {className}"
   bind:this={titleEl}
+  bind:value
   {...rest}
 >
   <slot />
