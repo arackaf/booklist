@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { ajaxUtil } from "$lib/util/ajaxUtil";
-
   import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
+
+  import { ajaxUtil } from "$lib/util/ajaxUtil";
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let onResults: (results: any) => void;
   export let onError: () => void;
@@ -93,11 +95,17 @@
     </div>
 
     <div class="flex-1">
-      <div class="btn-group">
-        <input bind:value={remoteUrl} disabled={uploading} style="min-width: 200px" class="form-control" placeholder="New Cover URL" tabIndex={-1} />
-        <button class="btn btn-default" disabled={!remoteUrl || uploading}>
+      <div class="flex">
+        <Input
+          bind:value={remoteUrl}
+          disabled={uploading}
+          class="flex-1 rounded-tr-none rounded-br-none border-r-0"
+          placeholder="New Cover URL"
+          tabIndex={-1}
+        />
+        <Button class="h-8 p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
           <i class="far fa-cloud-upload-alt" />
-        </button>
+        </Button>
       </div>
     </div>
   </div>
