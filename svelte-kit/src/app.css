@@ -5,3 +5,30 @@
 .form-group {
   @apply flex flex-col gap-1;
 }
+
+input[type="radio"] {
+  @apply relative w-4 h-4 appearance-none border border-neutral-400 rounded-full outline-none;
+}
+
+input[type="radio"]:focus {
+  @apply ring-2 ring-[var(--primary-7)] border-[var(--primary-7)];
+}
+
+input[type="radio"]:before {
+  @apply absolute top-1/2 left-1/2 block w-3/4 h-3/4 rounded-full content-[""];
+
+  transform: translate(-50%, -50%);
+}
+
+input[type="radio"]:checked:before {
+  @apply bg-[var(--primary-5)];
+}
+
+select {
+  appearance: none;
+
+  background-image: url(/chevron-down.svg);
+  background-position: right 8px top 50%;
+  background-size: 15px;
+  background-repeat: no-repeat;
+}

@@ -2,6 +2,8 @@
   import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
 
+  import Select from "$lib/components/ui/Select/Select.svelte";
+  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
@@ -23,6 +25,39 @@
   <div>
     <h1>New</h1>
     <hr />
+  </div>
+
+  <h1>Select Group</h1>
+  <div />
+
+  <div class="form-group">
+    <label for="fc">Title</label>
+    <select id="fc" class="form-control">
+      <option value="a">A</option>
+      <option value="b">Hello World Hello World</option>
+    </select>
+  </div>
+  <div>
+    <SelectGroup labelText="Title">
+      <Select slot="select">
+        <option value="a">A</option>
+        <option value="b">Hello World Hello World</option>
+      </Select>
+    </SelectGroup>
+  </div>
+
+  <div class="form-group">
+    <label for="fc">Title</label>
+    <select id="fc" class="form-control">
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </select>
+  </div>
+  <div>
+    <select class="border rounded w-36">
+      <option value="a">A</option>
+      <option value="b">B</option>
+    </select>
   </div>
 
   <h1>Input Group</h1>

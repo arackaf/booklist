@@ -15,6 +15,10 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { get } from "svelte/store";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Input from "$lib/components/ui/Input/Input.svelte";
+  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
+  import Select from "$lib/components/ui/Select/Select.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};
@@ -31,6 +35,7 @@
   let key = 1;
 
   const onOpen = () => {
+    key++;
     syncSearchState();
     titleEl?.focus();
   };
@@ -74,27 +79,21 @@
         <input type="hidden" name="user" value={$publicUser} />
       {/if}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-        <div>
-          <div class="form-group">
-            <label for="search_title">Title</label>
-            <input id="search_title" name="search" bind:this={titleEl} value={localSearchValues.search} placeholder="Title" class="form-control" />
-          </div>
-        </div>
-        <div>
-          <div class="form-group">
-            <label for="book_search_pub">Publisher</label>
-            <input id="book_search_pub" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" class="form-control" />
-          </div>
-        </div>
-        <div>
-          <div class="form-group">
-            <label for="book_search_auth">Author</label>
-            <input id="book_search_auth" name="author" value={localSearchValues.author} placeholder="Author" class="form-control" />
-          </div>
-        </div>
+        <InputGroup labelText="Title">
+          <Input bind:titleEl slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
+        </InputGroup>
+
+        <InputGroup labelText="Publisher">
+          <Input slot="input" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+        </InputGroup>
+
+        <InputGroup labelText="Author">
+          <Input slot="input" name="author" value={localSearchValues.author} placeholder="Author" />
+        </InputGroup>
+
         <div class="flex flex-col">
-          <label for="__" class="form-label">Is Read?</label>
-          <div class="flex-1 flex flex-row gap-4 items-center radio mt-1 md:mt-0">
+          <label for="isReadE" class="text-sm">Is Read?</label>
+          <div class="flex-1 flex flex-row gap-4 items-center mt-1 md:mt-0">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
@@ -109,16 +108,13 @@
             </div>
           </div>
         </div>
-        <div>
-          <div class="form-group">
-            <label for="book_search_sort">Sort</label>
-            <select id="book_search_sort" name="sort" value={localSearchValues.sortPacket} class="form-control">
-              {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
-                <option value={sortVal}>{display}</option>
-              {/each}
-            </select>
-          </div>
-        </div>
+        <SelectGroup labelText="Sort">
+          <Select slot="select" name="sort" value={localSearchValues.sortPacket}>
+            {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
+              <option value={sortVal}>{display}</option>
+            {/each}
+          </Select>
+        </SelectGroup>
 
         <SelectAndDisplayContainer isEmpty={!localTags.length}>
           <SelectAvailableTags slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
