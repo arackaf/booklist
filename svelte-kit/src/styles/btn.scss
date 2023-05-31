@@ -198,15 +198,4 @@
     border-top-right-radius: var(--default-border-radius);
     border-bottom-right-radius: var(--default-border-radius);
   }
-  @media (max-width: 500px) {
-    .btn-first-tiny {
-      border-top-left-radius: 4px !important;
-      border-bottom-left-radius: 4px !important;
-    }
-    .tiny-orphan {
-      border-top-right-radius: var(--default-border-radius);
-      border-bottom-right-radius: var(--default-border-radius);
-      border-right: var(--default-border-width) solid var(--neutral-border);
-    }
-  }
 }

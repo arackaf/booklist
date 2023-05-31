@@ -67,7 +67,7 @@
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="search-input tiny-orphan first-child rounded-tr-none rounded-br-none border-r-0 shadow-none"
+              class="search-input rounded-tr-none rounded-br-none border-r-0 shadow-none"
               placeholder="Title search"
             />
             <QuickFormFiller />
