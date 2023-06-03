@@ -22,19 +22,19 @@
 
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={GRID_VIEW} />
-  <button disabled={anyBooksSelected} class="btn btn-default first-child" class:active={bookViewToUse == GRID_VIEW}>
+  <button disabled={anyBooksSelected} class="hidden lg:flex btn btn-default first-child" class:active={bookViewToUse == GRID_VIEW}>
     <i class="fal fa-fw fa-table" />
   </button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={COVERS_LIST} />
-  <button disabled={anyBooksSelected} class="btn btn-default" class:active={bookViewToUse == COVERS_LIST}>
+  <button disabled={anyBooksSelected} class="hidden lg:flex btn btn-default" class:active={bookViewToUse == COVERS_LIST}>
     <i class="fas fa-fw fa-th" />
   </button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-  <button disabled={anyBooksSelected} class="btn btn-default last-child" class:active={bookViewToUse == BASIC_LIST_VIEW}>
+  <button disabled={anyBooksSelected} class="hidden lg:flex btn btn-default last-child" class:active={bookViewToUse == BASIC_LIST_VIEW}>
     <i class="fal fa-fw fa-list" />
   </button>
 </form>

@@ -57,37 +57,37 @@
 </script>
 
 {#if !selectedBooksCount}
-  <Button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="h-8 connect-left connect-right">
+  <Button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="hidden lg:flex h-8 connect-left connect-right">
     <i class="fal fa-fw fa-filter" />
   </Button>
   {#if !isPublic}
-    <Button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="h-8 connect-left connect-right">
+    <Button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="hidden lg:flex h-8 connect-left connect-right">
       <i class="fal fa-fw fa-sitemap" />
     </Button>
-    <Button title="Edit tags" on:click={mobileHandler(editTags, true)} class="h-8 connect-left connect-right">
+    <Button title="Edit tags" on:click={mobileHandler(editTags, true)} class="hidden lg:flex h-8 connect-left connect-right">
       <i class="fal fa-fw fa-tags" />
     </Button>
   {/if}
 
   <form method="POST" action="?/reloadBooks" use:enhance={reload}>
-    <Button class="h-8 connect-left" type="submit" disabled={reloading}>
+    <Button class="hidden lg:flex h-8 connect-left" type="submit" disabled={reloading}>
       <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
     </Button>
   </form>
 {:else if !isPublic}
-  <Button class="h-8 connect-left connect-right" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
+  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
     <i class="fal fa-fw fa-sitemap" />
   </Button>
-  <Button class="h-8 connect-left connect-right" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
+  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
     <i class="fal fa-fw fa-tags" />
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
-    <Button class="h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
+    <Button class="hidden lg:flex h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <i class="fal fa-fw fa-eye" />
     </Button>
   </BookReadSetter>
   <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
-    <Button class="h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
+    <Button class="hidden lg:flex h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <i class="fal fa-fw fa-eye-slash" />
     </Button>
   </BookReadSetter>
