@@ -9,7 +9,6 @@
   import { selectedBooksLookup } from "../state/selectionState";
   import Button from "$lib/components/ui/Button/Button.svelte";
   export let isPublic: boolean;
-  export let closeMobileMenu: () => void = () => {};
 
   let bulkReadSaving: boolean;
   let bulkUnReadSaving: boolean;

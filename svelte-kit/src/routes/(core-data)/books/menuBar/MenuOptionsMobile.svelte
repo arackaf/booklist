@@ -54,17 +54,17 @@
 {#if !selectedBooksCount}
   <hr />
 
-  <Button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="h-8">
+  <Button title="Filter search" on:click={mobileHandler(openFilterModal)} class="h-8">
     <span>Set Filters</span>
     <i class="fal fa-fw fa-filter" />
   </Button>
   <hr />
   {#if !isPublic}
-    <Button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="h-8">
+    <Button title="Edit subjects" on:click={mobileHandler(editSubjects)} class="h-8">
       <span>Edit Subjects</span>
       <i class="fal fa-fw fa-sitemap" />
     </Button>
-    <Button title="Edit tags" on:click={mobileHandler(editTags, true)} class="h-8">
+    <Button title="Edit tags" on:click={mobileHandler(editTags)} class="h-8">
       <span>Edit Tags</span>
       <i class="fal fa-fw fa-tags" />
     </Button>
@@ -80,11 +80,11 @@
   <hr />
 {:else if !isPublic}
   <hr />
-  <Button class="h-8" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks, true)}>
+  <Button class="h-8" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
     <span>Add / Remove Subjects</span>
     <i class="fal fa-fw fa-sitemap" />
   </Button>
-  <Button class="h-8" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks, true)}>
+  <Button class="h-8" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
     <span>Add / Remove Tags</span>
     <i class="fal fa-fw fa-tags" />
   </Button>
