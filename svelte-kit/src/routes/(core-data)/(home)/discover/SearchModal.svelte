@@ -21,6 +21,7 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
@@ -173,19 +174,23 @@
         <div>
           {#if totalBooks}
             <div class="flex flex-row gap-1 items-center">
-              <button type="button" on:click={pageOne} disabled={!canPageDown} class="btn btn-default">
-                <i class="fal fa-angle-double-left" />
-              </button>
-              <button type="button" on:click={pageDown} disabled={!canPageDown} class="btn btn-default">
-                <i class="fal fa-angle-left" />
-              </button>
+              <div class="flex">
+                <Button type="button" on:click={pageOne} disabled={!canPageDown} icon={true} class="connect-right">
+                  <i class="fal fa-fw fa-angle-double-left" />
+                </Button>
+                <Button type="button" on:click={pageDown} disabled={!canPageDown} icon={true} class="connect-left">
+                  <i class="fal fa-fw fa-angle-left" />
+                </Button>
+              </div>
               <span class="text-sm mx-1">{page} of {totalPages}</span>
-              <button type="button" on:click={pageUp} disabled={!canPageUp} class="btn btn-default">
-                <i class="fal fa-angle-right" />
-              </button>
-              <button type="button" on:click={pageLast} disabled={!canPageUp} class="btn btn-default">
-                <i class="fal fa-angle-double-right" />
-              </button>
+              <div class="flex">
+                <Button type="button" on:click={pageUp} disabled={!canPageUp} icon={true} class="connect-right">
+                  <i class="fal fa-fw fa-angle-right" />
+                </Button>
+                <Button type="button" on:click={pageLast} disabled={!canPageUp} icon={true} class="connect-left">
+                  <i class="fal fa-fw fa-angle-double-right" />
+                </Button>
+              </div>
             </div>
             <hr class="my-2" />
           {/if}
