@@ -6,11 +6,13 @@
 
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
-  import MenuOptions from "./MenuOptions.svelte";
+  import BookViewsDesktop from "./BookViewsDesktop.svelte";
+  import BookViewsMobile from "./BookViewsMobile.svelte";
+  import MenuOptionsMobile from "./MenuOptionsMobile.svelte";
+  import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
   import { publicUser, searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
-  import BookViews from "./BookViews.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let isPublic: boolean;
@@ -36,8 +38,8 @@
 <div class="books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {isPublic} {closeMobileMenu} />
-      <BookViews {bookViewToUse} {closeMobileMenu} />
+      <MenuOptionsMobile {isPublic} {closeMobileMenu} />
+      <BookViewsMobile {bookViewToUse} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
@@ -56,7 +58,7 @@
       {/if}
       <PagingButtons />
       <div class="margin-right">
-        <div class="menu-bar-desktop flex">
+        <div class="flex">
           <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
             {#if $publicUser}
               <input type="hidden" name="user" value={$publicUser} />
@@ -75,11 +77,11 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions {isPublic} />
+          <MenuOptionsDesktop {isPublic} />
         </div>
       </div>
-      <div class="menu-bar-desktop btn-group margin-right">
-        <BookViews {bookViewToUse} />
+      <div class="btn-group margin-right">
+        <BookViewsDesktop {bookViewToUse} />
       </div>
 
       <ActiveSearchFilters />
