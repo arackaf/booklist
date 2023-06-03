@@ -27,8 +27,22 @@
     <hr />
   </div>
 
-  <h1>Select Group</h1>
+  <h1>Anchor Button</h1>
   <div />
+
+  <div />
+  <div>
+    <div class="flex">
+      <Button href="/foo" icon={true} class="connect-right">
+        <span class="sr">Go a page up</span>
+        <i class="fal fa-fw fa-angle-right" />
+      </Button>
+      <Button this={"button"} disabled={true} class="connect-left" icon={true}>
+        <span class="sr">Go to last page</span>
+        <i class="fal fa-fw fa-angle-double-right" />
+      </Button>
+    </div>
+  </div>
 
   <div />
   <div>

@@ -1,13 +1,15 @@
 <script lang="ts">
   export let theme: "primary" | "success" | "danger" | "default" = "default";
   export let size: "default" | "med" | "sm" = "default";
-  export let disabled: boolean = false;
+  export let disabled: boolean | undefined = undefined;
   export let icon: boolean = false;
 
   let className = "";
   export { className as class };
 
   const { className: ignore, ...rest } = $$restProps;
+
+  export let href: string | null | undefined = undefined;
 
   $: defaultButton = theme === "default";
   $: isPrimary = theme === "primary";
@@ -19,9 +21,16 @@
   $: fontSize = size === "default" ? "text-base" : size === "med" ? "text-sm" : "text-xs leading-3";
 
   $: addedClasses = [paddingTop, paddingSide, fontSize, className].join(" ");
+
+  let type: "a" | "button";
+
+  $: {
+    type = disabled ? "button" : href ? "a" : "button";
+  }
 </script>
 
-<button
+<svelte:element
+  this={type}
   class:bg-primary-5={isPrimary}
   class:border-primary-5={isPrimary}
   class:text-primary-10={isPrimary}
@@ -43,9 +52,10 @@
   class:cursor-not-allowed={disabled}
   class:opacity-50={disabled}
   class={`flex items-center m-0 rounded border transition-[box-shadow,opacity] ${addedClasses}`}
-  {disabled}
+  disabled={type === "button" ? disabled : undefined}
+  href={type === "a" ? href : undefined}
   on:click
   {...rest}
 >
   <slot />
-</button>
+</svelte:element>
