@@ -44,7 +44,7 @@
   </MobileMenu>
 
   <div style="font-size: 11pt; position: relative">
-    <div class="flex flex-wrap gap-2" style="margin-bottom: 5px">
+    <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
       <button
         style="font-size: 1.4rem; align-self: center"
         class="block lg:hidden raw-button icon-button"
@@ -69,7 +69,7 @@
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+              class="h-8 search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"
             />
             <QuickFormFiller />
@@ -80,7 +80,7 @@
           <MenuOptionsDesktop {isPublic} />
         </div>
       </div>
-      <div class="btn-group hidden lg:flex">
+      <div class="hidden lg:flex">
         <BookViewsDesktop {bookViewToUse} />
       </div>
 
