@@ -20,12 +20,17 @@
       this={canPageOne ? "a" : "span"}
       href={$changeFilter.pageTo(1)}
       class:disabled={!canPageOne}
-      class="h-8 connect-right btn btn-default"
+      class="core-anchor-button h-8 hidden sm:flex rounded sm:rounded-tr-none sm:rounded-br-none border"
     >
       <span class="sr">Go to page 1</span>
       <i class="fal fa-fw fa-angle-double-left" />
     </svelte:element>
-    <svelte:element this={canPageDown ? "a" : "span"} href={pageDownHref} class:disabled={!canPageDown} class="h-8 connect-left btn btn-default">
+    <svelte:element
+      this={canPageDown ? "a" : "span"}
+      href={pageDownHref}
+      class:disabled={!canPageDown}
+      class="core-anchor-button h-8 flex rounded sm:border-l-0 sm:rounded-tl-none sm:rounded-bl-none border"
+    >
       <span class="sr">Go a page down</span>
       <i class="fal fa-fw fa-angle-left" />
     </svelte:element>
@@ -42,19 +47,23 @@
   </div>
 
   <div class="flex">
-    <svelte:element this={canPageUp ? "a" : "span"} href={pageUpHref} class:disabled={!canPageUp} class="h-8 connect-right btn btn-default page">
+    <svelte:element
+      this={canPageUp ? "a" : "span"}
+      href={pageUpHref}
+      class:disabled={!canPageUp}
+      class="core-anchor-button flex h-8 rounded sm:border-r-0 sm:rounded-tr-none sm:rounded-br-none border"
+    >
       <span class="sr">Go a page up</span>
       <i class="fal fa-fw fa-angle-right" />
     </svelte:element>
-    <svelte:element this={canPageLast ? "a" : "span"} href={pageLastHref} class:disabled={!canPageLast} class="h-8 connect-left btn btn-default">
+    <svelte:element
+      this={canPageLast ? "a" : "span"}
+      href={pageLastHref}
+      class:disabled={!canPageLast}
+      class="core-anchor-button hidden sm:flex h-8 rounded sm:rounded-tl-none sm:rounded-bl-none border"
+    >
       <span class="sr">Go to last page</span>
       <i class="fal fa-fw fa-angle-double-right" />
     </svelte:element>
   </div>
 </div>
-
-<style>
-  .btn {
-    padding: 6px;
-  }
-</style>

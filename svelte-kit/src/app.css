@@ -36,3 +36,7 @@ select {
 .connect-right {
   @apply border-r-0 rounded-tr-none rounded-br-none;
 }
+
+.core-anchor-button {
+  @apply items-center m-0 transition-[box-shadow,opacity] bg-white border-neutral-400 text-neutral-700 py-1.5 px-1.5 text-base;
+}

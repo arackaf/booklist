@@ -42,7 +42,7 @@
   class:focus:shadow-sm={size === "sm"}
   class:cursor-not-allowed={disabled}
   class:opacity-50={disabled}
-  class={`flex items-center m-0 rounded border lead transition-[box-shadow,opacity] ${addedClasses}`}
+  class={`flex items-center m-0 rounded border transition-[box-shadow,opacity] ${addedClasses}`}
   {disabled}
   on:click
   {...rest}
