@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import { changeFilter } from "../state/searchState";
 
   $: ({ page, totalPages } = $pageStore.data);
@@ -16,24 +17,14 @@
 
 <div class="flex items-center gap-2">
   <div class="flex">
-    <svelte:element
-      this={canPageOne ? "a" : "span"}
-      href={$changeFilter.pageTo(1)}
-      class:disabled={!canPageOne}
-      class="core-anchor-button h-8 hidden sm:flex rounded sm:rounded-tr-none sm:rounded-br-none border"
-    >
+    <Button href={$changeFilter.pageTo(1)} disabled={!canPageOne} class="h-8 connect-right hidden sm:flex" icon={true}>
       <span class="sr">Go to page 1</span>
       <i class="fal fa-fw fa-angle-double-left" />
-    </svelte:element>
-    <svelte:element
-      this={canPageDown ? "a" : "span"}
-      href={pageDownHref}
-      class:disabled={!canPageDown}
-      class="core-anchor-button h-8 flex rounded sm:border-l-0 sm:rounded-tl-none sm:rounded-bl-none border"
-    >
+    </Button>
+    <Button href={pageDownHref} disabled={!canPageDown} class="h-8 rounded-tl sm:rounded-tl-none rounded-bl sm:rounded-bl-none" icon={true}>
       <span class="sr">Go a page down</span>
       <i class="fal fa-fw fa-angle-left" />
-    </svelte:element>
+    </Button>
   </div>
 
   <div class="results-holder">
@@ -47,23 +38,18 @@
   </div>
 
   <div class="flex">
-    <svelte:element
-      this={canPageUp ? "a" : "span"}
+    <Button
       href={pageUpHref}
-      class:disabled={!canPageUp}
-      class="core-anchor-button flex h-8 rounded sm:border-r-0 sm:rounded-tr-none sm:rounded-br-none border"
+      class="h-8 border-r sm:border-r-0 rounded-tr sm:rounded-tr-none rounded-br sm:rounded-br-none"
+      icon={true}
+      disabled={!canPageUp}
     >
       <span class="sr">Go a page up</span>
       <i class="fal fa-fw fa-angle-right" />
-    </svelte:element>
-    <svelte:element
-      this={canPageLast ? "a" : "span"}
-      href={pageLastHref}
-      class:disabled={!canPageLast}
-      class="core-anchor-button hidden sm:flex h-8 rounded sm:rounded-tl-none sm:rounded-bl-none border"
-    >
+    </Button>
+    <Button href={pageLastHref} class="h-8 connect-left hidden sm:flex" icon={true} disabled={!canPageLast}>
       <span class="sr">Go to last page</span>
       <i class="fal fa-fw fa-angle-double-right" />
-    </svelte:element>
+    </Button>
   </div>
 </div>
