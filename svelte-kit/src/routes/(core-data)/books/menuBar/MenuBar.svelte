@@ -44,10 +44,10 @@
   </MobileMenu>
 
   <div style="font-size: 11pt; position: relative">
-    <div class="flex flex-wrap" style="margin-bottom: 5px">
+    <div class="flex flex-wrap gap-2" style="margin-bottom: 5px">
       <button
         style="font-size: 1.4rem; align-self: center"
-        class="block lg:hidden margin-right raw-button icon-button"
+        class="block lg:hidden raw-button icon-button"
         aria-label="Open mobile menu"
         on:click={() => (mobileMenuOpen = true)}
       >
@@ -57,7 +57,7 @@
         <PublicBooksHeader />
       {/if}
       <PagingButtons />
-      <div class="margin-right">
+      <div>
         <div class="flex">
           <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
             {#if $publicUser}
@@ -69,7 +69,7 @@
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+              class="hidden sm:block search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"
             />
             <QuickFormFiller />
@@ -80,7 +80,7 @@
           <MenuOptionsDesktop {isPublic} />
         </div>
       </div>
-      <div class="btn-group margin-right">
+      <div class="btn-group">
         <BookViewsDesktop {bookViewToUse} />
       </div>
 
