@@ -5,6 +5,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
   import type { Book } from "$data/types";
 
@@ -45,15 +46,10 @@
         <SubTitleText>{book.authors.join(", ")}</SubTitleText>
       {/if}
 
-      <button
-        disabled={adding}
-        on:click={_selectBook}
-        style="cursor: pointer; margin-top: auto; align-self: flex-start"
-        class="btn btn-primary btn-xs"
-      >
-        Add to list&nbsp;
+      <Button theme="primary" size="sm" class="mt-auto self-start gap-2" disabled={adding} on:click={_selectBook}>
+        Add to list
         <i class="fal fa-plus" />
-      </button>
+      </Button>
     </div>
   </div>
   <hr class="my-2" />
