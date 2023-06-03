@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "./menu-bar-styles.scss";
-
   import { sanitize } from "$lib/util/formDataHelpers";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
 
@@ -35,7 +33,7 @@
   }
 </script>
 
-<div class="x-books-menu-bar">
+<div>
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
