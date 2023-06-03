@@ -40,9 +40,6 @@
     .page-label {
       display: none;
     }
-    .page-edge {
-      display: none;
-    }
     .page {
       border-radius: var(--default-border-radius) !important;
       border: var(--default-border-width) solid var(--neutral-border) !important;
@@ -50,16 +47,6 @@
 
     .mobile-menu-button {
       display: block;
-    }
-
-    input.search-input {
-      border-right-width: var(--default-border-width);
-      border-top-right-radius: var(--default-border-radius);
-      border-bottom-right-radius: var(--default-border-radius);
-    }
-
-    .menu-bar-desktop button {
-      display: none;
     }
   }
 

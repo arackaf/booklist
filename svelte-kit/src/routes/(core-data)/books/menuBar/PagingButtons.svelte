@@ -14,49 +14,39 @@
   $: pageLastHref = $changeFilter.pageTo(totalPages, totalPages);
 </script>
 
-<div style="display: flex; align-items: center" class="margin-right">
-  <div class="btn-group">
-    <svelte:element this={canPageOne ? "a" : "span"} href={$changeFilter.pageTo(1)} class:disabled={!canPageOne} class="btn btn-default page-edge">
+<div class="flex items-center gap-2">
+  <div class="flex">
+    <svelte:element
+      this={canPageOne ? "a" : "span"}
+      href={$changeFilter.pageTo(1)}
+      class:disabled={!canPageOne}
+      class="h-8 connect-right btn btn-default"
+    >
       <span class="sr">Go to page 1</span>
       <i class="fal fa-fw fa-angle-double-left" />
     </svelte:element>
-    <svelte:element
-      this={canPageDown ? "a" : "span"}
-      href={pageDownHref}
-      class:disabled={!canPageDown}
-      class="btn btn-default page"
-      style="margin-right: 5px"
-    >
+    <svelte:element this={canPageDown ? "a" : "span"} href={pageDownHref} class:disabled={!canPageDown} class="h-8 connect-left btn btn-default">
       <span class="sr">Go a page down</span>
       <i class="fal fa-fw fa-angle-left" />
     </svelte:element>
   </div>
 
-  <div class="results-holder overlay-holder">
-    <span style="display: inline;">
+  <div class="results-holder">
+    <span>
       {#if totalPages}
         <span><span class="page-label">Page </span>{page} of {totalPages}</span>
       {:else}
         <span>No results</span>
       {/if}
     </span>
-    <span style="visibility: hidden">
-      <span class="page-label">Page </span>1 of 10
-    </span>
   </div>
 
-  <div class="btn-group">
-    <svelte:element
-      this={canPageUp ? "a" : "span"}
-      href={pageUpHref}
-      class:disabled={!canPageUp}
-      class="btn btn-default page"
-      style="margin-left: 5px"
-    >
+  <div class="flex">
+    <svelte:element this={canPageUp ? "a" : "span"} href={pageUpHref} class:disabled={!canPageUp} class="h-8 connect-right btn btn-default page">
       <span class="sr">Go a page up</span>
       <i class="fal fa-fw fa-angle-right" />
     </svelte:element>
-    <svelte:element this={canPageLast ? "a" : "span"} href={pageLastHref} class:disabled={!canPageLast} class="btn btn-default page-edge">
+    <svelte:element this={canPageLast ? "a" : "span"} href={pageLastHref} class:disabled={!canPageLast} class="h-8 connect-left btn btn-default">
       <span class="sr">Go to last page</span>
       <i class="fal fa-fw fa-angle-double-right" />
     </svelte:element>

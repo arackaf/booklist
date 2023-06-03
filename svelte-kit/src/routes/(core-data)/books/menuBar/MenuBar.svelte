@@ -6,11 +6,13 @@
 
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
-  import MenuOptions from "./MenuOptions.svelte";
+  import BookViewsDesktop from "./BookViewsDesktop.svelte";
+  import BookViewsMobile from "./BookViewsMobile.svelte";
+  import MenuOptionsMobile from "./MenuOptionsMobile.svelte";
+  import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
   import { publicUser, searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
-  import BookViews from "./BookViews.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
 
   export let isPublic: boolean;
@@ -33,19 +35,19 @@
   }
 </script>
 
-<div class="books-menu-bar">
+<div class="x-books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
-      <MenuOptions {isPublic} {closeMobileMenu} />
-      <BookViews {bookViewToUse} {closeMobileMenu} />
+      <MenuOptionsMobile {isPublic} {closeMobileMenu} />
+      <BookViewsMobile {bookViewToUse} {closeMobileMenu} />
     </div>
   </MobileMenu>
 
   <div style="font-size: 11pt; position: relative">
-    <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
+    <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
       <button
         style="font-size: 1.4rem; align-self: center"
-        class="mobile-menu-button margin-right raw-button icon-button"
+        class="block lg:hidden raw-button icon-button"
         aria-label="Open mobile menu"
         on:click={() => (mobileMenuOpen = true)}
       >
@@ -55,8 +57,8 @@
         <PublicBooksHeader />
       {/if}
       <PagingButtons />
-      <div class="margin-right">
-        <div class="menu-bar-desktop btn-group">
+      <div class="hidden sm:block">
+        <div class="flex">
           <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
             {#if $publicUser}
               <input type="hidden" name="user" value={$publicUser} />
@@ -67,7 +69,7 @@
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="search-input tiny-orphan first-child rounded-tr-none rounded-br-none border-r-0 shadow-none"
+              class="h-8 search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"
             />
             <QuickFormFiller />
@@ -75,11 +77,11 @@
               <input type="hidden" name="subjects" value={subject} />
             {/each}
           </form>
-          <MenuOptions {isPublic} />
+          <MenuOptionsDesktop {isPublic} />
         </div>
       </div>
-      <div class="menu-bar-desktop btn-group margin-right">
-        <BookViews {bookViewToUse} />
+      <div class="hidden lg:flex">
+        <BookViewsDesktop {bookViewToUse} />
       </div>
 
       <ActiveSearchFilters />

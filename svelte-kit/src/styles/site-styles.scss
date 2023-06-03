@@ -534,11 +534,6 @@ div.toast-notification h4 {
   }
 }
 
-.btn-group input:focus,
-.btn-group button:focus {
-  z-index: 999999999;
-}
-
 button.btn {
   transition: box-shadow 0.15s linear;
 }
@@ -548,9 +543,6 @@ button.btn:focus {
 }
 button.btn-xs:focus {
   box-shadow: 0 0 3px var(--primary-7);
-}
-.btn-group button:focus {
-  box-shadow: 0 0 2px var(--primary-7);
 }
 
 button::-moz-focus-inner {
