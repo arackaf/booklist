@@ -57,7 +57,7 @@
         <PublicBooksHeader />
       {/if}
       <PagingButtons />
-      <div>
+      <div class="hidden sm:block">
         <div class="flex">
           <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
             {#if $publicUser}
@@ -69,7 +69,7 @@
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="hidden sm:block search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+              class="search-input lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"
             />
             <QuickFormFiller />
@@ -80,7 +80,7 @@
           <MenuOptionsDesktop {isPublic} />
         </div>
       </div>
-      <div class="btn-group">
+      <div class="btn-group hidden lg:flex">
         <BookViewsDesktop {bookViewToUse} />
       </div>
 
