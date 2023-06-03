@@ -36,3 +36,15 @@ select {
 .connect-right {
   @apply border-r-0 rounded-tr-none rounded-br-none;
 }
+
+.raw-button {
+  @apply flex items-center p-0 bg-transparent border-0 text-neutral-600 cursor-pointer shadow-none;
+}
+
+.raw-button.icon-button i {
+  line-height: 27px; /* mobile menu trigger */
+}
+
+.raw-button.bold {
+  font-weight: bold;
+}

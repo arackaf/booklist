@@ -578,30 +578,6 @@ select {
   font-weight: 700;
 }
 
-.raw-button {
-  padding: 0;
-  background: rgba(255, 255, 255, 0);
-  border: 0;
-  color: var(--neutral-text);
-  font-size: inherit;
-  cursor: pointer;
-
-  &:focus,
-  &:active {
-    box-shadow: none;
-  }
-
-  &.icon-button {
-    i {
-      line-height: 27px; // mobile menu trigger
-    }
-  }
-
-  &.bold {
-    font-weight: bold;
-  }
-}
-
 canvas.book-preview {
   display: block;
 }

@@ -18,7 +18,10 @@
   {#if data.childSubjects?.length}
     <br />
 
-    <button on:click={runDrilldown} class="drilldown-btn raw-button"><span>View</span> <i class="far fa-chart-bar" /></button>
+    <button on:click={runDrilldown} class="gap-2 raw-button text-lg">
+      <span class="leading-none">View</span>
+      <i class="far fa-chart-bar leading-none" />
+    </button>
   {/if}
 
   <div class={"arrow " + position} />
@@ -48,13 +51,6 @@
     transform: translateY(calc(-1 * var(--arrow-diagonal)));
   }
 
-  .drilldown-btn {
-    display: flex;
-    align-items: center;
-  }
-  .drilldown-btn span {
-    margin-right: 7px;
-  }
   .content {
     display: flex;
     align-items: baseline;
