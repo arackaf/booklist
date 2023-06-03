@@ -23,7 +23,7 @@
   });
 </script>
 
-<div bind:this={rootEl} style="display: none;">
+<div bind:this={rootEl} class="hidden">
   <div class="mobile-menu-content">
     <div>
       <div class="header">

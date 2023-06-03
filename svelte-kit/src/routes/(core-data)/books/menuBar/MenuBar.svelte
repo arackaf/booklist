@@ -35,7 +35,7 @@
   }
 </script>
 
-<div class="books-menu-bar">
+<div class="x-books-menu-bar">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
@@ -44,10 +44,10 @@
   </MobileMenu>
 
   <div style="font-size: 11pt; position: relative">
-    <div style="display: flex; flex-wrap: wrap; margin-bottom: 5px">
+    <div class="flex flex-wrap" style="margin-bottom: 5px">
       <button
         style="font-size: 1.4rem; align-self: center"
-        class="mobile-menu-button margin-right raw-button icon-button"
+        class="block lg:hidden margin-right raw-button icon-button"
         aria-label="Open mobile menu"
         on:click={() => (mobileMenuOpen = true)}
       >
