@@ -35,18 +35,6 @@
   const editSubjectsForSelectedBooks = () => editBooksSubjects();
   const editTagsForSelectedBooks = () => editBooksTags();
 
-  const mobileHandler =
-    (fn: () => unknown, delay = false) =>
-    () => {
-      setTimeout(
-        () => {
-          closeMobileMenu?.();
-        },
-        delay ? 300 : 0
-      );
-      fn();
-    };
-
   $: {
     if (bulkReadSaving || bulkUnReadSaving) {
       startSaving(getSelectedBooksIds());
@@ -57,14 +45,14 @@
 </script>
 
 {#if !selectedBooksCount}
-  <Button title="Filter search" on:click={mobileHandler(openFilterModal, true)} class="hidden lg:flex h-8 connect-left connect-right">
+  <Button title="Filter search" on:click={openFilterModal} class="hidden lg:flex h-8 connect-left connect-right">
     <i class="fal fa-fw fa-filter" />
   </Button>
   {#if !isPublic}
-    <Button title="Edit subjects" on:click={mobileHandler(editSubjects, true)} class="hidden lg:flex h-8 connect-left connect-right">
+    <Button title="Edit subjects" on:click={editSubjects} class="hidden lg:flex h-8 connect-left connect-right">
       <i class="fal fa-fw fa-sitemap" />
     </Button>
-    <Button title="Edit tags" on:click={mobileHandler(editTags, true)} class="hidden lg:flex h-8 connect-left connect-right">
+    <Button title="Edit tags" on:click={editTags} class="hidden lg:flex h-8 connect-left connect-right">
       <i class="fal fa-fw fa-tags" />
     </Button>
   {/if}
@@ -75,10 +63,10 @@
     </Button>
   </form>
 {:else if !isPublic}
-  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
+  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" on:click={editSubjectsForSelectedBooks}>
     <i class="fal fa-fw fa-sitemap" />
   </Button>
-  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
+  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" on:click={editTagsForSelectedBooks}>
     <i class="fal fa-fw fa-tags" />
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>

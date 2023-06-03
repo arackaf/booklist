@@ -35,17 +35,12 @@
   const editSubjectsForSelectedBooks = () => editBooksSubjects();
   const editTagsForSelectedBooks = () => editBooksTags();
 
-  const mobileHandler =
-    (fn: () => unknown, delay = false) =>
-    () => {
-      setTimeout(
-        () => {
-          closeMobileMenu?.();
-        },
-        delay ? 300 : 0
-      );
-      fn();
-    };
+  const mobileHandler = (fn: () => unknown) => () => {
+    setTimeout(() => {
+      closeMobileMenu?.();
+    }, 300);
+    fn();
+  };
 
   $: {
     if (bulkReadSaving || bulkUnReadSaving) {
@@ -85,11 +80,11 @@
   <hr />
 {:else if !isPublic}
   <hr />
-  <Button class="h-8" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
+  <Button class="h-8" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks, true)}>
     <span>Add / Remove Subjects</span>
     <i class="fal fa-fw fa-sitemap" />
   </Button>
-  <Button class="h-8" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
+  <Button class="h-8" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks, true)}>
     <span>Add / Remove Tags</span>
     <i class="fal fa-fw fa-tags" />
   </Button>
