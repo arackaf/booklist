@@ -4,6 +4,7 @@
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 
   import { selectedBooksLookup } from "../state/selectionState";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
   $: selectedBooksIds = Object.keys($selectedBooksLookup).map(s => +s);
   $: anyBooksSelected = !!selectedBooksIds.length;
@@ -22,19 +23,19 @@
 
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={GRID_VIEW} />
-  <button disabled={anyBooksSelected} class="h-8 btn btn-default connect-right" class:active={bookViewToUse == GRID_VIEW}>
+  <Button disabled={bookViewToUse == GRID_VIEW || anyBooksSelected} softDisable={true} class="h-8 connect-right">
     <i class="fal fa-fw fa-table" />
-  </button>
+  </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={COVERS_LIST} />
-  <button disabled={anyBooksSelected} class="h-8 btn btn-default connect-right connect-left" class:active={bookViewToUse == COVERS_LIST}>
+  <Button disabled={bookViewToUse == COVERS_LIST || anyBooksSelected} softDisable={true} class="h-8 connect-right connect-left">
     <i class="fas fa-fw fa-th" />
-  </button>
+  </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-  <button disabled={anyBooksSelected} class="h-8 btn btn-default connect-left" class:active={bookViewToUse == BASIC_LIST_VIEW}>
+  <Button disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected} softDisable={true} class="h-8 connect-left">
     <i class="fal fa-fw fa-list" />
-  </button>
+  </Button>
 </form>

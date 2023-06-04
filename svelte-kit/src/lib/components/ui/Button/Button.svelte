@@ -2,6 +2,7 @@
   export let theme: "primary" | "success" | "danger" | "default" = "default";
   export let size: "default" | "med" | "sm" = "default";
   export let disabled: boolean | undefined = undefined;
+  export let softDisable: boolean = false;
   export let icon: boolean = false;
 
   let className = "";
@@ -49,8 +50,10 @@
   class:leading-none={icon}
   class:focus:shadow-md={size === "default" || size === "med"}
   class:focus:shadow-sm={size === "sm"}
-  class:cursor-not-allowed={disabled}
-  class:opacity-50={disabled}
+  class:cursor-not-allowed={disabled && !softDisable}
+  class:cursor-default={disabled && softDisable}
+  class:opacity-50={disabled && !softDisable}
+  class:opacity-70={disabled && softDisable}
   class={`flex items-center m-0 rounded border transition-[box-shadow,opacity] ${addedClasses}`}
   disabled={type === "button" ? disabled : undefined}
   href={type === "a" ? href : undefined}
