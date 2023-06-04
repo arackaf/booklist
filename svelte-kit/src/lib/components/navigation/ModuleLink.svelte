@@ -18,7 +18,7 @@
     onClick();
   };
 
-  $: bgColorClass = active ? "bg-[var(--primary-7)]" : "";
+  $: bgColorClass = active ? "bg-[var(--primary-6)]" : "";
   $: colorClass = disabled ? "text-[var(--primary-7)]" : "text-[var(--primary-10)]";
   $: cursorClass = disabled || active ? "cursor-default" : undefined;
 </script>
