@@ -1,6 +1,9 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+
   import DisplayBook from "./DisplayBook.svelte";
   import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
@@ -43,16 +46,15 @@
       <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
       <div class="flex flex-row">
-        <button class="btn btn-default" on:click={openModal}>
+        <Button class="gap-2" on:click={openModal}>
           <i class="fal fa-search" />
           <span>Search your books</span>
-        </button>
+        </Button>
 
         {#if selectedBooks.length}
-          <button on:click={getRecommendations} disabled={recommendationsLoading} class="btn btn-primary ml-auto">
-            {#if recommendationsLoading}<i class="far fa-fw fa-spin fa-spinner" />{/if}
+          <ActionButton theme="primary" class="ml-auto" on:click={getRecommendations} running={recommendationsLoading}>
             Get Recommendations
-          </button>
+          </ActionButton>
         {/if}
       </div>
 
