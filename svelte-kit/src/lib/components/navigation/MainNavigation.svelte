@@ -38,7 +38,7 @@
 
 <header class="master-nav">
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
-    <div class={`hidden sm:flex text-lg ${isHome ? "active" : ""}`}>
+    <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
       <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
@@ -46,13 +46,15 @@
     </div>
 
     <ul class="flex nav-items">
-      <NavBarItem active={isHome} class="flex sm:hidden" href="/" style="margin-top: '2px';" label={"Home"}>
+      <NavBarItem active={isHome} class="flex md:hidden" href="/" style="margin-top: '2px';" label={"Home"}>
         <i class="fal fa-fw fa-home text-lg" />
       </NavBarItem>
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/scan" style="position: relative;" label={"Scan books"}>
-          <span class="hidden sm:block">Book entry</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-scanner" />
+          <span class="hidden md:block">Book entry</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-scanner" />
+          </span>
           {#if pendingCount}
             <span class={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
               <span class="overlay-holder">
@@ -65,26 +67,34 @@
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
-          <span class="hidden sm:block">Books</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-books" />
+          <span class="hidden md:block">Books</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-books" />
+          </span>
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/subjects" label={"Manage subjects"}>
-          <span class="hidden sm:block">Subjects</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-sitemap" />
+          <span class="hidden md:block">Subjects</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-sitemap" />
+          </span>
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
-          <span class="hidden sm:block">Settings</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-cogs" />
+          <span class="hidden md:block">Settings</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-cogs" />
+          </span>
         </NavBarItem>
       {/if}
       {#if loggedIn && isAdminUser}
         <NavBarItem href="/admin/similar-books" label={"Admin"}>
-          <span class="hidden sm:block">Admin</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-users-cog" />
+          <span class="hidden md:block">Admin</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-users-cog" />
+          </span>
         </NavBarItem>
       {/if}
     </ul>
@@ -97,16 +107,20 @@
             })}
           label={"Login"}
         >
-          <span class="hidden sm:block">Login</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-sign-in" />
+          <span class="hidden md:block">Login</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-sign-in" />
+          </span>
         </NavBarItem>
       {/if}
     </ul>
     {#if loggedIn}
       <ul class="flex ml-auto">
         <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
-          <span class="hidden sm:block">Logout</span>
-          <i class="block sm:hidden text-lg fal fa-fw fa-sign-out" />
+          <span class="hidden md:block">Logout</span>
+          <span class="md:hidden">
+            <i class="text-lg fal fa-fw fa-sign-out" />
+          </span>
         </NavBarItem>
       </ul>
     {/if}
