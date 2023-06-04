@@ -1,6 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { enhance } from "$app/forms";
+  import Button from "$lib/components/ui/Button/Button.svelte";
+
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 
   import { selectedBooksLookup } from "../state/selectionState";
@@ -22,22 +24,22 @@
 
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={GRID_VIEW} />
-  <button disabled={anyBooksSelected} class="btn btn-default first-child" class:active={bookViewToUse == GRID_VIEW}>
+  <Button disabled={bookViewToUse == GRID_VIEW || anyBooksSelected}>
     <span>Main View</span>
     <i class="fal fa-fw fa-table" />
-  </button>
+  </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={COVERS_LIST} />
-  <button disabled={anyBooksSelected} class="btn btn-default" class:active={bookViewToUse == COVERS_LIST}>
+  <Button disabled={bookViewToUse == COVERS_LIST || anyBooksSelected}>
     <span>Covers View</span>
     <i class="fas fa-fw fa-th" />
-  </button>
+  </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-  <button disabled={anyBooksSelected} class="btn btn-default last-child" class:active={bookViewToUse == BASIC_LIST_VIEW}>
+  <Button disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected}>
     <span>Mobile View</span>
     <i class="fal fa-fw fa-list" />
-  </button>
+  </Button>
 </form>
