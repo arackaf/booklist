@@ -6,6 +6,7 @@
   export let disabled = false;
   export let onClick: (() => void) | null = null;
   export let label: string = "";
+  export let active = false;
 
   const linkClicked = (evt: any) => {
     if (!onClick || disabled) {
@@ -16,17 +17,24 @@
     onClick();
   };
 
+  $: bgColorClass = active ? "bg-[var(--primary-7)]" : "";
   $: colorClass = disabled ? "text-[var(--primary-7)]" : "text-[var(--primary-10)]";
-  $: cursorClass = disabled ? "cursor-default" : undefined;
+  $: cursorClass = disabled || active ? "cursor-default" : undefined;
 </script>
 
 {#if href}
-  <a class="flex items-center {colorClass} px-3 touch-manipulation" on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
+  <a
+    class="flex items-center {colorClass} {bgColorClass} {cursorClass} px-3 touch-manipulation"
+    on:click={linkClicked}
+    href={disabled ? null : href}
+    {style}
+    aria-label={label}
+  >
     <slot />
   </a>
 {:else}
   <RawButton
-    class="flex items-center px-3 touch-manipulation"
+    class="flex items-center px-3 touch-manipulation {bgColorClass}"
     color={colorClass}
     cursor={cursorClass}
     on:click={linkClicked}

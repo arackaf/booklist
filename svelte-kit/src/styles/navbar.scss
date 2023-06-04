@@ -1,14 +1,5 @@
 .master-nav {
   .nav {
-    .active {
-      background-color: var(--primary-7);
-
-      a,
-      button {
-        cursor: default;
-      }
-    }
-
     @media (max-width: 767px) {
       padding-left: 0px;
     }

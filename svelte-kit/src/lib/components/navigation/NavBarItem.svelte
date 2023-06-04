@@ -18,8 +18,8 @@
   const spreadClassNames = (baseCssClasses = "", ...userClasses: string[]) => `${baseCssClasses} ${userClasses.join(" ")}`;
 </script>
 
-<li class={spreadClassNames(className || "", !!disabled ? "disabled" : "", isActive ? "active" : "")}>
-  <ModuleLink {disabled} {onClick} {style} href={disabled ? "" : href} {label}>
+<li class={spreadClassNames(className || "", !!disabled ? "disabled" : "")}>
+  <ModuleLink active={isActive} {disabled} {onClick} {style} href={disabled ? "" : href} {label}>
     <slot />
   </ModuleLink>
 </li>
