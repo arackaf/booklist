@@ -47,12 +47,12 @@
 
     <ul class="flex nav-items">
       <NavBarItem active={isHome} class="flex sm:hidden" href="/" style="margin-top: '2px';" label={"Home"}>
-        <i class="fal fa-fw fa-home" />
+        <i class="fal fa-fw fa-home text-lg" />
       </NavBarItem>
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/scan" style="position: relative;" label={"Scan books"}>
           <span class="hidden sm:block">Book entry</span>
-          <i class="block sm:hidden fal fa-fw fa-scanner" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-scanner" />
           {#if pendingCount}
             <span class={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
               <span class="overlay-holder">
@@ -66,25 +66,25 @@
       {#if loggedIn || hasPublicId}
         <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
           <span class="hidden sm:block">Books</span>
-          <i class="block sm:hidden fal fa-fw fa-books" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-books" />
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/subjects" label={"Manage subjects"}>
           <span class="hidden sm:block">Subjects</span>
-          <i class="block sm:hidden fal fa-fw fa-sitemap" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-sitemap" />
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
           <span class="hidden sm:block">Settings</span>
-          <i class="block sm:hidden fal fa-fw fa-cogs" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-cogs" />
         </NavBarItem>
       {/if}
       {#if loggedIn && isAdminUser}
         <NavBarItem href="/admin/similar-books" label={"Admin"}>
           <span class="hidden sm:block">Admin</span>
-          <i class="block sm:hidden fal fa-fw fa-users-cog" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-users-cog" />
         </NavBarItem>
       {/if}
     </ul>
@@ -98,7 +98,7 @@
           label={"Login"}
         >
           <span class="hidden sm:block">Login</span>
-          <i class="block sm:hidden fal fa-fw fa-sign-in" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-sign-in" />
         </NavBarItem>
       {/if}
     </ul>
@@ -106,7 +106,7 @@
       <ul class="flex ml-auto">
         <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
           <span class="hidden sm:block">Logout</span>
-          <i class="block sm:hidden fal fa-fw fa-sign-out" />
+          <i class="block sm:hidden text-lg fal fa-fw fa-sign-out" />
         </NavBarItem>
       </ul>
     {/if}
