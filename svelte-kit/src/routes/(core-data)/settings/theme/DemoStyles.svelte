@@ -15,7 +15,7 @@
             <Input slot="input" placeholder="Search title" value="The Slefish Gene" />
           </InputGroup>
 
-          <div class="alert alert-warning margin-bottom">Did you spell this right?</div>
+          <div class="alert alert-warning">Did you spell this right?</div>
         </div>
       </div>
       <div>
@@ -24,7 +24,7 @@
             <Input slot="input" placeholder="Publisher" value="Basic Books" />
           </InputGroup>
 
-          <div class="alert alert-success margin-bottom">Looks good to me!</div>
+          <div class="alert alert-success">Looks good to me!</div>
         </div>
       </div>
       <div>
@@ -32,7 +32,7 @@
           <InputGroup labelText="Author">
             <Input slot="input" placeholder="Author" />
           </InputGroup>
-          <div class="alert alert-danger margin-bottom">Author is required!</div>
+          <div class="alert alert-danger">Author is required!</div>
         </div>
       </div>
     </div>
