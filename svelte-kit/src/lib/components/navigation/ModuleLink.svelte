@@ -21,11 +21,11 @@
 </script>
 
 {#if href}
-  <a class={colorClass} on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
+  <a class="flex items-center {colorClass} px-3" on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
     <slot />
   </a>
 {:else}
-  <RawButton color={colorClass} cursor={cursorClass} on:click={linkClicked} {style} aria-label={label}>
+  <RawButton class="flex items-center px-3" color={colorClass} cursor={cursorClass} on:click={linkClicked} {style} aria-label={label}>
     <slot />
   </RawButton>
 {/if}
