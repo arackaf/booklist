@@ -3,6 +3,7 @@
 
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
@@ -51,16 +52,16 @@
 <section>
   <div class="flex flex-col-reverse md:grid md:grid-cols-2 gap-2">
     <div>
-      <div style="display: flex; align-items: center">
-        <h4 style="margin-top: 0; margin-bottom: 0; font-size: 16px">
+      <div class="flex items-center">
+        <h4 class="text-base my-0 flex gap-1">
           Enter your books here
           <button class="raw-button cursor-pointer" on:click={() => (showScanInstructions = !showScanInstructions)}>
             <i class="far fa-question-circle" />
           </button>
         </h4>
-        <button class="btn btn-xs margin-left" on:click={manuallyEnterBook}> Manual entry </button>
+        <Button size="sm" class="ml-6" on:click={manuallyEnterBook}>Manual entry</Button>
       </div>
-      <div style="margin-top: 10px">
+      <div class="mt-2">
         <SlideAnimate open={showScanInstructions} class="card card-info card-slim" style="width: 80%">
           <div>
             Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
