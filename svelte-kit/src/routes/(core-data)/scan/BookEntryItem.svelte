@@ -63,6 +63,6 @@
     <label for="entry-item-{idx}" class="control-label" style="margin-right: 5px"> ISBN </label>
   </div>
   <Input id="entry-item-{idx}" on:focus={onFocus} style="max-width: 250px" bind:inputEl on:keydown={keyDown} />
-  {#if queuing}<span class="label label-default margin-left">Queuing</span>{/if}
-  {#if queued}<span class="label label-success margin-left">Queued</span>{/if}
+  {#if queuing}<span class="label label-default ml-2">Queuing</span>{/if}
+  {#if queued}<span class="label label-success ml-2">Queued</span>{/if}
 </div>
