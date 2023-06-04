@@ -6,6 +6,7 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
 
   export let book: Book;
   export let unselectBook: (book: Book) => void;
@@ -41,9 +42,7 @@
             {book.authors.join(", ")}
           </SubTitleText>
         {/if}
-        <div class="mt-auto">
-          <button on:click={() => unselectBook(book)} style="cursor: pointer" class="btn btn-xs btn-danger">Remove</button>
-        </div>
+        <Button class="mt-auto self-start" theme="danger" size="sm" on:click={() => unselectBook(book)}>Remove</Button>
       </div>
     </div>
     <hr class="my-2" />
