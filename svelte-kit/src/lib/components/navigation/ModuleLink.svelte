@@ -7,7 +7,7 @@
   export let onClick: (() => void) | null = null;
   export let label: string = "";
   export let active = false;
-  export let padding = "px-3";
+  export let padding = "px-4";
 
   const linkClicked = (evt: any) => {
     if (!onClick || disabled) {

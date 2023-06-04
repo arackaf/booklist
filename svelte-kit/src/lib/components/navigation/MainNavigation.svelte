@@ -38,7 +38,7 @@
 
 <header class="master-nav">
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
-    <div class={`flex text-lg hidden-xs ${isHome ? "active" : ""}`}>
+    <div class={`hidden sm:flex text-lg ${isHome ? "active" : ""}`}>
       <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
@@ -46,13 +46,13 @@
     </div>
 
     <ul class="flex nav-items">
-      <NavBarItem active={isHome} class="visible-xs" href="/" style="margin-top: '2px';" label={"Home"}>
-        <i class="fal fa-fw fa-home visible-xs" />
+      <NavBarItem active={isHome} class="flex sm:hidden" href="/" style="margin-top: '2px';" label={"Home"}>
+        <i class="fal fa-fw fa-home" />
       </NavBarItem>
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/scan" style="position: relative;" label={"Scan books"}>
-          <span class="hidden-xs">Book entry</span>
-          <i class="visible-xs fal fa-fw fa-scanner" />
+          <span class="hidden sm:block">Book entry</span>
+          <i class="block sm:hidden fal fa-fw fa-scanner" />
           {#if pendingCount}
             <span class={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
               <span class="overlay-holder">
@@ -65,26 +65,26 @@
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
-          <span class="hidden-xs">Books</span>
-          <i class="visible-xs fal fa-fw fa-books" />
+          <span class="hidden sm:block">Books</span>
+          <i class="block sm:hidden fal fa-fw fa-books" />
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/subjects" label={"Manage subjects"}>
-          <span class="hidden-xs">Subjects</span>
-          <i class="visible-xs fal fa-fw fa-sitemap" />
+          <span class="hidden sm:block">Subjects</span>
+          <i class="block sm:hidden fal fa-fw fa-sitemap" />
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
         <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
-          <span class="hidden-xs">Settings</span>
-          <i class="visible-xs fal fa-fw fa-cogs" />
+          <span class="hidden sm:block">Settings</span>
+          <i class="block sm:hidden fal fa-fw fa-cogs" />
         </NavBarItem>
       {/if}
       {#if loggedIn && isAdminUser}
         <NavBarItem href="/admin/similar-books" label={"Admin"}>
-          <span class="hidden-xs">Admin</span>
-          <i class="visible-xs fal fa-fw fa-users-cog" />
+          <span class="hidden sm:block">Admin</span>
+          <i class="block sm:hidden fal fa-fw fa-users-cog" />
         </NavBarItem>
       {/if}
     </ul>
@@ -97,16 +97,16 @@
             })}
           label={"Login"}
         >
-          <span class="hidden-xs">Login</span>
-          <i class="visible-xs fal fa-fw fa-sign-in" />
+          <span class="hidden sm:block">Login</span>
+          <i class="block sm:hidden fal fa-fw fa-sign-in" />
         </NavBarItem>
       {/if}
     </ul>
     {#if loggedIn}
       <ul class="flex ml-auto">
         <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
-          <span class="hidden-xs">Logout</span>
-          <i class="visible-xs fal fa-fw fa-sign-out" />
+          <span class="hidden sm:block">Logout</span>
+          <i class="block sm:hidden fal fa-fw fa-sign-out" />
         </NavBarItem>
       </ul>
     {/if}

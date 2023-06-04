@@ -1,38 +1,4 @@
 .master-nav {
-  .nav {
-    @media (max-width: 767px) {
-      padding-left: 0px;
-    }
-
-    @media (max-width: 500px) {
-      padding-left: 0;
-
-      li a,
-      li button {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-    }
-
-    @media (max-width: 350px) {
-      padding-left: 0;
-      min-height: 20px;
-
-      li a,
-      li button {
-        padding-left: 8px;
-        padding-right: 8px;
-
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
-
-        i {
-          font-size: 13pt !important;
-        }
-      }
-    }
-  }
-
   .number-badge {
     --badge-size: 0.7rem;
     &.big-count {
