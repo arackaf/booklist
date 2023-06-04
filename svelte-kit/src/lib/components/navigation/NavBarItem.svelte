@@ -19,7 +19,7 @@
 </script>
 
 <li class={spreadClassNames(className || "", !!disabled ? "disabled" : "", isActive ? "active" : "")}>
-  <ModuleLink {onClick} {style} href={disabled ? "" : href} {label}>
+  <ModuleLink {disabled} {onClick} {style} href={disabled ? "" : href} {label}>
     <slot />
   </ModuleLink>
 </li>

@@ -8,21 +8,24 @@
   export let label: string = "";
 
   const linkClicked = (evt: any) => {
-    if (!onClick) {
+    if (!onClick || disabled) {
       return;
     }
 
     evt.preventDefault();
     onClick();
   };
+
+  $: colorClass = disabled ? "text-[var(--primary-7)]" : "text-[var(--primary-10)]";
+  $: cursorClass = disabled ? "cursor-default" : undefined;
 </script>
 
 {#if href}
-  <a on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
+  <a class={colorClass} on:click={linkClicked} href={disabled ? null : href} {style} aria-label={label}>
     <slot />
   </a>
 {:else}
-  <RawButton on:click={linkClicked} {style} aria-label={label}>
+  <RawButton color={colorClass} cursor={cursorClass} on:click={linkClicked} {style} aria-label={label}>
     <slot />
   </RawButton>
 {/if}
