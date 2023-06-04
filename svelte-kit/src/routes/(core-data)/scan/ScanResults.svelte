@@ -53,7 +53,7 @@
           currently outstanding
         </span>
         {#if toggleShow}
-          <button on:click={toggleIncomingQueue} class="raw-button margin-left-xs">
+          <button on:click={toggleIncomingQueue} class="raw-button ml-1">
             <i style="color: white" class="far fa-white {toggleClass}" />
           </button>
         {/if}
@@ -62,7 +62,7 @@
       <span class="label label-success">
         <span style={labelScanStatusStyles}> All pending books saved </span>
         {#if toggleShow}
-          <button on:click={toggleIncomingQueue} class="raw-button margin-left-xs">
+          <button on:click={toggleIncomingQueue} class="raw-button ml-1">
             <i style="color: white" class="far fa-white {toggleClass}" />
           </button>
         {/if}
