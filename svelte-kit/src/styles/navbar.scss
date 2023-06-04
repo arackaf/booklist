@@ -1,12 +1,5 @@
 .master-nav {
   .nav {
-    li {
-      a,
-      button {
-        touch-action: manipulation;
-      }
-    }
-
     .active {
       background-color: var(--primary-7);
 
