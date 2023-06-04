@@ -34,7 +34,7 @@
   }
 </script>
 
-<div>
+<div class="sticky top-0 z-[3] bg-white mt-[-2px] pt-[2px] pb-[1px]">
   <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="button-container" style="display: flex; flex-direction: column">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
