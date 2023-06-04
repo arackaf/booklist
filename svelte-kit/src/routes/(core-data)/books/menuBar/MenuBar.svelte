@@ -12,6 +12,7 @@
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
+  import RawButton from "$lib/components/ui/Button/RawButton.svelte";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
@@ -43,14 +44,14 @@
 
   <div style="font-size: 11pt; position: relative">
     <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
-      <button
+      <RawButton
         style="font-size: 1.4rem; align-self: center"
-        class="block lg:hidden raw-button icon-button"
+        class="block lg:hidden leading-none"
         aria-label="Open mobile menu"
         on:click={() => (mobileMenuOpen = true)}
       >
         <i class="far fa-fw fa-bars" />
-      </button>
+      </RawButton>
       {#if isPublic}
         <PublicBooksHeader />
       {/if}

@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --no-cover-mobile-width: 35px;
+  --no-cover-mobile-height: 53px;
+  --no-cover-mobile-padding-top: 10px;
+  --no-cover-mobile-font-size: 10px;
+
+  --no-cover-small-width: 50px;
+  --no-cover-small-height: 65px;
+  --no-cover-small-padding-top: 10px;
+  --no-cover-small-font-size: 14px;
+
+  --no-cover-medium-width: 106px;
+  --no-cover-medium-height: 131px;
+  --no-cover-medium-padding-top: 20px;
+  --no-cover-medium-font-size: 18px;
+}
+
 input[type="radio"] {
   @apply relative w-4 h-4 appearance-none border border-neutral-400 rounded-full outline-none;
 }
@@ -38,17 +55,42 @@ select {
 }
 
 .raw-button {
-  @apply items-center p-0 bg-transparent border-0 text-neutral-600 cursor-pointer shadow-none;
-}
-
-.raw-button.icon-button i {
-  line-height: 27px; /* mobile menu trigger */
-}
-
-.raw-button.bold {
-  font-weight: bold;
+  @apply p-0 bg-transparent border-0 text-neutral-600 cursor-pointer shadow-none;
 }
 
 button::-moz-focus-inner {
   border: 0;
 }
+
+/* book covers */
+
+.no-cover-mobile,
+.no-cover-small,
+.no-cover-medium {
+  background-color: var(--primary-4);
+  color: var(--primary-9);
+  text-align: center;
+}
+
+.no-cover-mobile {
+  width: var(--no-cover-mobile-width);
+  height: var(--no-cover-mobile-height);
+  font-size: var(--no-cover-mobile-font-size);
+  padding-top: var(--no-cover-mobile-padding-top);
+}
+
+.no-cover-small {
+  width: var(--no-cover-small-width);
+  height: var(--no-cover-small-height);
+  font-size: var(--no-cover-small-font-size);
+  padding-top: var(--no-cover-small-padding-top);
+}
+
+.no-cover-medium {
+  width: var(--no-cover-medium-width);
+  height: var(--no-cover-medium-height);
+  font-size: var(--no-cover-medium-font-size);
+  padding-top: var(--no-cover-medium-padding-top);
+}
+
+/* book covers */
