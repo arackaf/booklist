@@ -37,7 +37,7 @@
 </script>
 
 <header class="master-nav">
-  <nav class="nav">
+  <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
     <div class={`nav-header hidden-xs ${isHome ? "active" : ""}`}>
       <ModuleLink href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
