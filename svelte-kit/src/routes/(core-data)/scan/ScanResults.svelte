@@ -80,10 +80,7 @@
       <div style="margin-bottom: 0">
         {#each booksSaved as book (book)}
           <div transition:fade|local={{ easing: quadIn }} class="mb-2">
-            <div
-              class="border-bottom padding-bottom"
-              style="display: flex; flex-direction: row; color: {book.success ? 'var(--neutral-text)' : 'red'}"
-            >
+            <div class="border-bottom pb-2" style="display: flex; flex-direction: row; color: {book.success ? 'var(--neutral-text)' : 'red'}">
               <div style="min-width: 90px">
                 <BookCover size="small" {book} />
               </div>
