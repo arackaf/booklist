@@ -12,7 +12,7 @@
 <div class={"root " + position}>
   <div class="content">
     <span class="name">{data.display}: {data.count}</span>
-    <button class="raw-button" on:click={() => removeBar(data.groupId)}><i class="fad fa-times-circle" /></button>
+    <button class="raw-button flex" on:click={() => removeBar(data.groupId)}><i class="fad fa-times-circle" /></button>
   </div>
 
   {#if data.childSubjects?.length}

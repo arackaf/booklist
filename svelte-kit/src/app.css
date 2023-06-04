@@ -38,7 +38,7 @@ select {
 }
 
 .raw-button {
-  @apply flex items-center p-0 bg-transparent border-0 text-neutral-600 cursor-pointer shadow-none;
+  @apply items-center p-0 bg-transparent border-0 text-neutral-600 cursor-pointer shadow-none;
 }
 
 .raw-button.icon-button i {
