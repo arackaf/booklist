@@ -1,11 +1,5 @@
-<div class="section-nav-container margin-bottom">
-  <nav class="section-nav">
+<div class="mb-1 z-[3] sticky top-0 pb-1 bg-[var(--content-background)]">
+  <nav class="flex border-b border-b-[var(--primary-9)] mt-[calc(-1*var(--main-spacing-top))]">
     <slot />
   </nav>
 </div>
-
-<style>
-  .section-nav-container {
-    z-index: 3;
-  }
-</style>

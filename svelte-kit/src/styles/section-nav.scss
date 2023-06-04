@@ -1,19 +1,4 @@
-.section-nav-container {
-  position: sticky;
-  top: 0;
-  background-color: var(--content-background);
-  padding-bottom: 5px;
-}
-
-.section-nav {
-  display: flex;
-  border-bottom: var(--default-border-width) solid var(--primary-9);
-  margin: calc(-1 * var(--main-spacing-top)) 0 0;
-}
 .section-nav-item {
-  display: flex;
-  padding: 0;
-
   a {
     text-decoration: none;
   }

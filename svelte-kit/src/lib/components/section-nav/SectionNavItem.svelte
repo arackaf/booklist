@@ -9,7 +9,7 @@
   $: active = targetPathname === $page.url.pathname;
 </script>
 
-<div class="section-nav-item" class:active class:disabled>
+<div class="section-nav-item flex p-0" class:active class:disabled>
   <svelte:element this={active || disabled ? "span" : "a"} href={active || disabled ? null : href}>
     <slot />
   </svelte:element>
