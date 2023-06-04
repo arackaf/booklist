@@ -1,4 +1,6 @@
 <script lang="ts">
+  import RawButton from "../ui/Button/RawButton.svelte";
+
   export let href: string;
   export let style = "";
   export let disabled = false;
@@ -20,7 +22,7 @@
     <slot />
   </a>
 {:else}
-  <button class="raw-button" on:click={linkClicked} {style} aria-label={label}>
+  <RawButton on:click={linkClicked} {style} aria-label={label}>
     <slot />
-  </button>
+  </RawButton>
 {/if}
