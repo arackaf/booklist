@@ -7,6 +7,7 @@
   export let onClick: (() => void) | null = null;
   export let label: string = "";
   export let active = false;
+  export let padding = "px-3";
 
   const linkClicked = (evt: any) => {
     if (!onClick || disabled) {
@@ -24,7 +25,7 @@
 
 {#if href}
   <a
-    class="flex items-center {colorClass} {bgColorClass} {cursorClass} px-3 touch-manipulation"
+    class="flex items-center {colorClass} {bgColorClass} {cursorClass} {padding} touch-manipulation"
     on:click={linkClicked}
     href={disabled ? null : href}
     {style}
@@ -34,7 +35,7 @@
   </a>
 {:else}
   <RawButton
-    class="flex items-center px-3 touch-manipulation {bgColorClass}"
+    class="flex items-center touch-manipulation {bgColorClass} {padding}"
     color={colorClass}
     cursor={cursorClass}
     on:click={linkClicked}

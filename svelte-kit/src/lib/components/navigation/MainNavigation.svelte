@@ -38,8 +38,8 @@
 
 <header class="master-nav">
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
-    <div class={`nav-header hidden-xs ${isHome ? "active" : ""}`}>
-      <ModuleLink href={$publicUserIdPersist.urlTo("/")}>
+    <div class={`flex text-lg hidden-xs ${isHome ? "active" : ""}`}>
+      <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
