@@ -21,40 +21,33 @@ body {
     "header"
     "main"
     "footer";
+}
+#app > footer {
+  grid-area: footer;
+}
 
-  > header {
-    grid-area: header;
-  }
+header {
+  grid-area: header;
+}
 
-  > main {
-    grid-area: main;
-    overflow: auto;
+main {
+  grid-area: main;
+  overflow: auto;
 
-    display: grid;
-    grid-template-rows: 1fr auto;
+  display: grid;
+  grid-template-rows: 1fr auto;
 
-    grid-template-columns: 1fr minmax(0, var(--content-max-width)) 1fr;
-
-    > section {
-      &.flush-bottom {
-        padding-bottom: 0;
-      }
-      &.full {
-        grid-area: 1 / 1 / 2 / 4;
-        background-color: unset;
-      }
-
-      grid-area: 1 / 2 / 2 / 3;
-      background-color: var(--content-background);
-      padding: var(--main-spacing);
-    }
-
-    > footer {
-      grid-area: 2 / 1 / 3 / 4;
-    }
-  }
-
-  > footer {
-    grid-area: footer;
-  }
+  grid-template-columns: 1fr minmax(0, var(--content-max-width)) 1fr;
+}
+main > section {
+  grid-area: 1 / 2 / 2 / 3;
+  background-color: var(--content-background);
+  padding: var(--main-spacing);
+}
+main > section.full {
+  grid-area: 1 / 1 / 2 / 4;
+  background-color: unset;
+}
+main > footer {
+  grid-area: 2 / 1 / 3 / 4;
 }

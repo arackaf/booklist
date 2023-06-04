@@ -107,7 +107,7 @@
   };
 </script>
 
-<section class="full flush-bottom">
+<section class="full pb-0">
   <div style="background-color: white;">
     <MenuBar {isPublic} {bookViewToUse} />
 
