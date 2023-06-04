@@ -69,7 +69,7 @@
 </script>
 
 <div>
-  <div class="padding-bottom-med subjectRow">
+  <div class="pb-5 subjectRow">
     <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
   <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">

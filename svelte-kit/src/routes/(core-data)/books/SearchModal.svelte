@@ -145,7 +145,7 @@
         </div>
       </div>
 
-      <div class="margin-top-med">
+      <div class="mt-5">
         <Button theme="primary" text="Filter">Search</Button>
       </div>
     </form>

@@ -28,7 +28,7 @@
   $: noResultsMessage = $scans.length ? "No more recent scans" : "No recent scans";
 </script>
 
-<div class="recent-scans-module margin-top-med">
+<div class="recent-scans-module mt-5">
   <div class="overlay-holder">
     <div class="results">
       {#each $scans as item}

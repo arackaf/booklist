@@ -140,7 +140,7 @@
     </div>
   </td>
   <td>
-    <div class="margin-top-sm">
+    <div class="mt-1">
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
           <ActionButton size="sm" running={readSaving || multiReadSaving} theme={book.isRead ? "success" : "default"}>
