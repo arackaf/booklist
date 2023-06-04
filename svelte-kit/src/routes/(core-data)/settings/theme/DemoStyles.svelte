@@ -42,7 +42,7 @@
       <Button class="ml-auto">Close</Button>
     </div>
   </div>
-  <div class="alert alert-info margin-top" style="max-width: 550px">
+  <div class="alert alert-info mt-2" style="max-width: 550px">
     This color theme will be saved locally, and remembered the next time you browse here (on the same device)
   </div>
 </div>

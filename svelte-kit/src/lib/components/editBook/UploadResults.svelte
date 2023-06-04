@@ -11,9 +11,9 @@
 
 {#if error}
   {#if status === "invalid-size"}
-    <div class="alert alert-warning margin-top">This image is too small to use</div>
+    <div class="alert alert-warning mt-3">This image is too small to use</div>
   {:else}
-    <div class="alert alert-danger margin-top">An error occured</div>
+    <div class="alert alert-danger mt-3">An error occured</div>
   {/if}
 {:else}
   <div class="flex flex-row mt-3">
