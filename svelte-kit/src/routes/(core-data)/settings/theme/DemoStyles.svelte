@@ -1,4 +1,5 @@
 <script>
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 </script>
@@ -37,8 +38,8 @@
     </div>
     <hr />
     <div class="flex flex-row">
-      <button class="btn btn-primary">Filter</button>
-      <button class="btn ml-auto">Close</button>
+      <Button theme="primary">Filter</Button>
+      <Button class="ml-auto">Close</Button>
     </div>
   </div>
   <div class="alert alert-info margin-top" style="max-width: 550px">
