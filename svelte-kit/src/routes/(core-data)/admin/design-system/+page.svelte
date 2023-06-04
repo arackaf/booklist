@@ -91,9 +91,7 @@
   <h1>Primary</h1>
   <div />
 
-  <div>
-    <button class="btn btn-primary">Button</button>
-  </div>
+  <div />
   <div>
     <Button theme="primary">Button</Button>
   </div>
@@ -101,9 +99,7 @@
   <h1>Success</h1>
   <div />
 
-  <div>
-    <button class="btn btn-success">Button</button>
-  </div>
+  <div />
   <div>
     <Button theme="success">Button</Button>
   </div>
@@ -111,9 +107,7 @@
   <h1>Danger</h1>
   <div />
 
-  <div>
-    <button class="btn btn-danger">Button</button>
-  </div>
+  <div />
   <div>
     <Button type="primary" theme="danger">Button</Button>
   </div>
@@ -121,9 +115,7 @@
   <h1>ActionButton</h1>
   <div />
 
-  <div>
-    <button class="btn" on:click={clickButton} disabled={running}>Search</button>
-  </div>
+  <div />
   <div>
     <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
@@ -131,16 +123,12 @@
   <h1>ActionButton</h1>
   <div />
 
-  <div>
-    <button class="btn" on:click={clickButton} disabled={running}>Search</button>
-  </div>
+  <div />
   <div>
     <ActionButtonNew theme="primary" {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
 
-  <div>
-    <button class="btn" on:click={clickButton} disabled={running}>Search</button>
-  </div>
+  <div />
   <div>
     <ActionButtonNew {running} on:click={clickButton}>
       Search
@@ -151,13 +139,9 @@
   <h1>Icon Button</h1>
   <div />
 
+  <div />
   <div>
-    <button class="btn btn-default">
-      <i class="fal fa-fw fa-search" />
-    </button>
-  </div>
-  <div>
-    <IconButton class="btn btn-default">
+    <IconButton>
       <i class="fal fa-fw fa-search" />
     </IconButton>
   </div>
@@ -165,9 +149,7 @@
   <h1>Default</h1>
   <div />
 
-  <div>
-    <button class="btn">Button</button>
-  </div>
+  <div />
   <div>
     <Button>Button</Button>
   </div>
@@ -183,9 +165,7 @@
   <h1>sm</h1>
   <div />
 
-  <div>
-    <button class="btn btn-xs">Button</button>
-  </div>
+  <div />
   <div>
     <Button size="sm">Buttoning</Button>
   </div>
@@ -193,9 +173,7 @@
   <h1>danger-sm</h1>
   <div />
 
-  <div>
-    <button class="btn btn-xs btn-danger">Button</button>
-  </div>
+  <div />
   <div>
     <Button size="sm" theme="danger">Buttoning</Button>
   </div>
@@ -203,9 +181,7 @@
   <h1>Disabled</h1>
   <div />
 
-  <div>
-    <button class="btn btn-primary disabled">Button</button>
-  </div>
+  <div />
   <div>
     <Button type="primary" disabled={true}>Button</Button>
   </div>
@@ -213,9 +189,7 @@
   <h1>Default</h1>
   <div />
 
-  <div>
-    <button class="btn">Button</button>
-  </div>
+  <div />
   <div>
     <Button>Button</Button>
   </div>
@@ -223,9 +197,7 @@
   <h1>Disabled</h1>
   <div />
 
-  <div>
-    <button class="btn" disabled>Button</button>
-  </div>
+  <div />
   <div>
     <Button disabled>Button</Button>
   </div>
