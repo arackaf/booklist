@@ -33,7 +33,7 @@
       {/if}
       <th style="width: 60px" />
       <th style="min-width: 200px">
-        <a class="bold no-underline" href={$changeFilter.withSort("title")}>
+        <a class="bold" href={$changeFilter.withSort("title")}>
           Title
           {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </a>
@@ -43,13 +43,13 @@
       <th style="min-width: 90px;" />
       <th />
       <th style="min-width: 85px; ">
-        <a class="bold no-underline" href={$changeFilter.withSort("pages")}>
+        <a class="bold" href={$changeFilter.withSort("pages")}>
           Pages
           {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </a>
       </th>
       <th>
-        <a class="bold no-underline" href={$changeFilter.withSort("id")}>
+        <a class="bold" href={$changeFilter.withSort("id")}>
           Added
           {#if sortField == "id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </a>
