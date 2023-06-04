@@ -167,9 +167,10 @@
           <Button size="sm" theme="primary" disabled={saving}>Save</Button>
           <Button size="sm" type="button" disabled={saving} on:click={onCancelEdit}>Cancel</Button>
           {#if editingSubject.id}
-            <Button size="sm" theme="danger" class="ml-auto" type="button" disabled={saving} on:click={() => (deleteShowing = true)}>
-              Delete
-              {originalName}
+            <Button size="sm" theme="danger" class="ml-auto gap-1" type="button" disabled={saving} on:click={() => (deleteShowing = true)}>
+              <span>
+                Delete {originalName}
+              </span>
               <i class="fal fa-fw fa-trash-alt" />
             </Button>
           {/if}
@@ -190,7 +191,7 @@
 
       <div class="flex flex-row gap-3">
         <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
-        <Button size="sm" type="button" disabled={deleting} on:click={() => (deleteShowing = false)} class="btn btn-xs">Cancel</Button>
+        <Button size="sm" type="button" disabled={deleting} on:click={() => (deleteShowing = false)}>Cancel</Button>
       </div>
     </div>
   </form>

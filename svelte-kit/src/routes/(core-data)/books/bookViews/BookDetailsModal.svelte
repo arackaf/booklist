@@ -6,7 +6,9 @@
   import EditBook from "$lib/components/editBook/EditBook.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+
   import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
@@ -82,10 +84,10 @@
         {/if}
         {#if !isPublic}
           <div style="margin-top: auto">
-            <button class="btn btn-xs flex flex-row gap-2" on:click={() => (editing = true)}>
+            <Button size="sm" class="gap-2" on:click={() => (editing = true)}>
               <span>Edit book</span>
               <i class="fal fa-pencil-alt" />
-            </button>
+            </Button>
           </div>
         {/if}
       </div>
