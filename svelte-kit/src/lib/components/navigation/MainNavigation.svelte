@@ -45,7 +45,7 @@
       </ModuleLink>
     </div>
 
-    <ul class="nav-items">
+    <ul class="flex nav-items">
       <NavBarItem active={isHome} class="visible-xs" href="/" style="margin-top: '2px';" label={"Home"}>
         <i class="fal fa-fw fa-home visible-xs" />
       </NavBarItem>
@@ -88,7 +88,7 @@
         </NavBarItem>
       {/if}
     </ul>
-    <ul class="nav-items-right">
+    <ul class="flex ml-auto">
       {#if !loggedIn}
         <NavBarItem
           onClick={() =>
@@ -103,7 +103,7 @@
       {/if}
     </ul>
     {#if loggedIn}
-      <ul class="nav-items-right">
+      <ul class="flex ml-auto">
         <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
           <span class="hidden-xs">Logout</span>
           <i class="visible-xs fal fa-fw fa-sign-out" />

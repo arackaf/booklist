@@ -18,7 +18,7 @@
   $: isActive = active != null ? active : currentPathname === hrefPathname;
 </script>
 
-<li class={className || ""}>
+<li class="flex {className || ''}">
   <ModuleLink active={isActive} {disabled} {onClick} {style} href={disabled ? "" : href} {label}>
     <slot />
   </ModuleLink>

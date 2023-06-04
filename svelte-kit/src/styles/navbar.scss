@@ -33,26 +33,6 @@
     }
   }
 
-  .nav-items {
-    padding-left: 0;
-  }
-  .nav-items > li,
-  .nav-items-right > li {
-    display: flex;
-    align-items: stretch;
-  }
-  .nav-items,
-  .nav-items-right {
-    margin-top: 0;
-    margin-bottom: 0;
-    display: flex;
-    align-items: stretch;
-    list-style-type: none;
-  }
-  .nav-items-right {
-    margin-left: auto;
-  }
-
   .number-badge {
     --badge-size: 0.7rem;
     &.big-count {
