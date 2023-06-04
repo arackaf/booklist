@@ -1,5 +1,4 @@
 @import "./main-layout";
-@import "./btn";
 @import "./alert-label";
 @import "./table-tab";
 @import "./section-nav";
@@ -532,21 +531,6 @@ div.toast-notification h4 {
     grid-column-start: 1;
     grid-column-end: 2;
   }
-}
-
-button.btn {
-  transition: box-shadow 0.15s linear;
-}
-
-button.btn:focus {
-  box-shadow: 0 0 6px var(--primary-7);
-}
-button.btn-xs:focus {
-  box-shadow: 0 0 3px var(--primary-7);
-}
-
-button::-moz-focus-inner {
-  border: 0;
 }
 
 ul.striped {

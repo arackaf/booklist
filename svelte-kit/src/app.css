@@ -48,3 +48,7 @@ select {
 .raw-button.bold {
   font-weight: bold;
 }
+
+button::-moz-focus-inner {
+  border: 0;
+}
