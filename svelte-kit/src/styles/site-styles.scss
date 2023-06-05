@@ -513,19 +513,6 @@ div.toast-notification h4 {
   color: var(--primary-10);
 }
 
-.overlay-holder {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-
-  > * {
-    grid-row-start: 1;
-    grid-row-end: 2;
-    grid-column-start: 1;
-    grid-column-end: 2;
-  }
-}
-
 ul.striped {
   & > li:nth-child(even) {
     background-color: var(--neutral-8);

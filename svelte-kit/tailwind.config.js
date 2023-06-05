@@ -4,6 +4,17 @@ export default {
   theme: {
     extend: {
       colors: {
+        "info-1": "var(--info-1)",
+        "info-2": "var(--info-2)",
+        "info-3": "var(--info-3)",
+        "info-4": "var(--info-4)",
+        "info-5": "var(--info-5)",
+        "info-6": "var(--info-6)",
+        "info-7": "var(--info-7)",
+        "info-8": "var(--info-8)",
+        "info-9": "var(--info-9)",
+        "info-10": "var(--info-10)",
+
         "primary-1": "var(--primary-1)",
         "primary-2": "var(--primary-2)",
         "primary-3": "var(--primary-3)",

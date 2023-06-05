@@ -7,7 +7,6 @@
 
   import BookSvg from "./BookSvg.svelte";
 
-  import "$styles/navbar.scss";
   import "./mobile-menu.scss";
   import { onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
@@ -22,6 +21,8 @@
   $: isHome = homeModules.has(pathname);
 
   let pendingCount = 0;
+
+  $: bigCount = pendingCount > 9;
 
   function handleWsPendingCountUpdate(evt: any) {
     const detail = evt?.detail || {};
@@ -56,10 +57,10 @@
             <i class="text-lg fal fa-fw fa-scanner" />
           </span>
           {#if pendingCount}
-            <span class={`number-badge ${pendingCount > 9 ? "big-count" : ""}`}>
+            <span class="absolute top-[3px] right-[2px] {bigCount ? 'text-[0.7rem]' : 'text-[0.65rem]'}">
               <span class="overlay-holder">
-                <i class="fas fa-badge" />
-                <span>{pendingCount}</span>
+                <i class="fas fa-badge text-info-6 text-base leading-none" />
+                <span class="text-primary-2 leading-none self-center justify-self-center">{pendingCount}</span>
               </span>
             </span>
           {/if}
