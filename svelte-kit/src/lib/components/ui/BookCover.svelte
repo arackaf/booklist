@@ -52,32 +52,13 @@
 
 <div class="overlay-holder overflow-hidden" style={style + sizingStyle}>
   {#if previewString}
-    <span class="preview" style={`background: url('${previewString}') no-repeat; background-size: cover; ${sizingStyle}`} />
+    <span class="z-[1] blur-sm" style={`background: url('${previewString}') no-repeat; background-size: cover; ${sizingStyle}`} />
   {/if}
   {#if urlToUse}
-    <img alt="Book cover" src={urlToUse} class="image" style={sizingStyle} />
+    <img class="z-[2]" alt="Book cover" src={urlToUse} style={sizingStyle} />
   {:else}
     <div class={noCoverClasses}>
       <div>{noCoverMessage}</div>
     </div>
   {/if}
 </div>
-
-<style>
-  /* div {
-    display: grid;
-    grid-template-areas: "content";
-    overflow: hidden;
-  }
-  div > * {
-    grid-area: content;
-  } */
-
-  .preview {
-    z-index: 1;
-    filter: blur(5px);
-  }
-  .image {
-    z-index: 2;
-  }
-</style>
