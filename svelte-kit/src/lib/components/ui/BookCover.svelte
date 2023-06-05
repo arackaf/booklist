@@ -50,7 +50,7 @@
   }
 </script>
 
-<div style={style + sizingStyle}>
+<div class="overlay-holder overflow-hidden" style={style + sizingStyle}>
   {#if previewString}
     <span class="preview" style={`background: url('${previewString}') no-repeat; background-size: cover; ${sizingStyle}`} />
   {/if}
@@ -64,14 +64,14 @@
 </div>
 
 <style>
-  div {
+  /* div {
     display: grid;
     grid-template-areas: "content";
     overflow: hidden;
   }
   div > * {
     grid-area: content;
-  }
+  } */
 
   .preview {
     z-index: 1;
