@@ -35,6 +35,19 @@
       return size === "medium" ? book.mediumImage : size === "small" ? book.smallImage : book.mobileImage;
     }
   }
+
+  let noCoverClasses: string = "";
+  let noCoverCommonClasses = "bg-primary-4 text-primary-9 text-center";
+  $: {
+    noCoverClasses = noCoverCommonClasses + " ";
+    if (size === "mobile") {
+      noCoverClasses += "w-[35px] h-[53px] pt-2 text-[10px]";
+    } else if (size === "small") {
+      noCoverClasses += "w-[50px] h-[65px] pt-2 text-sm";
+    } else {
+      noCoverClasses += "w-[106px] h-[131px] pt-5 text-lg";
+    }
+  }
 </script>
 
 <div style={style + sizingStyle}>
@@ -44,7 +57,7 @@
   {#if urlToUse}
     <img alt="Book cover" src={urlToUse} class="image" style={sizingStyle} />
   {:else}
-    <div class="no-cover-{size}">
+    <div class={noCoverClasses}>
       <div>{noCoverMessage}</div>
     </div>
   {/if}
