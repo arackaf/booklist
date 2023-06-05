@@ -33,6 +33,45 @@
 
   <div />
   <div>
+    <BookCover
+      size="mobile"
+      preview={{
+        h: 54,
+        w: 35,
+        b64: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nAEoANf/AM7OzbiztLa5uAD////Qzs23vboACxMCDRMArLSvAHp/eHZ2dMPLyN76FbyD1p+mAAAAAElFTkSuQmCC"
+      }}
+      url="https://my-library-cover-uploads.s3.amazonaws.com/medium-covers/60a93babcc3928454b5d1cc6/15eb8649-2b41-4f26-90d2-f0ac7118cfe9.jpg"
+    />
+  </div>
+
+  <div />
+  <div>
+    <BookCover
+      size="small"
+      preview={{
+        h: 77,
+        w: 50,
+        b64: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nAEoANf/AM7OzbiztLa5uAD////Qzs23vboACxMCDRMArLSvAHp/eHZ2dMPLyN76FbyD1p+mAAAAAElFTkSuQmCC"
+      }}
+      url="https://my-library-cover-uploads.s3.amazonaws.com/medium-covers/60a93babcc3928454b5d1cc6/15eb8649-2b41-4f26-90d2-f0ac7118cfe9.jpg"
+    />
+  </div>
+
+  <div />
+  <div>
+    <BookCover
+      size="medium"
+      preview={{
+        h: 164,
+        w: 106,
+        b64: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAECAIAAADETxJQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAM0lEQVR4nAEoANf/AM7OzbiztLa5uAD////Qzs23vboACxMCDRMArLSvAHp/eHZ2dMPLyN76FbyD1p+mAAAAAElFTkSuQmCC"
+      }}
+      url="https://my-library-cover-uploads.s3.amazonaws.com/medium-covers/60a93babcc3928454b5d1cc6/15eb8649-2b41-4f26-90d2-f0ac7118cfe9.jpg"
+    />
+  </div>
+
+  <div />
+  <div>
     <BookCover size="mobile" />
   </div>
 
