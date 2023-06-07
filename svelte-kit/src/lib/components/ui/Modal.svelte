@@ -1,7 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import Modal from "svelte-helpers/Modal.svelte";
-  import "$styles/modal-overrides.scss";
 
   import StandardModalHeader from "./StandardModalHeader.svelte";
   import StandardModalFooter from "./StandardModalFooter.svelte";

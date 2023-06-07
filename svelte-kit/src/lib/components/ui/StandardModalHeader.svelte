@@ -7,12 +7,12 @@
   export let smaller = false;
 </script>
 
-<div class="standard-modal-header">
+<div class="flex items-center">
   <h1 class:text-base={smaller} class:text-xl={!smaller} class="modal-title text-base">{caption}</h1>
 
   {#if !noClose}
     <!-- TODO: -->
-    <button style="margin-left: auto; display: flex;" class="close raw-button" on:click={closeModal}>
+    <button style="margin-left: auto; display: flex;" class="close raw-button text-lg font-bold" on:click={closeModal}>
       <i class="far fa-times" />
     </button>
   {/if}
