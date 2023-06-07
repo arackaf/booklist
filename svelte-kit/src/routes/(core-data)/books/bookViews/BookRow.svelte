@@ -185,7 +185,7 @@
   .gridHoverFilter {
     text-decoration: none;
     visibility: hidden;
-    color: var(--neutral-light-text);
+    color: var(--neutral-5);
   }
 
   td:hover .gridHoverFilter {

@@ -117,7 +117,7 @@
     text-align: center;
     background-color: white;
     padding: 5px;
-    color: var(--neutral-text);
+    color: var(--neutral-3);
     outline: none;
     cursor: pointer;
   }

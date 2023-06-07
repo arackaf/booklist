@@ -6,6 +6,10 @@ hr {
   margin-bottom: 0.5em;
 }
 
+.svelte-helpers-modal-content {
+  --modal-content-padding: 20px !important;
+  border-color: var(--primary-3) !important;
+}
 :root {
   --animation-duration: 300ms;
 
@@ -304,20 +308,6 @@ body,
   }
 }
 
-#home,
-.svelte-helpers-modal-content {
-  --neutral-text: var(--neutral-3);
-  --neutral-light-text: var(--neutral-5);
-  --neutral-lighter-text: var(--neutral-7);
-  --neutral-border: var(--neutral-6);
-
-  --neutral-light-background: var(--neutral-10);
-  --neutral-background: var(--neutral-5);
-  --neutral-dark-background: var(--neutral-9);
-
-  --info-button-color: white;
-}
-
 #app {
   -webkit-overflow-scrolling: touch;
 }
@@ -327,7 +317,7 @@ select,
 reach-portal,
 a,
 button {
-  color: var(--neutral-text);
+  color: var(--neutral-3);
 }
 button[type="submit"] {
   font-weight: normal;
@@ -440,7 +430,7 @@ label {
 
 .panel {
   padding: 15px;
-  border: var(--default-border-width) solid var(--neutral-border);
+  border: var(--default-border-width) solid var(--neutral-6);
   border-radius: 3px;
 }
 .panel.panel-info {
@@ -560,5 +550,5 @@ canvas.book-preview {
 .book-author {
   font-size: 14px;
   font-weight: normal;
-  color: var(--neutral-light-text);
+  color: var(--neutral-5);
 }

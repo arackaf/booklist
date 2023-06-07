@@ -85,7 +85,7 @@
 
 <style>
   :global(.listGroupItem) {
-    border-bottom: var(--default-border-width) solid var(--neutral-border);
+    border-bottom: var(--default-border-width) solid var(--neutral-6);
     padding-top: 5px;
     padding-bottom: 5px;
   }

@@ -23,7 +23,7 @@
 <style>
   .entry {
     display: flex;
-    border: 1px solid var(--neutral-border);
+    border: 1px solid var(--neutral-6);
     border-radius: 5px;
     padding: 15px;
     gap: 10px;
