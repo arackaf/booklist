@@ -7,10 +7,6 @@
   display: inline;
   line-height: normal;
 
-  &.label-block {
-    display: inline-block;
-  }
-
   &.label-default {
     background-color: var(--neutral-5);
     color: white;
