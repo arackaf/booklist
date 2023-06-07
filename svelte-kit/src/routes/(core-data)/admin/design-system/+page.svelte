@@ -8,6 +8,7 @@
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
+  import Label from "$lib/components/ui/Label/Label.svelte";
 
   let running = false;
   function clickButton() {
@@ -26,6 +27,13 @@
   <div>
     <h1>New</h1>
     <hr />
+  </div>
+
+  <div>
+    <div class="label label-default">Hello World</div>
+  </div>
+  <div>
+    <Label>Hello World</Label>
   </div>
 
   <h1>Book cover</h1>
