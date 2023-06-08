@@ -30,10 +30,31 @@
   </div>
 
   <div>
-    <div class="label label-default">Hello World</div>
+    <div class="label label-default">Hello Worlding</div>
   </div>
   <div>
-    <Label>Hello World</Label>
+    <Label display="inline-block">Hello Worlding</Label>
+  </div>
+
+  <div>
+    <div class="label label-default">Hello Worlding</div>
+  </div>
+  <div>
+    <Label display="inline-block">Hello Worlding</Label>
+  </div>
+
+  <div>
+    <div class="label label-danger">Error Message</div>
+  </div>
+  <div>
+    <Label theme="error">Error Message</Label>
+  </div>
+
+  <div>
+    <div class="label label-danger">Error Message</div>
+  </div>
+  <div>
+    <Label display="inline-block" theme="error">Error Message</Label>
   </div>
 
   <h1>Book cover</h1>

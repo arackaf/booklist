@@ -1,7 +1,21 @@
 <script lang="ts">
+  let className = "";
+  export { className as class };
+
   export let display = "inline";
+  export let theme: "default" | "error" = "default";
+
+  let addedClasses = "";
+
+  $: {
+    if (theme === "default") {
+      addedClasses = className + " bg-neutral-500 text-white ";
+    } else if (theme === "error") {
+      addedClasses = className + " bg-red-600 text-white ";
+    }
+  }
 </script>
 
-<div class="text-[11px] font-bold py-[3px] px-[6px] rounded-[3px] whitespace-nowrap {display} leading-normal bg-neutral-500 text-white">
+<div class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] {display} {addedClasses}">
   <slot />
 </div>
