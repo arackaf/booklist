@@ -4,6 +4,7 @@
   import { ajaxUtil } from "$lib/util/ajaxUtil";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
+  import Label from "$lib/components/ui/Label/Label.svelte";
 
   export let onResults: (results: any) => void;
   export let onError: () => void;
@@ -90,7 +91,7 @@
         </Dropzone>
       {/key}
       {#if uploadError}
-        <div style="display: inline-block; margin-top: 2px; margin-bottom: 2px" class="label label-danger">{uploadError}</div>
+        <Label theme="error">{uploadError}</Label>
       {/if}
     </div>
 

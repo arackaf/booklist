@@ -2,7 +2,7 @@
   let className = "";
   export { className as class };
 
-  export let display = "inline";
+  export let display = "inline-block";
   export let theme: "default" | "error" = "default";
 
   let addedClasses = "";
