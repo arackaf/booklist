@@ -48,12 +48,12 @@
 <div>
   <div>
     {#if pending}
-      <Button size="sm" theme="primary" on:click={toggleIncomingQueue}>
+      <Button size="sm" theme="default" on:click={toggleIncomingQueue}>
         <span style={labelScanStatusStyles}>
           {pending}
           Book{pending === 1 ? "" : "s"}
           currently outstanding
-          <i style="color: white" class="far fa-white ml-1 {toggleClass}" />
+          <i class="far ml-1 {toggleClass}" />
         </span>
       </Button>
     {:else if pending != null}
