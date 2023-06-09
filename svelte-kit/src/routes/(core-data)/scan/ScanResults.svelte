@@ -4,7 +4,6 @@
   import { quadIn } from "svelte/easing";
 
   import Button from "$lib/components/ui/Button/Button.svelte";
-  import RawButton from "$lib/components/ui/Button/RawButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import useReducer from "$lib/state/useReducer";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
@@ -30,9 +29,6 @@
 
   $: toggleClass = showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down";
 
-  $: toggleShow = booksSaved.length || pending;
-  $: labelScanStatusStyles = !!toggleShow ? `display: inline-block; width: 30ch` : "";
-
   onMount(() => {
     function sendIt({ detail }: any) {
       dispatch([detail.type, detail.pendingCount ?? detail.packet]);
@@ -49,7 +45,7 @@
   <div>
     {#if pending}
       <Button size="sm" theme="info" on:click={toggleIncomingQueue}>
-        <span style={labelScanStatusStyles}>
+        <span>
           {pending}
           Book{pending === 1 ? "" : "s"}
           currently outstanding
@@ -58,7 +54,7 @@
       </Button>
     {:else}
       <Button size="sm" class="gap-2" on:click={toggleIncomingQueue} theme="success">
-        <span style={labelScanStatusStyles}> All pending books saved </span>
+        <span> All pending books saved </span>
         <i style="color: white" class="far fa-white {toggleClass}" />
       </Button>
     {/if}
