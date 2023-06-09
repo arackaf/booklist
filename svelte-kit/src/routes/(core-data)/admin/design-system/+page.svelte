@@ -43,6 +43,16 @@
     <Label display="inline-block">Hello Worlding</Label>
   </div>
 
+  <div />
+  <div>
+    <Label theme="error">Error Message</Label>
+  </div>
+
+  <div />
+  <div>
+    <Label display="inline-block" theme="error">Error Message</Label>
+  </div>
+
   <h1>Book cover</h1>
   <div />
 
