@@ -56,15 +56,11 @@
           <i class="far ml-1 {toggleClass}" />
         </span>
       </Button>
-    {:else if pending != null}
-      <span class="label label-success">
+    {:else}
+      <Button size="sm" class="gap-2" on:click={toggleIncomingQueue} theme="success">
         <span style={labelScanStatusStyles}> All pending books saved </span>
-        {#if "toggleShow"}
-          <RawButton on:click={toggleIncomingQueue} class="ml-1">
-            <i style="color: white" class="far fa-white {toggleClass}" />
-          </RawButton>
-        {/if}
-      </span>
+        <i style="color: white" class="far fa-white {toggleClass}" />
+      </Button>
     {/if}
   </div>
 
@@ -72,7 +68,7 @@
     <SlideAnimate open={showIncomingQueue} stiffDown={true}>
       <div class="alert alert-info alert-slim" style="margin-bottom: 15px">
         Your entered and failed books will show up here, briefly, although everything is being logged. The recent scans section in the main page has
-        everything.
+        all recent scan results.
       </div>
 
       <div style="margin-bottom: 0">
