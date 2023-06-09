@@ -193,6 +193,14 @@
     <Button theme="primary">Button</Button>
   </div>
 
+  <h1>Info</h1>
+  <div />
+
+  <div />
+  <div>
+    <Button theme="info">Button</Button>
+  </div>
+
   <h1>Success</h1>
   <div />
 

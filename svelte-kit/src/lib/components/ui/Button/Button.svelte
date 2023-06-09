@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let theme: "primary" | "success" | "danger" | "default" = "default";
+  export let theme: "primary" | "info" | "success" | "danger" | "default" = "default";
   export let size: "default" | "med" | "sm" = "default";
   export let disabled: boolean | undefined = undefined;
   export let softDisable: boolean = false;
@@ -14,6 +14,7 @@
 
   $: defaultButton = theme === "default";
   $: isPrimary = theme === "primary";
+  $: isInfo = theme === "info";
   $: isSuccess = theme === "success";
   $: isDanger = theme === "danger";
 
@@ -44,6 +45,10 @@
   class:border-success-5={isSuccess}
   class:text-success-10={isSuccess}
   class:focus:shadow-success-7={isSuccess}
+  class:bg-info-5={isInfo}
+  class:border-info-5={isInfo}
+  class:text-info-10={isInfo}
+  class:focus:shadow-info-7={isInfo}
   class:bg-white={defaultButton}
   class:border-neutral-400={defaultButton}
   class:text-neutral-700={defaultButton}
