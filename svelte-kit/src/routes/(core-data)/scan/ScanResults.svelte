@@ -3,6 +3,8 @@
   import { fade } from "svelte/transition";
   import { quadIn } from "svelte/easing";
 
+  import Button from "$lib/components/ui/Button/Button.svelte";
+  import RawButton from "$lib/components/ui/Button/RawButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import useReducer from "$lib/state/useReducer";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
@@ -46,25 +48,21 @@
 <div>
   <div>
     {#if pending}
-      <span class="label label-info">
+      <Button size="sm" theme="primary" on:click={toggleIncomingQueue}>
         <span style={labelScanStatusStyles}>
           {pending}
           Book{pending === 1 ? "" : "s"}
           currently outstanding
+          <i style="color: white" class="far fa-white ml-1 {toggleClass}" />
         </span>
-        {#if toggleShow}
-          <button on:click={toggleIncomingQueue} class="raw-button ml-1">
-            <i style="color: white" class="far fa-white {toggleClass}" />
-          </button>
-        {/if}
-      </span>
+      </Button>
     {:else if pending != null}
       <span class="label label-success">
         <span style={labelScanStatusStyles}> All pending books saved </span>
-        {#if toggleShow}
-          <button on:click={toggleIncomingQueue} class="raw-button ml-1">
+        {#if "toggleShow"}
+          <RawButton on:click={toggleIncomingQueue} class="ml-1">
             <i style="color: white" class="far fa-white {toggleClass}" />
-          </button>
+          </RawButton>
         {/if}
       </span>
     {/if}
