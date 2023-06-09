@@ -11,6 +11,7 @@
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Label from "$lib/components/ui/Label/Label.svelte";
   import Select from "$lib/components/ui/Select/Select.svelte";
   import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
@@ -110,13 +111,12 @@
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div>
+      <div class="flex flex-col gap-1">
         <InputGroup labelText="Name">
           <Input slot="input" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
         </InputGroup>
         {#if missingName}
-          <div style="margin-top: 5px; display: inline-block;" class="label label-danger">Subjects need names!</div>
-          <br />
+          <Label theme="error" class="self-start">Subjects need names!</Label>
         {/if}
         <div
           class="label label-default"
