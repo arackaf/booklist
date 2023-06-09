@@ -48,7 +48,7 @@
 <div>
   <div>
     {#if pending}
-      <Button size="sm" theme="default" on:click={toggleIncomingQueue}>
+      <Button size="sm" theme="info" on:click={toggleIncomingQueue}>
         <span style={labelScanStatusStyles}>
           {pending}
           Book{pending === 1 ? "" : "s"}
