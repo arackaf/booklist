@@ -3,7 +3,7 @@
   export { className as class };
 
   export let display = "inline-block";
-  export let theme: "default" | "error" = "default";
+  export let theme: "default" | "error" | "success" = "default";
 
   let addedClasses = "";
 
@@ -12,6 +12,8 @@
       addedClasses = className + " bg-neutral-500 text-white ";
     } else if (theme === "error") {
       addedClasses = className + " bg-red-600 text-white ";
+    } else if (theme === "success") {
+      addedClasses = className + " bg-green-600 text-white ";
     }
   }
 </script>
