@@ -12,6 +12,7 @@
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Label from "$lib/components/ui/Label/Label.svelte";
 
   export let tag: Tag;
   export let colors: Color[];
@@ -97,14 +98,13 @@
     <input type="hidden" name="id" value={editingTag.id} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div class="md:col-span-2">
-        <div>
+        <div class="flex flex-col gap-1">
           <InputGroup labelText="Name">
             <Input slot="input" error={missingName} bind:inputEl bind:value={editingTag.name} name="name" placeholder="Tag name" />
           </InputGroup>
 
           {#if missingName}
-            <div style="margin-top: 5px; display: inline-block;" class="label label-danger">Tags need names!</div>
-            <br />
+            <Label theme="error" class="self-start">Tags need names!</Label>
           {/if}
           <div
             class="label label-default"
