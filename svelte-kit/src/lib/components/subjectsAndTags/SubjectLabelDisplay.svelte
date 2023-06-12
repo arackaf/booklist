@@ -13,7 +13,7 @@
   $: textColor = item.textColor || "white";
 </script>
 
-<Label colors={item} class="flex gap-2">
+<Label colors={item} class="inline-flex gap-2">
   {#if childSubjects?.length}
     <button class={cn("toggle raw-button", { expanded })} on:click={() => setExpanded(!expanded)} style="color: {textColor};}">
       <i class="fad fa-chevron-right" class:rotate-90={expanded} />
