@@ -27,7 +27,7 @@
 
 <span
   style="{colorStyles} {style}"
-  class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] {display} {addedClasses}"
+  class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] noselect {display} {addedClasses}"
 >
   <slot />
 </span>

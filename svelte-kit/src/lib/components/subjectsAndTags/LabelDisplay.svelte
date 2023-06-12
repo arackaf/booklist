@@ -15,13 +15,13 @@
 </script>
 
 {#if href}
-  <a {href} style={extraStyles} class="{disabled ? disabledClasses : ''}  noselect {extraClasses}">
+  <a {href} style={extraStyles} class="{disabled ? disabledClasses : ''} {extraClasses}">
     <Label colors={item}>
       {item.name}
     </Label>
   </a>
 {:else}
-  <Label colors={item} class="{disabled ? disabledClasses : ''} noselect {extraClasses}">
+  <Label colors={item} class="{disabled ? disabledClasses : ''} {extraClasses}">
     {item.name}
   </Label>
 {/if}

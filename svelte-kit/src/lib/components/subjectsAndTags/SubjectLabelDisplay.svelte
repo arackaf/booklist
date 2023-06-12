@@ -11,7 +11,7 @@
   $: textColor = item.textColor || "white";
 </script>
 
-<span style="background-color: {item.backgroundColor}; color: {textColor};" class="label label-default label-editable-expandable noselect ">
+<span style="background-color: {item.backgroundColor}; color: {textColor};" class="label label-default label-editable-expandable">
   {#if childSubjects?.length}
     <button
       class={cn("toggle raw-button", { expanded })}

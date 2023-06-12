@@ -12,7 +12,7 @@
   export let href: string = "";
 </script>
 
-<Label colors={item} style={extraStyles} class={"flex gap-1 noselect " + className}>
+<Label colors={item} style={extraStyles} class={"flex gap-1 " + className}>
   {#if href}
     <a {href} class="fw-700" style="color: {item.textColor || 'white'}; font-size: inherit">X</a>
   {:else}
