@@ -3,7 +3,6 @@
 
   export let item = {} as any;
   export let extraStyles = "";
-  export let name = "";
   export let doRemove: () => void = () => {};
 
   let className = "";
@@ -20,7 +19,7 @@
       X
     </button>
   {/if}
-  <span style="border-left: 1px solid {item.textColor}">{name}</span>
+  <span style="border-left: 1px solid {item.textColor}" />
   {#if $$slots.default}
     <slot />
   {:else}
