@@ -1,25 +1,24 @@
 <script lang="ts">
-  import type { Label } from "$data/types";
   import cn from "classnames";
 
-  export let item: Label;
+  import Label from "$lib/components/ui/Label/Label.svelte";
+  import type { Label as LabelType } from "$data/types";
+
+  export let item: LabelType;
   export let onEdit: () => void;
   export let expanded: boolean;
   export let setExpanded: (val: boolean) => void;
-  export let childSubjects: Label[];
+  export let childSubjects: LabelType[];
 
   $: textColor = item.textColor || "white";
 </script>
 
-<span style="background-color: {item.backgroundColor}; color: {textColor};" class="label label-default label-editable-expandable">
+<Label colors={item} class="flex gap-2">
   {#if childSubjects?.length}
-    <button
-      class={cn("toggle raw-button", { expanded })}
-      on:click={() => setExpanded(!expanded)}
-      style="color: {textColor}; border-right: {`var(--default-border-width) solid ${textColor}`}"
-    >
-      <i class="fad fa-chevron-right" />
+    <button class={cn("toggle raw-button", { expanded })} on:click={() => setExpanded(!expanded)} style="color: {textColor};}">
+      <i class="fad fa-chevron-right" class:rotate-90={expanded} />
     </button>
+    <span style="border-left: 1px solid {textColor}" />
   {/if}
 
   {#if $$slots.default}
@@ -28,7 +27,7 @@
     {item.name}
   {/if}
 
-  <button class="raw-button" on:click={onEdit} style="color: {textColor}; cursor: pointer; margin-left: 5px;">
+  <button class="raw-button" on:click={onEdit} style="color: {textColor}; cursor: pointer;">
     <i class="fal fa-pencil-alt" />
   </button>
-</span>
+</Label>
