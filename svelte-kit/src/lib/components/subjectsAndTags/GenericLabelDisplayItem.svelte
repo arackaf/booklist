@@ -7,5 +7,5 @@
 </script>
 
 <span style="display: flex; margin-left: {effectiveChildLevel * 15}px">
-  <LabelDisplay extraStyles="cursor: pointer" {item} disabled={item.disabled} />
+  <LabelDisplay {item} disabled={item.disabled} />
 </span>

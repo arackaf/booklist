@@ -4,20 +4,26 @@
 
   export let display = "inline-block";
   export let theme: "default" | "error" | "success" = "default";
+  export let colors: { backgroundColor: string; textColor: string } | null = null;
 
-  let addedClasses = "";
+  let addedClasses = className;
+  let styles = "";
 
   $: {
-    if (theme === "default") {
-      addedClasses = className + " bg-neutral-500 text-white ";
-    } else if (theme === "error") {
-      addedClasses = className + " bg-red-600 text-white ";
-    } else if (theme === "success") {
-      addedClasses = className + " bg-green-600 text-white ";
+    if (colors) {
+      styles = `background-color: ${colors.backgroundColor}; color: ${colors.textColor}`;
+    } else {
+      if (theme === "default") {
+        addedClasses = className + " bg-neutral-500 text-white ";
+      } else if (theme === "error") {
+        addedClasses = className + " bg-red-600 text-white ";
+      } else if (theme === "success") {
+        addedClasses = className + " bg-green-600 text-white ";
+      }
     }
   }
 </script>
 
-<div class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] {display} {addedClasses}">
+<span style={styles} class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] {display} {addedClasses}">
   <slot />
-</div>
+</span>
