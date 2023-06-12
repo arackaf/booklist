@@ -3,6 +3,7 @@
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
   import Input from "$lib/components/ui/Input/Input.svelte";
+  import Label from "$lib/components/ui/Label/Label.svelte";
 
   export let focused: boolean;
   export let selected: boolean;
@@ -64,5 +65,5 @@
   </div>
   <Input id="entry-item-{idx}" on:focus={onFocus} style="max-width: 250px" bind:inputEl on:keydown={keyDown} />
   {#if queuing}<span class="label label-default ml-2">Queuing</span>{/if}
-  {#if queued}<span class="label label-success ml-2">Queued</span>{/if}
+  {#if queued}<Label theme="success" class="ml-2">Queue</Label>{/if}
 </div>
