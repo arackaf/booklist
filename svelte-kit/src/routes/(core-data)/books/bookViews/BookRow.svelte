@@ -8,6 +8,7 @@
 
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Label from "$lib/components/ui/Label/Label.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
@@ -152,7 +153,9 @@
             {/if}
           </ActionButton>
         </BookReadSetter>
-      {:else if !!book.isRead}<span class="label label-success"> Read <i class="far fa-fw fa-check" /> </span>{/if}
+      {:else if book.isRead}
+        <Label theme="success">Read <i class="far fa-fw fa-check" /></Label>
+      {/if}
     </div>
   </td>
   <td>
