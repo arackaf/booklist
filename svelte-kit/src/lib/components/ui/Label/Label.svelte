@@ -6,12 +6,13 @@
   export let theme: "default" | "error" | "success" = "default";
   export let colors: { backgroundColor: string; textColor: string } | null = null;
 
+  export let style = "";
   let addedClasses = className;
-  let styles = "";
+  let colorStyles = "";
 
   $: {
     if (colors) {
-      styles = `background-color: ${colors.backgroundColor}; color: ${colors.textColor}`;
+      colorStyles = `background-color: ${colors.backgroundColor}; color: ${colors.textColor}`;
     } else {
       if (theme === "default") {
         addedClasses = className + " bg-neutral-500 text-white ";
@@ -24,6 +25,9 @@
   }
 </script>
 
-<span style={styles} class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] {display} {addedClasses}">
+<span
+  style="{colorStyles} {style}"
+  class="text-[11px] font-bold leading-[normal] whitespace-nowrap py-[3px] px-[6px] rounded-[3px] {display} {addedClasses}"
+>
   <slot />
 </span>
