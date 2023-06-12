@@ -12,7 +12,7 @@
 
   $: {
     if (colors) {
-      colorStyles = `background-color: ${colors.backgroundColor}; color: ${colors.textColor}`;
+      colorStyles = `background-color: ${colors.backgroundColor}; color: ${colors.textColor};`;
     } else {
       if (theme === "default") {
         addedClasses = className + " bg-neutral-500 text-white ";

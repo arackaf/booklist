@@ -118,12 +118,9 @@
         {#if missingName}
           <Label theme="error" class="self-start">Subjects need names!</Label>
         {/if}
-        <div
-          class="label label-default"
-          style="background-color: {editingSubject.backgroundColor}; color: {editingSubject.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
-        >
+        <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
           {editingSubject.name.trim() || "<label preview>"}
-        </div>
+        </Label>
       </div>
       <SelectGroup labelText="Parent">
         <Select slot="select" bind:value={editingSubject.parentId} name="parentId">
@@ -157,7 +154,7 @@
           <CustomColorPicker
             labelStyle="margin-left: 3px"
             onColorChosen={color => (editingSubject.textColor = color)}
-            currentColor={editingSubject.backgroundColor}
+            currentColor={editingSubject.textColor}
           />
           <input type="hidden" name="textColor" value={editingSubject.textColor} />
         </div>
