@@ -11,20 +11,6 @@
     background-color: var(--neutral-5);
     color: white;
   }
-
-  &.label-editable-expandable {
-    .toggle {
-      cursor: pointer;
-      margin-right: 5px;
-      padding-right: 5px;
-
-      &.expanded {
-        i {
-          transform: rotate(90deg);
-        }
-      }
-    }
-  }
 }
 
 .card {
