@@ -13,9 +13,14 @@
 
 <Label colors={item} style={extraStyles} class={"flex gap-1 " + className}>
   {#if href}
-    <a {href} class="fw-700" style="color: {item.textColor || 'white'}; font-size: inherit">X</a>
+    <a {href} class="font-bold" style="color: {item.textColor || 'white'}; font-size: inherit">X</a>
   {:else}
-    <button type="button" on:click={doRemove} class="raw-button fw-700 cursor-pointer" style="color: {item.textColor || 'white'}; font-size: inherit">
+    <button
+      type="button"
+      on:click={doRemove}
+      class="raw-button font-bold cursor-pointer"
+      style="color: {item.textColor || 'white'}; font-size: inherit"
+    >
       X
     </button>
   {/if}
