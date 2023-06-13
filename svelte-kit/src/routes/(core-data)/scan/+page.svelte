@@ -62,7 +62,7 @@
         <Button size="sm" class="ml-6" on:click={manuallyEnterBook}>Manual entry</Button>
       </div>
       <div class="mt-2">
-        <SlideAnimate open={showScanInstructions} class="card card-info card-slim" style="width: 80%">
+        <SlideAnimate open={showScanInstructions} class="p-3 bg-info-9 text-info-1 border-info-8 border rounded" style="width: 80%">
           <div>
             Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
             book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
