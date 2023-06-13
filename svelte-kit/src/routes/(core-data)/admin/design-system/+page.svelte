@@ -29,30 +29,22 @@
     <hr />
   </div>
 
-  <div>
-    <div class="label label-default">Hello Worlding</div>
-  </div>
+  <div />
   <div>
     <Label display="inline-block">Hello Worlding</Label>
   </div>
 
-  <div>
-    <div class="label label-default">Hello Worlding</div>
-  </div>
+  <div />
   <div>
     <Label display="inline-block">Hello Worlding</Label>
   </div>
 
-  <div>
-    <div class="label label-success">Success</div>
-  </div>
+  <div />
   <div>
     <Label theme="success">Success</Label>
   </div>
 
-  <div>
-    <div class="label label-success">Success</div>
-  </div>
+  <div />
   <div>
     <Label display="inline-block" theme="success">Success</Label>
   </div>
