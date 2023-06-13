@@ -106,12 +106,9 @@
           {#if missingName}
             <Label theme="error" class="self-start">Tags need names!</Label>
           {/if}
-          <div
-            class="label label-default"
-            style="background-color: {editingTag.backgroundColor}; color: {editingTag.textColor}; max-width: 100%; overflow: hidden; align-self: flex-start;"
-          >
+          <Label colors={editingTag} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
             {editingTag.name.trim() || "<label preview>"}
-          </div>
+          </Label>
         </div>
       </div>
 
