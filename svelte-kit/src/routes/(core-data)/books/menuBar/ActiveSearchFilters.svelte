@@ -9,6 +9,7 @@
 
   $: resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
   const removeAllFiltersLabel = {
+    textColor: "white",
     backgroundColor: "var(--danger-7)",
     name: "Remove all filters"
   };

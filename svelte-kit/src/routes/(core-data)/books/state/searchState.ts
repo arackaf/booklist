@@ -33,10 +33,10 @@ export const searchState = derived(page, $page => {
   const sortString = sort ?? DEFAULT_SORT;
   const [sortField, sortDirection] = sortString.split("-");
 
-  const subjectHash = toHash($page.data.subjects);
+  const subjectHash = toHash<{ id: number; name: string }>($page.data.subjects);
   const subjectsObjects = subjects.map(id => subjectHash[id]).filter(s => s);
 
-  const tagHash = toHash($page.data.tags);
+  const tagHash = toHash<{ id: number; name: string }>($page.data.tags);
   const tagObjects = tags.map(id => tagHash[id]).filter(s => s);
 
   const result = {

@@ -1,10 +1,13 @@
 <script lang="ts">
+  import type { LabelColors } from "$lib/components/subjectsAndTags/types";
+
   let className = "";
   export { className as class };
 
   export let display = "inline-block";
   export let theme: "default" | "error" | "success" = "default";
-  export let colors: { backgroundColor: string; textColor: string } | null = null;
+
+  export let colors: LabelColors | null = null;
 
   export let style = "";
   let addedClasses = className;
