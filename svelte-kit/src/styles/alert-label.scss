@@ -1,18 +1,3 @@
-.label {
-  font-size: 11px;
-  padding: 3px 6px;
-  border-radius: 3px;
-  font-weight: bold;
-  white-space: nowrap;
-  display: inline;
-  line-height: normal;
-
-  &.label-default {
-    background-color: var(--neutral-5);
-    color: white;
-  }
-}
-
 .card {
   padding: 15px;
   border-radius: 3px;
