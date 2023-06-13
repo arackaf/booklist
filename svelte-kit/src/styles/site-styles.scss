@@ -369,18 +369,6 @@ h4 {
   margin: 0;
   font-size: 18px;
 }
-h5 {
-  margin: 0;
-  font-size: 16px;
-}
-h6 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: normal;
-}
-.form-inline {
-  display: flex;
-}
 
 label {
   font-size: 14px;
@@ -395,55 +383,9 @@ label {
   user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }
 
-.wait-for-loading > i {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  opacity: 0.2;
-  z-index: 5000;
-}
-
-.wait-for-long-loading {
-  position: fixed;
-  top: 40%;
-  left: 0;
-  right: 0;
-  opacity: 0.2;
-  z-index: 5000;
-  display: flex;
-  justify-content: center;
-
-  & > div {
-    display: flex;
-  }
-}
-
-.drag-handle {
-  cursor: move;
-}
-
 .toastify {
   z-index: 10;
   margin-right: 10px;
-}
-
-.panel {
-  padding: 15px;
-  border: var(--default-border-width) solid var(--neutral-6);
-  border-radius: 3px;
-}
-.panel.panel-info {
-  border-color: var(--primary-10);
-}
-.panel.panel-info .panel-heading {
-  background-color: var(--primary-10);
-  margin-top: -15px;
-  margin-left: -15px;
-  margin-right: -15px;
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 14px;
-  display: flex;
 }
 
 @media (max-width: 600px) {
@@ -456,19 +398,6 @@ div,
 span {
   &.disabled {
     opacity: 0.6;
-  }
-}
-
-div.responsive-radios {
-  display: flex;
-  align-items: center;
-}
-@media (max-width: 800px) {
-  div.responsive-radios {
-    flex-direction: column;
-  }
-  div.responsive-radios > span {
-    align-self: flex-start;
   }
 }
 
@@ -530,10 +459,6 @@ select {
   font-weight: 700;
 }
 
-canvas.book-preview {
-  display: block;
-}
-
 .sr {
   border: 0;
   clip: rect(0, 0, 0, 0);
@@ -544,10 +469,4 @@ canvas.book-preview {
   padding: 0;
   position: absolute;
   width: 1px;
-}
-
-.book-author {
-  font-size: 14px;
-  font-weight: normal;
-  color: var(--neutral-5);
 }
