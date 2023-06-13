@@ -11,7 +11,7 @@
   $: addedClasses = active ? "bg-[var(--primary-10)]" : "";
 </script>
 
-<div class="section-nav-item flex p-0" class:active class:disabled class:cursor-default={active || disabled}>
+<div class="section-nav-item flex p-0" class:active class:opacity-60={disabled} class:cursor-default={active || disabled}>
   <svelte:element
     this={active || disabled ? "span" : "a"}
     class="p-4 {addedClasses}"
