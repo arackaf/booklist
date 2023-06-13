@@ -56,7 +56,7 @@
             <div>
               <div class="flex flex-col">
                 <span class="text-base">Similar Books</span>
-                <table class="table table-condensed" style="backgroundColor: transparent">
+                <table class="table table-condensed w-full max-w-full text-sm" style="backgroundColor: transparent">
                   <tbody>
                     {#each similarBooks as book}
                       <tr>

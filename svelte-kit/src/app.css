@@ -58,3 +58,15 @@ button::-moz-focus-inner {
   grid-column-start: 1;
   grid-column-end: 2;
 }
+
+th {
+  font-size: 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--primary-8);
+}
+
+td {
+  vertical-align: top;
+  padding: 5px;
+  border-top: var(--default-border-width) solid var(--neutral-6);
+}

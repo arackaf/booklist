@@ -21,34 +21,34 @@
   }
 </script>
 
-<table style="position: relative; align-self: start;" class="table no-padding-top">
+<table style="position: relative; align-self: start;" class="table w-full max-w-full">
   <thead>
     <tr>
       {#if !isPublic}
-        <th style="text-align: center; width: 25px;">
+        <th class="p-0" style="text-align: center; width: 25px;">
           <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
             <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")} />
           </button>
         </th>
       {/if}
-      <th style="width: 60px" />
-      <th style="min-width: 200px">
+      <th class="p-0" style="width: 60px" />
+      <th class="p-0" style="min-width: 200px">
         <a class="bold" href={$changeFilter.withSort("title")}>
           Title
           {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </a>
       </th>
-      <th style="min-width: 90px;">Subjects</th>
-      <th style="min-width: 90px;">Tags</th>
-      <th style="min-width: 90px;" />
-      <th />
-      <th style="min-width: 85px; ">
+      <th class="p-0" style="min-width: 90px;">Subjects</th>
+      <th class="p-0" style="min-width: 90px;">Tags</th>
+      <th class="p-0" style="min-width: 90px;" />
+      <th class="p-0" />
+      <th class="p-0" style="min-width: 85px; ">
         <a class="bold" href={$changeFilter.withSort("pages")}>
           Pages
           {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
         </a>
       </th>
-      <th>
+      <th class="p-0">
         <a class="bold" href={$changeFilter.withSort("id")}>
           Added
           {#if sortField == "id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
