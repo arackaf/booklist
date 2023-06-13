@@ -31,22 +31,6 @@
 
 .alert,
 .card {
-  &.slidable {
-    padding: 0 !important;
-
-    & > * {
-      padding: 15px;
-
-      &.card-slim,
-      &.alert-slim {
-        padding: 10px;
-      }
-      &.card-slimmer,
-      &.alert-slimmer {
-        padding: 5px;
-      }
-    }
-  }
   &.alert-warning,
   &.card-warning {
     background-color: var(--warning-9);
