@@ -52,7 +52,7 @@
       </div>
     {/if}
 
-    <div class="checkbox-group">
+    <div class="flex font-bold text-sm">
       <label class="checkbox">
         Allow your book collection to be viewed publicly?
         <input name="isPublic" bind:checked={showForm} disabled={saving} style="margin-left: 5px" type="checkbox" />
