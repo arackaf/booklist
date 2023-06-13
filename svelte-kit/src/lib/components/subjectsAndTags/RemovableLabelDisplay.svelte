@@ -20,9 +20,9 @@
 
 <Label colors={colorsPacket} style={extraStyles} class={"flex gap-1 " + className}>
   {#if href}
-    <a {href} class="font-bold" style="font-size: inherit">X</a>
+    <a {href} class="font-bold text-inherit" style="font-size: inherit">X</a>
   {:else}
-    <button type="button" on:click={doRemove} class="raw-button font-bold cursor-pointer" style="font-size: inherit"> X </button>
+    <button type="button" on:click={doRemove} class="raw-button font-bold cursor-pointer" style="font-size: inherit; color: inherit;"> X </button>
   {/if}
   <span style="border-left: 1px solid {item?.textColor || 'white'}" />
   {#if $$slots.default}
