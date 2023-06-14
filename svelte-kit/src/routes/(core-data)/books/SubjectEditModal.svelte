@@ -15,8 +15,8 @@
   const emptySubject = {
     id: 0,
     name: "",
-    textColor: "",
-    backgroundColor: "",
+    backgroundColor: "#847E71",
+    textColor: "#ffffff",
     path: ""
   };
 
