@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import cn from "classnames";
   import localStorageManager from "$lib/util/localStorage";
 
   export let tabName = "";

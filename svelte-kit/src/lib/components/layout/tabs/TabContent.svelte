@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import cn from "classnames";
 
   export let tabName = "";
   let className = "";
@@ -11,6 +10,6 @@
   $: isActive = currentTab === tabName;
 </script>
 
-<div {...$$restProps} class={cn("tab-pane", className, { active: isActive })}>
+<div {...$$restProps} class="mt-2 ml-0 md:ml-1 {className}" class:hidden={!isActive}>
   <slot {isActive} />
 </div>
