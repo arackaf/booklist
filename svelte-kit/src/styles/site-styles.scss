@@ -406,12 +406,6 @@ div.toast-notification h4 {
   color: var(--primary-10);
 }
 
-ul.striped {
-  & > li:nth-child(even) {
-    background-color: var(--neutral-8);
-  }
-}
-
 a,
 button,
 input,
