@@ -128,9 +128,3 @@
   </nav>
   <div id="main-mobile-menu" class="main-mobile-menu" />
 </header>
-
-<style>
-  header :global(a) {
-    text-decoration: none;
-  }
-</style>
