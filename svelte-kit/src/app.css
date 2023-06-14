@@ -40,7 +40,7 @@ select {
 }
 
 .raw-button {
-  @apply p-0 bg-transparent border-0 text-neutral-600 cursor-pointer shadow-none;
+  @apply p-0 bg-transparent border-0 text-neutral-600 shadow-none;
 }
 
 button::-moz-focus-inner {
