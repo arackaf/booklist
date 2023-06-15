@@ -2,20 +2,6 @@
   import { fade } from "svelte/transition";
 </script>
 
-<div in:fade={{ delay: 50, duration: 200 }}>
+<div class="fixed top-1/3 left-1/2 z-[99999] -translate-x-1/2 -translate-y-1/2" in:fade={{ delay: 50, duration: 200 }}>
   <i class="far fa-5x fa-spin fa-spinner" />
 </div>
-
-<style>
-  div {
-    position: fixed;
-    left: 50%;
-    top: 30%;
-    transform: translateX(-50%) translateY(-50%);
-    z-index: 99999;
-  }
-  i {
-    opacity: 0.5;
-    color: var(--primary-3);
-  }
-</style>
