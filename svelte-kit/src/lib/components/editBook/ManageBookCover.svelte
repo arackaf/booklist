@@ -111,15 +111,3 @@
     </div>
   </div>
 </form>
-
-<style>
-  :global(.dropzone-container) {
-    border: 3px solid var(--primary-9);
-    text-align: center;
-    background-color: white;
-    padding: 5px;
-    color: var(--neutral-3);
-    outline: none;
-    cursor: pointer;
-  }
-</style>
