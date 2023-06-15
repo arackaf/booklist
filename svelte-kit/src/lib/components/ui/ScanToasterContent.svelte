@@ -7,36 +7,10 @@
   $: authors = (book.authors ?? []).join(", ");
 </script>
 
-<section>
+<section class="flex w-[300px] gap-1">
   <BookCover style="width: 60px" {book} size="small" />
   <div class="book-info">
-    <div class="title">{book.title}</div>
-    <div class="authors">{authors}</div>
+    <div class="text-base leading-none mb-1 w-[225px] whitespace-nowrap overflow-hidden text-ellipsis">{book.title}</div>
+    <div class="text-sm italic w-[225px] whitespace-nowrap overflow-hidden text-ellipsis">{authors}</div>
   </div>
 </section>
-
-<style>
-  section {
-    width: 300px;
-    display: flex;
-    flex-direction: row;
-  }
-
-  .title,
-  .authors {
-    width: 225px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .title {
-    font-size: 18px;
-    line-height: 1;
-    margin-bottom: 3px;
-  }
-  .authors {
-    font-size: 12px;
-    font-style: italic;
-  }
-</style>
