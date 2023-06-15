@@ -13,13 +13,7 @@
 </script>
 
 <div>
-  <div use:slideAnimate={{ open, fade, stiffDown }} class:hide={!hydrated} {...$$props}>
+  <div use:slideAnimate={{ open, fade, stiffDown }} class:hidden={!hydrated} {...$$props}>
     <slot />
   </div>
 </div>
-
-<style>
-  .hide {
-    display: none;
-  }
-</style>
