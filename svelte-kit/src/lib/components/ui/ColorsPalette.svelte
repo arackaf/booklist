@@ -7,26 +7,11 @@
 <div>
   {#each colors as color}
     <div
-      class="colorChoice"
-      class:colorChoiceCurrent={color == currentColor}
+      class="float-left border border-black h-[20px] w-[20px] m-1 cursor-pointer transition-transform"
+      class:scale-125={color == currentColor}
       on:click={() => onColorChosen(color)}
       on:keydown={() => {}}
       style="background-color: {color}"
     />
   {/each}
 </div>
-
-<style>
-  .colorChoice {
-    float: left;
-    border: var(--default-border-width) solid black;
-    height: 20px;
-    width: 20px;
-    margin: 3px;
-    cursor: pointer;
-    transition: transform 75ms ease-in;
-  }
-  .colorChoice.colorChoiceCurrent {
-    transform: scale(1.25);
-  }
-</style>
