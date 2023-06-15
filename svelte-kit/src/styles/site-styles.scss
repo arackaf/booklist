@@ -1,14 +1,5 @@
 @import "./alert-label";
 
-hr {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-}
-
-.svelte-helpers-modal-content {
-  --modal-content-padding: 20px !important;
-  border-color: var(--primary-3) !important;
-}
 :root {
   --animation-duration: 300ms;
 
@@ -70,10 +61,6 @@ hr {
   --info-8: hsl(184, 80%, 74%);
   --info-9: hsl(185, 94%, 87%);
   --info-10: hsl(186, 100%, 94%);
-}
-
-* {
-  box-sizing: border-box;
 }
 
 .scheme1 {
@@ -298,6 +285,10 @@ hr {
   --primary-11: hsl(0, 0%, 99%);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body,
 .app-container {
   --content-background: var(--primary-11);
@@ -313,7 +304,6 @@ body,
 #app,
 input,
 select,
-reach-portal,
 a,
 button {
   color: var(--neutral-3);
@@ -344,6 +334,8 @@ input[disabled] {
 }
 
 hr {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
   border: var(--default-border-width) solid var(--primary-4);
 }
 
@@ -372,11 +364,6 @@ label {
   user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }
 
-.toastify {
-  z-index: 10;
-  margin-right: 10px;
-}
-
 @media (max-width: 600px) {
   input {
     font-size: 16px;
@@ -389,21 +376,6 @@ label.checkbox {
   & > input {
     margin-right: 5px;
   }
-}
-
-div.toast-notification {
-  display: flex;
-  padding: 10px;
-  background: var(--primary-4);
-  color: var(--primary-10);
-}
-div.toast-notification.success {
-  background: var(--success-7);
-}
-div.toast-notification a,
-div.toast-notification span,
-div.toast-notification h4 {
-  color: var(--primary-10);
 }
 
 a,
@@ -419,6 +391,11 @@ select {
 
 .svelte-modal-overlay {
   z-index: 99 !important;
+}
+
+.svelte-helpers-modal-content {
+  --modal-content-padding: 20px !important;
+  border-color: var(--primary-3) !important;
 }
 
 .sr {
@@ -441,4 +418,24 @@ select {
   color: var(--neutral-3);
   outline: none;
   cursor: pointer;
+}
+
+.toastify {
+  z-index: 10;
+  margin-right: 10px;
+}
+
+div.toast-notification {
+  display: flex;
+  padding: 10px;
+  background: var(--primary-4);
+  color: var(--primary-10);
+}
+div.toast-notification.success {
+  background: var(--success-7);
+}
+div.toast-notification a,
+div.toast-notification span,
+div.toast-notification h4 {
+  color: var(--primary-10);
 }
