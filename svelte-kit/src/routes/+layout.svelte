@@ -46,7 +46,7 @@
   });
 </script>
 
-<div class={`app-container ${theme}`} class:white-bg={whiteBg === "1"}>
+<div class={`app-container overflow-hidden h-screen w-screen ${theme}`} class:white-bg={whiteBg === "1"}>
   <div id="app">
     <MainNavigation />
     <main>
@@ -65,11 +65,3 @@
     {/if}
   </div>
 </div>
-
-<style>
-  .app-container {
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-  }
-</style>
