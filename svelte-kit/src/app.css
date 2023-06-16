@@ -1,4 +1,5 @@
 @import "./styles/main-layout.css";
+@import "./styles/graph-tooltip.css";
 
 @tailwind base;
 @tailwind components;
