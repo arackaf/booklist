@@ -19,7 +19,7 @@
   }
 </script>
 
-<div class="buttons">
+<div class="grid gap-4 buttons" style="grid-template-columns: 120px 120px;">
   <div>
     <h1>Old</h1>
     <hr />
@@ -299,11 +299,3 @@
     <Button disabled>Button</Button>
   </div>
 </div>
-
-<style>
-  .buttons {
-    display: grid;
-    gap: 15px;
-    grid-template-columns: 120px 120px;
-  }
-</style>
