@@ -1,3 +1,15 @@
+.popper-tooltip {
+  display: none;
+  opacity: 0;
+  transition: opacity 200ms ease-in;
+}
+.popper-tooltip.exists {
+  display: block;
+}
+.popper-tooltip.show {
+  opacity: 1;
+}
+
 .tooltip-root {
   --bg-color: var(--info-9);
   --arrow-size: 10px;

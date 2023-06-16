@@ -23,17 +23,3 @@
 {:else}
   <MultiBar {data} {height} {width} {x} {totalSvgWidth} {position} {drilldown} {removeBar} {noInitialAnimation} />
 {/if}
-
-<style>
-  :global(.popper-tooltip) {
-    display: none;
-    opacity: 0;
-    transition: opacity 200ms ease-in;
-  }
-  :global(.popper-tooltip.exists) {
-    display: block;
-  }
-  :global(.popper-tooltip.show) {
-    opacity: 1;
-  }
-</style>
