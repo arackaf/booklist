@@ -48,7 +48,11 @@
   }
 </script>
 
-<div class="listGroupItem" on:click={itemClicked} on:keypress={() => {}}>
+<div
+  class="py-1 border-b border-b-neutral-400 listGroupItem first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10"
+  on:click={itemClicked}
+  on:keypress={() => {}}
+>
   <div style="display: flex">
     <div style="margin-right: 5px; min-width: 55px">
       <BookCover size="mobile" {book} />
@@ -82,11 +86,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  :global(.listGroupItem) {
-    border-bottom: var(--default-border-width) solid var(--neutral-6);
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
-</style>
