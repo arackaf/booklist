@@ -51,7 +51,7 @@
     <span>
       {similarBooksCount} similar book{similarBooksCount === 1 ? "" : "s"}
     </span>
-    <button disabled={loading} class:expanded class="raw-button" on:click={expand}>
+    <button disabled={loading} class="raw-button ml-auto" class:cursor-pointer={loading} class:rotate-180={expanded} on:click={expand}>
       {#if loading}
         <i class="far fa-spinner fa-spin" />
       {:else}
@@ -60,7 +60,7 @@
     </button>
   </div>
   <SlideAnimate open={expanded}>
-    <div class="similar-books-container">
+    <div class="flex flex-col gap-3 mt-3 max-h-80 overflow-y-scroll">
       {#each similarBooks as book}
         <BookDisplay {book} />
       {/each}
@@ -79,27 +79,3 @@
     <div class="alert alert-info">Sync pending</div>
   {/if}
 {/if}
-
-<style>
-  .similar-books-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-    max-height: 300px;
-    overflow-y: scroll;
-  }
-
-  .alert {
-    width: 50%;
-  }
-  .alert button {
-    margin-left: auto;
-  }
-  button.expanded i {
-    transform: rotate(180deg);
-  }
-  button:disabled {
-    cursor: default;
-  }
-</style>
