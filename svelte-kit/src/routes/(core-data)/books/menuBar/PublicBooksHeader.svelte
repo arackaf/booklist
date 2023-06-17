@@ -14,12 +14,4 @@
   }
 </script>
 
-<h4>{booksHeader}</h4>
-
-<style>
-  h4 {
-    margin-right: 5px;
-    margin-bottom: 0;
-    align-self: center;
-  }
-</style>
+<h4 class="text-lg font-bold mr-1">{booksHeader}</h4>
