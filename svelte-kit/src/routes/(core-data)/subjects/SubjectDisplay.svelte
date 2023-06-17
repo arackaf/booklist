@@ -75,7 +75,7 @@
   <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if childSubjects.length}
-        <ul on:outrostart={exitStart} transition:scale|local={scaleTransitionProps}>
+        <ul class="ml-5" on:outrostart={exitStart} transition:scale|local={scaleTransitionProps}>
           {#each childSubjects as s (s.id)}
             <li on:outrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
               <svelte:self subject={s} {editSubject} />

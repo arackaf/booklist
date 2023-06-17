@@ -35,12 +35,12 @@
   setContext("subject-chain-disable-animation", writable(false));
 </script>
 
-<section class="flush-bottom subjectsRoot">
+<section class="flush-bottom grid grid-rows-[auto_1fr]">
   <div>
     <Button class="mb-4" theme="primary" on:click={() => editSubject(newSubject())}>New Subject</Button>
   </div>
 
-  <div class="contentRoot">
+  <div class="border-l-2 border-l-primary-4 pl-3 lg:pl-7">
     <ul>
       {#each rootSubjects as s (s.id)}
         <li on:outrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
@@ -69,36 +69,3 @@
     <Button on:click={closeEditModal}>Close</Button>
   </Modal>
 </section>
-
-<style>
-  ul {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .subjectsRoot {
-    display: grid;
-    grid-template-rows: auto 1fr;
-  }
-
-  .subjectsRoot :global(ul) {
-    margin-left: 0;
-    padding-left: 0;
-  }
-
-  .subjectsRoot :global(ul ul) {
-    margin-left: 20px;
-  }
-
-  .contentRoot {
-    padding-left: 30px;
-    border-left: 2px solid var(--primary-4);
-  }
-  @media (max-width: 1000px) {
-    .contentRoot {
-      margin-left: 10px;
-      padding-left: 10px;
-    }
-  }
-</style>
