@@ -25,12 +25,12 @@
 {#if bookDetails}
   <tr>
     <td colSpan={isPublic ? 8 : 9} style="border-top: 0; padding-left: 50px; padding-top: 0; padding-bottom: 15px;">
-      <div class="detailsRow grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="pt-3 pr-3 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
           {#if !editorialReviews || !editorialReviews.length}
             <h4>No editorial reviews for this book</h4>
           {:else}
-            <div>
+            <div class="max-h-80 overflow-y-scroll">
               {#each editorialReviews as review, index}
                 <div>
                   {#if index > 0}
@@ -53,7 +53,7 @@
           {#if !similarBooks || !similarBooks.length}
             <h4>No similar items found for this book</h4>
           {:else}
-            <div>
+            <div class="max-h-80 overflow-y-scroll">
               <div class="flex flex-col">
                 <span class="text-base">Similar Books</span>
                 <table class="table table-condensed w-full max-w-full text-sm" style="backgroundColor: transparent">
@@ -88,16 +88,3 @@
     </td>
   </tr>
 {/if}
-
-<style>
-  :global(.detailsRow) {
-    padding-right: 10px;
-  }
-  :global(.detailsRow) {
-    padding-top: 10px;
-  }
-  :global(.detailsRow > * > div) {
-    max-height: 250px;
-    overflow: auto;
-  }
-</style>
