@@ -8,13 +8,6 @@ label.checkbox {
   }
 }
 
-a,
-button,
-input,
-select {
-  touch-action: manipulation;
-}
-
 .border-bottom {
   border-bottom: 2px solid var(--primary-5);
 }

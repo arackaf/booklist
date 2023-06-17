@@ -58,6 +58,12 @@ body,
 #app {
   -webkit-overflow-scrolling: touch;
 }
+a,
+button,
+input,
+select {
+  touch-action: manipulation;
+}
 
 hr {
   margin-top: 0.5em;
