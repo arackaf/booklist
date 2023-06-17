@@ -14,6 +14,84 @@
   --default-border-radius: 5px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+#app,
+input,
+select,
+a,
+button {
+  color: var(--neutral-3);
+}
+button[type="submit"] {
+  font-weight: normal;
+}
+
+footer {
+  background-color: var(--primary-8);
+  padding: 9px;
+}
+
+a {
+  cursor: pointer;
+}
+
+button,
+input,
+select,
+a {
+  outline: 0;
+}
+
+body,
+.app-container {
+  --content-background: var(--primary-11);
+}
+.app-container.white-bg {
+  --content-background: #fff;
+}
+
+#app {
+  -webkit-overflow-scrolling: touch;
+}
+
+hr {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  border: var(--default-border-width) solid var(--primary-4);
+}
+
+h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+label {
+  font-size: 14px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently not supported by any browser */
+}
+
+fieldset[disabled] input,
+input[disabled] {
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  input {
+    font-size: 16px;
+  }
+}
+
 input[type="radio"] {
   @apply relative w-4 h-4 appearance-none border border-neutral-400 rounded-full outline-none;
 }
