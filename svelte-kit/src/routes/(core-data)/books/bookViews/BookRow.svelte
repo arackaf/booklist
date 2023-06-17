@@ -76,7 +76,7 @@
       <BookCover size="small" {book} />
     </div>
   </td>
-  <td>
+  <td class="group">
     <div>
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-1">
@@ -90,11 +90,19 @@
           {#if detailsLoading}
             <span><i class="far fa-fw fa-spin fa-spinner" /></span>
           {:else if expanded}
-            <button style={hoverOverride} class="raw-button gridHoverFilter text-sm" on:click={() => (expanded = false)}>
+            <button
+              style={hoverOverride}
+              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+              on:click={() => (expanded = false)}
+            >
               <i class={`far fa-minus fa-fw`} />
             </button>
           {:else}
-            <button style={hoverOverride} class="raw-button gridHoverFilter text-sm" on:click={() => (expanded = true)}>
+            <button
+              style={hoverOverride}
+              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+              on:click={() => (expanded = true)}
+            >
               <i class={`far fa-plus fa-fw`} />
             </button>
           {/if}
@@ -103,17 +111,21 @@
             <a
               style="padding-top: 1px; {hoverOverride}"
               target="_new"
-              class="gridHoverFilter text-sm"
+              class="invisible text-neutral-500 group-hover:visible text-sm"
               href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
             >
               <i class={`fab fa-amazon fa-fw`} />
             </a>
           {/if}
           {#if !isPublic}
-            <button style={hoverOverride} class="raw-button gridHoverFilter text-sm" on:click={() => editBook(book)}>
+            <button style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm" on:click={() => editBook(book)}>
               <i class="fal fa-pencil-alt fa-fw" />
             </button>
-            <button style={hoverOverride} class="raw-button gridHoverFilter text-sm" on:click={() => (pendingDelete = true)}>
+            <button
+              style={hoverOverride}
+              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+              on:click={() => (pendingDelete = true)}
+            >
               <i class={`fal fa-trash-alt fa-fw`} />
             </button>
           {/if}
@@ -183,15 +195,3 @@
 {#if expanded}
   <BookRowDetails {isPublic} id={book.id} bind:detailsLoading />
 {/if}
-
-<style>
-  .gridHoverFilter {
-    text-decoration: none;
-    visibility: hidden;
-    color: var(--neutral-5);
-  }
-
-  td:hover .gridHoverFilter {
-    visibility: visible;
-  }
-</style>
