@@ -69,7 +69,7 @@
 </script>
 
 <div>
-  <div class="pb-5 subjectRow">
+  <div class="pb-5">
     <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
   <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
@@ -86,20 +86,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  ul {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .subjectRow {
-    padding-left: 0;
-    margin-left: 0;
-  }
-
-  .subjectRow > :global(div) {
-    padding-left: 0;
-  }
-</style>
