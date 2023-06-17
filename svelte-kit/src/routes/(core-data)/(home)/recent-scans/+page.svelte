@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "./index.scss";
-
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 
@@ -30,7 +28,7 @@
 
 <div class="recent-scans-module mt-5">
   <div class="overlay-holder">
-    <div class="results">
+    <div class="grid grid-cols-[75px_1fr] gap-4">
       {#each $scans as item}
         {#if item.success}
           <BookCover size="small" book={item} />
@@ -39,14 +37,14 @@
         {:else}
           <div />
           <div>
-            <div class="alert alert-danger inline-flex">Failed to lookup isbn {item.isbn}</div>
+            <div class="alert alert-danger w-[40ch] inline-flex">Failed to lookup isbn {item.isbn}</div>
           </div>
         {/if}
       {/each}
 
       {#if $nextPageKey}
         <div />
-        <ActionButton theme="primary" running={loading} on:click={loadNextScans}>Load More</ActionButton>
+        <ActionButton class="w-[40ch]" theme="primary" running={loading} on:click={loadNextScans}>Load More</ActionButton>
       {/if}
     </div>
   </div>
