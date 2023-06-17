@@ -10,36 +10,12 @@
 <section>
   <div class="list">
     {#each books as book}
-      <div class="entry">
+      <div class="flex flex-col lg:flex-row gap-3 mb-3 p-4 rounded border border-neutral-400">
         <BookDisplay {book} />
-        <div class="similar-books">
+        <div class="flex-1 flex flex-col overflow-hidden">
           <SimilarBooks {book} />
         </div>
       </div>
     {/each}
   </div>
 </section>
-
-<style>
-  .entry {
-    display: flex;
-    border: 1px solid var(--neutral-6);
-    border-radius: 5px;
-    padding: 15px;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  @media (max-width: 1000px) {
-    .entry {
-      flex-direction: column;
-    }
-  }
-
-  .similar-books {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-</style>
