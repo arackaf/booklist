@@ -1,6 +1,7 @@
 @import "./styles/themes.css";
 @import "./styles/main-layout.css";
 @import "./styles/graph-tooltip.css";
+@import "./styles/dropzone-styles.css";
 
 @tailwind base;
 @tailwind components;
