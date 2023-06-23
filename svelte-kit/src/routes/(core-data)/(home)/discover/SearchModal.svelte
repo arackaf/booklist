@@ -156,7 +156,7 @@
         <div class="flex flex-row gap-3">
           <ActionButton running={loading}>Search</ActionButton>
 
-          <div class="msg-holder">
+          <div class="flex relative flex-1 self-stretch">
             {#if noAvailableBooks}
               <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-info alert-slimmer">
                 You've added all of the books from this page
@@ -164,7 +164,14 @@
             {/if}
 
             {#if noResults}
-              <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-warning alert-slimmer">No results</div>
+              <div
+                class="flex items-start justify-start alert alert-warning alert-slimmer"
+                style="backface-visibility: hidden;"
+                in:resultsMessageIn|local
+                out:resultsMessageOut
+              >
+                No results
+              </div>
             {/if}
           </div>
         </div>
@@ -200,20 +207,3 @@
     </div>
   </form>
 </Modal>
-
-<style>
-  .msg-holder {
-    display: flex;
-    position: relative;
-    flex: 1;
-    align-self: stretch;
-  }
-
-  .msg-holder > div {
-    display: flex;
-    align-items: flex-start;
-    justify-content: left;
-    /* fix transition 1px glitch */
-    backface-visibility: hidden;
-  }
-</style>

@@ -55,11 +55,14 @@
   let sizeClass = "";
   $: {
     let size = $viewBoxSpring;
+    sizeClass = "leading-none ";
 
-    if (size < 400) sizeClass = "xsmall";
-    else if (size < 700) sizeClass = "small";
-    else if (size < 1000) sizeClass = "medium";
-    else sizeClass = "large";
+    console.log({ size });
+
+    if (size < 400) sizeClass += "text-base lg:text-lg";
+    else if (size < 700) sizeClass += "text-base lg:text-lg";
+    else if (size < 1000) sizeClass += "text-lg sm:text-base lg:text-lg";
+    else sizeClass += "text-xl sm:text-lg lg:text-xs";
   }
 
   let rootElement: HTMLDivElement;
@@ -67,7 +70,7 @@
 </script>
 
 <div use:scrollInitial bind:this={rootElement}>
-  <div class="chart-container" style="max-width: {MAX_SVG_WIDTH}px">
+  <div class="h-[600px] mx-auto" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
       <h4 style="display: inline" class="text-xl font-semibold">{header}</h4>
       {#if excludedCount}
@@ -84,7 +87,7 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" class={sizeClass} style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
+    <svg width="100%" class="{sizeClass} block" style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
         {#each nonExcludedGroups as d, i (d.groupId)}
           <Bar
@@ -114,43 +117,3 @@
   </div>
   <hr />
 </div>
-
-<style>
-  .chart-container {
-    height: 600px;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
-  svg {
-    display: block;
-    font-size: 12px;
-  }
-
-  @media (max-width: 1000px) {
-    svg.large {
-      font-size: 14px;
-    }
-  }
-
-  @media (max-width: 700px) {
-    svg.medium {
-      font-size: 14px;
-    }
-    svg.large {
-      font-size: 16px;
-    }
-  }
-
-  @media (max-width: 400px) {
-    svg.small {
-      font-size: 16px;
-    }
-    svg.medium {
-      font-size: 18px;
-    }
-    svg.large {
-      font-size: 20px;
-    }
-  }
-</style>
