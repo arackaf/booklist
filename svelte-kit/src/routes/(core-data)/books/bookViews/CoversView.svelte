@@ -20,67 +20,22 @@
 <BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
 <div>
-  <div class="root">
-    <div style="border: 0" class="covers-list">
+  <div class="flex flex-col items-center mt-4">
+    <div style="border: 0" class="covers-list flex justify-center flex-wrap m-[-15px] max-w-7xl">
       {#each books as book}
-        <figure on:click={() => previewBook(book)} on:keydown={() => {}}>
-          <div>
-            <BookCover size="medium" {book} />
+        <figure
+          class="w-[120px] m-3 flex flex-col cursor-pointer border border-neutral-300 rounded p-[5px] transition-[transform_box-shadow] hover:-translate-y-1 hover:shadow-lg hover:shadow-neutral-300"
+          on:click={() => previewBook(book)}
+          on:keydown={() => {}}
+        >
+          <div class="self-center">
+            <BookCover imgClasses="max-w-full" size="medium" {book} />
           </div>
-          <figcaption>{book.title}</figcaption>
+          <figcaption class="whitespace-nowrap overflow-hidden text-ellipsis text-xs font-bold mt-auto p-[2px]">
+            {book.title}
+          </figcaption>
         </figure>
       {/each}
     </div>
   </div>
 </div>
-
-<style>
-  .root {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 15px;
-  }
-
-  .covers-list {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: -15px;
-    max-width: 1200px;
-  }
-  figure {
-    width: 120px;
-    margin: 15px;
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    border: var(--default-border-width) solid var(--neutral-8);
-    border-radius: 5px;
-    padding: 5px;
-    transition: transform 100ms ease-in, box-shadow 100ms ease-in;
-  }
-
-  figure:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 4px 12px var(--neutral-7);
-  }
-
-  .covers-list :global(img) {
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  figcaption {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
-    font-weight: bold;
-    color: var(--neutral-2);
-    margin-top: auto;
-    padding: 2px;
-  }
-</style>

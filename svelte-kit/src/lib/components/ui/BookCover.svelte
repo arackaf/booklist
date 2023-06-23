@@ -10,6 +10,7 @@
 
   export let preview: string | PreviewPacket | null = null;
   export let noCoverMessage: string = "No Cover";
+  export let imgClasses = "";
 
   let previewToUse: string | PreviewPacket | null;
   $: {
@@ -55,7 +56,7 @@
     <span class="z-[1] blur-sm" style={`background: url('${previewString}') no-repeat; background-size: cover; ${sizingStyle}`} />
   {/if}
   {#if urlToUse}
-    <img class="z-[2]" alt="Book cover" src={urlToUse} style={sizingStyle} />
+    <img class="z-[2] {imgClasses}" alt="Book cover" src={urlToUse} style={sizingStyle} />
   {:else}
     <div class={noCoverClasses}>
       <div>{noCoverMessage}</div>
