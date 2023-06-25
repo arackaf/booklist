@@ -6,6 +6,7 @@
 
   import type { Color, Tag } from "$data/types";
 
+  import Alert from "$lib/components/ui/Alert.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
@@ -165,12 +166,13 @@
   <form method="POST" action="?/deleteTag" use:enhance={runDelete}>
     <input type="hidden" name="id" value={editingTag.id} />
 
-    <div class="flex flex-col gap-4">
-      <div class="alert alert-danger alert-slim" style="align-self: flex-start">
+    <div class="flex flex-col gap-3">
+      <Alert type="error" layout="slim">
         <div>
           <span>Delete {originalName}?</span>
         </div>
-      </div>
+      </Alert>
+
       <div class="flex flex-row gap-4">
         <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
         <Button size="sm" disabled={deleting} on:click={() => (deleteShowing = false)}>Cancel</Button>
