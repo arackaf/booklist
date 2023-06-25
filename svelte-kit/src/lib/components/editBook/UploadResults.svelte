@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { BookImages } from "$data/types";
+  import Alert from "$lib/components/ui/Alert.svelte";
 
   import UploadResult from "./UploadResult.svelte";
 
@@ -11,9 +12,9 @@
 
 {#if error}
   {#if status === "invalid-size"}
-    <div class="alert alert-warning mt-3">This image is too small to use</div>
+    <Alert type="warning" class="mt-3">This image is too small to use</Alert>
   {:else}
-    <div class="alert alert-danger mt-3">An error occured</div>
+    <Alert type="error" class="mt-3">An error occured</Alert>
   {/if}
 {:else}
   <div class="flex flex-row mt-3">
