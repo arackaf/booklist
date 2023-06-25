@@ -2,10 +2,9 @@
 
 label.checkbox {
   display: flex;
-
-  & > input {
-    margin-right: 5px;
-  }
+}
+label.checkbox > input {
+  margin-right: 5px;
 }
 
 .border-bottom {
