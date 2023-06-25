@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import cn from "classnames";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
