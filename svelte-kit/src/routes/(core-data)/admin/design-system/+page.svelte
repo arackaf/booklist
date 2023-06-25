@@ -9,6 +9,7 @@
   import IconButton from "$lib/components/ui/Button/IconButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
+  import Alert from "$lib/components/ui/Alert.svelte";
 
   let running = false;
   function clickButton() {
@@ -27,6 +28,34 @@
   <div>
     <h1>New</h1>
     <hr />
+  </div>
+
+  <div>
+    <div class="alert alert-info">Hello World</div>
+  </div>
+  <div>
+    <Alert type="info">Hello World</Alert>
+  </div>
+
+  <div>
+    <div class="alert alert-success">Hello World</div>
+  </div>
+  <div>
+    <Alert type="success">Hello World</Alert>
+  </div>
+
+  <div>
+    <div class="alert alert-warning">Hello World</div>
+  </div>
+  <div>
+    <Alert type="warning">Hello World</Alert>
+  </div>
+
+  <div>
+    <div class="alert alert-danger">Hello World</div>
+  </div>
+  <div>
+    <Alert type="error">Hello World</Alert>
   </div>
 
   <div />
