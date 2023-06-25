@@ -2,11 +2,14 @@
   export let display = "flex";
 
   export let type: "warning" | "info" | "success" | "error" = "info";
+  export let layout: "normal" | "slim" | "slimmer" = "normal";
 
   let className = "";
   export { className as class };
 
   let colors = "";
+
+  let padding = layout === "normal" ? "p-3" : layout === "slim" ? "p-2" : "p-1";
 
   $: {
     if (type === "info") {
@@ -21,6 +24,6 @@
   }
 </script>
 
-<div class="{display} {colors} items-center p-3 rounded {className}">
+<div class="{display} {colors} items-center {padding} rounded {className}">
   <slot />
 </div>

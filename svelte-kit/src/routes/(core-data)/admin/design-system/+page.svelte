@@ -38,6 +38,20 @@
   </div>
 
   <div>
+    <div class="alert alert-info alert-slim">Hello World</div>
+  </div>
+  <div>
+    <Alert type="info" layout="slim">Hello World</Alert>
+  </div>
+
+  <div>
+    <div class="alert alert-info alert-slimmer">Hello World</div>
+  </div>
+  <div>
+    <Alert type="info" layout="slimmer">Hello World</Alert>
+  </div>
+
+  <div>
     <div class="alert alert-success">Hello World</div>
   </div>
   <div>
