@@ -7,6 +7,7 @@
 
   import type { Color, Subject } from "$data/types";
 
+  import Alert from "$lib/components/ui/Alert.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
@@ -179,12 +180,12 @@
   <form method="POST" action="/subjects?/deleteSubject" use:enhance={runDelete}>
     <input type="hidden" name="id" value={editingSubject.id} />
     <div class="flex flex-col gap-3">
-      <div class="alert alert-danger alert-slim">
+      <Alert type="error" layout="slim">
         <div class="flex flex-row gap-2">
           <span>Delete {editingSubject.name}?</span>
           {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
         </div>
-      </div>
+      </Alert>
 
       <div class="flex flex-row gap-3">
         <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
