@@ -9,7 +9,7 @@
 
   let colors = "";
 
-  let padding = layout === "normal" ? "p-3" : layout === "slim" ? "p-2" : "p-1";
+  let padding = layout === "normal" ? "p-3" : layout === "slim" ? "p-2" : "py-1 px-2";
 
   $: {
     if (type === "info") {

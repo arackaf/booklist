@@ -22,6 +22,7 @@
 
   import SearchResults from "./SearchResults.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
+  import Alert from "$lib/components/ui/Alert.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
@@ -158,19 +159,14 @@
 
           <div class="flex relative flex-1 self-stretch">
             {#if noAvailableBooks}
-              <div in:resultsMessageIn|local out:resultsMessageOut class="alert alert-info alert-slimmer">
-                You've added all of the books from this page
+              <div in:resultsMessageIn|local>
+                <Alert type="info" layout="slimmer">You've added all of the books from this page</Alert>
               </div>
             {/if}
 
             {#if noResults}
-              <div
-                class="flex items-start justify-start alert alert-warning alert-slimmer"
-                style="backface-visibility: hidden;"
-                in:resultsMessageIn|local
-                out:resultsMessageOut
-              >
-                No results
+              <div class="flex items-start justify-start" style="backface-visibility: hidden;" in:resultsMessageIn|local out:resultsMessageOut>
+                <Alert type="warning" layout="slimmer">No results</Alert>
               </div>
             {/if}
           </div>
