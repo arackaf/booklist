@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Alert from "$lib/components/ui/Alert.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 
@@ -26,7 +27,7 @@
   $: noResultsMessage = $scans.length ? "No more recent scans" : "No recent scans";
 </script>
 
-<div class="recent-scans-module mt-5">
+<div class="recent-scans-module">
   <div class="overlay-holder">
     <div class="grid grid-cols-[75px_1fr] gap-4">
       {#each $scans as item}
@@ -37,7 +38,9 @@
         {:else}
           <div />
           <div>
-            <div class="alert alert-danger w-[40ch] inline-flex">Failed to lookup isbn {item.isbn}</div>
+            <Alert type="error" class="w-[40ch] inline-flex">
+              Failed to lookup isbn {item.isbn}
+            </Alert>
           </div>
         {/if}
       {/each}
@@ -53,7 +56,9 @@
       {#if $scans.length}
         <hr class="my-3" />
       {/if}
-      <div class="alert alert-info">{noResultsMessage}</div>
+      <Alert type="info">
+        {noResultsMessage}
+      </Alert>
     </div>
   {/if}
 </div>
