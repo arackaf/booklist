@@ -8,6 +8,7 @@
   import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
   import type { Book } from "$data/types";
+  import Alert from "$lib/components/ui/Alert.svelte";
 
   export let data;
 
@@ -77,7 +78,7 @@
         </div>
       </div>
     {:else if recommendationsLoaded}
-      <div class="alert alert-warning">Nothing found</div>
+      <Alert type="warning">Nothing found</Alert>
     {/if}
   </div>
 </div>
