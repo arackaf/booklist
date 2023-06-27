@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
+  import Alert from "$lib/components/ui/Alert.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
@@ -8,7 +9,6 @@
   import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
   import type { Book } from "$data/types";
-  import Alert from "$lib/components/ui/Alert.svelte";
 
   export let data;
 

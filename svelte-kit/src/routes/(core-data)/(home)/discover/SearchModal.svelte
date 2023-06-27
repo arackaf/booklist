@@ -9,6 +9,8 @@
 
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
+  import Alert from "$lib/components/ui/Alert.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
@@ -21,8 +23,6 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import Alert from "$lib/components/ui/Alert.svelte";
 
   export let isOpen: boolean;
   export let onHide: () => void;
