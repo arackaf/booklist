@@ -20,6 +20,7 @@
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
   import { searchState } from "./state/searchState";
+  import Alert from "$lib/components/ui/Alert.svelte";
 
   export let data;
 
@@ -112,15 +113,16 @@
     <MenuBar {isPublic} {bookViewToUse} />
 
     <div>
-      <div class="overlay-holder" style="flex: 1; padding: 0px; grid-template-columns: 100%">
+      <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
         {#if !$books.length}
           <div>
-            <div class="alert alert-warning" style="margin-top: 20px">No books found</div>
+            <Alert type="warning">No books found</Alert>
+
             {#if !hasPublicId && !hasBooks && $searchState.activeFilterCount === 0}
-              <div class="alert alert-warning" style="margin-top: 20px">
+              <Alert class="mt-4" type="warning">
                 If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
                 <a href="/settings/account-sync">here</a>
-              </div>
+              </Alert>
             {/if}
           </div>
         {:else}
