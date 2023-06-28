@@ -1,14 +1,16 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
 
+  import type { Book } from "$data/types";
+  import Alert from "$lib/components/ui/Alert.svelte";
+  import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
+
   import GridView from "./bookViews/GridView.svelte";
   import BasicView from "./bookViews/BasicView.svelte";
   import CoversView from "./bookViews/CoversView.svelte";
 
   import MenuBar from "./menuBar/MenuBar.svelte";
 
-  import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
-  import type { Book } from "$data/types";
   import { selectedBooksLookup, selectionState } from "./state/selectionState";
 
   import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
@@ -20,7 +22,6 @@
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
   import { searchState } from "./state/searchState";
-  import Alert from "$lib/components/ui/Alert.svelte";
 
   export let data;
 
