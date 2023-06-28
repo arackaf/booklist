@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Alert from "$lib/components/ui/Alert.svelte";
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
 
   export let data;
@@ -11,7 +12,7 @@
       {#if user}
         <EditPublicUserSettings {user} {isPublic} {publicLink} />
       {:else}
-        <div class="alert alert-danger">An error occured</div>
+        <Alert type="error">An error occured</Alert>
       {/if}
     </div>
   </div>
