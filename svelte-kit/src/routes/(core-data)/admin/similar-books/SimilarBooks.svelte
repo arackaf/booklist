@@ -2,6 +2,7 @@
   import { enhance } from "$app/forms";
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
 
+  import Alert from "$lib/components/ui/Alert.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
@@ -47,7 +48,7 @@
 </script>
 
 {#if hasSimilarBooks}
-  <div class="alert alert-success">
+  <Alert type="success">
     <span>
       {similarBooksCount} similar book{similarBooksCount === 1 ? "" : "s"}
     </span>
@@ -58,7 +59,8 @@
         <i class="far fa-angle-double-down" />
       {/if}
     </button>
-  </div>
+  </Alert>
+
   <SlideAnimate open={expanded}>
     <div class="flex flex-col gap-3 mt-3 max-h-80 overflow-y-scroll">
       {#each similarBooks as book}
@@ -68,14 +70,15 @@
   </SlideAnimate>
 {:else if isbn10}
   {#if book.similarBooksLastSyncDisplay}
-    <div class="alert alert-warning">
+    <Alert type="warning">
       None found. Last attempt {book.similarBooksLastSyncDisplay}
-    </div>
+    </Alert>
+
     <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
       <input type="hidden" name="id" value={book.id} />
       <ActionButton theme="primary" type="submit" running={isRunning} class="mt-3">Re-attempt</ActionButton>
     </form>
   {:else}
-    <div class="alert alert-info">Sync pending</div>
+    <Alert type="info">Sync pending</Alert>
   {/if}
 {/if}
