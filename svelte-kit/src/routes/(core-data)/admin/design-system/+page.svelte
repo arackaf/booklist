@@ -30,44 +30,32 @@
     <hr />
   </div>
 
-  <div>
-    <div class="alert alert-info">Hello World</div>
-  </div>
+  <div />
   <div>
     <Alert type="info">Hello World</Alert>
   </div>
 
-  <div>
-    <div class="alert alert-info alert-slim">Hello World</div>
-  </div>
+  <div />
   <div>
     <Alert type="info" layout="slim">Hello World</Alert>
   </div>
 
-  <div>
-    <div class="alert alert-info alert-slimmer">Hello World</div>
-  </div>
+  <div />
   <div>
     <Alert type="info" layout="slimmer">Hello World</Alert>
   </div>
 
-  <div>
-    <div class="alert alert-success">Hello World</div>
-  </div>
+  <div />
   <div>
     <Alert type="success">Hello World</Alert>
   </div>
 
-  <div>
-    <div class="alert alert-warning">Hello World</div>
-  </div>
+  <div />
   <div>
     <Alert type="warning">Hello World</Alert>
   </div>
 
-  <div>
-    <div class="alert alert-danger">Hello World</div>
-  </div>
+  <div />
   <div>
     <Alert type="error">Hello World</Alert>
   </div>
