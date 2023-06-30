@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import Alert from "$lib/components/ui/Alert.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
@@ -15,7 +16,7 @@
             <Input slot="input" placeholder="Search title" value="The Slefish Gene" />
           </InputGroup>
 
-          <div class="alert alert-warning">Did you spell this right?</div>
+          <Alert type="warning">Did you spell this right?</Alert>
         </div>
       </div>
       <div>
@@ -24,7 +25,7 @@
             <Input slot="input" placeholder="Publisher" value="Basic Books" />
           </InputGroup>
 
-          <div class="alert alert-success">Looks good to me!</div>
+          <Alert type="success">Looks good to me!</Alert>
         </div>
       </div>
       <div>
@@ -32,7 +33,7 @@
           <InputGroup labelText="Author">
             <Input slot="input" placeholder="Author" />
           </InputGroup>
-          <div class="alert alert-danger">Author is required!</div>
+          <Alert type="error">Author is required!</Alert>
         </div>
       </div>
     </div>
@@ -42,7 +43,5 @@
       <Button class="ml-auto">Close</Button>
     </div>
   </div>
-  <div class="alert alert-info mt-2" style="max-width: 550px">
-    This color theme will be saved locally, and remembered the next time you browse here (on the same device)
-  </div>
+  <Alert type="info" class="mt-2">This color theme will be saved locally, and remembered the next time you browse here (on the same device)</Alert>
 </div>
