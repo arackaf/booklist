@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "$styles/fontawesome/css/all.min.css";
-
   import { onMount } from "svelte";
   import { page } from "$app/stores";
 

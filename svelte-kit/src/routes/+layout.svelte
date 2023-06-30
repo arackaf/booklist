@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "$styles/fontawesome/css/all.min.css";
-
   import "toastify-js/src/toastify.css";
 
   import "../app.css";

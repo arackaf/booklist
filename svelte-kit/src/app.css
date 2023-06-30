@@ -4,6 +4,7 @@
 @import "./styles/dropzone.css";
 @import "./styles/toast.css";
 @import "./styles/site-styles.css";
+@import "./styles/fontawesome/css/all.min.css";
 
 @tailwind base;
 @tailwind components;
