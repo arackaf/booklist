@@ -3,6 +3,7 @@
 @import "./styles/graph-tooltip.css";
 @import "./styles/dropzone.css";
 @import "./styles/toast.css";
+@import "./styles/site-styles.css";
 
 @tailwind base;
 @tailwind components;

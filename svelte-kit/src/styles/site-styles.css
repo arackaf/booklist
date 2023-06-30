@@ -1,5 +1,3 @@
-@import "./alert-label";
-
 label.checkbox {
   display: flex;
 }
