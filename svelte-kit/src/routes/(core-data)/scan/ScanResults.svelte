@@ -3,6 +3,7 @@
   import { fade } from "svelte/transition";
   import { quadIn } from "svelte/easing";
 
+  import Alert from "$lib/components/ui/Alert.svelte";
   import Button from "$lib/components/ui/Button/Button.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import useReducer from "$lib/state/useReducer";
@@ -62,10 +63,10 @@
 
   <div style="margin-top: 10px">
     <SlideAnimate open={showIncomingQueue} stiffDown={true}>
-      <div class="alert alert-info alert-slim" style="margin-bottom: 15px">
+      <Alert type="info" layout="slim" class="mb-4">
         Your entered and failed books will show up here, briefly, although everything is being logged. The recent scans section in the main page has
         all recent scan results.
-      </div>
+      </Alert>
 
       <div style="margin-bottom: 0">
         {#each booksSaved as book (book)}
