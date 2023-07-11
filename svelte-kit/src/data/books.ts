@@ -1,7 +1,7 @@
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 
-import type { Book, BookDetails, BookSearch, SimilarBook } from "./types";
+import type { Book, BookDetails, BookImages, BookSearch, SimilarBook } from "./types";
 import {
   mySqlConnectionFactory,
   getInsertLists,
@@ -123,7 +123,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       countResp.time.toFixed(1)
     );
 
-    const books: Book[] = booksResp.rows;
+    const books: Book[] = updateBookImages(booksResp.rows);
     const totalBooks = parseInt(countResp.rows[0].total);
     const totalPages = Math.ceil(totalBooks / pageSize);
 
@@ -174,7 +174,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
         };
       });
 
-  return { editorialReviews, similarBooks };
+  return { editorialReviews, similarBooks: updateBookImages(similarBooks) };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
@@ -487,3 +487,17 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
 export const deleteBook = async (userId: string, id: number) => {
   await executeCommand("delete book", `DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
 };
+
+function updateBookImages<T extends BookImages>(books: T[]): T[] {
+  const fields = ["mobileImage", "smallImage", "mediumImage"] as const;
+  for (const book of books) {
+    for (const field of fields) {
+      const currentVal = book[field];
+      if (currentVal) {
+        book[field] = currentVal.replace("my-library-cover-uploads.s3.amazonaws.com", "d193qjyckdxivp.cloudfront.net");
+      }
+    }
+  }
+
+  return books;
+}
