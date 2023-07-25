@@ -45,6 +45,7 @@ async function doSync(book: any) {
       }
     }
 
+    console.log("Starting related items sync for", id, title);
     const allResults = await getBookRelatedItems(isbn);
 
     if (!allResults || !allResults.length) {

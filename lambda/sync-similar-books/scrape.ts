@@ -28,11 +28,13 @@ export async function getBookRelatedItems(isbn: string) {
       }
     });
 
+    console.log("Attempting url", `https://www.amazon.com/dp/${isbn}`);
     await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
+    await page.waitForTimeout(100);
 
     const title = await page.title();
     if (/page not found/i.test(title)) {
-      console.log("Not found");
+      console.log("Page not found when syncing related items");
       return null;
     }
 
@@ -228,7 +230,7 @@ export async function getAuthorFromBookPage(isbn: string) {
 
     const title = await page.title();
     if (/page not found/i.test(title)) {
-      console.log("Not found");
+      console.log("Page not found when syncing author");
       return null;
     }
 
