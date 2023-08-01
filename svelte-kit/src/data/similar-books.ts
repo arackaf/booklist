@@ -3,16 +3,27 @@ import type { BookWithSimilarItems, SimilarBook } from "./types";
 
 const LIMIT = 50;
 
-export const getBooksWithSimilarBooks = async () => {
+type QueryProps = {
+  userId?: string;
+};
+
+export const getBooksWithSimilarBooks = async ({ userId }: QueryProps = {}) => {
+  let filters = "";
+  const args: any[] = [];
+  if (userId) {
+    filters += "AND userId = ?";
+    args.push(userId);
+  }
   const eligibleBooks = await executeQuery<BookWithSimilarItems>(
     "books that might have similar books",
     `
       SELECT id, title, authors, isbn, smallImage, smallImagePreview, similarBooks, DATE_FORMAT(similarBooksLastSync, '%Y-%m-%dT%TZ') similarBooksLastSync
       FROM books 
-      WHERE CHAR_LENGTH(isbn) = 10 OR (CHAR_LENGTH(isbn) = 13 AND isbn LIKE '978%')
+      WHERE CHAR_LENGTH(isbn) = 10 OR (CHAR_LENGTH(isbn) = 13 AND isbn LIKE '978%') ${filters}
       ORDER BY id DESC
       LIMIT 50;
-    `
+    `,
+    args
   );
 
   return eligibleBooks;

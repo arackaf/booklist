@@ -5,11 +5,12 @@ import { differenceInMinutes, differenceInHours, differenceInCalendarDays, diffe
 
 import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
 
-export const load = async ({ parent }) => {
+export const load = async ({ parent, url }) => {
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
     throw redirect(302, "/");
   }
+
   const books = await getBooksWithSimilarBooks();
 
   const now = new Date(new Date().toISOString());
@@ -45,7 +46,7 @@ export const load = async ({ parent }) => {
 
 export const actions = {
   async updateRecommended({ request, locals }) {
-    const session = await locals.getSession();
+    const session = (await locals.getSession()) as any;
     if (session?.userId !== ADMIN_USER) {
       return {};
     }
