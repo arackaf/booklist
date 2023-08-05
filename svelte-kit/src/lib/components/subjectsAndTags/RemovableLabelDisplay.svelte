@@ -14,7 +14,7 @@
   let colorsPacket: LabelColors | null;
 
   $: {
-    colorsPacket = item?.name && item?.textColor ? (item as LabelColors) : null;
+    colorsPacket = item?.name && (item?.textColor || item?.backgroundColor) ? (item as LabelColors) : null;
   }
 </script>
 
