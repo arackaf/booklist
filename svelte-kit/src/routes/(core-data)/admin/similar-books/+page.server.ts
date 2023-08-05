@@ -14,8 +14,6 @@ export const load = async ({ parent, url, params }) => {
   const subjects = url.searchParams.getAll("subjects");
   const myBooks = url.searchParams.get("my-books");
 
-  console.log({ userId: parentParams.userId, subjects, myBooks });
-
   const books = await getBooksWithSimilarBooks({ userId: myBooks == "true" ? parentParams.userId : null, subjects });
 
   const now = new Date(new Date().toISOString());
