@@ -13,10 +13,12 @@
   export let href: ((s: Subject) => string | null) | null = null;
 
   $: subjectHash = toHash(subjects);
+
+  $: selectedLabels = currentlySelected.filter(id => subjectHash[id]).map(id => subjectHash[id]);
 </script>
 
 <div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
-  {#each currentlySelected.filter(id => subjectHash[id]).map(id => subjectHash[id]) as s}
+  {#each selectedLabels as s (s.id)}
     {#if onRemove}
       <RemovableLabelDisplay item={s} doRemove={() => onRemove?.(s)} />
     {:else}
