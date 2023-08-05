@@ -5,13 +5,18 @@ import { differenceInMinutes, differenceInHours, differenceInCalendarDays, diffe
 
 import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
 
-export const load = async ({ parent, url }) => {
+export const load = async ({ parent, url, params }) => {
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
     throw redirect(302, "/");
   }
 
-  const books = await getBooksWithSimilarBooks();
+  const subjects = url.searchParams.getAll("subjects");
+  const myBooks = url.searchParams.get("my-books");
+
+  console.log({ userId: parentParams.userId, subjects, myBooks });
+
+  const books = await getBooksWithSimilarBooks({ userId: myBooks == "true" ? parentParams.userId : null, subjects });
 
   const now = new Date(new Date().toISOString());
   books.forEach(book => {
