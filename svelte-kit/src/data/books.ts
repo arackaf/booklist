@@ -12,8 +12,8 @@ import {
   type TransactionItem,
   db
 } from "./dbUtils";
-import { books } from "../db/schema";
-import { and, eq, sql } from "drizzle-orm";
+import { books, booksTags } from "../db/schema";
+import { and, eq, sql, exists } from "drizzle-orm";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -54,20 +54,32 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     return EMPTY_BOOKS_RESULTS;
   }
 
-  const authorSearch = "Stephen Jay Gould";
-  userId = "123";
+  const authorSearch = "S";
+  //userId = "123";
 
-  const x = db
+  const tag = 34;
+
+  const queryAST = db
     .select()
     .from(books)
     .where(
       and(
         // yo Prettier, chill and leave the line breaks
         eq(books.userId, userId),
-        sql`${books.authors}->>"$" LIKE ${authorSearch}`
+        sql`LOWER(${books.authors}->>"$") LIKE ${`%${authorSearch.toLowerCase()}%`}`,
+        exists(
+          db
+            .select({ _: sql`1` })
+            .from(booksTags)
+            .where(and(eq(books.id, booksTags.book), eq(booksTags.tag, tag)))
+        )
       )
-    )
-    .toSQL();
+    );
+
+  const res = await queryAST.execute();
+  console.log(res.length);
+
+  const x = queryAST.toSQL();
 
   console.log("\n\nBooks Query:\n  ", x.sql, "\n  ", x.params, "\n\n");
 
