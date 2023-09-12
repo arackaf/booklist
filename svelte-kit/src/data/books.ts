@@ -13,7 +13,7 @@ import {
   db
 } from "./dbUtils";
 import { books, booksTags } from "../db/schema";
-import { and, eq, sql, exists } from "drizzle-orm";
+import { and, eq, sql, exists, inArray } from "drizzle-orm";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -71,7 +71,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
           db
             .select({ _: sql`1` })
             .from(booksTags)
-            .where(and(eq(books.id, booksTags.book), eq(booksTags.tag, tag)))
+            .where(and(eq(books.id, booksTags.book), inArray(booksTags.tag, [tag, 35, 36])))
         )
       )
     );
