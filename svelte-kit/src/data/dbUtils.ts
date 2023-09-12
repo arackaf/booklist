@@ -1,10 +1,14 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
-
+import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { MYSQL_CONNECTION_STRING } from "$env/static/private";
+
+import * as schema from "../db/schema";
 
 export const mySqlConnectionFactory = new Client({
   url: MYSQL_CONNECTION_STRING
 });
+
+export const db = drizzle(mySqlConnectionFactory.connection(), { schema });
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
 

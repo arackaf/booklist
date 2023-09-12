@@ -13,6 +13,7 @@ const config = {
     alias: {
       $styles: "src/styles",
       $lib: "src/lib",
+      $db: "src/db",
       $data: "src/data",
       $lambda: "src/lambda"
     }

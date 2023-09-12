@@ -9,8 +9,11 @@ import {
   executeQueryFirst,
   executeQuery,
   executeCommand,
-  type TransactionItem
+  type TransactionItem,
+  db
 } from "./dbUtils";
+import { books } from "../db/schema";
+import { and, eq, sql } from "drizzle-orm";
 
 const defaultBookFields: (keyof Book)[] = [
   "id",
@@ -50,6 +53,24 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
+
+  const authorSearch = "Stephen Jay Gould";
+  userId = "123";
+
+  const x = db
+    .select()
+    .from(books)
+    .where(
+      and(
+        // yo Prettier, chill and leave the line breaks
+        eq(books.userId, userId),
+        sql`${books.authors}->>"$" LIKE ${authorSearch}`
+      )
+    )
+    .toSQL();
+
+  console.log("\n\nBooks Query:\n  ", x.sql, "\n  ", x.params, "\n\n");
+
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
   const pageSize = Math.min(searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE, 100);
   const skip = (page - 1) * pageSize;
