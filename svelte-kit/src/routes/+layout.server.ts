@@ -1,7 +1,8 @@
+import type { ServerLoadEvent } from "@sveltejs/kit";
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { getUxState } from "$lib/util/uxState";
 
-export async function load({ locals, isDataRequest, request, cookies, depends }) {
+export async function load({ locals, isDataRequest, request, cookies, depends }: ServerLoadEvent) {
   depends("app:root");
 
   const session = await locals.getSession();

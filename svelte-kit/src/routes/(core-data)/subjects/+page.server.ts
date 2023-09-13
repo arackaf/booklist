@@ -1,9 +1,10 @@
+import type { RequestEvent } from "@sveltejs/kit";
 import type { SubjectEditFields } from "$data/dbUtils";
 import { saveSubject, deleteSubject } from "$data/subjects";
 import { toJson } from "$lib/util/formDataHelpers";
 
 export const actions = {
-  async saveSubject({ request, locals }) {
+  async saveSubject({ request, locals }: RequestEvent) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
@@ -18,7 +19,7 @@ export const actions = {
 
     await saveSubject(session.userId, fields.id, fields);
   },
-  async deleteSubject({ request, locals }) {
+  async deleteSubject({ request, locals }: RequestEvent) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
