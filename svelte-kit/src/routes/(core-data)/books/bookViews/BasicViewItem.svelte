@@ -19,7 +19,6 @@
 
 <div
   use:pan={{ delay: 0 }}
-  use:swipe
   on:pan={e => onPan("Pan", e)}
   on:panup={e => onPan("Pan Up", e)}
   on:pandown={e => onPan("Pan Down", e)}
