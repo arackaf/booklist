@@ -5,7 +5,7 @@ import { differenceInMinutes, differenceInHours, differenceInCalendarDays, diffe
 
 import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
 
-export const load = async ({ parent, url, params }) => {
+export const load = async ({ parent, url }) => {
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
     throw redirect(302, "/");
@@ -14,7 +14,7 @@ export const load = async ({ parent, url, params }) => {
   const subjects = url.searchParams.getAll("subjects");
   const myBooks = url.searchParams.get("my-books");
 
-  const books = await getBooksWithSimilarBooks({ userId: myBooks == "true" ? parentParams.userId : null, subjects });
+  const books = await getBooksWithSimilarBooks({ userId: myBooks == "true" ? parentParams.userId : undefined, subjects });
 
   const now = new Date(new Date().toISOString());
   books.forEach(book => {

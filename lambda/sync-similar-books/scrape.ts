@@ -18,7 +18,7 @@ export async function getBookRelatedItems(isbn: string) {
       });
   try {
     const page: Page = await browser.newPage({
-      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
+      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
       extraHTTPHeaders: {
         accept:
           "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -40,20 +40,33 @@ export async function getBookRelatedItems(isbn: string) {
 
     for (let i = 1; i <= 15; i++) {
       try {
-        await page.evaluate(() => window.scrollTo(0, i * 700));
-        await page.waitForTimeout(1000);
+        await page.evaluate(() => window.scrollTo(0, i * 300));
+        await page.waitForTimeout(250);
       } catch (er) {}
     }
 
-    const allCarousels = await page.locator("[data-a-carousel-options]").all();
+    let allCarousels = await page.locator("[data-a-carousel-options]").all();
+    console.log("Found", allCarousels.length, "carousels");
+    if (!allCarousels.length) {
+      console.log("Trying again ...");
+      try {
+        await page.waitForSelector("[data-a-carousel-options]", { timeout: 5000 });
+        allCarousels = await page.locator("[data-a-carousel-options]").all();
+        console.log("Second attempt found:", allCarousels.length, "carousels");
+      } catch (er) {
+        console.log("Second attemt failed");
+      }
+    }
 
     const allBookResults = new Map();
 
     for (const carousel of allCarousels) {
+      console.log("Processing carousel");
       const carouselEl = await carousel.elementHandle();
       const headerEl = await carouselEl.$(".a-carousel-heading");
 
       if (headerEl == null) {
+        console.log("No carousel heading found");
         continue;
       } else {
         const results = await processCarousel(page, carousel);
@@ -120,7 +133,6 @@ async function processCarousel(page, carousel) {
 }
 
 async function getResults(carousel) {
-  const result = [];
   const resultsMap = new Map();
 
   const cards = await carousel.locator("li.a-carousel-card").all();
@@ -142,8 +154,10 @@ async function getBookInfo(card) {
   } else {
     const author = await getAuthor(card);
     if (author) {
+      console.log("Found author", author);
       return { ...coreBookData, author };
     } else {
+      console.log("No author found");
       return null;
     }
   }
@@ -166,6 +180,7 @@ async function getCoreData(card) {
         if (isbnMaybe.length >= 10 && [...isbnMaybe.slice(0, 9)].every(c => !isNaN(c))) {
           if (!isbn) {
             isbn = isbnMaybe;
+            console.log("Found isbn", isbn);
           } else if (isbn !== isbnMaybe) {
             continue;
           }
@@ -185,6 +200,7 @@ async function getCoreData(card) {
       }
     }
   }
+  console.log("Results found", { isbn, title, img });
   if (isbn && title && img) {
     return { isbn: isbn.toUpperCase(), title: title.trim(), img };
   }
