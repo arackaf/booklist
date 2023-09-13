@@ -18,6 +18,12 @@ label.checkbox > input {
   border-color: var(--primary-3) !important;
 }
 
+@media (max-width: 600px) {
+  .svelte-helpers-modal-content {
+    margin-top: 10px !important;
+  }
+}
+
 .sr {
   border: 0;
   clip: rect(0, 0, 0, 0);
