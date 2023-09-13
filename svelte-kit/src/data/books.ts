@@ -13,9 +13,28 @@ import {
   db
 } from "./dbUtils";
 import { books, booksTags } from "../db/schema";
-import { and, eq, sql, exists, inArray } from "drizzle-orm";
+import { and, eq, sql, exists, inArray, type SQLWrapper } from "drizzle-orm";
 
-const defaultBookFields: (keyof Book)[] = [
+const defaultBookFields = {
+  id: books.id,
+  title: books.title,
+  pages: books.pages,
+  userId: books.userId,
+  authors: books.authors,
+  isbn: books.isbn,
+  publisher: books.publisher,
+  publicationDate: books.publicationDate,
+  isRead: books.isRead,
+  dateAdded: books.dateAdded,
+  mobileImage: books.mobileImage,
+  mobileImagePreview: books.mobileImagePreview,
+  smallImage: books.smallImage,
+  smallImagePreview: books.smallImagePreview,
+  mediumImage: books.mediumImage,
+  mediumImagePreview: books.mediumImagePreview
+};
+
+const defaultBookFields_old: (keyof Book)[] = [
   "id",
   "title",
   "pages",
@@ -34,8 +53,30 @@ const defaultBookFields: (keyof Book)[] = [
   "mediumImagePreview"
 ];
 
-const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
-const iosBookFields = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
+const compactBookFields = {
+  id: books.id,
+  title: books.title,
+  authors: books.authors,
+  isbn: books.isbn,
+  publisher: books.publisher,
+  isRead: books.isRead,
+  smallImage: books.smallImage,
+  smallImagePreview: books.smallImagePreview
+};
+
+const iosBookFields = {
+  id: books.id,
+  title: books.title,
+  authors: books.authors,
+  isRead: books.isRead,
+  smallImage: books.smallImage,
+  smallImagePreview: books.smallImagePreview,
+  mediumImage: books.mediumImage,
+  mediumImagePreview: books.mediumImagePreview
+};
+
+const compactBookFields_old = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
+const iosBookFields_old = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
 
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
@@ -60,7 +101,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   const tag = 34;
 
   const queryAST = db
-    .select()
+    .select(defaultBookFields)
     .from(books)
     .where(
       and(
@@ -130,7 +171,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
 
-    const fieldsToSelect = resultSet === "compact" ? compactBookFields : resultSet === "ios" ? iosBookFields : defaultBookFields;
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields_old : resultSet === "ios" ? iosBookFields_old : defaultBookFields_old;
     const sortExpression = getSort(sort);
 
     const mainBooksProjection = `
