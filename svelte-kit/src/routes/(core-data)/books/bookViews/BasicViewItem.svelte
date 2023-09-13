@@ -31,7 +31,7 @@
       <BookCover size="mobile" {book} />
     </div>
     <div style="overflow: hidden">
-      <div style="display: flex; flex-direction: column; height: 100%">
+      <div class="flex flex-col h-full overflow-hidden">
         <span class="text-sm leading-[normal] truncate">{book.title}</span>
         <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
       </div>
