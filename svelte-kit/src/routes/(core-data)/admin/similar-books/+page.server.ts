@@ -5,7 +5,7 @@ import { differenceInMinutes, differenceInHours, differenceInCalendarDays, diffe
 
 import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
 
-export const load = async ({ parent, url, params }) => {
+export const load = async ({ parent, url }) => {
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
     throw redirect(302, "/");
