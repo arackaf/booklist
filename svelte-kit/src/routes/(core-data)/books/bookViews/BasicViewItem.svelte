@@ -3,86 +3,30 @@
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
-
-  import { page } from "$app/stores";
-  import { runDelete } from "$lib/state/dataUpdates";
-  import { enhance } from "$app/forms";
-  import { selectionState } from "../state/selectionState";
 
   export let book: Book;
   export let isPublic: boolean;
 
-  let showActions = false;
-
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
-
-  let pendingDelete = false;
-  let deleting = false;
-
-  const deleteBook = () => {
-    deleting = true;
-
-    return async ({ result }: any) => {
-      deleting = false;
-      pendingDelete = false;
-
-      if (result.data.success) {
-        runDelete($page.data.books, book.id);
-        $page.data.totalBooks.update((x: number) => x - 1);
-        selectionState.unSelectBook(book.id);
-      }
-    };
-  };
-
-  function itemClicked(evt: any) {
-    const elClicked = evt.target.tagName;
-    if (elClicked === "I" || elClicked === "BUTTON") {
-      return;
-    }
-
-    showActions = !showActions;
-  }
 </script>
 
-<div
-  class="py-1 border-b border-b-neutral-400 listGroupItem first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10"
-  on:click={itemClicked}
-  on:keypress={() => {}}
->
+<div class="py-1 border-b border-b-neutral-400 listGroupItem first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10">
   <div style="display: flex">
-    <div style="margin-right: 5px; min-width: 55px">
+    <div style="margin-right: 5px; min-width: 40px">
       <BookCover size="mobile" {book} />
     </div>
-    <div style="overflow: hidden">
-      <form method="POST" action="?/deleteBook" use:enhance={deleteBook} style="display: flex;">
-        <input type="hidden" name="id" value={book.id} />
-        <div class="flex flex-col h-full overflow-hidden">
-          <span class="text-sm leading-[normal] truncate">{book.title}</span>
-          <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
-          {#if showActions}
-            <div class="flex flex-row gap-2 mt-auto pt-2">
-              {#if !isPublic}
-                <Button type="button" theme="primary" size="sm" icon={true} aria-label="Edit book" on:click={() => editBook(book)}>
-                  <i class="fal fa-fw fa-pencil-alt" />
-                </Button>
-                <Button type="button" size="sm" icon={true} aria-label="Delete book" on:click={() => (pendingDelete = true)}>
-                  <i class="far fa-fw fa-trash" />
-                </Button>
-              {/if}
-              {#if pendingDelete}
-                <ActionButton running={deleting} size="sm" theme="danger">Confirm Delete</ActionButton>
-              {/if}
-              {#if pendingDelete}
-                <Button type="button" size="sm" on:click={() => (pendingDelete = false)} disabled={deleting}>Cancel</Button>
-              {/if}
-            </div>
-          {/if}
-        </div>
-      </form>
+    <div class="overflow-hidden flex-1 mr-1">
+      <div class="flex flex-col h-full overflow-hidden">
+        <span class="text-sm leading-[normal] truncate">{book.title}</span>
+        <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
+      </div>
+    </div>
+    <div class="self-stretch opacity-70 flex">
+      <button class="raw-button" on:click={() => editBook(book)}>
+        <i class="fal fa-pencil fa-fw" />
+      </button>
     </div>
   </div>
 </div>
