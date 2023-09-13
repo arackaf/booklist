@@ -505,6 +505,7 @@ pencil:
       - write
   styles:
     - regular
+    - light
   unicode: f040
   voted: false
 pencil-alt:
