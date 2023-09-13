@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="self-stretch opacity-70 flex">
-      <button class="raw-button" on:click={() => editBook(book)}>
+      <button aria-label="Edit" class="raw-button" on:click={() => editBook(book)}>
         <i class="fal fa-pencil fa-fw" />
       </button>
     </div>
