@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { pan, swipe } from "svelte-gestures";
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
@@ -6,9 +7,26 @@
 
   export let book: Book;
   export let isPublic: boolean;
+
+  function onPan(msg: string, e: any) {
+    console.log(msg, e);
+  }
+
+  function onSwipe(e: any) {
+    console.log("Swipe", e);
+  }
 </script>
 
-<div class="py-1 border-b border-b-neutral-400 listGroupItem first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10">
+<div
+  use:pan={{ delay: 0 }}
+  use:swipe
+  on:pan={e => onPan("Pan", e)}
+  on:panup={e => onPan("Pan Up", e)}
+  on:pandown={e => onPan("Pan Down", e)}
+  on:panmove={e => onPan("Pan Move", e)}
+  on:swipe={onSwipe}
+  class="py-1 border-b border-b-neutral-400 listGroupItem first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10"
+>
   <div style="display: flex">
     <div style="margin-right: 5px; min-width: 55px">
       <BookCover size="mobile" {book} />
