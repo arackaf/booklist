@@ -60,7 +60,7 @@
     <div style="overflow: hidden">
       <form method="POST" action="?/deleteBook" use:enhance={deleteBook} style="display: flex;">
         <input type="hidden" name="id" value={book.id} />
-        <div style="display: flex; flex-direction: column; height: 100%">
+        <div class="flex flex-col h-full overflow-hidden">
           <span class="text-sm leading-[normal] truncate">{book.title}</span>
           <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
           {#if showActions}
