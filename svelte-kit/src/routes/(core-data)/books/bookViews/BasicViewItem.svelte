@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getContext } from "svelte";
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
@@ -6,6 +7,9 @@
 
   export let book: Book;
   export let isPublic: boolean;
+
+  const booksModuleContext: any = getContext("books-module-context");
+  const { editBook } = booksModuleContext;
 </script>
 
 <div class="py-1 border-b border-b-neutral-400 listGroupItem first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10">
@@ -19,8 +23,10 @@
         <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
       </div>
     </div>
-    <div class="self-center opacity-70">
-      <i class="fal fa-pencil fa-fw" />
+    <div class="self-stretch opacity-70 flex">
+      <button class="raw-button" on:click={() => editBook(book)}>
+        <i class="fal fa-pencil fa-fw" />
+      </button>
     </div>
   </div>
 </div>
