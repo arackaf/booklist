@@ -5,7 +5,7 @@ export const books = mysqlTable("books", {
   userId: varchar("userId", { length: 50 }).notNull(),
   dateAdded: datetime("dateAdded").notNull(),
   title: varchar("title", { length: 250 }).notNull(),
-  authors: json("authors"),
+  authors: json("authors").$type<string[]>(),
   isbn: varchar("isbn", { length: 25 }),
   pages: int("pages"),
   isRead: tinyint("isRead").notNull(),
