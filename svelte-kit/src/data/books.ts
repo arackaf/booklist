@@ -13,7 +13,8 @@ import {
   db
 } from "./dbUtils";
 import { books, booksTags } from "../db/schema";
-import { and, eq, sql, exists, inArray, type SQLWrapper } from "drizzle-orm";
+import { and, eq, sql, like, exists, inArray } from "drizzle-orm";
+import type { InferModelFromColumns, SQLWrapper } from "drizzle-orm";
 
 const defaultBookFields = {
   id: books.id,
@@ -33,6 +34,8 @@ const defaultBookFields = {
   mediumImage: books.mediumImage,
   mediumImagePreview: books.mediumImagePreview
 };
+
+export type FullBook = InferModelFromColumns<typeof defaultBookFields>;
 
 const defaultBookFields_old: (keyof Book)[] = [
   "id",
@@ -90,16 +93,10 @@ const getSort = (sortPack: any = { id: -1 }) => {
   return `ORDER BY ${field} ${dir}`;
 };
 
-export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
-  if (!userId) {
-    return EMPTY_BOOKS_RESULTS;
-  }
+/*
 
-  const authorSearch = "S";
-  //userId = "123";
-
-  const tag = 34;
-
+  const authorSearch = "";
+  const tag = 111;
   const queryAST = db
     .select(defaultBookFields)
     .from(books)
@@ -124,6 +121,15 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 
   console.log("\n\nBooks Query:\n  ", x.sql, "\n  ", x.params, "\n\n");
 
+*/
+
+export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
+  if (!userId) {
+    return EMPTY_BOOKS_RESULTS;
+  }
+
+  const conditions: SQLWrapper[] = [];
+
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
   const pageSize = Math.min(searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE, 100);
   const skip = (page - 1) * pageSize;
@@ -133,26 +139,48 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 
     const start = +new Date();
 
+    conditions.push(eq(books.userId, userId));
+
     const filters = ["userId = ?"];
     const args: any[] = [userId];
 
     if (search) {
+      conditions.push(like(books.title, `%${search}%`));
       filters.push("title LIKE ?");
       args.push(`%${search}%`);
     }
     if (publisher) {
+      conditions.push(like(books.publisher, `%${publisher}%`));
       filters.push("publisher LIKE ?");
       args.push(`%${publisher}%`);
     }
     if (author) {
+      conditions.push(sql`LOWER(${books.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
       filters.push(`LOWER(authors->>"$") LIKE ?`);
       args.push(`%${author.toLowerCase()}%`);
     }
     if (isRead != null) {
+      conditions.push(eq(books.isRead, isRead ? 1 : 0));
       filters.push("isRead = ?");
       args.push(isRead);
     }
     if (tags.length) {
+      conditions.push(
+        exists(
+          db
+            .select({ _: sql`1` })
+            .from(booksTags)
+            .where(
+              and(
+                eq(books.id, booksTags.book),
+                inArray(
+                  booksTags.tag,
+                  tags.map(t => Number(t))
+                )
+              )
+            )
+        )
+      );
       filters.push("EXISTS (SELECT 1 FROM books_tags bt WHERE bt.book = b.id AND bt.tag IN (?))");
       args.push(tags);
     }
@@ -197,12 +225,12 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       countResp.time.toFixed(1)
     );
 
-    const books: Book[] = updateBookImages(booksResp.rows);
+    const booksResultOld: Book[] = updateBookImages(booksResp.rows);
     const totalBooks = parseInt(countResp.rows[0].total);
     const totalPages = Math.ceil(totalBooks / pageSize);
 
     const arrayFieldsToInit = ["subjects", "tags"] as (keyof Book)[];
-    books.forEach(book => {
+    booksResultOld.forEach(book => {
       arrayFieldsToInit.forEach(arr => {
         if (!Array.isArray(book[arr])) {
           (book as any)[arr] = [] as string[];
@@ -215,7 +243,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     });
 
-    return { books, totalBooks, page, totalPages };
+    return { books: booksResultOld, totalBooks, page, totalPages };
   } catch (er) {
     console.log("er", er);
   }
