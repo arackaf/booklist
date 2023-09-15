@@ -3,12 +3,25 @@ import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { MYSQL_CONNECTION_STRING } from "$env/static/private";
 
 import * as schema from "../db/schema";
+import type { MySqlColumn } from "drizzle-orm/mysql-core";
+import type { SQL } from "drizzle-orm";
 
 export const mySqlConnectionFactory = new Client({
   url: MYSQL_CONNECTION_STRING
 });
 
 export const db = drizzle(mySqlConnectionFactory.connection(), { schema });
+
+type ExtractTypeFromMySqlColumn<T extends MySqlColumn> = T extends MySqlColumn<infer U>
+  ? U extends { notNull: true }
+    ? U["data"]
+    : U["data"] | null
+  : never;
+
+type ExtractSqlType<T> = T extends MySqlColumn ? ExtractTypeFromMySqlColumn<T> : T extends SQL.Aliased<infer V> ? V : never;
+export type InferSelection<T> = {
+  [K in keyof T]: ExtractSqlType<T[K]>;
+};
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
 

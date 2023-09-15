@@ -1,5 +1,6 @@
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
+import { type SQLWrapper, and, or, not, eq, sql, like, exists, inArray, desc } from "drizzle-orm";
 
 import type { Book, BookDetails, BookImages, BookSearch, SimilarBook } from "./types";
 import {
@@ -10,11 +11,10 @@ import {
   executeQuery,
   executeCommand,
   type TransactionItem,
-  db
+  db,
+  type InferSelection
 } from "./dbUtils";
-import { books, booksSubjects, booksTags, subjects as subjectsTable, tags as tagsTable } from "../db/schema";
-import { and, or, not, eq, sql, like, exists, inArray, desc } from "drizzle-orm";
-import type { InferModelFromColumns, SQLWrapper } from "drizzle-orm";
+import { books, booksSubjects, booksTags, subjects as subjectsTable } from "../db/schema";
 
 const defaultBookFields = {
   id: books.id,
@@ -39,7 +39,7 @@ const defaultBookFields = {
   mediumImagePreview: books.mediumImagePreview
 };
 
-export type FullBook = InferModelFromColumns<typeof defaultBookFields>;
+type FullBook = InferSelection<typeof defaultBookFields>;
 
 const defaultBookFields_old: (keyof Book)[] = [
   "id",
