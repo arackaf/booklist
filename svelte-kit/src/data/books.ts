@@ -13,11 +13,15 @@ import {
   db
 } from "./dbUtils";
 import { books, booksSubjects, booksTags, subjects as subjectsTable, tags as tagsTable } from "../db/schema";
-import { and, or, not, eq, sql, like, exists, inArray } from "drizzle-orm";
+import { and, or, not, eq, sql, like, exists, inArray, desc } from "drizzle-orm";
 import type { InferModelFromColumns, SQLWrapper } from "drizzle-orm";
 
 const defaultBookFields = {
   id: books.id,
+  tags: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as("tags"),
+  subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
+    "subjects"
+  ),
   title: books.title,
   pages: books.pages,
   userId: books.userId,
@@ -248,6 +252,23 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 
     const fieldsToSelect = resultSet === "compact" ? compactBookFields_old : resultSet === "ios" ? iosBookFields_old : defaultBookFields_old;
     const sortExpression = getSort(sort);
+
+    const res = await db
+      .select(defaultBookFields)
+      .from(books)
+      .where(and(...conditions))
+      .orderBy(desc(books.id));
+
+    console.log(res[0], "\n");
+    console.log(res[1], "\n");
+
+    const resQuery = await db
+      .select(defaultBookFields)
+      .from(books)
+      .where(and(...conditions))
+      .toSQL();
+
+    console.log("Latest query\n\n", resQuery.sql, "\n", resQuery.params, "\n");
 
     const mainBooksProjection = `
       SELECT 
