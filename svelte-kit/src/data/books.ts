@@ -12,8 +12,8 @@ import {
   type TransactionItem,
   db
 } from "./dbUtils";
-import { books, booksTags } from "../db/schema";
-import { and, eq, sql, like, exists, inArray } from "drizzle-orm";
+import { books, booksSubjects, booksTags, subjects as subjectsTable, tags as tagsTable } from "../db/schema";
+import { and, or, not, eq, sql, like, exists, inArray } from "drizzle-orm";
 import type { InferModelFromColumns, SQLWrapper } from "drizzle-orm";
 
 const defaultBookFields = {
@@ -186,6 +186,22 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     }
     if (subjects.length) {
       if (!searchChildSubjects) {
+        conditions.push(
+          exists(
+            db
+              .select({ _: sql`1` })
+              .from(booksSubjects)
+              .where(
+                and(
+                  eq(books.id, booksSubjects.book),
+                  inArray(
+                    booksSubjects.subject,
+                    tags.map(t => Number(t))
+                  )
+                )
+              )
+          )
+        );
         filters.push("EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id AND bs.subject IN (?))");
         args.push(subjects);
       } else {
@@ -194,8 +210,39 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
           `EXISTS (SELECT 1 FROM books_subjects bs JOIN subjects s ON bs.subject = s.id WHERE bs.book = b.id AND (bs.subject IN (?) OR ${pathMatch}))`
         );
         args.push(subjects, ...subjects.map(id => `%,${id},%`));
+
+        conditions.push(
+          exists(
+            db
+              .select({ _: sql`1` })
+              .from(booksSubjects)
+              .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
+              .where(
+                and(
+                  eq(books.id, booksSubjects.book),
+                  or(
+                    inArray(
+                      booksSubjects.subject,
+                      subjects.map(s => Number(s))
+                    ),
+                    ...subjects.map(s => like(subjectsTable.path, `%${s}%`))
+                  )
+                )
+              )
+          )
+        );
       }
     } else if (noSubjects) {
+      conditions.push(
+        not(
+          exists(
+            db
+              .select({ _: sql`1` })
+              .from(booksSubjects)
+              .where(eq(booksSubjects.book, books.id))
+          )
+        )
+      );
       filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
 
