@@ -1,8 +1,8 @@
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
+import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc, getTableColumns } from "drizzle-orm";
 
-import type { Book, BookDetails, BookImages, BookSearch, SimilarBook } from "./types";
+import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { getInsertLists, runTransaction, executeQuery, executeCommand, type TransactionItem, db, type InferSelection } from "./dbUtils";
 import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "../db/schema";
 import { execute } from "../db/dbUtils";
@@ -205,16 +205,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
   //executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
 
   const similarBooksQuery = db
-    .select({
-      id: similarBooksTable.id,
-      title: similarBooksTable.title,
-      isbn: similarBooksTable.isbn,
-      authors: similarBooksTable.authors,
-      mobileImage: similarBooksTable.mobileImage,
-      mobileImagePreview: similarBooksTable.mobileImagePreview,
-      smallImage: similarBooksTable.smallImage,
-      smallImagePreview: similarBooksTable.smallImagePreview
-    })
+    .select(getTableColumns(similarBooksTable))
     .from(booksTable)
     .leftJoin(similarBooksTable, sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`)
     .where(and(eq(booksTable.id, Number(id)), isNotNull(similarBooksTable.id)));
