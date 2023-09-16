@@ -253,15 +253,21 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       .limit(pageSize)
       .offset(skip);
 
+    const booksCount = db
+      .select({ total: sql<string>`count(*)` })
+      .from(booksTable)
+      .where(and(...conditions));
+
     const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
 
-    const [books, countResp] = await Promise.all([booksReq, countReq]);
+    const [books, countResp] = await Promise.all([booksReq, booksCount]);
     const end = +new Date();
 
     console.log(`Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`, end - start);
 
     updateBookImages(books);
-    const totalBooks = parseInt(countResp.rows[0].total);
+    const totalBooks = parseInt(countResp[0].total);
+
     const totalPages = Math.ceil(totalBooks / pageSize);
 
     return { books, totalBooks, page, totalPages };
