@@ -54,7 +54,7 @@
         <div class="grid grid-cols-4 gap-x-4 gap-y-1">
           <span>Tags:</span>
 
-          <div class="col-span-3">
+          <div class="col-span-3 self-center">
             {#if book?.tags?.length}
               <DisplaySelectedTags {tags} currentlySelected={book.tags || []} />
             {:else}
@@ -62,11 +62,9 @@
             {/if}
           </div>
           <span>Subjects:</span>
-          <div class="col-span-3">
+          <div class="col-span-3 self-center">
             {#if book?.subjects?.length}
-              <div class="flex items-center">
-                <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
-              </div>
+              <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
             {:else}
               <span style="fontStyle: italic">None</span>
             {/if}
