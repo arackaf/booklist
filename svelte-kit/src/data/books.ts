@@ -43,25 +43,6 @@ const defaultBookFields = {
 
 type FullBook = InferSelection<typeof defaultBookFields>;
 
-const defaultBookFields_old: (keyof Book)[] = [
-  "id",
-  "title",
-  "pages",
-  "userId",
-  "authors",
-  "isbn",
-  "publisher",
-  "publicationDate",
-  "isRead",
-  "dateAdded",
-  "mobileImage",
-  "mobileImagePreview",
-  "smallImage",
-  "smallImagePreview",
-  "mediumImage",
-  "mediumImagePreview"
-];
-
 const compactBookFields = {
   id: booksTable.id,
   title: booksTable.title,
@@ -87,18 +68,6 @@ const iosBookFields = {
 const compactBookFields_old = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
 const iosBookFields_old = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
 
-const getSort_old = (sortPack: any = { id: -1 }) => {
-  const [rawField, rawDir] = Object.entries(sortPack)[0];
-
-  if (rawField == "id") {
-    return rawDir === -1 ? "ORDER BY dateAdded DESC, id DESC" : "ORDER BY dateAdded, id";
-  }
-
-  const field = rawField === "title" ? "title" : "pages";
-  const dir = rawDir === -1 ? "DESC" : "ASC";
-  return `ORDER BY ${field} ${dir}`;
-};
-
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
 
@@ -122,34 +91,21 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   const skip = (page - 1) * pageSize;
 
   try {
-    const conn = mySqlConnectionFactory.connection();
-
     const start = +new Date();
 
     conditions.push(eq(booksTable.userId, userId));
 
-    const filters = ["userId = ?"];
-    const args: any[] = [userId];
-
     if (search) {
       conditions.push(like(booksTable.title, `%${search}%`));
-      filters.push("title LIKE ?");
-      args.push(`%${search}%`);
     }
     if (publisher) {
       conditions.push(like(booksTable.publisher, `%${publisher}%`));
-      filters.push("publisher LIKE ?");
-      args.push(`%${publisher}%`);
     }
     if (author) {
       conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
-      filters.push(`LOWER(authors->>"$") LIKE ?`);
-      args.push(`%${author.toLowerCase()}%`);
     }
     if (isRead != null) {
       conditions.push(eq(booksTable.isRead, isRead ? 1 : 0));
-      filters.push("isRead = ?");
-      args.push(isRead);
     }
     if (tags.length) {
       conditions.push(
@@ -168,8 +124,6 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
             )
         )
       );
-      filters.push("EXISTS (SELECT 1 FROM books_tags bt WHERE bt.book = b.id AND bt.tag IN (?))");
-      args.push(tags);
     }
     if (subjects.length) {
       if (!searchChildSubjects) {
@@ -189,14 +143,8 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
               )
           )
         );
-        filters.push("EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id AND bs.subject IN (?))");
-        args.push(subjects);
       } else {
         const pathMatch = subjects.map(_ => "s.path LIKE ?").join(" OR ");
-        filters.push(
-          `EXISTS (SELECT 1 FROM books_subjects bs JOIN subjects s ON bs.subject = s.id WHERE bs.book = b.id AND (bs.subject IN (?) OR ${pathMatch}))`
-        );
-        args.push(subjects, ...subjects.map(id => `%,${id},%`));
 
         conditions.push(
           exists(
@@ -230,20 +178,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
           )
         )
       );
-      filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
     }
-
-    const fieldsToSelect = resultSet === "compact" ? compactBookFields_old : resultSet === "ios" ? iosBookFields_old : defaultBookFields_old;
-    const sortExpression = getSort_old(sort);
-
-    const mainBooksProjection = `
-      SELECT 
-        ${fieldsToSelect.join(",")},
-        (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
-        (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects`;
-    const filterBody = `
-      FROM books b 
-      WHERE ${filters.join(" AND ")}`;
 
     const booksReq = db
       .select(defaultBookFields)
@@ -258,16 +193,13 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       .from(booksTable)
       .where(and(...conditions));
 
-    const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
-
     const [books, countResp] = await Promise.all([booksReq, booksCount]);
     const end = +new Date();
 
-    console.log(`Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`, end - start);
+    console.log(`Query: books page ${page}+${pageSize} ${sort} latency:`, end - start);
 
     updateBookImages(books);
     const totalBooks = parseInt(countResp[0].total);
-
     const totalPages = Math.ceil(totalBooks / pageSize);
 
     return { books, totalBooks, page, totalPages };
