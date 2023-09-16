@@ -104,7 +104,6 @@ export type SimilarBook = {
   title: string;
   isbn: string;
   authors: string[];
-  asin: string;
 } & BookImages;
 
 export type BookDetails = {
