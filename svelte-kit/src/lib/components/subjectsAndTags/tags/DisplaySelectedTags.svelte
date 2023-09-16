@@ -20,7 +20,7 @@
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}
-      <LabelDisplay item={t} href={href != null ? href(t) : null} />
+      <LabelDisplay class="flex" item={t} href={href != null ? href(t) : null} />
     {/if}
   {/each}
 </div>
