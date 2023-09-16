@@ -134,8 +134,6 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
           )
         );
       } else {
-        const pathMatch = subjects.map(_ => "s.path LIKE ?").join(" OR ");
-
         conditions.push(
           exists(
             db
