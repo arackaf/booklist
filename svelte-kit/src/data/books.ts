@@ -1,6 +1,6 @@
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { type SQLWrapper, and, or, not, eq, sql, like, exists, inArray, desc } from "drizzle-orm";
+import { type SQLWrapper, and, or, not, eq, sql, like, exists, inArray, desc, asc } from "drizzle-orm";
 
 import type { Book, BookDetails, BookImages, BookSearch, SimilarBook } from "./types";
 import {
@@ -14,29 +14,31 @@ import {
   db,
   type InferSelection
 } from "./dbUtils";
-import { books, booksSubjects, booksTags, subjects as subjectsTable } from "../db/schema";
+import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable } from "../db/schema";
+import type { MySqlColumn } from "drizzle-orm/mysql-core";
 
 const defaultBookFields = {
-  id: books.id,
+  id: booksTable.id,
   tags: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as("tags"),
   subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
     "subjects"
   ),
-  title: books.title,
-  pages: books.pages,
-  userId: books.userId,
-  authors: books.authors,
-  isbn: books.isbn,
-  publisher: books.publisher,
-  publicationDate: books.publicationDate,
-  isRead: books.isRead,
-  dateAdded: books.dateAdded,
-  mobileImage: books.mobileImage,
-  mobileImagePreview: books.mobileImagePreview,
-  smallImage: books.smallImage,
-  smallImagePreview: books.smallImagePreview,
-  mediumImage: books.mediumImage,
-  mediumImagePreview: books.mediumImagePreview
+  dateAddedDisplay: sql<string>`DATE_FORMAT(dateAdded, '%c/%e/%Y')`,
+  title: booksTable.title,
+  pages: booksTable.pages,
+  userId: booksTable.userId,
+  authors: booksTable.authors,
+  isbn: booksTable.isbn,
+  publisher: booksTable.publisher,
+  publicationDate: booksTable.publicationDate,
+  isRead: sql<boolean>`isRead`.mapWith(val => val == 1),
+  dateAdded: booksTable.dateAdded,
+  mobileImage: booksTable.mobileImage,
+  mobileImagePreview: booksTable.mobileImagePreview,
+  smallImage: booksTable.smallImage,
+  smallImagePreview: booksTable.smallImagePreview,
+  mediumImage: booksTable.mediumImage,
+  mediumImagePreview: booksTable.mediumImagePreview
 };
 
 type FullBook = InferSelection<typeof defaultBookFields>;
@@ -61,31 +63,31 @@ const defaultBookFields_old: (keyof Book)[] = [
 ];
 
 const compactBookFields = {
-  id: books.id,
-  title: books.title,
-  authors: books.authors,
-  isbn: books.isbn,
-  publisher: books.publisher,
-  isRead: books.isRead,
-  smallImage: books.smallImage,
-  smallImagePreview: books.smallImagePreview
+  id: booksTable.id,
+  title: booksTable.title,
+  authors: booksTable.authors,
+  isbn: booksTable.isbn,
+  publisher: booksTable.publisher,
+  isRead: booksTable.isRead,
+  smallImage: booksTable.smallImage,
+  smallImagePreview: booksTable.smallImagePreview
 };
 
 const iosBookFields = {
-  id: books.id,
-  title: books.title,
-  authors: books.authors,
-  isRead: books.isRead,
-  smallImage: books.smallImage,
-  smallImagePreview: books.smallImagePreview,
-  mediumImage: books.mediumImage,
-  mediumImagePreview: books.mediumImagePreview
+  id: booksTable.id,
+  title: booksTable.title,
+  authors: booksTable.authors,
+  isRead: booksTable.isRead,
+  smallImage: booksTable.smallImage,
+  smallImagePreview: booksTable.smallImagePreview,
+  mediumImage: booksTable.mediumImage,
+  mediumImagePreview: booksTable.mediumImagePreview
 };
 
 const compactBookFields_old = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
 const iosBookFields_old = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
 
-const getSort = (sortPack: any = { id: -1 }) => {
+const getSort_old = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
 
   if (rawField == "id") {
@@ -97,35 +99,16 @@ const getSort = (sortPack: any = { id: -1 }) => {
   return `ORDER BY ${field} ${dir}`;
 };
 
-/*
+const getSort = (sortPack: any = { id: -1 }) => {
+  const [rawField, rawDir] = Object.entries(sortPack)[0];
 
-  const authorSearch = "";
-  const tag = 111;
-  const queryAST = db
-    .select(defaultBookFields)
-    .from(books)
-    .where(
-      and(
-        // yo Prettier, chill and leave the line breaks
-        eq(books.userId, userId),
-        sql`LOWER(${books.authors}->>"$") LIKE ${`%${authorSearch.toLowerCase()}%`}`,
-        exists(
-          db
-            .select({ _: sql`1` })
-            .from(booksTags)
-            .where(and(eq(books.id, booksTags.book), inArray(booksTags.tag, [tag, 35, 36])))
-        )
-      )
-    );
+  if (rawField == "id") {
+    return rawDir === -1 ? [desc(booksTable.dateAdded), desc(booksTable.id)] : [asc(booksTable.dateAdded), asc(booksTable.id)];
+  }
 
-  const res = await queryAST.execute();
-  console.log(res.length);
-
-  const x = queryAST.toSQL();
-
-  console.log("\n\nBooks Query:\n  ", x.sql, "\n  ", x.params, "\n\n");
-
-*/
+  const field = rawField === "title" ? booksTable.title : booksTable.pages;
+  return rawDir === -1 ? [desc(field)] : [asc(field)];
+};
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (!userId) {
@@ -143,28 +126,28 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 
     const start = +new Date();
 
-    conditions.push(eq(books.userId, userId));
+    conditions.push(eq(booksTable.userId, userId));
 
     const filters = ["userId = ?"];
     const args: any[] = [userId];
 
     if (search) {
-      conditions.push(like(books.title, `%${search}%`));
+      conditions.push(like(booksTable.title, `%${search}%`));
       filters.push("title LIKE ?");
       args.push(`%${search}%`);
     }
     if (publisher) {
-      conditions.push(like(books.publisher, `%${publisher}%`));
+      conditions.push(like(booksTable.publisher, `%${publisher}%`));
       filters.push("publisher LIKE ?");
       args.push(`%${publisher}%`);
     }
     if (author) {
-      conditions.push(sql`LOWER(${books.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
+      conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
       filters.push(`LOWER(authors->>"$") LIKE ?`);
       args.push(`%${author.toLowerCase()}%`);
     }
     if (isRead != null) {
-      conditions.push(eq(books.isRead, isRead ? 1 : 0));
+      conditions.push(eq(booksTable.isRead, isRead ? 1 : 0));
       filters.push("isRead = ?");
       args.push(isRead);
     }
@@ -176,7 +159,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
             .from(booksTags)
             .where(
               and(
-                eq(books.id, booksTags.book),
+                eq(booksTable.id, booksTags.book),
                 inArray(
                   booksTags.tag,
                   tags.map(t => Number(t))
@@ -197,10 +180,10 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
               .from(booksSubjects)
               .where(
                 and(
-                  eq(books.id, booksSubjects.book),
+                  eq(booksTable.id, booksSubjects.book),
                   inArray(
                     booksSubjects.subject,
-                    tags.map(t => Number(t))
+                    subjects.map(t => Number(t))
                   )
                 )
               )
@@ -223,7 +206,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
               .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
               .where(
                 and(
-                  eq(books.id, booksSubjects.book),
+                  eq(booksTable.id, booksSubjects.book),
                   or(
                     inArray(
                       booksSubjects.subject,
@@ -243,7 +226,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
             db
               .select({ _: sql`1` })
               .from(booksSubjects)
-              .where(eq(booksSubjects.book, books.id))
+              .where(eq(booksSubjects.book, booksTable.id))
           )
         )
       );
@@ -251,24 +234,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     }
 
     const fieldsToSelect = resultSet === "compact" ? compactBookFields_old : resultSet === "ios" ? iosBookFields_old : defaultBookFields_old;
-    const sortExpression = getSort(sort);
-
-    const res = await db
-      .select(defaultBookFields)
-      .from(books)
-      .where(and(...conditions))
-      .orderBy(desc(books.id));
-
-    console.log(res[0], "\n");
-    console.log(res[1], "\n");
-
-    const resQuery = await db
-      .select(defaultBookFields)
-      .from(books)
-      .where(and(...conditions))
-      .toSQL();
-
-    console.log("Latest query\n\n", resQuery.sql, "\n", resQuery.params, "\n");
+    const sortExpression = getSort_old(sort);
 
     const mainBooksProjection = `
       SELECT 
@@ -279,39 +245,26 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       FROM books b 
       WHERE ${filters.join(" AND ")}`;
 
-    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} ${sortExpression} LIMIT ?, ?`, args.concat(skip, pageSize)) as any;
+    const booksReq = db
+      .select(defaultBookFields)
+      .from(booksTable)
+      .where(and(...conditions))
+      .orderBy(...getSort(sort))
+      .limit(pageSize)
+      .offset(skip);
+
     const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
 
-    const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
+    const [books, countResp] = await Promise.all([booksReq, countReq]);
     const end = +new Date();
 
-    console.log(
-      `Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`,
-      end - start,
-      "query time (books, count):",
-      booksResp.time.toFixed(1) + ",",
-      countResp.time.toFixed(1)
-    );
+    console.log(`Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`, end - start);
 
-    const booksResultOld: Book[] = updateBookImages(booksResp.rows);
+    updateBookImages(books);
     const totalBooks = parseInt(countResp.rows[0].total);
     const totalPages = Math.ceil(totalBooks / pageSize);
 
-    const arrayFieldsToInit = ["subjects", "tags"] as (keyof Book)[];
-    booksResultOld.forEach(book => {
-      arrayFieldsToInit.forEach(arr => {
-        if (!Array.isArray(book[arr])) {
-          (book as any)[arr] = [] as string[];
-        }
-      });
-
-      book.isRead = (book.isRead as any) == 1;
-
-      const date = new Date(book.dateAdded);
-      book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    });
-
-    return { books: booksResultOld, totalBooks, page, totalPages };
+    return { books, totalBooks, page, totalPages };
   } catch (er) {
     console.log("er", er);
   }

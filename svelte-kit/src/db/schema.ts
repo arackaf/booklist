@@ -1,3 +1,4 @@
+import type { PreviewPacket } from "$data/types";
 import { int, datetime, tinyint, json, mysqlTable, varchar, longtext } from "drizzle-orm/mysql-core";
 
 export const books = mysqlTable("books", {
@@ -15,11 +16,11 @@ export const books = mysqlTable("books", {
   similarBooksLastSyncSuccess: tinyint("similarBooksLastSyncSuccess"),
   similarBooksLastSyncFailureReason: longtext("similarBooksLastSyncFailureReason"),
   mobileImage: varchar("mobileImage", { length: 250 }),
-  mobileImagePreview: json("mobileImagePreview"),
+  mobileImagePreview: json("mobileImagePreview").$type<string | PreviewPacket | null>(),
   smallImage: varchar("smallImage", { length: 250 }),
-  smallImagePreview: json("smallImagePreview"),
+  smallImagePreview: json("smallImagePreview").$type<string | PreviewPacket | null>(),
   mediumImage: varchar("mediumImage", { length: 250 }),
-  mediumImagePreview: json("mediumImagePreview"),
+  mediumImagePreview: json("mediumImagePreview").$type<string | PreviewPacket | null>(),
   publicationDate: varchar("publicationDate", { length: 30 }),
   publisher: varchar("publisher", { length: 100 }),
   editorialReviews: json("editorialReviews")
