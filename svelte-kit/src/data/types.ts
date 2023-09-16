@@ -89,7 +89,7 @@ export type BookSearch = {
   resultSet?: string;
 };
 
-type EditorialReview = {
+export type EditorialReview = {
   source: string;
   content: string;
 };

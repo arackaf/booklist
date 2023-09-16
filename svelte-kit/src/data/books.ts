@@ -1,21 +1,11 @@
 import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { type SQLWrapper, and, or, not, eq, sql, like, exists, inArray, desc, asc } from "drizzle-orm";
+import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
 
 import type { Book, BookDetails, BookImages, BookSearch, SimilarBook } from "./types";
-import {
-  mySqlConnectionFactory,
-  getInsertLists,
-  runTransaction,
-  executeQueryFirst,
-  executeQuery,
-  executeCommand,
-  type TransactionItem,
-  db,
-  type InferSelection
-} from "./dbUtils";
-import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable } from "../db/schema";
-import type { MySqlColumn } from "drizzle-orm/mysql-core";
+import { getInsertLists, runTransaction, executeQuery, executeCommand, type TransactionItem, db, type InferSelection } from "./dbUtils";
+import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "../db/schema";
+import { execute } from "../db/dbUtils";
 
 const defaultBookFields = {
   id: booksTable.id,
@@ -209,33 +199,57 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 };
 
 export const getBookDetails = async (id: string): Promise<BookDetails> => {
-  const editorialReviewsQuery = executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
+  const editorialReviewsQuery = db
+    .select({ editorialReviews: booksTable.editorialReviews })
+    .from(booksTable)
+    .where(eq(booksTable.id, Number(id)));
 
-  const similarBooksQuery = executeQuery<SimilarBook>(
-    "similar books",
-    `
-    SELECT sb.*
-    FROM books b
-    LEFT JOIN similar_books sb
-    ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
-    WHERE b.id = ? AND sb.id IS NOT NULL;
-    `,
-    [id]
-  );
+  //executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
 
-  const [book, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
-  const editorialReviews =
-    book.editorialReviews ??
-    []
-      .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
-      .map((er: any) => {
-        return {
-          content: er.content || er.Content,
-          source: er.source || er.Source
-        };
-      });
+  const similarBooksQuery = db
+    .select({
+      id: similarBooksTable.id,
+      title: similarBooksTable.title,
+      isbn: similarBooksTable.isbn,
+      authors: similarBooksTable.authors,
+      mobileImage: similarBooksTable.mobileImage,
+      mobileImagePreview: similarBooksTable.mobileImagePreview,
+      smallImage: similarBooksTable.smallImage,
+      smallImagePreview: similarBooksTable.smallImagePreview
+    })
+    .from(booksTable)
+    .leftJoin(similarBooksTable, sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`)
+    .where(and(eq(booksTable.id, Number(id)), isNotNull(similarBooksTable.id)));
 
-  return { editorialReviews, similarBooks: updateBookImages(similarBooks) };
+  //console.log("similar books", similarBooksQuery.sql);
+
+  // const similarBooksQuery = executeQuery<SimilarBook>(
+  //   "similar books",
+  //   `
+  // SELECT sb.*
+  // FROM books b
+  // LEFT JOIN similar_books sb
+  // ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
+  // WHERE b.id = ? AND sb.id IS NOT NULL;
+  //   `,
+  //   [id]
+  // );
+
+  const [book, similarBooks] = await Promise.all([null, execute("similar books", similarBooksQuery)]);
+  console.log("Ayyyy", { similarBooks });
+  // const editorialReviews =
+  //   book.editorialReviews ??
+  //   []
+  //     .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
+  //     .map((er: any) => {
+  //       return {
+  //         content: er.content || er.Content,
+  //         source: er.source || er.Source
+  //       };
+  //     });
+
+  return { editorialReviews: [], similarBooks };
+  // return { editorialReviews, similarBooks: updateBookImages(similarBooks) };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
