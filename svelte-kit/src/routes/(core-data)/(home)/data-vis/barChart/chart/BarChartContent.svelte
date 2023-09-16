@@ -57,8 +57,6 @@
     let size = $viewBoxSpring;
     sizeClass = "leading-none ";
 
-    console.log({ size });
-
     if (size < 400) sizeClass += "text-base lg:text-lg";
     else if (size < 700) sizeClass += "text-base lg:text-lg";
     else if (size < 1000) sizeClass += "text-lg sm:text-base lg:text-lg";
