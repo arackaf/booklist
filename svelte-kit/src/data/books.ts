@@ -1,9 +1,8 @@
-import type { ExecutedQuery, Transaction } from "@planetscale/database";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc, getTableColumns } from "drizzle-orm";
+import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
 
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
-import { getInsertLists, runTransaction, executeQuery, executeCommand, type TransactionItem, db, type InferSelection } from "./dbUtils";
+import { getInsertLists, runTransaction, type TransactionItem, db, type InferSelection } from "./dbUtils";
 import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "../db/schema";
 import { execute } from "../db/dbUtils";
 import type { MySqlTransaction } from "drizzle-orm/mysql-core";
@@ -55,9 +54,6 @@ const iosBookFields = {
   mediumImage: booksTable.mediumImage,
   mediumImagePreview: booksTable.mediumImagePreview
 };
-
-const compactBookFields_old = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
-const iosBookFields_old = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
 
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
