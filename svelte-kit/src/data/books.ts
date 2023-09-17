@@ -200,45 +200,25 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
   const editorialReviewsQuery = db
     .select({ editorialReviews: booksTable.editorialReviews })
     .from(booksTable)
-    .where(eq(booksTable.id, Number(id)));
-
-  //executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
+    .where(and(eq(booksTable.id, Number(id)), isNotNull(booksTable.editorialReviews)));
 
   const similarBooksQuery = db
-    .select(getTableColumns(similarBooksTable))
-    .from(booksTable)
-    .leftJoin(similarBooksTable, sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`)
-    .where(and(eq(booksTable.id, Number(id)), isNotNull(similarBooksTable.id)));
+    .select()
+    .from(similarBooksTable)
+    .where(
+      exists(
+        db
+          .select({ _: sql`1` })
+          .from(booksTable)
+          .where(and(eq(booksTable.id, Number(id)), sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`))
+      )
+    );
 
-  //console.log("similar books", similarBooksQuery.sql);
+  const [books, similarBooks] = await Promise.all([execute("editorial reviews", editorialReviewsQuery), execute("similar books", similarBooksQuery)]);
 
-  // const similarBooksQuery = executeQuery<SimilarBook>(
-  //   "similar books",
-  //   `
-  // SELECT sb.*
-  // FROM books b
-  // LEFT JOIN similar_books sb
-  // ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
-  // WHERE b.id = ? AND sb.id IS NOT NULL;
-  //   `,
-  //   [id]
-  // );
+  const editorialReviews = books.flatMap(b => b.editorialReviews!);
 
-  const [book, similarBooks] = await Promise.all([null, execute("similar books", similarBooksQuery)]);
-  console.log("Ayyyy", { similarBooks });
-  // const editorialReviews =
-  //   book.editorialReviews ??
-  //   []
-  //     .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
-  //     .map((er: any) => {
-  //       return {
-  //         content: er.content || er.Content,
-  //         source: er.source || er.Source
-  //       };
-  //     });
-
-  return { editorialReviews: [], similarBooks };
-  // return { editorialReviews, similarBooks: updateBookImages(similarBooks) };
+  return { editorialReviews, similarBooks };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {

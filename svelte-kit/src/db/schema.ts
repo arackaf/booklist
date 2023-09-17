@@ -31,12 +31,12 @@ export const similarBooks = mysqlTable("similar_books", {
   title: varchar("title", { length: 250 }).notNull(),
   authors: json("authors").$type<string[]>(),
   authorsLastManualSync: datetime("authorsLastManualSync"),
-  isbn: varchar("isbn", { length: 25 }),
+  isbn: varchar("isbn", { length: 25 }).notNull(),
 
   mobileImage: varchar("mobileImage", { length: 250 }),
-  mobileImagePreview: json("mobileImagePreview"),
+  mobileImagePreview: json("mobileImagePreview").$type<string | PreviewPacket | null>(),
   smallImage: varchar("smallImage", { length: 250 }),
-  smallImagePreview: json("smallImagePreview")
+  smallImagePreview: json("smallImagePreview").$type<string | PreviewPacket | null>()
 });
 
 export const tags = mysqlTable("tags", {

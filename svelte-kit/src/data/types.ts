@@ -103,8 +103,8 @@ export type MinimalBookInfo = {
 export type SimilarBook = {
   title: string;
   isbn: string;
-  authors: string[];
-} & BookImages;
+  authors: string[] | null;
+} & Omit<BookImages, "mediumImage" | "mediumImagePreview">;
 
 export type BookDetails = {
   editorialReviews: EditorialReview[];
