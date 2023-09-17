@@ -445,14 +445,12 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
-  await executeCommand(
-    "update book read status",
-    `
-    UPDATE books
-    SET isRead = ?
-    WHERE userId = ? AND id IN (?)
-  `,
-    [read, userId, ids]
+  await execute(
+    "update books read",
+    db
+      .update(booksTable)
+      .set({ isRead: read ? 1 : 0 })
+      .where(and(eq(booksTable.userId, userId), inArray(booksTable.id, ids)))
   );
 };
 
