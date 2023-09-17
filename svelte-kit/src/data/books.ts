@@ -455,7 +455,7 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
 };
 
 export const deleteBook = async (userId: string, id: number) => {
-  await executeCommand("delete book", `DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
+  await execute("delete book", db.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id))));
 };
 
 function updateBookImages<T extends Partial<BookImages>>(books: T[]): T[] {
