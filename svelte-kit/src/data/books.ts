@@ -168,8 +168,9 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       );
     }
 
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : resultSet === "ios" ? iosBookFields : defaultBookFields;
     const booksReq = db
-      .select(defaultBookFields)
+      .select(fieldsToSelect as typeof defaultBookFields)
       .from(booksTable)
       .where(and(...conditions))
       .orderBy(...getSort(sort))
@@ -222,31 +223,24 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
-  const results = await executeQuery<{ count: string; subjects: any }>(
-    "subject books aggregate",
-    `
-    SELECT
-      COUNT(*) count,
-      agg.subjects
-    FROM books b
-    JOIN (
-        SELECT
-            bs.book,
-            JSON_ARRAYAGG(bs.subject) subjects
-        FROM books_subjects bs
-        JOIN subjects s
-        ON bs.subject = s.id
-        GROUP BY bs.book
-    ) agg
-    ON b.id = agg.book
-    WHERE b.userId = ?
-    GROUP BY agg.subjects
-    HAVING agg.subjects IS NOT NULL
-  `,
-    [userId]
-  );
+  const aggQuery = db
+    .select({ book: booksSubjects.book, subjects: sql<string>`JSON_ARRAYAGG(${booksSubjects.subject})`.as("agg.subjects") })
+    .from(booksSubjects)
+    .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
+    .groupBy(booksSubjects.book)
+    .as("agg");
 
-  return results.map((r: any) => ({ ...r, count: +r.count }));
+  const query = db
+    .select({ count: sql`COUNT(*)`.mapWith(val => Number(val)).as("count"), subjects: aggQuery.subjects })
+    .from(booksTable)
+    .innerJoin(aggQuery, eq(booksTable.id, aggQuery.book))
+    .where(eq(booksTable.userId, userId))
+    .groupBy(aggQuery.subjects)
+    .having(isNotNull(aggQuery.subjects));
+
+  const results = await execute("subject books aggregate", query);
+
+  return results.map(r => ({ ...r, count: +r.count }));
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
@@ -532,7 +526,7 @@ export const deleteBook = async (userId: string, id: number) => {
   await executeCommand("delete book", `DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
 };
 
-function updateBookImages<T extends BookImages>(books: T[]): T[] {
+function updateBookImages<T extends Partial<BookImages>>(books: T[]): T[] {
   const fields = ["mobileImage", "smallImage", "mediumImage"] as const;
   for (const book of books) {
     for (const field of fields) {
