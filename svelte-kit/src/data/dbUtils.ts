@@ -2,7 +2,7 @@ import { Client, type Transaction, type ExecutedQuery, type Connection } from "@
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { MYSQL_CONNECTION_STRING } from "$env/static/private";
 
-import * as schema from "../db/schema";
+import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import type { SQL } from "drizzle-orm";
 
@@ -85,3 +85,14 @@ export type SubjectEditFields = {
 };
 
 export const getInsertLists = (lists: any[]) => Array.from({ length: lists.length }, () => "(?)").join(", ");
+
+export const executeDrizzle = async <T>(description: string, command: Promise<T>): Promise<T> => {
+  const start = +new Date();
+
+  const result = await command;
+
+  const end = +new Date();
+  console.log(description, "latency:", end - start);
+
+  return result;
+};

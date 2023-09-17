@@ -1,11 +1,10 @@
-import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
+import type { MySqlTransaction } from "drizzle-orm/mysql-core";
 
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
-import { getInsertLists, runTransaction, type TransactionItem, db, type InferSelection } from "./dbUtils";
-import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "../db/schema";
-import { execute } from "../db/dbUtils";
-import type { MySqlTransaction } from "drizzle-orm/mysql-core";
+import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
+import { getInsertLists, runTransaction, type TransactionItem, db, type InferSelection, executeDrizzle } from "./dbUtils";
+import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "./drizzle-schema";
 
 const defaultBookFields = {
   id: booksTable.id,
@@ -212,7 +211,10 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
       )
     );
 
-  const [books, similarBooks] = await Promise.all([execute("editorial reviews", editorialReviewsQuery), execute("similar books", similarBooksQuery)]);
+  const [books, similarBooks] = await Promise.all([
+    executeDrizzle("editorial reviews", editorialReviewsQuery),
+    executeDrizzle("similar books", similarBooksQuery)
+  ]);
 
   const editorialReviews = books.flatMap(b => b.editorialReviews!);
 
@@ -235,13 +237,13 @@ export const aggregateBooksSubjects = async (userId: string) => {
     .groupBy(aggQuery.subjects)
     .having(isNotNull(aggQuery.subjects));
 
-  const results = await execute("subject books aggregate", query);
+  const results = await executeDrizzle("subject books aggregate", query);
 
   return results.map(r => ({ ...r, count: +r.count }));
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  await execute(
+  await executeDrizzle(
     "insert book",
     db.transaction(async tx => {
       await tx.insert(booksTable).values({
@@ -290,7 +292,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
 
   const isReadUpdate = book.isRead != null ? { isRead: book.isRead ? 1 : 0 } : {};
 
-  await execute(
+  await executeDrizzle(
     "update book",
     db.transaction(async tx => {
       await tx
@@ -441,7 +443,7 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
-  await execute(
+  await executeDrizzle(
     "update books read",
     db
       .update(booksTable)
@@ -451,7 +453,7 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
 };
 
 export const deleteBook = async (userId: string, id: number) => {
-  await execute("delete book", db.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id))));
+  await executeDrizzle("delete book", db.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id))));
 };
 
 function updateBookImages<T extends Partial<BookImages>>(books: T[]): T[] {
