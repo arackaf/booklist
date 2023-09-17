@@ -245,93 +245,75 @@ export const aggregateBooksSubjects = async (userId: string) => {
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  const transaction = db.transaction(async tx => {
-    await tx.insert(booksTable).values({
-      title: book.title!,
-      pages: book.pages ?? null,
-      authors: book.authors ?? [],
-      isbn: book.isbn,
-      publisher: book.publisher,
-      publicationDate: book.publicationDate,
-      isRead: book.isRead ? 1 : 0,
-      mobileImage: book.mobileImage,
-      mobileImagePreview: book.mobileImagePreview ?? null,
-      smallImage: book.smallImage,
-      smallImagePreview: book.smallImagePreview ?? null,
-      mediumImage: book.mediumImage,
-      mediumImagePreview: book.mediumImagePreview ?? null,
-      userId,
-      dateAdded: new Date()
-    });
+  await execute(
+    "insert book",
+    db.transaction(async tx => {
+      await tx.insert(booksTable).values({
+        title: book.title!,
+        pages: book.pages ?? null,
+        authors: book.authors ?? [],
+        isbn: book.isbn,
+        publisher: book.publisher,
+        publicationDate: book.publicationDate,
+        isRead: book.isRead ? 1 : 0,
+        mobileImage: book.mobileImage,
+        mobileImagePreview: book.mobileImagePreview ?? null,
+        smallImage: book.smallImage,
+        smallImagePreview: book.smallImagePreview ?? null,
+        mediumImage: book.mediumImage,
+        mediumImagePreview: book.mediumImagePreview ?? null,
+        userId,
+        dateAdded: new Date()
+      });
 
-    const idRes = await tx.select({ id: sql`LAST_INSERT_ID()`.mapWith(val => Number(val)) }).from(booksTable);
-    const { id } = idRes[0];
+      const idRes = await tx.select({ id: sql`LAST_INSERT_ID()`.mapWith(val => Number(val)) }).from(booksTable);
+      const { id } = idRes[0];
 
-    if (book.subjects) {
-      await syncBookSubjects(tx, id, book.subjects);
-    }
-    if (book.tags) {
-      await syncBookTags(tx, id, book.tags);
-    }
-  });
-
-  await execute("insert book", transaction);
+      if (book.subjects) {
+        await syncBookSubjects(tx, id, book.subjects);
+      }
+      if (book.tags) {
+        await syncBookTags(tx, id, book.tags);
+      }
+    })
+  );
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
   const doImages = Object.hasOwn(book, "mobileImage");
-
   const imageFields = doImages
-    ? [
-        book.mobileImage,
-        JSON.stringify(book.mobileImagePreview ?? null),
-        book.smallImage,
-        JSON.stringify(book.smallImagePreview ?? null),
-        book.mediumImage,
-        JSON.stringify(book.mediumImagePreview ?? null)
-      ]
-    : [];
+    ? {
+        mobileImage: book.mobileImage,
+        mobileImagePreview: book.mobileImagePreview,
+        smallImage: book.smallImage,
+        smallImagePreview: book.smallImagePreview,
+        mediumImage: book.mediumImage,
+        mediumImagePreview: book.mediumImagePreview
+      }
+    : {};
 
-  return runTransaction(
+  const isReadUpdate = book.isRead != null ? { isRead: book.isRead ? 1 : 0 } : {};
+
+  await execute(
     "update book",
-    tx =>
-      tx.execute(
-        `
-        UPDATE books
-        SET 
-          title = ?,
-          pages = ?,
-          authors = ?,
-          isbn = ?,
-          publisher = ?,
-          publicationDate = ?,
-          isRead = ?${
-            doImages
-              ? `,
-          mobileImage = ?,
-          mobileImagePreview = ?,
-          smallImage = ?,
-          smallImagePreview = ?,
-          mediumImage = ?,
-          mediumImagePreview = ?`
-              : ""
-          }
-        WHERE id = ? AND userId = ?;`,
-        [
-          // core fields
-          book.title,
-          book.pages ?? null,
-          JSON.stringify(book.authors ?? []),
-          book.isbn,
-          book.publisher,
-          book.publicationDate,
-          book.isRead ?? false
-        ]
-          .concat(imageFields)
-          .concat(book.id, userId)
-      )
-    //tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
-    //tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
+    db.transaction(async tx => {
+      await tx
+        .update(booksTable)
+        .set({
+          ...imageFields,
+          ...isReadUpdate,
+          title: book.title,
+          pages: book.pages,
+          authors: book.authors,
+          isbn: book.isbn,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate
+        })
+        .where(and(eq(booksTable.userId, userId), eq(booksTable.id, book.id!)));
+
+      await syncBookSubjects(tx, book.id!, book.subjects ?? [], true);
+      await syncBookTags(tx, book.id!, book.tags ?? [], true);
+    })
   );
 };
 
