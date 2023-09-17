@@ -6,6 +6,7 @@ import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { getInsertLists, runTransaction, executeQuery, executeCommand, type TransactionItem, db, type InferSelection } from "./dbUtils";
 import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "../db/schema";
 import { execute } from "../db/dbUtils";
+import type { MySqlTransaction } from "drizzle-orm/mysql-core";
 
 const defaultBookFields = {
   id: booksTable.id,
@@ -244,61 +245,37 @@ export const aggregateBooksSubjects = async (userId: string) => {
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  return runTransaction(
-    "insert book",
-    tx =>
-      tx.execute(
-        `
-      INSERT INTO books (
-        title,
-        pages,
-        authors,
-        isbn,
-        publisher,
-        publicationDate,
-        isRead,
-        mobileImage,
-        mobileImagePreview,
-        smallImage,
-        smallImagePreview,
-        mediumImage,
-        mediumImagePreview,
-        userId,
-        dateAdded
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-        [
-          book.title,
-          book.pages ?? null,
-          JSON.stringify(book.authors ?? []),
-          book.isbn,
-          book.publisher,
-          book.publicationDate,
-          book.isRead ?? false,
-          book.mobileImage,
-          JSON.stringify(book.mobileImagePreview ?? null),
-          book.smallImage,
-          JSON.stringify(book.smallImagePreview ?? null),
-          book.mediumImage,
-          JSON.stringify(book.mediumImagePreview ?? null),
-          userId,
-          new Date()
-        ]
-      ),
-    tx => tx.execute("SELECT LAST_INSERT_ID() as id"),
-    async (tx, newId) => {
-      const bookId = +(newId!.rows[0] as any).id;
+  const transaction = db.transaction(async tx => {
+    await tx.insert(booksTable).values({
+      title: book.title!,
+      pages: book.pages ?? null,
+      authors: book.authors ?? [],
+      isbn: book.isbn,
+      publisher: book.publisher,
+      publicationDate: book.publicationDate,
+      isRead: book.isRead ? 1 : 0,
+      mobileImage: book.mobileImage,
+      mobileImagePreview: book.mobileImagePreview ?? null,
+      smallImage: book.smallImage,
+      smallImagePreview: book.smallImagePreview ?? null,
+      mediumImage: book.mediumImage,
+      mediumImagePreview: book.mediumImagePreview ?? null,
+      userId,
+      dateAdded: new Date()
+    });
 
-      const result: ExecutedQuery[] = [];
-      if (book.subjects?.length) {
-        result.push(...(await syncBookSubjects(tx, bookId, book.subjects)));
-      }
-      if (book.tags?.length) {
-        result.push(...(await syncBookTags(tx, bookId, book.tags)));
-      }
-      return result;
+    const idRes = await tx.select({ id: sql`LAST_INSERT_ID()`.mapWith(val => Number(val)) }).from(booksTable);
+    const { id } = idRes[0];
+
+    if (book.subjects) {
+      await syncBookSubjects(tx, id, book.subjects);
     }
-  );
+    if (book.tags) {
+      await syncBookTags(tx, id, book.tags);
+    }
+  });
+
+  await execute("insert book", transaction);
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
@@ -352,53 +329,28 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
         ]
           .concat(imageFields)
           .concat(book.id, userId)
-      ),
-    tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
-    tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
+      )
+    //tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
+    //tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
   );
 };
 
-const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
-  const tagPairs = tags.map(tagId => [bookId, tagId]);
-  const result: ExecutedQuery[] = [];
-
+const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, bookId: number, tags: number[], clearExisting = false) => {
   if (clearExisting) {
-    result.push(await tx.execute(`DELETE FROM books_tags WHERE book = ?`, [bookId]));
+    await tx.delete(booksTags).where(eq(booksTags.book, bookId));
   }
   if (tags.length) {
-    result.push(
-      await tx.execute(
-        `
-        INSERT INTO books_tags (book, tag)
-        VALUES ${getInsertLists(tagPairs)}
-        `,
-        tagPairs
-      )
-    );
+    await tx.insert(booksTags).values(tags.map(tag => ({ book: bookId, tag })));
   }
-  return result;
 };
 
-const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
-  const subjectPairs = subjects.map(subjectId => [bookId, subjectId]);
-  const result: ExecutedQuery[] = [];
-
+const syncBookSubjects = async (tx: MySqlTransaction<any, any, any, any>, bookId: number, subjects: number[], clearExisting = false) => {
   if (clearExisting) {
-    result.push(await tx.execute(`DELETE FROM books_subjects WHERE book = ?`, [bookId]));
+    await tx.delete(booksSubjects).where(eq(booksSubjects.book, bookId));
   }
   if (subjects.length) {
-    result.push(
-      await tx.execute(
-        `
-        INSERT INTO books_subjects (book, subject)
-        VALUES ${getInsertLists(subjectPairs)}
-        `,
-        subjectPairs
-      )
-    );
+    await tx.insert(booksSubjects).values(subjects.map(subject => ({ book: bookId, subject })));
   }
-
-  return result;
 };
 
 type BulkUpdate = {
