@@ -53,7 +53,7 @@ const updateSingleTag = async (userId: string, id: number, updates: TagEditField
 };
 
 export const deleteSingleTag = async (userId: string, id: number) => {
-  const tag = await getTag(id, userId);
+  const tag = await getTag(userId, id);
   if (!tag) {
     return;
   }
@@ -66,7 +66,7 @@ export const deleteSingleTag = async (userId: string, id: number) => {
   );
 };
 
-const getTag = async (id: number, userId: string) => {
+const getTag = async (userId: string, id: number) => {
   const res = await executeDrizzle(
     "get subject",
     db
