@@ -1,6 +1,7 @@
 import { and, eq, exists, inArray, getTableColumns, or, sql, type SQLWrapper, like, desc, isNotNull } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
 import { booksSubjects, books as booksTable, similarBooks } from "./drizzle-schema";
+import type { BookWithSimilarItems } from "./types";
 
 type QueryProps = {
   userId?: string;
@@ -41,11 +42,12 @@ export const getBooksWithSimilarBooks = async ({ userId, subjects }: QueryProps 
         id,
         title,
         authors,
-        isbn,
+        isbn: sql<string>`${booksTable.isbn}`,
         smallImage,
         smallImagePreview,
         similarBooks,
-        similarBooksLastSync: sql`DATE_FORMAT(${booksTable.similarBooksLastSync}, '%Y-%m-%dT%TZ')`
+        similarBooksLastSync: sql<string>`DATE_FORMAT(${booksTable.similarBooksLastSync}, '%Y-%m-%dT%TZ')`,
+        similarBooksLastSyncDisplay: sql<string>`''`
       })
       .from(booksTable)
       .where(

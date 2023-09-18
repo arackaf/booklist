@@ -11,7 +11,7 @@ export const books = mysqlTable("books", {
   pages: int("pages"),
   isRead: tinyint("isRead").notNull(),
 
-  similarBooks: json("similarBooks"),
+  similarBooks: json("similarBooks").$type<string[] | null>(),
   similarBooksLastSync: datetime("similarBooksLastSync"),
   similarBooksLastSyncSuccess: tinyint("similarBooksLastSyncSuccess"),
   similarBooksLastSyncFailureReason: longtext("similarBooksLastSyncFailureReason"),

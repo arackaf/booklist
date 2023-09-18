@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let currentColor: string;
+  export let currentColor: string | null;
   export let colors: string[];
   export let onColorChosen: (color: string) => {};
 </script>
