@@ -9,19 +9,19 @@
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
 
-<div class={"tooltip-root " + position}>
-  <div class="content">
-    <span class="name">{data.display}: {data.count}</span>
+<div class={"tooltip-root flex flex-col gap-3 bg-slate-400 text-black rounded p-2 " + position}>
+  <div class="flex items-baseline gap-2 text-lg">
+    <span class="name">{data.display}: {data.count} Books</span>
     <button class="raw-button flex" on:click={() => removeBar(data.groupId)}><i class="fad fa-times-circle" /></button>
   </div>
 
   {#if data.childSubjects?.length}
-    <br />
-
-    <button on:click={runDrilldown} class="gap-2 raw-button text-lg">
-      <span class="leading-none">View</span>
-      <i class="far fa-chart-bar leading-none" />
-    </button>
+    <div class="text-base">
+      <button on:click={runDrilldown} class="gap-2 raw-button flex gap-1">
+        <span class="leading-none text-black">View</span>
+        <i class="far fa-chart-bar leading-none text-black" />
+      </button>
+    </div>
   {/if}
 
   <div class={"arrow " + position} />

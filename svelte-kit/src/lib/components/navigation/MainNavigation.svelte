@@ -37,7 +37,7 @@
   });
 </script>
 
-<header class="master-nav">
+<header class="master-nav z-10">
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
     <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
       <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>

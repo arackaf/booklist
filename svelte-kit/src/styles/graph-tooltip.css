@@ -11,14 +11,9 @@
 }
 
 .tooltip-root {
-  --bg-color: var(--info-9);
   --arrow-size: 10px;
   --arrow-diagonal: 7px; /* half of sqrt(10^2 + 10^2)  */
   --arrow-offset: 5px; /* half of sqrt(10^2 + 10^2)  */
-  color: var(--neutral-3);
-  background-color: var(--bg-color);
-  padding: 10px;
-  border-radius: 5px;
 }
 
 .tooltip-root.left {
@@ -31,23 +26,6 @@
 }
 .tooltip-root.top {
   transform: translateY(calc(-1 * var(--arrow-diagonal)));
-}
-
-.tooltip-root .content {
-  display: flex;
-  align-items: baseline;
-}
-
-.tooltip-root .name {
-  font-size: 22px;
-  margin-right: 12px;
-}
-
-.tooltip-root .content button {
-  font-size: 22px;
-}
-.tooltip-root button {
-  cursor: pointer;
 }
 
 .tooltip-root .arrow,
