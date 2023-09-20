@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
-import { db, executeCommand, executeDrizzle, executeQuery } from "./dbUtils";
 import { booksTags, tags } from "./drizzle-schema";
+import { db, executeDrizzle, executeQuery } from "./dbUtils";
 import type { Tag, TagEditFields } from "./types";
 
 export const allTags = async (userId: string = ""): Promise<Tag[]> => {

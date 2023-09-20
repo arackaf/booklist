@@ -37,18 +37,9 @@ export const executeSQLRaw = async (description: string, sql: string, args: any[
   return result;
 };
 
-export const executeCommand = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
-  return executeSQLRaw("Command: " + description, sql, args);
-};
-
 export const executeQuery = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T[]> => {
   const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
   return resultRaw.rows as T[];
-};
-
-export const executeQueryFirst = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T> => {
-  const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
-  return resultRaw.rows[0] as T;
 };
 
 export const runTransaction = async (description: string, ...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
