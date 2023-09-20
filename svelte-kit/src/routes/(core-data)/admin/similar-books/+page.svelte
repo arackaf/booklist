@@ -21,20 +21,22 @@
   const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(id => id != subject.id));
 </script>
 
-<section>
+<section class="flex flex-col gap-3">
   <form action="/admin/similar-books">
-    <label class="checkbox">
-      <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
-      Only show my books
-    </label>
-    <br />
-    <div class="z-[9999999]">
-      <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
-        <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-        <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-      </SelectAndDisplayContainer>
+    <div class="flex flex-col gap-3">
+      <h1 class="text-lg font-bold">Filter</h1>
+      <label class="checkbox">
+        <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
+        Only show my books
+      </label>
+      <div class="z-[9999999]">
+        <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+          <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+          <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+        </SelectAndDisplayContainer>
+      </div>
+      <Button theme="primary" class="self-start">Search</Button>
     </div>
-    <Button theme="primary">Search</Button>
   </form>
   <div class="list">
     {#each books as book}
