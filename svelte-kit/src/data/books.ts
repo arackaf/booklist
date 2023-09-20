@@ -1,145 +1,191 @@
-import type { ExecutedQuery, Transaction } from "@planetscale/database";
+import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
+import type { MySqlTransaction } from "drizzle-orm/mysql-core";
+
+import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
+import { getInsertLists, runTransaction, type TransactionItem, db, type InferSelection, executeDrizzle } from "./dbUtils";
+import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "./drizzle-schema";
 
-import type { Book, BookDetails, BookImages, BookSearch, SimilarBook } from "./types";
-import {
-  mySqlConnectionFactory,
-  getInsertLists,
-  runTransaction,
-  executeQueryFirst,
-  executeQuery,
-  executeCommand,
-  type TransactionItem
-} from "./dbUtils";
+const defaultBookFields = {
+  id: booksTable.id,
+  tags: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as("tags"),
+  subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
+    "subjects"
+  ),
+  dateAddedDisplay: sql<string>`DATE_FORMAT(dateAdded, '%c/%e/%Y')`,
+  title: booksTable.title,
+  pages: booksTable.pages,
+  userId: booksTable.userId,
+  authors: booksTable.authors,
+  isbn: booksTable.isbn,
+  publisher: booksTable.publisher,
+  publicationDate: booksTable.publicationDate,
+  isRead: sql<boolean>`isRead`.mapWith(val => val == 1),
+  dateAdded: booksTable.dateAdded,
+  mobileImage: booksTable.mobileImage,
+  mobileImagePreview: booksTable.mobileImagePreview,
+  smallImage: booksTable.smallImage,
+  smallImagePreview: booksTable.smallImagePreview,
+  mediumImage: booksTable.mediumImage,
+  mediumImagePreview: booksTable.mediumImagePreview
+};
 
-const defaultBookFields: (keyof Book)[] = [
-  "id",
-  "title",
-  "pages",
-  "userId",
-  "authors",
-  "isbn",
-  "publisher",
-  "publicationDate",
-  "isRead",
-  "dateAdded",
-  "mobileImage",
-  "mobileImagePreview",
-  "smallImage",
-  "smallImagePreview",
-  "mediumImage",
-  "mediumImagePreview"
-];
+type FullBook = InferSelection<typeof defaultBookFields>;
 
-const compactBookFields = ["id", "title", "authors", "isbn", "publisher", "isRead", "smallImage", "smallImagePreview"];
-const iosBookFields = ["id", "title", "authors", "isRead", "smallImage", "smallImagePreview", "mediumImage", "mediumImagePreview"];
+const compactBookFields = {
+  id: booksTable.id,
+  title: booksTable.title,
+  authors: booksTable.authors,
+  isbn: booksTable.isbn,
+  publisher: booksTable.publisher,
+  isRead: booksTable.isRead,
+  smallImage: booksTable.smallImage,
+  smallImagePreview: booksTable.smallImagePreview
+};
+
+const iosBookFields = {
+  id: booksTable.id,
+  title: booksTable.title,
+  authors: booksTable.authors,
+  isRead: booksTable.isRead,
+  smallImage: booksTable.smallImage,
+  smallImagePreview: booksTable.smallImagePreview,
+  mediumImage: booksTable.mediumImage,
+  mediumImagePreview: booksTable.mediumImagePreview
+};
 
 const getSort = (sortPack: any = { id: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0];
 
   if (rawField == "id") {
-    return rawDir === -1 ? "ORDER BY dateAdded DESC, id DESC" : "ORDER BY dateAdded, id";
+    return rawDir === -1 ? [desc(booksTable.dateAdded), desc(booksTable.id)] : [asc(booksTable.dateAdded), asc(booksTable.id)];
   }
 
-  const field = rawField === "title" ? "title" : "pages";
-  const dir = rawDir === -1 ? "DESC" : "ASC";
-  return `ORDER BY ${field} ${dir}`;
+  const field = rawField === "title" ? booksTable.title : booksTable.pages;
+  return rawDir === -1 ? [desc(field)] : [asc(field)];
 };
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
+
+  const conditions: SQLWrapper[] = [];
+
   const { page, search, publisher, author, tags, searchChildSubjects, subjects, noSubjects, isRead, sort, resultSet } = searchPacket;
   const pageSize = Math.min(searchPacket.pageSize ?? DEFAULT_BOOKS_PAGE_SIZE, 100);
   const skip = (page - 1) * pageSize;
 
   try {
-    const conn = mySqlConnectionFactory.connection();
-
     const start = +new Date();
 
-    const filters = ["userId = ?"];
-    const args: any[] = [userId];
+    conditions.push(eq(booksTable.userId, userId));
 
     if (search) {
-      filters.push("title LIKE ?");
-      args.push(`%${search}%`);
+      conditions.push(like(booksTable.title, `%${search}%`));
     }
     if (publisher) {
-      filters.push("publisher LIKE ?");
-      args.push(`%${publisher}%`);
+      conditions.push(like(booksTable.publisher, `%${publisher}%`));
     }
     if (author) {
-      filters.push(`LOWER(authors->>"$") LIKE ?`);
-      args.push(`%${author.toLowerCase()}%`);
+      conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
     }
     if (isRead != null) {
-      filters.push("isRead = ?");
-      args.push(isRead);
+      conditions.push(eq(booksTable.isRead, isRead ? 1 : 0));
     }
     if (tags.length) {
-      filters.push("EXISTS (SELECT 1 FROM books_tags bt WHERE bt.book = b.id AND bt.tag IN (?))");
-      args.push(tags);
+      conditions.push(
+        exists(
+          db
+            .select({ _: sql`1` })
+            .from(booksTags)
+            .where(
+              and(
+                eq(booksTable.id, booksTags.book),
+                inArray(
+                  booksTags.tag,
+                  tags.map(t => Number(t))
+                )
+              )
+            )
+        )
+      );
     }
     if (subjects.length) {
       if (!searchChildSubjects) {
-        filters.push("EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id AND bs.subject IN (?))");
-        args.push(subjects);
-      } else {
-        const pathMatch = subjects.map(_ => "s.path LIKE ?").join(" OR ");
-        filters.push(
-          `EXISTS (SELECT 1 FROM books_subjects bs JOIN subjects s ON bs.subject = s.id WHERE bs.book = b.id AND (bs.subject IN (?) OR ${pathMatch}))`
+        conditions.push(
+          exists(
+            db
+              .select({ _: sql`1` })
+              .from(booksSubjects)
+              .where(
+                and(
+                  eq(booksTable.id, booksSubjects.book),
+                  inArray(
+                    booksSubjects.subject,
+                    subjects.map(t => Number(t))
+                  )
+                )
+              )
+          )
         );
-        args.push(subjects, ...subjects.map(id => `%,${id},%`));
+      } else {
+        conditions.push(
+          exists(
+            db
+              .select({ _: sql`1` })
+              .from(booksSubjects)
+              .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
+              .where(
+                and(
+                  eq(booksTable.id, booksSubjects.book),
+                  or(
+                    inArray(
+                      booksSubjects.subject,
+                      subjects.map(s => Number(s))
+                    ),
+                    ...subjects.map(s => like(subjectsTable.path, `%${s}%`))
+                  )
+                )
+              )
+          )
+        );
       }
     } else if (noSubjects) {
-      filters.push("NOT EXISTS (SELECT 1 FROM books_subjects bs WHERE bs.book = b.id)");
+      conditions.push(
+        not(
+          exists(
+            db
+              .select({ _: sql`1` })
+              .from(booksSubjects)
+              .where(eq(booksSubjects.book, booksTable.id))
+          )
+        )
+      );
     }
 
     const fieldsToSelect = resultSet === "compact" ? compactBookFields : resultSet === "ios" ? iosBookFields : defaultBookFields;
-    const sortExpression = getSort(sort);
+    const booksReq = db
+      .select(fieldsToSelect as typeof defaultBookFields)
+      .from(booksTable)
+      .where(and(...conditions))
+      .orderBy(...getSort(sort))
+      .limit(pageSize)
+      .offset(skip);
 
-    const mainBooksProjection = `
-      SELECT 
-        ${fieldsToSelect.join(",")},
-        (SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = b.id) tags, 
-        (SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = b.id) subjects`;
-    const filterBody = `
-      FROM books b 
-      WHERE ${filters.join(" AND ")}`;
+    const booksCount = db
+      .select({ total: sql<string>`count(*)` })
+      .from(booksTable)
+      .where(and(...conditions));
 
-    const booksReq = conn.execute(`${mainBooksProjection}${filterBody} ${sortExpression} LIMIT ?, ?`, args.concat(skip, pageSize)) as any;
-    const countReq = conn.execute(`SELECT COUNT(*) total ${filterBody}`, args) as any;
-
-    const [booksResp, countResp] = await Promise.all([booksReq, countReq]);
+    const [books, countResp] = await Promise.all([booksReq, booksCount]);
     const end = +new Date();
 
-    console.log(
-      `Query: books page ${page}+${pageSize} ${sortExpression.replace("ORDER BY ", "")} latency:`,
-      end - start,
-      "query time (books, count):",
-      booksResp.time.toFixed(1) + ",",
-      countResp.time.toFixed(1)
-    );
+    console.log(`Query: books page ${page}+${pageSize} ${sort} latency:`, end - start);
 
-    const books: Book[] = updateBookImages(booksResp.rows);
-    const totalBooks = parseInt(countResp.rows[0].total);
+    updateBookImages(books);
+    const totalBooks = parseInt(countResp[0].total);
     const totalPages = Math.ceil(totalBooks / pageSize);
-
-    const arrayFieldsToInit = ["subjects", "tags"] as (keyof Book)[];
-    books.forEach(book => {
-      arrayFieldsToInit.forEach(arr => {
-        if (!Array.isArray(book[arr])) {
-          (book as any)[arr] = [] as string[];
-        }
-      });
-
-      book.isRead = (book.isRead as any) == 1;
-
-      const date = new Date(book.dateAdded);
-      book.dateAddedDisplay = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    });
 
     return { books, totalBooks, page, totalPages };
   } catch (er) {
@@ -148,219 +194,143 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
 };
 
 export const getBookDetails = async (id: string): Promise<BookDetails> => {
-  const editorialReviewsQuery = executeQueryFirst<Book>("editorial reviews", "SELECT editorialReviews FROM books WHERE id = ?", [id]);
+  const editorialReviewsQuery = db
+    .select({ editorialReviews: booksTable.editorialReviews })
+    .from(booksTable)
+    .where(and(eq(booksTable.id, Number(id)), isNotNull(booksTable.editorialReviews)));
 
-  const similarBooksQuery = executeQuery<SimilarBook>(
-    "similar books",
-    `
-    SELECT sb.*
-    FROM books b
-    LEFT JOIN similar_books sb
-    ON JSON_SEARCH(b.similarBooks, 'one', sb.isbn)
-    WHERE b.id = ? AND sb.id IS NOT NULL;
-    `,
-    [id]
-  );
+  const similarBooksQuery = db
+    .select()
+    .from(similarBooksTable)
+    .where(
+      exists(
+        db
+          .select({ _: sql`1` })
+          .from(booksTable)
+          .where(and(eq(booksTable.id, Number(id)), sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`))
+      )
+    );
 
-  const [book, similarBooks] = await Promise.all([editorialReviewsQuery, similarBooksQuery]);
-  const editorialReviews =
-    book.editorialReviews ??
-    []
-      .filter((er: any) => (er.Content || er.content) && (er.Source || er.source))
-      .map((er: any) => {
-        return {
-          content: er.content || er.Content,
-          source: er.source || er.Source
-        };
-      });
+  const [books, similarBooks] = await Promise.all([
+    executeDrizzle("editorial reviews", editorialReviewsQuery),
+    executeDrizzle("similar books", similarBooksQuery)
+  ]);
 
-  return { editorialReviews, similarBooks: updateBookImages(similarBooks) };
+  const editorialReviews = books.flatMap(b => b.editorialReviews!);
+
+  return { editorialReviews, similarBooks };
 };
 
 export const aggregateBooksSubjects = async (userId: string) => {
-  const results = await executeQuery<{ count: string; subjects: any }>(
-    "subject books aggregate",
-    `
-    SELECT
-      COUNT(*) count,
-      agg.subjects
-    FROM books b
-    JOIN (
-        SELECT
-            bs.book,
-            JSON_ARRAYAGG(bs.subject) subjects
-        FROM books_subjects bs
-        JOIN subjects s
-        ON bs.subject = s.id
-        GROUP BY bs.book
-    ) agg
-    ON b.id = agg.book
-    WHERE b.userId = ?
-    GROUP BY agg.subjects
-    HAVING agg.subjects IS NOT NULL
-  `,
-    [userId]
-  );
+  const aggQuery = db
+    .select({ book: booksSubjects.book, subjects: sql<string>`JSON_ARRAYAGG(${booksSubjects.subject})`.as("agg.subjects") })
+    .from(booksSubjects)
+    .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
+    .groupBy(booksSubjects.book)
+    .as("agg");
 
-  return results.map((r: any) => ({ ...r, count: +r.count }));
+  const query = db
+    .select({ count: sql`COUNT(*)`.mapWith(val => Number(val)).as("count"), subjects: aggQuery.subjects })
+    .from(booksTable)
+    .innerJoin(aggQuery, eq(booksTable.id, aggQuery.book))
+    .where(eq(booksTable.userId, userId))
+    .groupBy(aggQuery.subjects)
+    .having(isNotNull(aggQuery.subjects));
+
+  const results = await executeDrizzle("subject books aggregate", query);
+
+  return results.map(r => ({ ...r, count: +r.count }));
 };
 
 export const insertBook = async (userId: string, book: Partial<Book>) => {
-  return runTransaction(
+  await executeDrizzle(
     "insert book",
-    tx =>
-      tx.execute(
-        `
-      INSERT INTO books (
-        title,
-        pages,
-        authors,
-        isbn,
-        publisher,
-        publicationDate,
-        isRead,
-        mobileImage,
-        mobileImagePreview,
-        smallImage,
-        smallImagePreview,
-        mediumImage,
-        mediumImagePreview,
+    db.transaction(async tx => {
+      await tx.insert(booksTable).values({
+        title: book.title!,
+        pages: book.pages ?? null,
+        authors: book.authors ?? [],
+        isbn: book.isbn,
+        publisher: book.publisher,
+        publicationDate: book.publicationDate,
+        isRead: book.isRead ? 1 : 0,
+        mobileImage: book.mobileImage,
+        mobileImagePreview: book.mobileImagePreview ?? null,
+        smallImage: book.smallImage,
+        smallImagePreview: book.smallImagePreview ?? null,
+        mediumImage: book.mediumImage,
+        mediumImagePreview: book.mediumImagePreview ?? null,
         userId,
-        dateAdded
-      )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-        [
-          book.title,
-          book.pages ?? null,
-          JSON.stringify(book.authors ?? []),
-          book.isbn,
-          book.publisher,
-          book.publicationDate,
-          book.isRead ?? false,
-          book.mobileImage,
-          JSON.stringify(book.mobileImagePreview ?? null),
-          book.smallImage,
-          JSON.stringify(book.smallImagePreview ?? null),
-          book.mediumImage,
-          JSON.stringify(book.mediumImagePreview ?? null),
-          userId,
-          new Date()
-        ]
-      ),
-    tx => tx.execute("SELECT LAST_INSERT_ID() as id"),
-    async (tx, newId) => {
-      const bookId = +(newId!.rows[0] as any).id;
+        dateAdded: new Date()
+      });
 
-      const result: ExecutedQuery[] = [];
-      if (book.subjects?.length) {
-        result.push(...(await syncBookSubjects(tx, bookId, book.subjects)));
+      const idRes = await tx.select({ id: sql`LAST_INSERT_ID()`.mapWith(val => Number(val)) }).from(booksTable);
+      const { id } = idRes[0];
+
+      if (book.subjects) {
+        await syncBookSubjects(tx, id, book.subjects);
       }
-      if (book.tags?.length) {
-        result.push(...(await syncBookTags(tx, bookId, book.tags)));
+      if (book.tags) {
+        await syncBookTags(tx, id, book.tags);
       }
-      return result;
-    }
+    })
   );
 };
 
 export const updateBook = async (userId: string, book: Partial<Book>) => {
   const doImages = Object.hasOwn(book, "mobileImage");
-
   const imageFields = doImages
-    ? [
-        book.mobileImage,
-        JSON.stringify(book.mobileImagePreview ?? null),
-        book.smallImage,
-        JSON.stringify(book.smallImagePreview ?? null),
-        book.mediumImage,
-        JSON.stringify(book.mediumImagePreview ?? null)
-      ]
-    : [];
+    ? {
+        mobileImage: book.mobileImage,
+        mobileImagePreview: book.mobileImagePreview,
+        smallImage: book.smallImage,
+        smallImagePreview: book.smallImagePreview,
+        mediumImage: book.mediumImage,
+        mediumImagePreview: book.mediumImagePreview
+      }
+    : {};
 
-  return runTransaction(
+  const isReadUpdate = book.isRead != null ? { isRead: book.isRead ? 1 : 0 } : {};
+
+  await executeDrizzle(
     "update book",
-    tx =>
-      tx.execute(
-        `
-        UPDATE books
-        SET 
-          title = ?,
-          pages = ?,
-          authors = ?,
-          isbn = ?,
-          publisher = ?,
-          publicationDate = ?,
-          isRead = ?${
-            doImages
-              ? `,
-          mobileImage = ?,
-          mobileImagePreview = ?,
-          smallImage = ?,
-          smallImagePreview = ?,
-          mediumImage = ?,
-          mediumImagePreview = ?`
-              : ""
-          }
-        WHERE id = ? AND userId = ?;`,
-        [
-          // core fields
-          book.title,
-          book.pages ?? null,
-          JSON.stringify(book.authors ?? []),
-          book.isbn,
-          book.publisher,
-          book.publicationDate,
-          book.isRead ?? false
-        ]
-          .concat(imageFields)
-          .concat(book.id, userId)
-      ),
-    tx => syncBookSubjects(tx, book.id!, book.subjects ?? [], true),
-    tx => syncBookTags(tx, book.id!, book.tags ?? [], true)
+    db.transaction(async tx => {
+      await tx
+        .update(booksTable)
+        .set({
+          ...imageFields,
+          ...isReadUpdate,
+          title: book.title,
+          pages: book.pages,
+          authors: book.authors,
+          isbn: book.isbn,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate
+        })
+        .where(and(eq(booksTable.userId, userId), eq(booksTable.id, book.id!)));
+
+      await syncBookSubjects(tx, book.id!, book.subjects ?? [], true);
+      await syncBookTags(tx, book.id!, book.tags ?? [], true);
+    })
   );
 };
 
-const syncBookTags = async (tx: Transaction, bookId: number, tags: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
-  const tagPairs = tags.map(tagId => [bookId, tagId]);
-  const result: ExecutedQuery[] = [];
-
+const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, bookId: number, tags: number[], clearExisting = false) => {
   if (clearExisting) {
-    result.push(await tx.execute(`DELETE FROM books_tags WHERE book = ?`, [bookId]));
+    await tx.delete(booksTags).where(eq(booksTags.book, bookId));
   }
   if (tags.length) {
-    result.push(
-      await tx.execute(
-        `
-        INSERT INTO books_tags (book, tag)
-        VALUES ${getInsertLists(tagPairs)}
-        `,
-        tagPairs
-      )
-    );
+    await tx.insert(booksTags).values(tags.map(tag => ({ book: bookId, tag })));
   }
-  return result;
 };
 
-const syncBookSubjects = async (tx: Transaction, bookId: number, subjects: number[], clearExisting = false): Promise<ExecutedQuery[]> => {
-  const subjectPairs = subjects.map(subjectId => [bookId, subjectId]);
-  const result: ExecutedQuery[] = [];
-
+const syncBookSubjects = async (tx: MySqlTransaction<any, any, any, any>, bookId: number, subjects: number[], clearExisting = false) => {
   if (clearExisting) {
-    result.push(await tx.execute(`DELETE FROM books_subjects WHERE book = ?`, [bookId]));
+    await tx.delete(booksSubjects).where(eq(booksSubjects.book, bookId));
   }
   if (subjects.length) {
-    result.push(
-      await tx.execute(
-        `
-        INSERT INTO books_subjects (book, subject)
-        VALUES ${getInsertLists(subjectPairs)}
-        `,
-        subjectPairs
-      )
-    );
+    await tx.insert(booksSubjects).values(subjects.map(subject => ({ book: bookId, subject })));
   }
-
-  return result;
 };
 
 type BulkUpdate = {
@@ -473,22 +443,20 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
-  await executeCommand(
-    "update book read status",
-    `
-    UPDATE books
-    SET isRead = ?
-    WHERE userId = ? AND id IN (?)
-  `,
-    [read, userId, ids]
+  await executeDrizzle(
+    "update books read",
+    db
+      .update(booksTable)
+      .set({ isRead: read ? 1 : 0 })
+      .where(and(eq(booksTable.userId, userId), inArray(booksTable.id, ids)))
   );
 };
 
 export const deleteBook = async (userId: string, id: number) => {
-  await executeCommand("delete book", `DELETE FROM books WHERE userId = ? AND id IN (?)`, [userId, id]);
+  await executeDrizzle("delete book", db.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id))));
 };
 
-function updateBookImages<T extends BookImages>(books: T[]): T[] {
+function updateBookImages<T extends Partial<BookImages>>(books: T[]): T[] {
   const fields = ["mobileImage", "smallImage", "mediumImage"] as const;
   for (const book of books) {
     for (const field of fields) {

@@ -1,10 +1,27 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
-
+import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { MYSQL_CONNECTION_STRING } from "$env/static/private";
+
+import * as schema from "./drizzle-schema";
+import type { MySqlColumn } from "drizzle-orm/mysql-core";
+import type { SQL } from "drizzle-orm";
 
 export const mySqlConnectionFactory = new Client({
   url: MYSQL_CONNECTION_STRING
 });
+
+export const db = drizzle(mySqlConnectionFactory.connection(), { schema });
+
+type ExtractTypeFromMySqlColumn<T extends MySqlColumn> = T extends MySqlColumn<infer U>
+  ? U extends { notNull: true }
+    ? U["data"]
+    : U["data"] | null
+  : never;
+
+type ExtractSqlType<T> = T extends MySqlColumn ? ExtractTypeFromMySqlColumn<T> : T extends SQL.Aliased<infer V> ? V : never;
+export type InferSelection<T> = {
+  [K in keyof T]: ExtractSqlType<T[K]>;
+};
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
 
@@ -20,18 +37,9 @@ export const executeSQLRaw = async (description: string, sql: string, args: any[
   return result;
 };
 
-export const executeCommand = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
-  return executeSQLRaw("Command: " + description, sql, args);
-};
-
 export const executeQuery = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T[]> => {
   const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
   return resultRaw.rows as T[];
-};
-
-export const executeQueryFirst = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T> => {
-  const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
-  return resultRaw.rows[0] as T;
 };
 
 export const runTransaction = async (description: string, ...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
@@ -68,3 +76,14 @@ export type SubjectEditFields = {
 };
 
 export const getInsertLists = (lists: any[]) => Array.from({ length: lists.length }, () => "(?)").join(", ");
+
+export const executeDrizzle = async <T>(description: string, command: Promise<T>): Promise<T> => {
+  const start = +new Date();
+
+  const result = await command;
+
+  const end = +new Date();
+  console.log(description, "latency:", end - start);
+
+  return result;
+};

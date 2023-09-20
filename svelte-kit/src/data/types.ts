@@ -3,8 +3,8 @@ import type { Readable } from "svelte/store";
 export type Label = {
   id: number;
   name: string;
-  textColor: string;
-  backgroundColor: string;
+  textColor: string | null;
+  backgroundColor: string | null;
 };
 
 export type Subject = Label & {
@@ -89,7 +89,7 @@ export type BookSearch = {
   resultSet?: string;
 };
 
-type EditorialReview = {
+export type EditorialReview = {
   source: string;
   content: string;
 };
@@ -97,14 +97,14 @@ type EditorialReview = {
 export type MinimalBookInfo = {
   title: string;
   isbn: string;
-  authors: string[];
-} & BookImages;
+  authors: string[] | null;
+} & Partial<BookImages>;
 
 export type SimilarBook = {
   title: string;
   isbn: string;
-  authors: string[];
-} & BookImages;
+  authors: string[] | null;
+} & Omit<BookImages, "mediumImage" | "mediumImagePreview">;
 
 export type BookDetails = {
   editorialReviews: EditorialReview[];
@@ -131,8 +131,8 @@ export type BookWithSimilarItems = {
   id: number;
   title: string;
   isbn: string;
-  authors: string[];
+  authors: string[] | null;
   similarBooks: string[] | null;
   similarBooksLastSync: string;
   similarBooksLastSyncDisplay: string;
-} & BookImages;
+} & Partial<BookImages>;

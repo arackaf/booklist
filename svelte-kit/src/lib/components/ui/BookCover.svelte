@@ -2,11 +2,12 @@
   import type { BookImages, PreviewPacket } from "$data/types";
 
   type Sizes = "mobile" | "small" | "medium";
+  type BookImagesPassed = Partial<BookImages>;
 
   export let style = "";
   export let url: string | null = null;
   export let size: Sizes;
-  export let book: BookImages | null = null;
+  export let book: BookImagesPassed | null = null;
 
   export let preview: string | PreviewPacket | null = null;
   export let noCoverMessage: string = "No Cover";
@@ -17,7 +18,7 @@
     if (preview != null) {
       previewToUse = preview;
     } else if (book) {
-      previewToUse = size === "medium" ? book.mediumImagePreview : size === "small" ? book.smallImagePreview : book.mobileImagePreview;
+      previewToUse = size === "medium" ? book.mediumImagePreview! : size === "small" ? book.smallImagePreview! : book.mobileImagePreview!;
     }
   }
 
@@ -25,7 +26,7 @@
   $: sizingStyle = previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "";
 
   $: urlToUse = getUrlToUse(book, size, url, sizingStyle);
-  function getUrlToUse(book: BookImages | null, size: Sizes, url: string | null, sizingStyle: string) {
+  function getUrlToUse(book: BookImagesPassed | null, size: Sizes, url: string | null, sizingStyle: string) {
     if (!book) {
       return url;
     }

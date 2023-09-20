@@ -1,4 +1,6 @@
-import { executeCommand, executeQuery } from "./dbUtils";
+import { and, eq } from "drizzle-orm";
+import { booksTags, tags } from "./drizzle-schema";
+import { db, executeDrizzle, executeQuery } from "./dbUtils";
 import type { Tag, TagEditFields } from "./types";
 
 export const allTags = async (userId: string = ""): Promise<Tag[]> => {
@@ -25,27 +27,53 @@ export const saveTag = async (userId: string, id: number, subject: TagEditFields
 };
 
 const insertSingleTag = async (userId: string, tag: TagEditFields) => {
-  return executeCommand(
+  return executeDrizzle(
     "insert tag",
-    `
-    INSERT INTO tags (name, textColor, backgroundColor, userId)
-    VALUES (?, ?, ?, ?)
-  `,
-    [tag.name, tag.textColor, tag.backgroundColor, userId]
+    db.insert(tags).values({
+      name: tag.name,
+      textColor: tag.textColor,
+      backgroundColor: tag.backgroundColor,
+      userId
+    })
   );
 };
 
 const updateSingleTag = async (userId: string, id: number, updates: TagEditFields) => {
-  return executeCommand(
+  return executeDrizzle(
     "update tag",
-    `
-    UPDATE tags 
-    SET name = ?, textColor = ?, backgroundColor = ?
-    WHERE id = ? AND userId = ?`,
-    [updates.name, updates.textColor, updates.backgroundColor, id, userId]
+    db
+      .update(tags)
+      .set({
+        name: updates.name,
+        textColor: updates.textColor,
+        backgroundColor: updates.backgroundColor
+      })
+      .where(and(eq(tags.id, id), eq(tags.userId, userId)))
   );
 };
 
 export const deleteSingleTag = async (userId: string, id: number) => {
-  return executeCommand("delete tag", `DELETE FROM tags WHERE id = ? AND userId = ?`, [id, userId]);
+  const tag = await getTag(userId, id);
+  if (!tag) {
+    return;
+  }
+  return executeDrizzle(
+    "delete tag",
+    db.transaction(async tx => {
+      await tx.delete(tags).where(eq(tags.id, id));
+      await tx.delete(booksTags).where(eq(booksTags.tag, id));
+    })
+  );
+};
+
+const getTag = async (userId: string, id: number) => {
+  const res = await executeDrizzle(
+    "get subject",
+    db
+      .select()
+      .from(tags)
+      .where(and(eq(tags.id, id), eq(tags.userId, userId)))
+  );
+
+  return res[0];
 };

@@ -1,5 +1,7 @@
+import { and, eq, exists, like, or, sql } from "drizzle-orm";
+import { booksSubjects, subjects } from "./drizzle-schema";
+import { type SubjectEditFields, executeDrizzle, db } from "./dbUtils";
 import type { Subject } from "./types";
-import { type SubjectEditFields, runTransaction, executeQuery, executeQueryFirst, executeCommand } from "./dbUtils";
 
 export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
   if (!userId) {
@@ -7,7 +9,7 @@ export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
   }
 
   try {
-    return await executeQuery("read subjects", `SELECT * FROM subjects WHERE userId = ? ORDER BY name;`, [userId]);
+    return await executeDrizzle("read subjects", db.select().from(subjects).where(eq(subjects.userId, userId)));
   } catch (err) {
     console.log("Error reading subjects", err);
     return [];
@@ -17,25 +19,41 @@ export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
 export const saveSubject = async (userId: string, id: string, subject: SubjectEditFields) => {
   const { name, originalParentId, parentId, backgroundColor, textColor } = subject;
 
+  const originalParentIdToPass = originalParentId && originalParentId != "0" ? parseInt(originalParentId, 10) : null;
+
   const newPath = await getNewPath(userId, parentId);
   if (id) {
-    return updateSingleSubject(userId, parseInt(id), { name, path: newPath, originalParentId, parentId, backgroundColor, textColor });
+    return updateSingleSubject(userId, parseInt(id), {
+      name,
+      path: newPath,
+      originalParentId: originalParentIdToPass,
+      parentId,
+      backgroundColor,
+      textColor
+    });
   } else {
     return insertSingleSubject(userId, { name, path: newPath, backgroundColor, textColor });
   }
 };
 
 const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">) => {
-  await executeCommand("insert subject", `INSERT INTO subjects (name, path, textColor, backgroundColor, userId) VALUES (?, ?, ?, ?, ?)`, [
-    subject.name,
-    subject.path || null,
-    subject.textColor,
-    subject.backgroundColor,
-    userId
-  ]);
+  await executeDrizzle(
+    "insert subject",
+    db.insert(subjects).values({
+      name: subject.name,
+      path: subject.path || null,
+      textColor: subject.textColor,
+      backgroundColor: subject.backgroundColor,
+      userId
+    })
+  );
 };
 
-const updateSingleSubject = async (userId: string, id: number, updates: SubjectEditFields) => {
+const updateSingleSubject = async (
+  userId: string,
+  id: number,
+  updates: Omit<SubjectEditFields, "originalParentId"> & { originalParentId: number | null }
+) => {
   if (!id) {
     return;
   }
@@ -44,10 +62,11 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
   let newSubjectPath: string | null;
   let newDescendantPathPiece: string | null;
 
-  const parentChanged = updates.originalParentId !== updates.parentId;
+  const parentChanged = updates.originalParentId != updates.parentId;
+
   if (parentChanged) {
     if (updates.parentId) {
-      newParent = await getSubject(updates.parentId!, userId);
+      newParent = await getSubject(updates.parentId, userId);
       if (!newParent) {
         return null;
       }
@@ -56,67 +75,60 @@ const updateSingleSubject = async (userId: string, id: number, updates: SubjectE
     newSubjectPath = newParent ? (newParent.path || ",") + `${newParent.id},` : null;
     newDescendantPathPiece = `${newSubjectPath || ","}${id},`;
 
-    await runTransaction(
+    await executeDrizzle(
       "update subject - with parent change",
-      tx =>
-        tx.execute(
-          `
-        UPDATE subjects
-        SET name = ?, textColor = ?, backgroundColor = ?, path = ?
-        WHERE id = ?
-        `,
-          [updates.name, updates.textColor, updates.backgroundColor, newSubjectPath, id]
-        ),
-      tx =>
-        tx.execute(
-          `
-        UPDATE subjects
-        SET path = REGEXP_REPLACE(path, '(.*,${id},)(.*)', '${newDescendantPathPiece}$2')
-        WHERE path LIKE '%,${id},%'
-      `,
-          []
-        )
-    );
-    return;
-  } else {
-    await executeCommand(
-      "update subject - no parent change",
-      `
-        UPDATE subjects
-        SET name = ?, textColor = ?, backgroundColor = ?
-        WHERE id = ?
-    `,
-      [updates.name, updates.textColor, updates.backgroundColor, id]
-    );
+      db.transaction(async tx => {
+        await tx
+          .update(subjects)
+          .set({
+            name: updates.name,
+            textColor: updates.textColor,
+            backgroundColor: updates.backgroundColor,
+            path: newSubjectPath
+          })
+          .where(eq(subjects.id, id));
 
-    return;
+        await tx
+          .update(subjects)
+          .set({ path: sql.raw(`REGEXP_REPLACE(path, '(.*,${id},)(.*)', '${newDescendantPathPiece}$2')`) })
+          .where(like(subjects.path, sql.raw(`'%,${id},%'`)));
+      })
+    );
+  } else {
+    await executeDrizzle(
+      "update subject - no parent change",
+      db
+        .update(subjects)
+        .set({ name: updates.name, textColor: updates.textColor, backgroundColor: updates.backgroundColor })
+        .where(eq(subjects.id, id))
+    );
   }
 };
 
 export const deleteSubject = async (userId: string, id: number) => {
-  await runTransaction(
+  await executeDrizzle(
     "delete subject",
-    tx =>
-      tx.execute(
-        `
-        DELETE
-        FROM books_subjects bs
-        WHERE bs.subject IN (
-          SELECT id
-          FROM subjects s
-          WHERE userId = ? AND (id = ? OR PATH LIKE '%,?,%')
-      )
-    `,
-        [userId, id, id]
-      ),
-    tx =>
-      tx.execute(
-        `
-        DELETE FROM subjects
-        WHERE userId = ? AND (id = ? OR PATH LIKE '%,?,%')
-      `,
-        [userId, id, id]
-      )
+    db.transaction(async tx => {
+      await tx.delete(booksSubjects).where(
+        exists(
+          db
+            .select({ id: subjects.id })
+            .from(subjects)
+            .where(
+              and(eq(subjects.id, booksSubjects.subject), eq(subjects.userId, userId), or(eq(subjects.id, id), like(subjects.path, sql`'%,${id},%'`)))
+            )
+        )
+      );
+
+      await tx.delete(subjects).where(
+        and(
+          // check userId
+          eq(subjects.userId, userId),
+          // subject match, or children
+          or(eq(subjects.id, id), like(subjects.path, sql`'%,${id},%'`))
+        )
+      );
+    })
   );
 };
 
@@ -131,5 +143,13 @@ const getNewPath = async (userId: string, parentId: number | null): Promise<stri
 };
 
 const getSubject = async (id: number, userId: string): Promise<Subject> => {
-  return executeQueryFirst("get subject", "SELECT * FROM subjects WHERE id = ? AND userId = ?", [id, userId]);
+  const res = await executeDrizzle(
+    "get subject",
+    db
+      .select()
+      .from(subjects)
+      .where(and(eq(subjects.id, id), eq(subjects.userId, userId)))
+  );
+
+  return res[0];
 };

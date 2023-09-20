@@ -7,7 +7,7 @@
   import { onMount } from "svelte";
 
   export let onColorChosen: (color: string) => void;
-  export let currentColor: string;
+  export let currentColor: string | null;
   export let labelStyle: string;
 
   let uniqueId = `customColorPickerId${++uniqueIdCounter}`;
