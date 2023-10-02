@@ -1,4 +1,6 @@
 .popper-tooltip {
+  /* override position: absolute to prevent page overflow / scrolling */
+  position: fixed !important;
   display: none;
   opacity: 0;
   transition: opacity 200ms ease-in;
