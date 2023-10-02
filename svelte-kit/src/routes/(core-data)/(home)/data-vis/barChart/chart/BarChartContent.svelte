@@ -31,7 +31,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
+  $: adjustedWidth = Math.min(MAX_SVG_WIDTH - 100, showingData.length * 110 + 60);
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
