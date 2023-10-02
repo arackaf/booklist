@@ -31,7 +31,7 @@
       return data;
     });
 
-  $: adjustedWidth = Math.min(MAX_SVG_WIDTH - 100, showingData.length * 110 + 60);
+  $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
@@ -46,7 +46,7 @@
     .range([chartHeight, 0])
     .nice();
 
-  $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
+  $: scaleX = scaleBand().domain(displayValues).range([50, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
 
   $: scaleY = verticalAxisScale.ticks(Math.min(10, dataMax));
 

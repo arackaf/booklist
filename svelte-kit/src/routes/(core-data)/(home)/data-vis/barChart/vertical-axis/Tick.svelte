@@ -15,6 +15,6 @@
 </script>
 
 <g style="opacity: 1" transform={translate}>
-  <line stroke="#000" y1="0" y2="0" x1="0" x2="-6" />
-  <text class="text-[1em]" fill="#000" style="text-anchor: end" transform="translate(-10, 5)">{d}</text>
+  <line stroke="#000" y1="0" y2="0" x1="50" x2="44" />
+  <text class="text-[1em]" fill="#000" style="text-anchor: end" transform="translate(42, 4)">{d}</text>
 </g>

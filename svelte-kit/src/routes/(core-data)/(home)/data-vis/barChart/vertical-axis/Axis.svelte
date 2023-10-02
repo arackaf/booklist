@@ -15,7 +15,7 @@
 
 <g transform={`translate(${$axisSpring.masterTransformX}, ${$axisSpring.masterTransformY})`}>
   <g {transform}>
-    <path fill="none" stroke="black" d="M0,0 H0.5 V{$axisSpring.height}" />
+    <path fill="none" stroke="black" d="M50,0 H50.5 V{$axisSpring.height}" />
     {#each data.filter((_, idx) => idx !== 0).map((d, idx) => [d, idx]) as d (d[1])}
       <Tick {scale} d={d[0]} />
     {/each}
