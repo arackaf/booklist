@@ -1,9 +1,10 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import { scaleLinear } from "d3-scale";
-  import { scaleBand } from "d3-scale";
+  import { scaleBand, scaleLinear } from "d3-scale";
+  import { axisLeft } from "d3-axis";
   import { max } from "d3-array";
 
+  import VerticalAxis from "../vertical-axis/Axis.svelte";
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
 
@@ -39,7 +40,15 @@
   $: dataScale = scaleLinear()
     .domain([0, dataMax ?? []])
     .range([0, chartHeight]);
+
+  $: verticalAxisScale = scaleLinear()
+    .domain([0, dataMax ?? []])
+    .range([chartHeight, 0])
+    .nice();
+
   $: scaleX = scaleBand().domain(displayValues).range([0, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
+
+  $: scaleY = verticalAxisScale.ticks(Math.min(10, dataMax));
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
   const offsetY = margin.bottom - height;
@@ -102,6 +111,15 @@
           />
         {/each}
       </g>
+
+      <VerticalAxis
+        masterTransformX={0}
+        masterTransformY={margin.top}
+        scale={verticalAxisScale}
+        data={scaleY}
+        graphHeight={chartHeight}
+        transform="translate(0, 0)"
+      />
 
       <Axis
         masterTransformX={0}
