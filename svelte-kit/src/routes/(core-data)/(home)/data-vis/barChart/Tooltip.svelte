@@ -17,7 +17,7 @@
 
   {#if data.childSubjects?.length}
     <div class="text-base">
-      <button on:click={runDrilldown} class="gap-2 raw-button flex gap-1">
+      <button on:click={runDrilldown} class="raw-button flex gap-2">
         <span class="leading-none text-black">View</span>
         <i class="far fa-chart-bar leading-none text-black" />
       </button>
