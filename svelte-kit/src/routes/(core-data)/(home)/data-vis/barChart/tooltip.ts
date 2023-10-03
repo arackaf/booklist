@@ -94,8 +94,6 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
   const { data, drilldown, removeBar, barWidth } = props;
   let { position } = props;
 
-  const barRect = node.getBoundingClientRect();
-
   const tooltipMabager = new TooltipHoverState();
 
   function initializePopper() {
