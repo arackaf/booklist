@@ -27,7 +27,7 @@
     <div class="flex flex-col gap-2">
       <div class="flex items-baseline gap-2 md:text-lg text-xs">
         <span class="name">{data.display}</span>
-        <button class="raw-button flex" on:click={() => removeBar(data.groupId)}><i class="fad fa-times-circle" /></button>
+        <button class="raw-button flex ml-auto" on:click={() => removeBar(data.groupId)}><i class="fad fa-times-circle" /></button>
       </div>
       <hr class="border-slate-600 my-0" />
     </div>
