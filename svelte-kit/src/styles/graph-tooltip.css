@@ -16,6 +16,14 @@
   --arrow-offset: 5px; /* half of sqrt(10^2 + 10^2)  */
 }
 
+@media (max-width: 800px) {
+  .tooltip-root {
+    --arrow-size: 6px;
+    --arrow-diagonal: 3px; /* half of sqrt(10^2 + 10^2)  */
+    --arrow-offset: 2px; /* half of sqrt(10^2 + 10^2)  */
+  }
+}
+
 .tooltip-root.left {
   transform: translateX(calc(-1 * var(--arrow-diagonal)));
 }
