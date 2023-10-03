@@ -12,19 +12,27 @@
 
 .tooltip-root {
   --arrow-size: 10px;
-  --arrow-diagonal: 7px; /* half of sqrt(10^2 + 10^2)  */
-  --arrow-offset: 5px; /* half of sqrt(10^2 + 10^2)  */
+  --arrow-diagonal: 7px; /* half of sqrt(10^2 + 10^2) which is how far the point protrudes out (once moved over halfway, per the next css var */
+  --arrow-offset: 5px; /* half of --arrow-size - move the box halfway over  */
+}
+
+@media (max-width: 800px) {
+  .tooltip-root {
+    --arrow-size: 6px;
+    --arrow-diagonal: 3px; /* same as above but with some fudging */
+    --arrow-offset: 2px;
+  }
 }
 
 .tooltip-root.left {
-  margin-top: 10px;
-  transform: translateX(calc(100% + var(--arrow-diagonal)));
+  transform: translateX(calc(-1 * var(--arrow-diagonal)));
 }
 .tooltip-root.right {
-  margin-top: 10px;
-  transform: translateX(calc(-1 * (100% + var(--arrow-diagonal))));
+  transform: translateX(calc(var(--arrow-diagonal)));
 }
-.tooltip-root.top {
+.tooltip-root.top,
+.tooltip-root.top-left,
+.tooltip-root.top-right {
   transform: translateY(calc(-1 * var(--arrow-diagonal)));
 }
 
@@ -40,18 +48,27 @@
 .tooltip-root .arrow {
   visibility: hidden;
 }
-.tooltip-root .arrow.left {
-  top: calc(50% - var(--arrow-offset));
-  left: calc(-1 * var(--arrow-offset));
-}
-.tooltip-root .arrow.right {
+.tooltip-root.left .arrow {
   top: calc(50% - var(--arrow-offset));
   right: calc(-1 * var(--arrow-offset));
 }
-.tooltip-root .arrow.top {
+.tooltip-root.right .arrow {
+  top: calc(50% - var(--arrow-offset));
+  left: calc(-1 * var(--arrow-offset));
+}
+.tooltip-root.top .arrow {
   left: calc(50% - var(--arrow-offset));
   bottom: calc(-1 * var(--arrow-offset));
 }
+.tooltip-root.top-left .arrow {
+  left: 15px;
+  bottom: calc(-1 * var(--arrow-offset));
+}
+.tooltip-root.top-right .arrow {
+  right: 15px;
+  bottom: calc(-1 * var(--arrow-offset));
+}
+
 .tooltip-root .arrow::before {
   visibility: visible;
   content: "";
