@@ -17,11 +17,9 @@
 }
 
 .tooltip-root.left {
-  margin-top: 10px;
   transform: translateX(calc(-1 * var(--arrow-diagonal)));
 }
 .tooltip-root.right {
-  margin-top: 10px;
   transform: translateX(calc(var(--arrow-diagonal)));
 }
 .tooltip-root.top {
@@ -48,7 +46,7 @@
   top: calc(50% - var(--arrow-offset));
   left: calc(-1 * var(--arrow-offset));
 }
-.tooltip-root .arrow.top {
+.tooltip-root.top .arrow {
   left: calc(50% - var(--arrow-offset));
   bottom: calc(-1 * var(--arrow-offset));
 }
