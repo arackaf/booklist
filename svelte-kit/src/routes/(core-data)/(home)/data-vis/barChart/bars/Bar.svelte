@@ -15,7 +15,15 @@
 
   export let noInitialAnimation: boolean;
 
-  $: position = (height < 150 ? "top" : index < barCount / 2 ? "right" : "left") as Position;
+  let position: Position;
+
+  $: {
+    if (height < 150) {
+      position = "top";
+    } else {
+      position = index < barCount / 2 ? "right" : "left";
+    }
+  }
 </script>
 
 {#if data.entries.length == 1}
