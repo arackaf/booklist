@@ -19,7 +19,13 @@
 
   $: {
     if (height < 150) {
-      position = "top";
+      if (index < 3) {
+        position = "top-left";
+      } else if (index >= barCount - 3) {
+        position = "top-right";
+      } else {
+        position = "top";
+      }
     } else {
       position = index < barCount / 2 ? "right" : "left";
     }

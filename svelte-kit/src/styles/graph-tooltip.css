@@ -22,7 +22,9 @@
 .tooltip-root.right {
   transform: translateX(calc(var(--arrow-diagonal)));
 }
-.tooltip-root.top {
+.tooltip-root.top,
+.tooltip-root.top-left,
+.tooltip-root.top-right {
   transform: translateY(calc(-1 * var(--arrow-diagonal)));
 }
 
@@ -50,6 +52,15 @@
   left: calc(50% - var(--arrow-offset));
   bottom: calc(-1 * var(--arrow-offset));
 }
+.tooltip-root.top-left .arrow {
+  left: 15px;
+  bottom: calc(-1 * var(--arrow-offset));
+}
+.tooltip-root.top-right .arrow {
+  right: 15px;
+  bottom: calc(-1 * var(--arrow-offset));
+}
+
 .tooltip-root .arrow::before {
   visibility: visible;
   content: "";

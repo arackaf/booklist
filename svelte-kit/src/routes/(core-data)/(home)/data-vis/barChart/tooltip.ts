@@ -2,7 +2,7 @@ import { createPopper, type Placement, type Instance as PopperInstance } from "@
 import Tooltip from "./Tooltip.svelte";
 import type { Subject } from "$data/types";
 
-export type Position = "left" | "right" | "top";
+export type Position = "left" | "right" | "top" | "top-left" | "top-right";
 export type PopperOptions = { position: Position; data: Data; drilldown: any; removeBar: (id: string) => void };
 
 class TooltipHoverState {
@@ -108,6 +108,8 @@ export const tooltip = (node: any, props: PopperOptions) => {
     const placementMap: { [keys in Position]: Placement } = {
       left: "left-start",
       top: "top",
+      "top-right": "top-end",
+      "top-left": "top-start",
       right: "right-start"
     };
 
