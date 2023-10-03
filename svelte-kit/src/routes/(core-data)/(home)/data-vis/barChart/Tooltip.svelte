@@ -31,5 +31,5 @@
     {/if}
   </div>
 
-  <div class={"arrow " + position} />
+  <div class="arrow" />
 </div>

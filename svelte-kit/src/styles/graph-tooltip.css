@@ -18,11 +18,11 @@
 
 .tooltip-root.left {
   margin-top: 10px;
-  transform: translateX(calc(100% + var(--arrow-diagonal)));
+  transform: translateX(calc(-1 * var(--arrow-diagonal)));
 }
 .tooltip-root.right {
   margin-top: 10px;
-  transform: translateX(calc(-1 * (100% + var(--arrow-diagonal))));
+  transform: translateX(calc(var(--arrow-diagonal)));
 }
 .tooltip-root.top {
   transform: translateY(calc(-1 * var(--arrow-diagonal)));
@@ -40,13 +40,13 @@
 .tooltip-root .arrow {
   visibility: hidden;
 }
-.tooltip-root .arrow.left {
-  top: calc(50% - var(--arrow-offset));
-  left: calc(-1 * var(--arrow-offset));
-}
-.tooltip-root .arrow.right {
+.tooltip-root.left .arrow {
   top: calc(50% - var(--arrow-offset));
   right: calc(-1 * var(--arrow-offset));
+}
+.tooltip-root.right .arrow {
+  top: calc(50% - var(--arrow-offset));
+  left: calc(-1 * var(--arrow-offset));
 }
 .tooltip-root .arrow.top {
   left: calc(50% - var(--arrow-offset));

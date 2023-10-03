@@ -67,6 +67,7 @@ class TooltipHoverState {
   isDead = () => this.#isDead;
 
   destroy() {
+    return;
     this.#isDying = true;
     this.#div?.classList.remove("show");
 
