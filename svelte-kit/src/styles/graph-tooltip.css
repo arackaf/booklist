@@ -12,15 +12,15 @@
 
 .tooltip-root {
   --arrow-size: 10px;
-  --arrow-diagonal: 7px; /* half of sqrt(10^2 + 10^2)  */
-  --arrow-offset: 5px; /* half of sqrt(10^2 + 10^2)  */
+  --arrow-diagonal: 7px; /* half of sqrt(10^2 + 10^2) which is how far the point protrudes out (once moved over halfway, per the next css var */
+  --arrow-offset: 5px; /* half of --arrow-size - move the box halfway over  */
 }
 
 @media (max-width: 800px) {
   .tooltip-root {
     --arrow-size: 6px;
-    --arrow-diagonal: 3px; /* half of sqrt(10^2 + 10^2)  */
-    --arrow-offset: 2px; /* half of sqrt(10^2 + 10^2)  */
+    --arrow-diagonal: 3px; /* same as above but with some fudging */
+    --arrow-offset: 2px;
   }
 }
 
