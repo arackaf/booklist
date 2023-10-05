@@ -7,12 +7,14 @@ export async function GET({ url, setHeaders, locals }) {
     return json({});
   }
 
-  setHeaders({
-    "cache-control": "max-age=3600"
-  });
-
   const id = url.searchParams.get("id") || "";
   const bookDetails = await getBookDetails(id);
+
+  if (bookDetails.similarBooks?.length) {
+    setHeaders({
+      "cache-control": "max-age=3600"
+    });
+  }
 
   return json(bookDetails);
 }
