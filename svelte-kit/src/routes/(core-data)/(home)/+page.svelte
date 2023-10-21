@@ -30,7 +30,7 @@
       header={packet.header}
       {books}
       chartIndex={i}
-      height={600}
+      height={390}
     />
   {/each}
 </div>

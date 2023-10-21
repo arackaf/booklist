@@ -16,7 +16,7 @@
   export let chartIndex: any;
 
   const MAX_SVG_WIDTH = 1200;
-  const MAX_SVG_HEIGHT = 600;
+  const MAX_SVG_HEIGHT = 390;
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -77,7 +77,7 @@
 </script>
 
 <div use:scrollInitial bind:this={rootElement}>
-  <div class="h-[600px] mx-auto" style="max-width: {MAX_SVG_WIDTH}px">
+  <div class="h-[500px] mx-auto mb-44" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
       <h4 style="display: inline" class="text-xl font-semibold">{header}</h4>
       {#if excludedCount}
@@ -94,7 +94,12 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" class="{sizeClass} block" style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
+    <svg
+      width="100%"
+      class="{sizeClass} block mt-7"
+      style="overflow: visible; max-height: {height}px"
+      viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}"
+    >
       <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
         {#each nonExcludedGroups as d, i (d.groupId)}
           <Bar

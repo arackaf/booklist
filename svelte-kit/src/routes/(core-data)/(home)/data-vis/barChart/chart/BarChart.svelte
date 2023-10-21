@@ -21,7 +21,7 @@
 
   $: ({ hasPublicId } = $page.data);
 
-  const margin = { top: 30, bottom: 180 };
+  const margin = { top: 0, bottom: 0 };
 </script>
 
 {#if !graphData.length}
