@@ -90,12 +90,7 @@
         </span>
       {/if}
     </div>
-    <svg
-      width="100%"
-      class="{sizeClass} block mt-7"
-      style="overflow: visible; max-height: {height}px"
-      viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}"
-    >
+    <svg width="100%" class="{sizeClass} block mt-7 overflow-visible max-h-[{height}px]" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
         {#each nonExcludedGroups as d, i (d.groupId)}
           <Bar
