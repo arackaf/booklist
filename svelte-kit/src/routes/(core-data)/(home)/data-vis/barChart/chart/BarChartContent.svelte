@@ -49,7 +49,6 @@
   $: scaleY = verticalAxisScale.ticks(Math.min(10, dataMax));
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
-  const offsetY = margin.bottom - height;
 
   const viewBoxSpring = spring(null as any, { stiffness: 0.1, damping: 0.4 });
   $: viewBoxSpring.set(adjustedWidth);
@@ -98,7 +97,7 @@
       style="overflow: visible; max-height: {height}px"
       viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}"
     >
-      <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
+      <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
         {#each nonExcludedGroups as d, i (d.groupId)}
           <Bar
             barCount={nonExcludedGroups.length}
