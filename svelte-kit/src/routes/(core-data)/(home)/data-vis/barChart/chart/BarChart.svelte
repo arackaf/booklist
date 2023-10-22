@@ -19,8 +19,6 @@
   $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
 
   $: ({ hasPublicId } = $page.data);
-
-  const margin = { top: 0, bottom: 0 };
 </script>
 
 {#if !graphData.length}
@@ -40,5 +38,5 @@
     </Alert>
   {/if}
 {:else}
-  <BarChartContent {margin} {header} {graphData} {drilldown} {chartIndex} />
+  <BarChartContent {header} {graphData} {drilldown} {chartIndex} />
 {/if}
