@@ -34,15 +34,14 @@
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
-  $: chartHeight = height - margin.top - margin.bottom;
   $: dataMax = max(dataValues);
   $: dataScale = scaleLinear()
     .domain([0, dataMax ?? []])
-    .range([0, chartHeight]);
+    .range([0, height]);
 
   $: verticalAxisScale = scaleLinear()
     .domain([0, dataMax ?? []])
-    .range([chartHeight, 0])
+    .range([height, 0])
     .nice();
 
   $: scaleX = scaleBand().domain(displayValues).range([50, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
@@ -121,7 +120,7 @@
         masterTransformY={margin.top}
         scale={verticalAxisScale}
         data={scaleY}
-        graphHeight={chartHeight}
+        graphHeight={height}
         transform="translate(0, 0)"
       />
 
