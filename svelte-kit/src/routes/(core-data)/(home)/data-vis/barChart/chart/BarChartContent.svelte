@@ -77,7 +77,7 @@
 </script>
 
 <div use:scrollInitial bind:this={rootElement}>
-  <div class="h-[500px] mx-auto mb-44" style="max-width: {MAX_SVG_WIDTH}px">
+  <div class="h-[500px] mx-auto mb-36" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
       <h4 style="display: inline" class="text-xl font-semibold">{header}</h4>
       {#if excludedCount}
