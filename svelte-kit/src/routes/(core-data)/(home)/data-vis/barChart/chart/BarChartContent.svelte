@@ -114,14 +114,7 @@
         {/each}
       </g>
 
-      <VerticalAxis
-        masterTransformX={0}
-        masterTransformY={margin.top}
-        scale={verticalAxisScale}
-        data={scaleY}
-        graphHeight={height}
-        transform="translate(0, 0)"
-      />
+      <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} transform="translate(0, 0)" />
 
       <Axis
         masterTransformX={0}
