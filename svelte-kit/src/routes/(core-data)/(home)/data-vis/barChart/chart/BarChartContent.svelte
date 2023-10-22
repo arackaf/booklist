@@ -116,14 +116,7 @@
 
       <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} transform="translate(0, 0)" />
 
-      <Axis
-        masterTransformX={0}
-        masterTransformY={-1 * margin.bottom}
-        data={showingData}
-        {scaleX}
-        graphWidth={adjustedWidth}
-        transform="translate(0, {height})"
-      />
+      <Axis data={showingData} {scaleX} graphWidth={adjustedWidth} transform="translate(0, {height})" />
     </svg>
   </div>
   <hr />

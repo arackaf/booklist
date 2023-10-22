@@ -6,18 +6,14 @@
   export let data: any[];
   export let graphWidth: any;
   export let scaleX: any;
-  export let masterTransformX: any;
-  export let masterTransformY: any;
 
-  let axisSpring = spring({ width: graphWidth, masterTransformX, masterTransformY }, { stiffness: 0.1, damping: 0.4 });
-  $: axisSpring.update(state => ({ ...state, width: graphWidth, masterTransformX, masterTransformY }));
+  let axisSpring = spring({ width: graphWidth }, { stiffness: 0.1, damping: 0.4 });
+  $: axisSpring.update(state => ({ ...state, width: graphWidth }));
 </script>
 
-<g transform={`translate(${$axisSpring.masterTransformX}, ${$axisSpring.masterTransformY})`}>
-  <g {transform}>
-    <path fill="none" stroke="black" d="M50.5,6 V0.5 H{$axisSpring.width - 1} V 6" />
-    {#each data as d (d)}
-      <Tick {scaleX} {d} />
-    {/each}
-  </g>
+<g {transform}>
+  <path fill="none" stroke="black" d="M50.5,6 V0.5 H{$axisSpring.width - 1} V 6" />
+  {#each data as d (d)}
+    <Tick {scaleX} {d} />
+  {/each}
 </g>
