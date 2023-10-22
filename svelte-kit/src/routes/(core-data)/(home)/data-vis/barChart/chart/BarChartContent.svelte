@@ -112,10 +112,9 @@
           />
         {/each}
 
-        <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} transform="translate(0, 0)" />
+        <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} />
+        <Axis data={showingData} {scaleX} graphWidth={adjustedWidth} />
       </g>
-
-      <Axis data={showingData} {scaleX} graphWidth={adjustedWidth} transform="translate(0, {height})" />
     </svg>
   </div>
   <hr />
