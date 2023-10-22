@@ -1,14 +1,12 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import { scaleBand, scaleLinear } from "d3-scale";
-  import { axisLeft } from "d3-axis";
   import { max } from "d3-array";
 
   import VerticalAxis from "../vertical-axis/Axis.svelte";
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
 
-  export let height: any;
   export let margin: { top: number; bottom: number };
   export let header: any;
   export let graphData: any[];
@@ -17,6 +15,7 @@
 
   const MAX_SVG_WIDTH = 1200;
   const MAX_SVG_HEIGHT = 390;
+  const height = MAX_SVG_HEIGHT;
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
