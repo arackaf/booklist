@@ -40,7 +40,7 @@
 
   $: verticalAxisScale = scaleLinear()
     .domain([0, dataMax ?? []])
-    .range([height, 0])
+    .range([0, height])
     .nice();
 
   $: scaleX = scaleBand().domain(displayValues).range([50, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
@@ -111,9 +111,9 @@
             noInitialAnimation={chartIndex === 0 && !rendered}
           />
         {/each}
-      </g>
 
-      <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} transform="translate(0, 0)" />
+        <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} transform="translate(0, 0)" />
+      </g>
 
       <Axis data={showingData} {scaleX} graphWidth={adjustedWidth} transform="translate(0, {height})" />
     </svg>
