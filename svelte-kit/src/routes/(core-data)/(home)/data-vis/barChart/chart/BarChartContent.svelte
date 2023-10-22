@@ -1,22 +1,20 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import { scaleBand, scaleLinear } from "d3-scale";
-  import { axisLeft } from "d3-axis";
   import { max } from "d3-array";
 
   import VerticalAxis from "../vertical-axis/Axis.svelte";
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
 
-  export let height: any;
-  export let margin: { top: number; bottom: number };
   export let header: any;
   export let graphData: any[];
   export let drilldown: any;
   export let chartIndex: any;
 
   const MAX_SVG_WIDTH = 1200;
-  const MAX_SVG_HEIGHT = 600;
+  const MAX_SVG_HEIGHT = 390;
+  const height = MAX_SVG_HEIGHT;
 
   const scrollInitial = (el: any) => {
     el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
@@ -35,15 +33,14 @@
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
-  $: chartHeight = height - margin.top - margin.bottom;
   $: dataMax = max(dataValues);
   $: dataScale = scaleLinear()
     .domain([0, dataMax ?? []])
-    .range([0, chartHeight]);
+    .range([0, height]);
 
   $: verticalAxisScale = scaleLinear()
     .domain([0, dataMax ?? []])
-    .range([chartHeight, 0])
+    .range([height, 0])
     .nice();
 
   $: scaleX = scaleBand().domain(displayValues).range([50, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
@@ -51,7 +48,6 @@
   $: scaleY = verticalAxisScale.ticks(Math.min(10, dataMax));
 
   $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
-  const offsetY = margin.bottom - height;
 
   const viewBoxSpring = spring(null as any, { stiffness: 0.1, damping: 0.4 });
   $: viewBoxSpring.set(adjustedWidth);
@@ -77,7 +73,7 @@
 </script>
 
 <div use:scrollInitial bind:this={rootElement}>
-  <div class="h-[600px] mx-auto" style="max-width: {MAX_SVG_WIDTH}px">
+  <div class="h-[500px] mx-auto mb-36" style="max-width: {MAX_SVG_WIDTH}px">
     <div>
       <h4 style="display: inline" class="text-xl font-semibold">{header}</h4>
       {#if excludedCount}
@@ -94,8 +90,13 @@
         </span>
       {/if}
     </div>
-    <svg width="100%" class="{sizeClass} block" style="max-height: {height}px" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
-      <g transform={`scale(1, -1) translate(0, ${offsetY})`}>
+    <svg
+      width="100%"
+      class="{sizeClass} block mt-7"
+      style="overflow: visible; max-height: {height}px"
+      viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}"
+    >
+      <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
         {#each nonExcludedGroups as d, i (d.groupId)}
           <Bar
             barCount={nonExcludedGroups.length}
@@ -112,23 +113,9 @@
         {/each}
       </g>
 
-      <VerticalAxis
-        masterTransformX={0}
-        masterTransformY={margin.top}
-        scale={verticalAxisScale}
-        data={scaleY}
-        graphHeight={chartHeight}
-        transform="translate(0, 0)"
-      />
+      <VerticalAxis scale={verticalAxisScale} data={scaleY} graphHeight={height} transform="translate(0, 0)" />
 
-      <Axis
-        masterTransformX={0}
-        masterTransformY={-1 * margin.bottom}
-        data={showingData}
-        {scaleX}
-        graphWidth={adjustedWidth}
-        transform="translate(0, {height})"
-      />
+      <Axis data={showingData} {scaleX} graphWidth={adjustedWidth} transform="translate(0, {height})" />
     </svg>
   </div>
   <hr />

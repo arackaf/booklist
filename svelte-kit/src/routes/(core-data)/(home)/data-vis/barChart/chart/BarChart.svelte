@@ -13,15 +13,12 @@
   export let drilldown: any;
   export let header: any;
   export let chartIndex: any;
-  export let height: any;
 
   $: subjectIds = subjects.map(s => s.id);
 
   $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
 
   $: ({ hasPublicId } = $page.data);
-
-  const margin = { top: 30, bottom: 180 };
 </script>
 
 {#if !graphData.length}
@@ -41,5 +38,5 @@
     </Alert>
   {/if}
 {:else}
-  <BarChartContent {height} {margin} {header} {graphData} {drilldown} {chartIndex} />
+  <BarChartContent {header} {graphData} {drilldown} {chartIndex} />
 {/if}

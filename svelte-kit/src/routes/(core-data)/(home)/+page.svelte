@@ -23,14 +23,6 @@
 
 <div>
   {#each chartPackets as packet, i (packet.header)}
-    <BarChart
-      drilldown={getDrilldownChart.bind(null, i)}
-      subjects={packet.subjects}
-      {subjectHash}
-      header={packet.header}
-      {books}
-      chartIndex={i}
-      height={600}
-    />
+    <BarChart drilldown={getDrilldownChart.bind(null, i)} subjects={packet.subjects} {subjectHash} header={packet.header} {books} chartIndex={i} />
   {/each}
 </div>
