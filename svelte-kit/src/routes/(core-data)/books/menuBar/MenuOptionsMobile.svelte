@@ -114,7 +114,7 @@
     <hr class="m-0" />
   {/if}
 
-  <form method="POST" action="?/reloadBooks" use:enhance={reload}>
+  <form method="POST" action="?/reloadBooks" class="contents" use:enhance={reload}>
     <Button class="h-8" type="submit" disabled={reloading}>
       <span>Reload Books</span>
       <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />

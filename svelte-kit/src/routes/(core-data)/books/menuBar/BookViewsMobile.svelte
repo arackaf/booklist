@@ -24,21 +24,21 @@
 
 <form method="POST" action="?/setBooksView" class="contents" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={GRID_VIEW} />
-  <Button disabled={bookViewToUse == GRID_VIEW || anyBooksSelected}>
+  <Button class="h-8" disabled={bookViewToUse == GRID_VIEW || anyBooksSelected}>
     <span>Main View</span>
     <i class="fal fa-fw fa-table" />
   </Button>
 </form>
 <form method="POST" action="?/setBooksView" class="contents" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={COVERS_LIST} />
-  <Button disabled={bookViewToUse == COVERS_LIST || anyBooksSelected}>
+  <Button class="h-8" disabled={bookViewToUse == COVERS_LIST || anyBooksSelected}>
     <span>Covers View</span>
     <i class="fas fa-fw fa-th" />
   </Button>
 </form>
 <form method="POST" action="?/setBooksView" class="contents" use:enhance={uiViewChange} on:submit={closeMobileMenu}>
   <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-  <Button disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected}>
+  <Button class="h-8" disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected}>
     <span>Mobile View</span>
     <i class="fal fa-fw fa-list" />
   </Button>
