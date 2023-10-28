@@ -5,11 +5,11 @@
 
   const INFLEXION_PADDING = 50; // space between donut and label inflexion point
 
-  const diameter = 600;
+  const diameter = 500;
   const width = diameter;
   const height = diameter;
 
-  const margin = 100;
+  const margin = 0;
 
   const radius = diameter / 2 - margin;
 
@@ -66,24 +66,26 @@
   });
 </script>
 
-<svg {width} {height} style="display: inline-block; overflow: visible;">
-  <g transform={`translate(${width / 2}, ${height / 2})`}>
-    {#each pieSegments as seg, i}
-      {#each seg.chunks as chunk}
-        <path d={chunk.arc} fill={chunk.color} />
+<div class="flex py-24">
+  <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
+    <g transform={`translate(${width / 2}, ${height / 2})`}>
+      {#each pieSegments as seg, i}
+        {#each seg.chunks as chunk}
+          <path d={chunk.arc} fill={chunk.color} />
+        {/each}
+        <circle cx={seg.centroid[0]} cy={seg.centroid[1]} r={2} />
+        <line x1={seg.centroid[0]} y1={seg.centroid[1]} x2={seg.inflexionPoint[0]} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
+        <line x1={seg.inflexionPoint[0]} y1={seg.inflexionPoint[1]} x2={seg.labelPosX} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
+        <text
+          x={seg.labelPosX + (seg.isRightLabel ? 2 : -2)}
+          y={seg.inflexionPoint[1]}
+          text-anchor={seg.textAnchor}
+          dominant-baseline="middle"
+          font-size={14}
+        >
+          {seg.masterLabel}
+        </text>
       {/each}
-      <circle cx={seg.centroid[0]} cy={seg.centroid[1]} r={2} />
-      <line x1={seg.centroid[0]} y1={seg.centroid[1]} x2={seg.inflexionPoint[0]} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
-      <line x1={seg.inflexionPoint[0]} y1={seg.inflexionPoint[1]} x2={seg.labelPosX} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
-      <text
-        x={seg.labelPosX + (seg.isRightLabel ? 2 : -2)}
-        y={seg.inflexionPoint[1]}
-        text-anchor={seg.textAnchor}
-        dominant-baseline="middle"
-        font-size={14}
-      >
-        {seg.masterLabel}
-      </text>
-    {/each}
-  </g>
-</svg>
+    </g>
+  </svg>
+</div>
