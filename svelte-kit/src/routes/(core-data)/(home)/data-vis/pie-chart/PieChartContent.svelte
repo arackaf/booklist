@@ -18,8 +18,17 @@
   const arcGenerator = arc();
   const pieSegments: any[] = pieData.map(segment => {
     const segmentCount = segment.data.entries.length;
+    const masterArc = {
+      innerRadius: 0,
+      outerRadius: radius,
+      startAngle: segment.startAngle,
+      endAngle: segment.endAngle
+    };
+    const centroid = arcGenerator.centroid(masterArc);
 
     return {
+      masterArc: arcGenerator(masterArc),
+      centroid,
       count: segmentCount,
       chunks: segment.data.entries.map((entry: any, idx: number) => {
         const arcSectionRadius = radius * ((segmentCount - idx) / segmentCount);
@@ -44,6 +53,7 @@
       {#each seg.chunks as chunk}
         <path d={chunk.arc} fill={chunk.color} />
       {/each}
+      <circle cx={seg.centroid[0]} cy={seg.centroid[1]} r={2} />
     {/each}
   </g>
 </svg>
