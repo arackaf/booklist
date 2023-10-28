@@ -126,5 +126,5 @@
       </ul>
     {/if}
   </nav>
-  <div id="main-mobile-menu" class="main-mobile-menu p-2 bg-white absolute border border-neutral-400" />
+  <div id="main-mobile-menu" class="main-mobile-menu p-2 bg-white absolute border border-neutral-400 z-10" />
 </header>
