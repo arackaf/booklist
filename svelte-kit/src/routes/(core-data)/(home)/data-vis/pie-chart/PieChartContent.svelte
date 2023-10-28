@@ -3,6 +3,8 @@
 
   export let graphData: any[];
 
+  const INFLEXION_PADDING = 50; // space between donut and label inflexion point
+
   const diameter = 600;
   const width = diameter;
   const height = diameter;
@@ -26,9 +28,26 @@
     };
     const centroid = arcGenerator.centroid(masterArc);
 
+    const inflexionInfo = {
+      innerRadius: radius + INFLEXION_PADDING,
+      outerRadius: radius + INFLEXION_PADDING,
+      startAngle: segment.startAngle,
+      endAngle: segment.endAngle
+    };
+
+    const inflexionPoint = arcGenerator.centroid(inflexionInfo);
+
+    const isRightLabel = inflexionPoint[0] > 0;
+    const labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
+    const textAnchor = isRightLabel ? "start" : "end";
+    const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
+
     return {
-      masterArc: arcGenerator(masterArc),
       centroid,
+      inflexionPoint,
+      labelPosX,
+      textAnchor,
+      masterLabel,
       count: segmentCount,
       chunks: segment.data.entries.map((entry: any, idx: number) => {
         const arcSectionRadius = radius * ((segmentCount - idx) / segmentCount);
@@ -47,13 +66,24 @@
   });
 </script>
 
-<svg {width} {height} style="display: inline-block">
+<svg {width} {height} style="display: inline-block; overflow: visible;">
   <g transform={`translate(${width / 2}, ${height / 2})`}>
     {#each pieSegments as seg, i}
       {#each seg.chunks as chunk}
         <path d={chunk.arc} fill={chunk.color} />
       {/each}
       <circle cx={seg.centroid[0]} cy={seg.centroid[1]} r={2} />
+      <line x1={seg.centroid[0]} y1={seg.centroid[1]} x2={seg.inflexionPoint[0]} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
+      <line x1={seg.inflexionPoint[0]} y1={seg.inflexionPoint[1]} x2={seg.labelPosX} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
+      <text
+        x={seg.labelPosX + (seg.isRightLabel ? 2 : -2)}
+        y={seg.inflexionPoint[1]}
+        text-anchor={seg.textAnchor}
+        dominant-baseline="middle"
+        font-size={14}
+      >
+        {seg.masterLabel}
+      </text>
     {/each}
   </g>
 </svg>
