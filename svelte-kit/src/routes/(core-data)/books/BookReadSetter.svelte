@@ -21,7 +21,7 @@
   };
 </script>
 
-<form method="POST" action="?/setBooksRead" use:enhance={booksUpdated}>
+<form method="POST" action="?/setBooksRead" class="contents" use:enhance={booksUpdated}>
   {#each ids as id}
     <input type="hidden" name="ids" value={id} />
   {/each}

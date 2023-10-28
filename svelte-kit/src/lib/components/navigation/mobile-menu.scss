@@ -9,18 +9,4 @@
   border-left-width: 0;
   border-top-right-radius: 0; //var(--default-border-radius);
   border-bottom-right-radius: var(--default-border-radius);
-
-  .mobile-menu-content {
-    background-color: white;
-
-    button span {
-      margin-left: 0;
-      margin-right: 10px;
-    }
-
-    button i {
-      margin-left: auto;
-      margin-right: 2px;
-    }
-  }
 }

@@ -99,17 +99,17 @@
 
   <Button title="Filter search" on:click={mobileHandler(openFilterModal)} class="h-8">
     <span>Set Filters</span>
-    <i class="fal fa-fw fa-filter" />
+    <i class="fal fa-fw fa-filter ml-auto" />
   </Button>
   <hr class="m-0" />
   {#if !isPublic}
     <Button title="Edit subjects" on:click={mobileHandler(editSubjects)} class="h-8">
       <span>Edit Subjects</span>
-      <i class="fal fa-fw fa-sitemap" />
+      <i class="fal fa-fw fa-sitemap ml-auto" />
     </Button>
     <Button title="Edit tags" on:click={mobileHandler(editTags)} class="h-8">
       <span>Edit Tags</span>
-      <i class="fal fa-fw fa-tags" />
+      <i class="fal fa-fw fa-tags ml-auto" />
     </Button>
     <hr class="m-0" />
   {/if}
@@ -117,30 +117,30 @@
   <form method="POST" action="?/reloadBooks" class="contents" use:enhance={reload}>
     <Button class="h-8" type="submit" disabled={reloading}>
       <span>Reload Books</span>
-      <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
+      <i class="fal fa-fw fa-sync ml-auto" class:fa-spin={reloading} />
     </Button>
   </form>
   <hr class="m-0" />
 {:else if !isPublic}
   <hr class="m-0" />
   <Button class="h-8" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
-    <span>Add / Remove Subjects</span>
-    <i class="fal fa-fw fa-sitemap" />
+    <span>Edit Subjects</span>
+    <i class="fal fa-fw fa-sitemap ml-auto" />
   </Button>
   <Button class="h-8" title="Add/remove tags" on:click={mobileHandler(editTagsForSelectedBooks)}>
-    <span>Add / Remove Tags</span>
-    <i class="fal fa-fw fa-tags" />
+    <span>Edit Tags</span>
+    <i class="fal fa-fw fa-tags ml-auto" />
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
     <Button class="h-8" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Read</span>
-      <i class="fal fa-fw fa-eye" />
+      <i class="fal fa-fw fa-eye ml-auto" />
     </Button>
   </BookReadSetter>
   <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
     <Button class="h-8" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Un-Read</span>
-      <i class="fal fa-fw fa-eye-slash" />
+      <i class="fal fa-fw fa-eye-slash ml-auto" />
     </Button>
   </BookReadSetter>
   <hr class="m-0" />
