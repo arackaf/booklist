@@ -3,11 +3,11 @@
 
   export let graphData: any[];
 
-  const diameter = 400;
+  const diameter = 600;
   const width = diameter;
   const height = diameter;
 
-  const margin = 50;
+  const margin = 100;
 
   const radius = diameter / 2 - margin;
 
