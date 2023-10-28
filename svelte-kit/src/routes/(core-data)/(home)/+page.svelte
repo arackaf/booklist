@@ -6,7 +6,7 @@
   import { toHash } from "$lib/state/helpers";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
 
-  import BarChart from "./data-vis/barChart/chart/BarChart.svelte";
+  import BarChart from "./data-vis/bar-chart/chart/BarChart.svelte";
 
   const subjects: Subject[] = $page.data.subjects;
   $: subjectHash = toHash(subjects);
