@@ -7,7 +7,6 @@
 
   import BookSvg from "./BookSvg.svelte";
 
-  import "./mobile-menu.scss";
   import { onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
