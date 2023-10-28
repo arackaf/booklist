@@ -4,7 +4,4 @@
   &.open {
     transform: translateX(0);
   }
-
-  border-top-right-radius: 0; //var(--default-border-radius);
-  border-bottom-right-radius: var(--default-border-radius);
 }
