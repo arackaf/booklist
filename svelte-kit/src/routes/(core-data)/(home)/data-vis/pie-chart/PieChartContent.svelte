@@ -7,7 +7,9 @@
   const width = diameter;
   const height = diameter;
 
-  const radius = 200;
+  const margin = 50;
+
+  const radius = diameter / 2 - margin;
 
   console.log({ graphData });
 
