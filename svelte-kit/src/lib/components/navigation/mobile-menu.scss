@@ -4,9 +4,7 @@
   &.open {
     transform: translateX(0);
   }
-  position: absolute;
   z-index: 10;
-  background-color: white;
 
   border: 1px solid var(--neutral-2);
   border-top-width: 0;
