@@ -17,13 +17,6 @@ header {
 
     padding: 4px 4px 4px 5px;
 
-    .button-container {
-      margin-top: 10px;
-      > * {
-        margin: 5px;
-      }
-    }
-
     .mobile-menu-content {
       background-color: white;
 
@@ -41,13 +34,6 @@ header {
         h3 {
           margin: 0 0 0 8px;
           align-self: center;
-        }
-      }
-
-      .button-container {
-        margin-top: 5px;
-        & button {
-          margin: 5px;
         }
       }
 

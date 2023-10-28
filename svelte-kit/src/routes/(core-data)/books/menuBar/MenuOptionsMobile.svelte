@@ -1,13 +1,20 @@
 <script lang="ts">
+  import { page } from "$app/stores";
+  import { goto } from "$app/navigation";
+
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
+  import Input from "$lib/components/ui/Input/Input.svelte";
+  import Button from "$lib/components/ui/Button/Button.svelte";
+
   import { getContext } from "svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
 
   import { endSaving, startSaving } from "../state/booksReadSavingState";
 
   import { selectedBooksLookup } from "../state/selectionState";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import { searchState } from "../state/searchState";
+
   export let isPublic: boolean;
   export let closeMobileMenu: () => void = () => {};
 
@@ -49,16 +56,52 @@
       endSaving(getSelectedBooksIds());
     }
   }
+
+  let quickSearchEl: any = {};
+
+  const runSearch = () => {
+    const searchParams = new URLSearchParams($page.url.searchParams);
+    const newSearch = quickSearchEl.value;
+
+    if (!newSearch) {
+      searchParams.delete("search");
+    } else {
+      searchParams.set("search", newSearch);
+    }
+
+    const newUrl = new URL($page.url);
+    newUrl.search = searchParams.toString();
+    goto(newUrl);
+    closeMobileMenu?.();
+  };
+  const resetSearch = () => {
+    quickSearchEl.value = $searchState.search;
+  };
 </script>
 
 {#if !selectedBooksCount}
-  <hr />
+  <Input
+    autocomplete="off"
+    bind:inputEl={quickSearchEl}
+    value={$searchState.search}
+    on:blur={resetSearch}
+    on:keydown={evt => {
+      if (evt.code === "Enter") {
+        runSearch();
+      }
+    }}
+    name="search"
+    class="h-8 m-0 mr-0"
+    placeholder="Title search"
+  />
+
+  <hr class="m-0" />
 
   <Button title="Filter search" on:click={mobileHandler(openFilterModal)} class="h-8">
     <span>Set Filters</span>
     <i class="fal fa-fw fa-filter" />
   </Button>
-  <hr />
+  <hr class="m-0" />
   {#if !isPublic}
     <Button title="Edit subjects" on:click={mobileHandler(editSubjects)} class="h-8">
       <span>Edit Subjects</span>
@@ -68,7 +111,7 @@
       <span>Edit Tags</span>
       <i class="fal fa-fw fa-tags" />
     </Button>
-    <hr />
+    <hr class="m-0" />
   {/if}
 
   <form method="POST" action="?/reloadBooks" use:enhance={reload}>
@@ -77,9 +120,9 @@
       <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
     </Button>
   </form>
-  <hr />
+  <hr class="m-0" />
 {:else if !isPublic}
-  <hr />
+  <hr class="m-0" />
   <Button class="h-8" title="Add/remove subjects" on:click={mobileHandler(editSubjectsForSelectedBooks)}>
     <span>Add / Remove Subjects</span>
     <i class="fal fa-fw fa-sitemap" />
@@ -100,5 +143,5 @@
       <i class="fal fa-fw fa-eye-slash" />
     </Button>
   </BookReadSetter>
-  <hr />
+  <hr class="m-0" />
 {/if}
