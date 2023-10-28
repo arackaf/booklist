@@ -27,11 +27,11 @@
 <div bind:this={rootEl} class="hidden">
   <div class="mobile-menu-content">
     <div>
-      <div class="flex items-center header">
-        <RawButton aria-label="Close mobile menu" on:click={onClose}>
+      <div class="flex items-center header mt-2">
+        <RawButton aria-label="Close mobile menu" class="text-[1.4rem] ml-[2px]" on:click={onClose}>
           <i class="far fa-times" />
         </RawButton>
-        <h3 class="leading-none">{title}</h3>
+        <h3 class="leading-none ml-2 text-lg">{title}</h3>
       </div>
       <slot />
     </div>

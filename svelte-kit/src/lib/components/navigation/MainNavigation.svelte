@@ -126,5 +126,5 @@
       </ul>
     {/if}
   </nav>
-  <div id="main-mobile-menu" class="main-mobile-menu" />
+  <div id="main-mobile-menu" class="main-mobile-menu p-2" />
 </header>

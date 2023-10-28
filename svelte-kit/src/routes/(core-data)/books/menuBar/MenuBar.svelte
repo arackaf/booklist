@@ -35,7 +35,7 @@
 </script>
 
 <div class="sticky top-0 z-[3] bg-white mt-[-2px] pt-[2px] pb-[1px]">
-  <MobileMenu title="Book Options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
+  <MobileMenu title="Search options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="flex flex-col gap-2 w-[175px] mt-4 mb-2">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
       <BookViewsMobile {bookViewToUse} {closeMobileMenu} />
