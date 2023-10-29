@@ -2,8 +2,14 @@ import { createPopper, type Placement, type Instance as PopperInstance } from "@
 import Tooltip from "./Tooltip.svelte";
 import type { Subject } from "$data/types";
 
-export type Position = "left" | "right" | "top" | "top-left" | "top-right";
-export type PopperOptions = { position: Position; data: Data; drilldown: any; removeBar: (id: string) => void };
+export type Position = "left" | "right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
+export type PopperOptions = {
+  position: Position;
+  data: Data;
+  drilldown: any;
+  removeBar: (id: string) => void;
+  hoverTarget?: Element;
+};
 
 class TooltipHoverState {
   #isDead: boolean = true;
@@ -106,11 +112,13 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
     });
 
     const placementMap: { [keys in Position]: Placement } = {
-      left: "left-start",
       top: "top",
       "top-right": "top-end",
       "top-left": "top-start",
-      right: "right-start"
+      left: "left",
+      "left-start": "left-start",
+      right: "right",
+      "right-start": "right-start"
     };
 
     const popperPlacement: Placement = placementMap[position];
