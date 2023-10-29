@@ -17,6 +17,7 @@
   {#each segment.chunks as chunk, i}
     <path d={chunk.arc} fill={chunk.color} />
   {/each}
+  <circle cx={segment.centroid[0]} cy={segment.centroid[1]} r={2} />
 </g>
 {#if mainArc}
   <circle
