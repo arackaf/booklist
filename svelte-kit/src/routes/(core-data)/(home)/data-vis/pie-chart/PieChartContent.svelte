@@ -78,18 +78,6 @@
     <g transform={`translate(${width / 2}, ${height / 2})`}>
       {#each pieSegments as seg}
         <SingleSlice segment={seg} />
-
-        <line x1={seg.centroid[0]} y1={seg.centroid[1]} x2={seg.inflexionPoint[0]} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
-        <line x1={seg.inflexionPoint[0]} y1={seg.inflexionPoint[1]} x2={seg.labelPosX} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
-        <text
-          x={seg.labelPosX + (seg.isRightLabel ? 2 : -2)}
-          y={seg.inflexionPoint[1]}
-          text-anchor={seg.textAnchor}
-          dominant-baseline="middle"
-          font-size={14}
-        >
-          {seg.masterLabel}
-        </text>
       {/each}
     </g>
   </svg>

@@ -28,3 +28,28 @@
     r={1}
   />
 {/if}
+<line
+  x1={segment.centroid[0]}
+  y1={segment.centroid[1]}
+  x2={segment.inflexionPoint[0]}
+  y2={segment.inflexionPoint[1]}
+  stroke={"black"}
+  fill={"black"}
+/>
+<line
+  x1={segment.inflexionPoint[0]}
+  y1={segment.inflexionPoint[1]}
+  x2={segment.labelPosX}
+  y2={segment.inflexionPoint[1]}
+  stroke={"black"}
+  fill={"black"}
+/>
+<text
+  x={segment.labelPosX + (segment.isRightLabel ? 2 : -2)}
+  y={segment.inflexionPoint[1]}
+  text-anchor={segment.textAnchor}
+  dominant-baseline="middle"
+  font-size={14}
+>
+  {segment.masterLabel}
+</text>
