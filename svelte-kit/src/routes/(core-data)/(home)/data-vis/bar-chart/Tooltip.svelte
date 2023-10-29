@@ -5,19 +5,8 @@
   export let data: Data;
   export let drilldown: any;
   export let removeBar: (id: string) => void;
-  export let barElement: SVGElement;
-
-  let style = "";
-
-  $: {
-    const barRect = barElement.getBoundingClientRect();
-    const barWidth = barRect.width;
-    if (position === "top-left") {
-      style = `left: calc(${Math.round(barWidth / 2)}px - var(--arrow-offset))`;
-    } else if (position === "top-right") {
-      style = `right: calc(${Math.round(barWidth / 2)}px - var(--arrow-offset))`;
-    }
-  }
+  export let arrowStyle = "";
+  export let targetElement: SVGElement;
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
@@ -44,5 +33,5 @@
     {/if}
   </div>
 
-  <div class="arrow" {style} />
+  <div class="arrow" style={arrowStyle} />
 </div>
