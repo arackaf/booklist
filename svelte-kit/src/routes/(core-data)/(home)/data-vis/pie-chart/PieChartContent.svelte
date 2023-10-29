@@ -1,6 +1,7 @@
 <script lang="ts">
   import { arc, pie } from "d3-shape";
   import { tooltip } from "../bar-chart/tooltip";
+  import SingleSlice from "./SingleSlice.svelte";
 
   export let graphData: any[];
 
@@ -68,23 +69,13 @@
       })
     };
   });
-
-  let mainArc: SVGElement;
-
-  //console.log({ pieSegments });
 </script>
 
 <div class="flex py-24">
   <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
     <g transform={`translate(${width / 2}, ${height / 2})`}>
-      {#each pieSegments as seg, i}
-        {#each seg.chunks as chunk}
-          {#if i === 0}
-            <path bind:this={mainArc} d={chunk.arc} fill={chunk.color} />
-          {:else}
-            <path d={chunk.arc} fill={chunk.color} />
-          {/if}
-        {/each}
+      {#each pieSegments as seg}
+        <SingleSlice segment={seg} />
         <circle cx={seg.centroid[0]} cy={seg.centroid[1]} r={2} />
         <line x1={seg.centroid[0]} y1={seg.centroid[1]} x2={seg.inflexionPoint[0]} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
         <line x1={seg.inflexionPoint[0]} y1={seg.inflexionPoint[1]} x2={seg.labelPosX} y2={seg.inflexionPoint[1]} stroke={"black"} fill={"black"} />
@@ -97,13 +88,6 @@
         >
           {seg.masterLabel}
         </text>
-        <circle
-          data-style="visibility: hidden"
-          use:tooltip={{ position: "right", data: seg.data, hoverTarget: mainArc, drilldown: () => {}, removeBar: () => {} }}
-          cx={seg.tooltipAnchor[0]}
-          cy={seg.tooltipAnchor[1]}
-          r={2}
-        />
       {/each}
     </g>
   </svg>

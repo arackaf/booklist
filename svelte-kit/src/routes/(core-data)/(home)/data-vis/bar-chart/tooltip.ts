@@ -99,7 +99,7 @@ export type Data = {
 };
 
 export const tooltip = (node: SVGElement, props: PopperOptions) => {
-  const { data, drilldown, removeBar, TooltipComponent = Tooltip } = props;
+  const { data, drilldown, removeBar, hoverTarget = node, TooltipComponent = Tooltip } = props;
   let { position } = props;
 
   const tooltipMabager = new TooltipHoverState();
@@ -147,14 +147,16 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
     });
   }
 
-  node.addEventListener("mouseenter", () => {
+  console.log({ hoverTarget });
+  hoverTarget.addEventListener("mouseenter", () => {
+    console.log("Mouse Enter");
     if (tooltipMabager.isDead()) {
       initializePopper();
     } else {
       tooltipMabager.hoverBar();
     }
   });
-  node.addEventListener("mouseleave", () => {
+  hoverTarget.addEventListener("mouseleave", () => {
     tooltipMabager.leaveBar();
   });
 
