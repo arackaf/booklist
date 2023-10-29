@@ -27,6 +27,7 @@
       endAngle: segment.endAngle
     };
     const centroid = arcGenerator.centroid(masterArc);
+    const tooltipAnchor = arcGenerator.centroid({ ...masterArc, innerRadius: radius });
 
     const inflexionInfo = {
       innerRadius: radius + INFLEXION_PADDING,
@@ -44,6 +45,7 @@
 
     return {
       centroid,
+      tooltipAnchor,
       inflexionPoint,
       labelPosX,
       textAnchor,
@@ -85,6 +87,7 @@
         >
           {seg.masterLabel}
         </text>
+        <circle style="visibility: hidden" cx={seg.tooltipAnchor[0]} cy={seg.tooltipAnchor[1]} r={2} />
       {/each}
     </g>
   </svg>
