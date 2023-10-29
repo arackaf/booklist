@@ -27,6 +27,6 @@
   }
 </script>
 
-<g use:tooltip={{ position, data, drilldown, removeBar, barWidth: width }}>
+<g use:tooltip={{ position, data, drilldown, removeBar }}>
   <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={color} />
 </g>

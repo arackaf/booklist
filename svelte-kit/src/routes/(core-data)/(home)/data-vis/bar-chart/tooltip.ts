@@ -3,7 +3,7 @@ import Tooltip from "./Tooltip.svelte";
 import type { Subject } from "$data/types";
 
 export type Position = "left" | "right" | "top" | "top-left" | "top-right";
-export type PopperOptions = { position: Position; data: Data; drilldown: any; removeBar: (id: string) => void; barWidth: number };
+export type PopperOptions = { position: Position; data: Data; drilldown: any; removeBar: (id: string) => void };
 
 class TooltipHoverState {
   #isDead: boolean = true;
@@ -87,11 +87,10 @@ export type Data = {
   count: number;
   display: string;
   childSubjects: Subject[];
-  barWidth: number;
 };
 
 export const tooltip = (node: SVGElement, props: PopperOptions) => {
-  const { data, drilldown, removeBar, barWidth } = props;
+  const { data, drilldown, removeBar } = props;
   let { position } = props;
 
   const tooltipMabager = new TooltipHoverState();
