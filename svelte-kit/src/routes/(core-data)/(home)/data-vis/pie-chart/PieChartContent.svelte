@@ -1,6 +1,5 @@
 <script lang="ts">
   import { arc, pie } from "d3-shape";
-  import { tooltip } from "../bar-chart/tooltip";
   import SingleSlice from "./SingleSlice.svelte";
 
   export let graphData: any[];
@@ -29,7 +28,7 @@
       endAngle: segment.endAngle
     };
     const centroid = arcGenerator.centroid(masterArc);
-    const tooltipAnchor = arcGenerator.centroid({ ...masterArc, innerRadius: radius });
+    const tooltipAnchor = arcGenerator.centroid({ ...masterArc, innerRadius: radius, outerRadius: masterArc.outerRadius - 2 });
 
     const inflexionInfo = {
       innerRadius: radius + INFLEXION_PADDING,
