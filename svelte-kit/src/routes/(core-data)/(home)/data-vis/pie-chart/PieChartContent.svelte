@@ -47,6 +47,7 @@
     return {
       startAngle: segment.startAngle,
       endAngle: segment.endAngle,
+      isRightLabel,
       data: segment.data,
       centroid,
       tooltipAnchor,
