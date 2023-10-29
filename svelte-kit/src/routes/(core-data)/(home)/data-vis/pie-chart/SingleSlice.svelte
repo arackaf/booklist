@@ -4,7 +4,13 @@
 
   let mainArc: SVGElement;
 
-  $: console.log({ segment });
+  const PI = 3.141592653;
+  $: startAngle = segment.startAngle * (180 / PI);
+  $: endAngle = segment.endAngle * (180 / PI);
+
+  $: midPoint = startAngle + (endAngle - startAngle) / 2;
+
+  $: console.log(segment.masterLabel, startAngle, endAngle, midPoint);
 </script>
 
 <g bind:this={mainArc}>
@@ -15,7 +21,7 @@
 {#if mainArc}
   <circle
     style="visibility: hidden"
-    use:tooltip={{ position: "right", data: segment.data, hoverTarget: mainArc, drilldown: () => {}, removeBar: () => {} }}
+    use:tooltip={{ position: midPoint < 180 ? "right" : "left", data: segment.data, hoverTarget: mainArc, drilldown: () => {}, removeBar: () => {} }}
     cx={segment.tooltipAnchor[0]}
     cy={segment.tooltipAnchor[1]}
     r={1}

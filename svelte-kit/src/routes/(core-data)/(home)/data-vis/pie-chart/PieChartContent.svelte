@@ -45,6 +45,8 @@
     const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
 
     return {
+      startAngle: segment.startAngle,
+      endAngle: segment.endAngle,
       data: segment.data,
       centroid,
       tooltipAnchor,
