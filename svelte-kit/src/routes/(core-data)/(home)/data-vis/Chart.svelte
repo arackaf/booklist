@@ -55,20 +55,25 @@
   {/if}
 {:else}
   <div>
-    <h4 style="display: inline" class="text-xl font-semibold">{header}</h4>
-    {#if excludedCount}
-      <span style="margin-left: 10px">
-        Excluding:
-        {#each graphData.filter(d => excluding[d.groupId]) as d}
-          <span style="margin-left: 10px">
-            {" " + d.display}
-            <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)}>
-              <i class="far fa-redo" />
-            </button>
-          </span>
-        {/each}
-      </span>
-    {/if}
+    <div class="flex items-baseline gap-4">
+      <div class="flex flex-col">
+        <h4 style="display: inline; text-wrap: nowrap" class="text-xl font-semibold">{header}</h4>
+        <span>xxx</span>
+      </div>
+      <div class="flex flex-wrap">
+        {#if excludedCount}
+          <span>Excluding: </span>
+          {#each graphData.filter(d => excluding[d.groupId]) as d}
+            <span style="margin-left: 10px; text-wrap: nowrap">
+              {" " + d.display}
+              <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)}>
+                <i class="far fa-redo" />
+              </button>
+            </span>
+          {/each}
+        {/if}
+      </div>
+    </div>
 
     {#if chartType === "BAR"}
       <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} />
