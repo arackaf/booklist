@@ -9,8 +9,6 @@
   $: endAngle = segment.endAngle * (180 / PI);
 
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
-
-  $: console.log(segment.masterLabel, startAngle, endAngle, midPoint);
 </script>
 
 <g bind:this={mainArc}>

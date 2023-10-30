@@ -148,7 +148,6 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
   }
 
   hoverTarget.addEventListener("mouseenter", () => {
-    console.log("Mouse Enter");
     if (tooltipMabager.isDead()) {
       initializePopper();
     } else {
