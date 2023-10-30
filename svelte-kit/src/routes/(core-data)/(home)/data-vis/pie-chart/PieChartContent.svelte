@@ -61,12 +61,10 @@
 
         return {
           color: entry.color,
-          arc: arcGenerator({
-            innerRadius: 0,
-            outerRadius: arcSectionRadius,
-            startAngle: segment.startAngle,
-            endAngle: segment.endAngle
-          })
+          innerRadius: 0,
+          outerRadius: arcSectionRadius,
+          startAngle: segment.startAngle,
+          endAngle: segment.endAngle
         };
       })
     };
