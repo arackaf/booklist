@@ -38,7 +38,6 @@
       startAngle: segment.startAngle,
       endAngle: segment.endAngle
     };
-    const centroid = arcGenerator.centroid(masterArc);
 
     const tooltipAnchor = arcGenerator.centroid({ ...masterArc, innerRadius: radius, outerRadius: masterArc.outerRadius - 2 });
 
@@ -61,7 +60,6 @@
       endAngle: segment.endAngle,
       isRightLabel,
       data: segment.data,
-      centroid,
       tooltipAnchor,
       inflexionPoint,
       labelPosX,
