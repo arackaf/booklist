@@ -1,11 +1,17 @@
 <script lang="ts">
+  import { arc } from "d3-shape";
+
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
+  import { spring } from "svelte/motion";
   export let segment: any;
   export let animate: boolean;
   export let labelsReady: boolean;
   export let onLabelsReady: () => void;
   export let removeSlice: (id: any) => void;
+  export let radius: number;
+
+  const arcGenerator = arc();
 
   let mainArc: SVGElement;
 
@@ -15,7 +21,26 @@
 
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
 
-  console.log({ chunks: segment.chunks, segment });
+  const getCentroid = (startAngle: number, endAngle: number) => {
+    return arcGenerator.centroid({
+      innerRadius: 0,
+      outerRadius: radius,
+      startAngle: startAngle,
+      endAngle: endAngle
+    });
+  };
+
+  const centroid = getCentroid(segment.startAngle, segment.endAngle);
+
+  const springConfig = { stiffness: 0.1, damping: 0.7 };
+
+  const initialLabelValues = { centroidX: centroid[0], centroidY: centroid[1] };
+  const sliceSpring = spring(initialLabelValues, springConfig);
+
+  $: {
+    const newCentroid = getCentroid(segment.startAngle, segment.endAngle);
+    sliceSpring.set({ centroidX: newCentroid[0], centroidY: newCentroid[1] });
+  }
 </script>
 
 <g bind:this={mainArc}>
@@ -23,7 +48,7 @@
     <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} />
   {/each}
   {#if labelsReady}
-    <circle cx={segment.centroid[0]} cy={segment.centroid[1]} r={2} />
+    <circle cx={$sliceSpring.centroidX} cy={$sliceSpring.centroidY} r={2} />
   {/if}
 </g>
 {#if labelsReady}

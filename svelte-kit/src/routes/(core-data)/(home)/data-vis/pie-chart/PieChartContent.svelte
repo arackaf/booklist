@@ -39,6 +39,7 @@
       endAngle: segment.endAngle
     };
     const centroid = arcGenerator.centroid(masterArc);
+
     const tooltipAnchor = arcGenerator.centroid({ ...masterArc, innerRadius: radius, outerRadius: masterArc.outerRadius - 2 });
 
     const inflexionInfo = {
@@ -93,7 +94,7 @@
   <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
     <g transform={`translate(${width / 2}, ${height / 2})`}>
       {#each pieSegments as seg (seg.data.groupId)}
-        <SingleSlice {removeSlice} {labelsReady} {onLabelsReady} {animate} segment={seg} />
+        <SingleSlice {radius} {removeSlice} {labelsReady} {onLabelsReady} {animate} segment={seg} />
       {/each}
     </g>
   </svg>
