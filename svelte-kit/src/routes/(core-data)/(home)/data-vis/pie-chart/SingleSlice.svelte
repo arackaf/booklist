@@ -68,8 +68,8 @@
     />
   {/if}
   <line
-    x1={segment.centroid[0]}
-    y1={segment.centroid[1]}
+    x1={$sliceSpring.centroidX}
+    y1={$sliceSpring.centroidY}
     x2={segment.inflexionPoint[0]}
     y2={segment.inflexionPoint[1]}
     stroke={"black"}
