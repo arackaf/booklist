@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    {#if chartType === "BAR"}
+    {#if chartType === "PIE"}
       <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} />
     {:else}
       <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} />
