@@ -5,9 +5,7 @@
 
   import { toHash } from "$lib/state/helpers";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
-
-  import BarChart from "./data-vis/bar-chart/chart/BarChart.svelte";
-  import PieChart from "./data-vis/pie-chart/PieChart.svelte";
+  import Chart from "./data-vis/Chart.svelte";
 
   const subjects: Subject[] = $page.data.subjects;
   $: subjectHash = toHash(subjects);
@@ -26,10 +24,6 @@
 
 <div>
   {#each chartPackets as packet, i (packet.header)}
-    {#if chartType === "BAR"}
-      <BarChart drilldown={getDrilldownChart.bind(null, i)} subjects={packet.subjects} {subjectHash} header={packet.header} {books} chartIndex={i} />
-    {:else}
-      <PieChart subjects={packet.subjects} {subjectHash} {books} chartIndex={i} />
-    {/if}
+    <Chart {books} {subjects} {subjectHash} drilldown={getDrilldownChart.bind(null, i)} header={packet.header} chartIndex={i} chartType={"BAR"} />
   {/each}
 </div>
