@@ -11,6 +11,7 @@
   export let removeSlice: (id: any) => void;
   export let radius: number;
 
+  const INFLEXION_PADDING = 50; // space between donut and label inflexion point
   const arcGenerator = arc();
 
   let mainArc: SVGElement;
@@ -29,17 +30,57 @@
       endAngle: endAngle
     });
   };
+  const getInflextionInfo = (startAngle: number, endAngle: number) => {
+    return {
+      innerRadius: radius + INFLEXION_PADDING,
+      outerRadius: radius + INFLEXION_PADDING,
+      startAngle: segment.startAngle,
+      endAngle: segment.endAngle
+    };
+  };
+
+  $: tooltipAnchor = arcGenerator.centroid({
+    startAngle: segment.startAngle,
+    endAngle: segment.endAngle,
+    innerRadius: radius,
+    outerRadius: radius - 2
+  });
+
+  const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
+  const inflexionPoint = arcGenerator.centroid(inflexionInfo);
+
+  let isRightLabel = inflexionPoint[0] > 0;
+  let labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
+  let textAnchor = isRightLabel ? "start" : "end";
 
   const centroid = getCentroid(segment.startAngle, segment.endAngle);
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
-  const initialLabelValues = { centroidX: centroid[0], centroidY: centroid[1] };
+  const initialLabelValues = {
+    centroidX: centroid[0],
+    centroidY: centroid[1],
+    inflexionPointX: inflexionPoint[0],
+    inflexionPointY: inflexionPoint[1]
+  };
   const sliceSpring = spring(initialLabelValues, springConfig);
 
   $: {
     const newCentroid = getCentroid(segment.startAngle, segment.endAngle);
-    sliceSpring.set({ centroidX: newCentroid[0], centroidY: newCentroid[1] });
+
+    const newInflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
+    const newInflexionPoint = arcGenerator.centroid(newInflexionInfo);
+
+    isRightLabel = newInflexionPoint[0] > 0;
+    labelPosX = newInflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
+    textAnchor = isRightLabel ? "start" : "end";
+
+    sliceSpring.set({
+      centroidX: newCentroid[0],
+      centroidY: newCentroid[1],
+      inflexionPointX: newInflexionPoint[0],
+      inflexionPointY: newInflexionPoint[1]
+    });
   }
 </script>
 
@@ -62,34 +103,28 @@
         drilldown: () => {},
         remove: removeSlice
       }}
-      cx={segment.tooltipAnchor[0]}
-      cy={segment.tooltipAnchor[1]}
+      cx={tooltipAnchor[0]}
+      cy={tooltipAnchor[1]}
       r={1}
     />
   {/if}
   <line
     x1={$sliceSpring.centroidX}
     y1={$sliceSpring.centroidY}
-    x2={segment.inflexionPoint[0]}
-    y2={segment.inflexionPoint[1]}
+    x2={$sliceSpring.inflexionPointX}
+    y2={$sliceSpring.inflexionPointY}
     stroke={"black"}
     fill={"black"}
   />
   <line
-    x1={segment.inflexionPoint[0]}
-    y1={segment.inflexionPoint[1]}
-    x2={segment.labelPosX}
-    y2={segment.inflexionPoint[1]}
+    x1={$sliceSpring.inflexionPointX}
+    y1={$sliceSpring.inflexionPointY}
+    x2={labelPosX}
+    y2={$sliceSpring.inflexionPointY}
     stroke={"black"}
     fill={"black"}
   />
-  <text
-    x={segment.labelPosX + (segment.isRightLabel ? 2 : -2)}
-    y={segment.inflexionPoint[1]}
-    text-anchor={segment.textAnchor}
-    dominant-baseline="middle"
-    font-size={14}
-  >
+  <text x={labelPosX + (isRightLabel ? 2 : -2)} y={$sliceSpring.inflexionPointY} text-anchor={textAnchor} dominant-baseline="middle" font-size={14}>
     {segment.masterLabel}
   </text>
 {/if}

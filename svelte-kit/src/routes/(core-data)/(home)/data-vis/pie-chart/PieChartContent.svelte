@@ -5,8 +5,6 @@
   export let graphData: any[];
   let animate = true;
 
-  const INFLEXION_PADDING = 50; // space between donut and label inflexion point
-
   const diameter = 500;
   const width = diameter;
   const height = diameter;
@@ -32,38 +30,13 @@
   const arcGenerator = arc();
   $: pieSegments = pieData.map(segment => {
     const segmentCount = segment.data.entries.length;
-    const masterArc = {
-      innerRadius: 0,
-      outerRadius: radius,
-      startAngle: segment.startAngle,
-      endAngle: segment.endAngle
-    };
 
-    const tooltipAnchor = arcGenerator.centroid({ ...masterArc, innerRadius: radius, outerRadius: masterArc.outerRadius - 2 });
-
-    const inflexionInfo = {
-      innerRadius: radius + INFLEXION_PADDING,
-      outerRadius: radius + INFLEXION_PADDING,
-      startAngle: segment.startAngle,
-      endAngle: segment.endAngle
-    };
-
-    const inflexionPoint = arcGenerator.centroid(inflexionInfo);
-
-    const isRightLabel = inflexionPoint[0] > 0;
-    const labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
-    const textAnchor = isRightLabel ? "start" : "end";
     const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
 
     return {
       startAngle: segment.startAngle,
       endAngle: segment.endAngle,
-      isRightLabel,
       data: segment.data,
-      tooltipAnchor,
-      inflexionPoint,
-      labelPosX,
-      textAnchor,
       masterLabel,
       count: segmentCount,
       chunks: segment.data.entries.map((entry: any, idx: number) => {
