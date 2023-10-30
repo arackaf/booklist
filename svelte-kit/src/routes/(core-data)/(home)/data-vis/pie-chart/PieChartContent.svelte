@@ -3,6 +3,7 @@
   import SingleSlice from "./SingleSlice.svelte";
 
   export let graphData: any[];
+  let animate = true;
 
   const INFLEXION_PADDING = 50; // space between donut and label inflexion point
 
@@ -69,13 +70,20 @@
       })
     };
   });
+
+  let labelsReady = !animate;
+  const onLabelsReady = () => {
+    setTimeout(() => {
+      labelsReady = true;
+    }, 200);
+  };
 </script>
 
 <div class="flex py-24">
   <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
     <g transform={`translate(${width / 2}, ${height / 2})`}>
       {#each pieSegments as seg}
-        <SingleSlice segment={seg} />
+        <SingleSlice {labelsReady} {onLabelsReady} {animate} segment={seg} />
       {/each}
     </g>
   </svg>

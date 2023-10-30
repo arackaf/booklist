@@ -13,21 +13,27 @@
   export let animate = true;
 
   let initialAnimationDoneCalled = false;
-  export let initialAnimationDone = () => {};
+  export let initialAnimationDone: () => void;
 
   const arcGenerator = arc();
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
-  // const springConfig = { stiffness: 0.2, damping: 0.8 };
 
   const initialSliceAngles = { startAngle: segmentChunk.startAngle, endAngle: animate ? segmentChunk.startAngle : segmentChunk.endAngle };
   const sliceSpring = spring(initialSliceAngles, springConfig);
 
   $: {
-    sliceSpring.set({
-      startAngle: segmentChunk.startAngle,
-      endAngle: segmentChunk.endAngle
-    });
+    sliceSpring
+      .set({
+        startAngle: segmentChunk.startAngle,
+        endAngle: segmentChunk.endAngle
+      })
+      .then(() => {
+        if (!initialAnimationDoneCalled) {
+          initialAnimationDone();
+        }
+        initialAnimationDoneCalled = true;
+      });
   }
 
   $: arcPath = arcGenerator({

@@ -2,7 +2,9 @@
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
   export let segment: any;
-  export let animate = true;
+  export let animate: boolean;
+  export let labelsReady: boolean;
+  export let onLabelsReady: () => void;
 
   let mainArc: SVGElement;
 
@@ -11,13 +13,11 @@
   $: endAngle = segment.endAngle * (180 / PI);
 
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
-
-  let labelsReady = !animate;
 </script>
 
 <g bind:this={mainArc}>
   {#each segment.chunks as chunk, i}
-    <SlicePath segmentChunk={chunk} />
+    <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} />
   {/each}
   {#if labelsReady}
     <circle cx={segment.centroid[0]} cy={segment.centroid[1]} r={2} />
