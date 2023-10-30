@@ -21,4 +21,4 @@
   }
 </script>
 
-<Tooltip {position} {data} {drilldown} {removeBar} {arrowStyle} {targetElement} />
+<Tooltip {position} {data} {drilldown} remove={removeBar} {arrowStyle} {targetElement} />

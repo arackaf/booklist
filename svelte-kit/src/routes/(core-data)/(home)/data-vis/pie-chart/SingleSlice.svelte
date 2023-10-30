@@ -5,6 +5,7 @@
   export let animate: boolean;
   export let labelsReady: boolean;
   export let onLabelsReady: () => void;
+  export let removeSlice: (id: any) => void;
 
   let mainArc: SVGElement;
 
@@ -13,6 +14,8 @@
   $: endAngle = segment.endAngle * (180 / PI);
 
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
+
+  console.log({ chunks: segment.chunks, segment });
 </script>
 
 <g bind:this={mainArc}>
@@ -32,7 +35,7 @@
         data: segment.data,
         hoverTarget: mainArc,
         drilldown: () => {},
-        removeBar: () => {}
+        remove: removeSlice
       }}
       cx={segment.tooltipAnchor[0]}
       cy={segment.tooltipAnchor[1]}

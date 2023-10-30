@@ -9,7 +9,7 @@ export type PopperOptions = {
   position: Position;
   data: Data;
   drilldown: any;
-  removeBar: (id: string) => void;
+  remove: (id: string) => void;
   hoverTarget?: Element;
   TooltipComponent?: typeof Tooltip;
 };
@@ -99,7 +99,7 @@ export type Data = {
 };
 
 export const tooltip = (node: SVGElement, props: PopperOptions) => {
-  const { data, drilldown, removeBar, hoverTarget = node, TooltipComponent = Tooltip } = props;
+  const { data, drilldown, remove, hoverTarget = node, TooltipComponent = Tooltip } = props;
   let { position } = props;
 
   const tooltipMabager = new TooltipHoverState();
@@ -111,7 +111,7 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
 
     new TooltipComponent({
       target: div,
-      props: { position, data, drilldown, removeBar, targetElement: node }
+      props: { position, data, drilldown, remove, targetElement: node }
     });
 
     const placementMap: { [keys in Position]: Placement } = {
