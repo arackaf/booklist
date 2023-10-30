@@ -61,7 +61,8 @@
     centroidX: centroid[0],
     centroidY: centroid[1],
     inflexionPointX: inflexionPoint[0],
-    inflexionPointY: inflexionPoint[1]
+    inflexionPointY: inflexionPoint[1],
+    labelPosX
   };
   const sliceSpring = spring(initialLabelValues, springConfig);
 
@@ -79,7 +80,8 @@
       centroidX: newCentroid[0],
       centroidY: newCentroid[1],
       inflexionPointX: newInflexionPoint[0],
-      inflexionPointY: newInflexionPoint[1]
+      inflexionPointY: newInflexionPoint[1],
+      labelPosX
     });
   }
 </script>
@@ -119,12 +121,18 @@
   <line
     x1={$sliceSpring.inflexionPointX}
     y1={$sliceSpring.inflexionPointY}
-    x2={labelPosX}
+    x2={$sliceSpring.labelPosX}
     y2={$sliceSpring.inflexionPointY}
     stroke={"black"}
     fill={"black"}
   />
-  <text x={labelPosX + (isRightLabel ? 2 : -2)} y={$sliceSpring.inflexionPointY} text-anchor={textAnchor} dominant-baseline="middle" font-size={14}>
+  <text
+    x={$sliceSpring.labelPosX + (isRightLabel ? 2 : -2)}
+    y={$sliceSpring.inflexionPointY}
+    text-anchor={textAnchor}
+    dominant-baseline="middle"
+    font-size={14}
+  >
     {segment.masterLabel}
   </text>
 {/if}
