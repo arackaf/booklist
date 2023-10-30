@@ -5,6 +5,7 @@
   import { stackGraphData } from "./stackGraphData";
   import BarChartContent from "./bar-chart/chart/BarChartContent.svelte";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";
+  import PieChartContent from "./pie-chart/PieChartContent.svelte";
 
   export let books: BookSubjectStack[];
   export let subjectHash: Hash<Subject>;
@@ -32,8 +33,8 @@
       return data;
     });
 
-  const removeBar = (id: any) => (excluding = { ...excluding, [id]: true });
-  const restoreBar = (id: any) => (excluding = { ...excluding, [id]: false });
+  const remove = (id: any) => (excluding = { ...excluding, [id]: true });
+  const restore = (id: any) => (excluding = { ...excluding, [id]: false });
 </script>
 
 {#if !graphData.length}
@@ -61,7 +62,7 @@
         {#each graphData.filter(d => excluding[d.groupId]) as d}
           <span style="margin-left: 10px">
             {" " + d.display}
-            <button class="raw-button" style="color: black" on:click={() => restoreBar(d.groupId)}>
+            <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)}>
               <i class="far fa-redo" />
             </button>
           </span>
@@ -70,9 +71,9 @@
     {/if}
 
     {#if chartType === "BAR"}
-      <BarChartContent {showingData} {removeBar} {header} {drilldown} {chartIndex} />
+      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} />
     {:else}
-      <BarChartContent {showingData} {removeBar} {header} {drilldown} {chartIndex} />
+      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} />
     {/if}
   </div>
 {/if}

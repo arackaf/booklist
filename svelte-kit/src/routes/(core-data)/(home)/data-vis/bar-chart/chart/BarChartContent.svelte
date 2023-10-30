@@ -7,7 +7,6 @@
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
 
-  export let header: any;
   export let showingData: any[];
   export let drilldown: any;
   export let chartIndex: any;
