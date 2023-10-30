@@ -34,8 +34,8 @@
     return {
       innerRadius: radius + INFLEXION_PADDING,
       outerRadius: radius + INFLEXION_PADDING,
-      startAngle: segment.startAngle,
-      endAngle: segment.endAngle
+      startAngle: startAngle,
+      endAngle: endAngle
     };
   };
 
@@ -68,7 +68,6 @@
 
   $: {
     const newCentroid = getCentroid(segment.startAngle, segment.endAngle);
-
     const newInflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
     const newInflexionPoint = arcGenerator.centroid(newInflexionInfo);
 
