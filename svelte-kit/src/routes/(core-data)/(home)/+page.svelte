@@ -22,6 +22,6 @@
 
 <div>
   {#each chartPackets as packet, i (packet.header)}
-    <Chart {books} {subjects} {subjectHash} drilldown={getDrilldownChart.bind(null, i)} header={packet.header} chartIndex={i} />
+    <Chart {books} subjects={packet.subjects} {subjectHash} drilldown={getDrilldownChart.bind(null, i)} header={packet.header} chartIndex={i} />
   {/each}
 </div>
