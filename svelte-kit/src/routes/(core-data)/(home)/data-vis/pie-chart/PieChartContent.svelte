@@ -9,6 +9,10 @@
 
   const noInitialAnimation = chartIndex === 0;
 
+  const scrollInitial = (el: any) => {
+    el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
+  };
+
   const diameter = 500;
   const width = diameter;
   const height = diameter;
@@ -52,7 +56,7 @@
   };
 </script>
 
-<div class="flex py-24">
+<div use:scrollInitial class="flex py-24">
   <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
     <g transform={`translate(${width / 2}, ${height / 2})`}>
       {#each pieSegments as seg (seg.data.groupId)}
