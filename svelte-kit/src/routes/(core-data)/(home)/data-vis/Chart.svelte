@@ -15,7 +15,14 @@
   export let header: any;
   export let chartIndex: any;
 
-  export let chartType: "PIE" | "BAR";
+  let chartType: "PIE" | "BAR" = "BAR";
+  const setChartType = (arg: "PIE" | "BAR") => {
+    chartType = arg;
+  };
+
+  $: isBar = chartType === "BAR";
+  $: isPie = chartType === "PIE";
+  const activeBtnStyle = "transform: scale(1.2)";
 
   $: subjectIds = subjects.map(s => s.id);
 
@@ -58,7 +65,26 @@
     <div class="flex items-baseline gap-4">
       <div class="flex flex-col">
         <h4 style="display: inline; text-wrap: nowrap" class="text-xl font-semibold">{header}</h4>
-        <span>xxx</span>
+        <div class="flex items-center gap-3 ml-1">
+          <button
+            on:click={() => setChartType("BAR")}
+            style={isBar ? activeBtnStyle : ""}
+            class="p-0 bg-transparent border-0 shadow-none"
+            class:text-neutral-600={!isBar}
+            class:text-primary-5={isBar}
+          >
+            <i class="fad fa-chart-bar" />
+          </button>
+          <button
+            on:click={() => setChartType("PIE")}
+            style={isPie ? activeBtnStyle : ""}
+            class="p-0 bg-transparent border-0 shadow-none"
+            class:text-neutral-600={!isPie}
+            class:text-primary-5={isPie}
+          >
+            <i class="fad fa-chart-pie" />
+          </button>
+        </div>
       </div>
       <div class="flex flex-wrap">
         {#if excludedCount}
@@ -75,7 +101,7 @@
       </div>
     </div>
 
-    {#if chartType === "PIE"}
+    {#if chartType === "BAR"}
       <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} />
     {:else}
       <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} />

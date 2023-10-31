@@ -18,12 +18,10 @@
   const getDrilldownChart = (index: number, subjects: any, header: any) => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
   };
-
-  let chartType: "PIE" | "BAR" = "PIE";
 </script>
 
 <div>
   {#each chartPackets as packet, i (packet.header)}
-    <Chart {books} {subjects} {subjectHash} drilldown={getDrilldownChart.bind(null, i)} header={packet.header} chartIndex={i} chartType={"BAR"} />
+    <Chart {books} {subjects} {subjectHash} drilldown={getDrilldownChart.bind(null, i)} header={packet.header} chartIndex={i} />
   {/each}
 </div>

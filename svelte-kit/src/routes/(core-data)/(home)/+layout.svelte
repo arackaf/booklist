@@ -9,7 +9,7 @@
 
 <TabbedPage>
   <svelte:fragment slot="nav">
-    <SectionNavItem href={$publicUserIdPersist.urlTo("/")}><span><i class="far fa-chart-bar mr-1" />Explore</span></SectionNavItem>
+    <SectionNavItem href={$publicUserIdPersist.urlTo("/")}><span>Explore</span></SectionNavItem>
     <SectionNavItem href={$publicUserIdPersist.urlTo("/discover")}>Discover</SectionNavItem>
     <SectionNavItem disabled={hasPublicId} href="/recent-scans">Recent Scans</SectionNavItem>
   </svelte:fragment>
