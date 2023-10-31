@@ -234,6 +234,9 @@ readers do not read off random characters that represent icons */
 .fa-chart-bar:before {
   content: "\f080"; }
 
+.fa-chart-pie:before {
+  content: "\f200"; }
+
 .fa-check:before {
   content: "\f00c"; }
 

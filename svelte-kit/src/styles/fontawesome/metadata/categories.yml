@@ -52,6 +52,7 @@ business:
     - badge
     - book
     - chart-bar
+    - chart-pie
     - pencil
     - pencil-alt
     - save
@@ -138,6 +139,7 @@ files:
 finance:
   icons:
     - book
+    - chart-pie
   label: Finance
 fitness:
   icons: []

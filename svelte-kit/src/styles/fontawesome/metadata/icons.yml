@@ -243,7 +243,27 @@ chart-bar:
       - graph
   styles:
     - regular
+    - duotone
+    - light
   unicode: f080
+  voted: false
+chart-pie:
+  changes:
+    - '4.2'
+    - 5.0.0
+    - 5.3.0
+  label: Pie Chart
+  search:
+    terms:
+      - analytics
+      - chart
+      - diagram
+      - graph
+      - pie
+  styles:
+    - duotone
+    - light
+  unicode: f200
   voted: false
 check:
   changes:
@@ -505,7 +525,6 @@ pencil:
       - write
   styles:
     - regular
-    - light
   unicode: f040
   voted: false
 pencil-alt:
