@@ -49,6 +49,12 @@
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%); }
 
+.fad.fa-chart-bar:after {
+  content: "\10f080"; }
+
+.fad.fa-chart-pie:after {
+  content: "\10f200"; }
+
 .fad.fa-chevron-right:after {
   content: "\10f054"; }
 
