@@ -20,8 +20,8 @@
     chartType = arg;
   };
 
-  let hasScrolledIntoView = false;
-  const onInitialScroll = () => (hasScrolledIntoView = true);
+  let hasRendered = false;
+  const onInitialRender = () => (hasRendered = true);
 
   $: isBar = chartType === "BAR";
   $: isPie = chartType === "PIE";
@@ -105,9 +105,9 @@
     </div>
 
     {#if chartType === "BAR"}
-      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} {hasScrolledIntoView} {onInitialScroll} />
+      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} {hasRendered} {onInitialRender} />
     {:else}
-      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} {hasScrolledIntoView} {onInitialScroll} />
+      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} {hasRendered} {onInitialRender} />
     {/if}
   </div>
 {/if}
