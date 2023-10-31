@@ -18,6 +18,10 @@
   export let chartType: "PIE" | "BAR" = "BAR";
   const setChartType = (arg: "PIE" | "BAR") => {
     chartType = arg;
+
+    if (chartIndex === 0) {
+      fetch("/api/update-ux-settings", { body: JSON.stringify({ initialChart: arg }), method: "POST", credentials: "include" });
+    }
   };
 
   let hasRendered = false;
