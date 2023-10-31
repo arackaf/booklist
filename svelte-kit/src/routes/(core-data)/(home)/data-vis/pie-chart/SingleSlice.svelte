@@ -91,11 +91,11 @@
   {#each segment.chunks as chunk, i}
     <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
   {/each}
-  {#if labelsReady}
+  {#if labelsReady || noInitialAnimation}
     <circle cx={$sliceSpring.centroidX} cy={$sliceSpring.centroidY} r={2} />
   {/if}
 </g>
-{#if labelsReady}
+{#if labelsReady || noInitialAnimation}
   {#if mainArc}
     <circle
       style="visibility: hidden"
