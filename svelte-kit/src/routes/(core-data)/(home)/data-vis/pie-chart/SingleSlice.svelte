@@ -103,7 +103,7 @@
         position: midPoint < 180 ? "right" : "left",
         data: segment.data,
         hoverTarget: mainArc,
-        drilldown,
+        drilldown: (...args) => drilldown(...args, "PIE"),
         remove: removeSlice
       }}
       cx={tooltipAnchor[0]}

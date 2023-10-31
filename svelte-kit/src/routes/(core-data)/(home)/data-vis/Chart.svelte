@@ -15,7 +15,7 @@
   export let header: any;
   export let chartIndex: any;
 
-  let chartType: "PIE" | "BAR" = "BAR";
+  export let chartType: "PIE" | "BAR" = "BAR";
   const setChartType = (arg: "PIE" | "BAR") => {
     chartType = arg;
   };

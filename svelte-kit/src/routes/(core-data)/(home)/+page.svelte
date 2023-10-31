@@ -13,15 +13,28 @@
 
   const books: BookSubjectStack[] = $page.data.books;
 
-  let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
+  type ChartPacketType = {
+    subjects: Subject[];
+    header: string;
+    startingChartType?: "PIE" | "BAR";
+  };
+  let chartPackets: ChartPacketType[] = [{ subjects: stackedSubjects, header: "All books" }];
 
-  const getDrilldownChart = (index: number, subjects: any, header: any) => {
-    chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
+  const getDrilldownChart = (index: number, subjects: any, header: any, chartType: "PIE" | "BAR") => {
+    chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header, startingChartType: chartType }];
   };
 </script>
 
 <div>
   {#each chartPackets as packet, i (packet.header)}
-    <Chart {books} subjects={packet.subjects} {subjectHash} drilldown={getDrilldownChart.bind(null, i)} header={packet.header} chartIndex={i} />
+    <Chart
+      {books}
+      subjects={packet.subjects}
+      {subjectHash}
+      drilldown={getDrilldownChart.bind(null, i)}
+      header={packet.header}
+      chartIndex={i}
+      chartType={packet.startingChartType}
+    />
   {/each}
 </div>

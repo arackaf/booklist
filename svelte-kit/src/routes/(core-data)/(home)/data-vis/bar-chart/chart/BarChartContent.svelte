@@ -70,7 +70,7 @@
             index={i}
             height={dataScale(d.count)}
             totalSvgWidth={adjustedWidth}
-            {drilldown}
+            drilldown={(...args) => drilldown(...args, "BAR")}
             {removeBar}
             noInitialAnimation={chartIndex === 0 && !rendered}
           />
