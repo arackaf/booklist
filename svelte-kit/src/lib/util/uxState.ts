@@ -5,7 +5,7 @@ export type UxState = {
   wbg: string;
   bkVw?: string;
   desktopRequested: string;
-  initialChart: "pie" | "bar";
+  initialChart: "PIE" | "BAR";
 };
 
 export const getUxState = (cookies: any) => {
@@ -63,6 +63,6 @@ const defaultUxState = (): UxState => {
     theme: "scheme1",
     wbg: "0",
     desktopRequested: "0",
-    initialChart: "bar"
+    initialChart: "BAR"
   };
 };

@@ -5,7 +5,10 @@
 
   import { toHash } from "$lib/state/helpers";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
+  import type { UxState } from "$lib/util/uxState";
   import Chart from "./data-vis/Chart.svelte";
+
+  const uxState = $page.data.uxState as UxState;
 
   const subjects: Subject[] = $page.data.subjects;
   $: subjectHash = toHash(subjects);
@@ -18,7 +21,7 @@
     header: string;
     startingChartType?: "PIE" | "BAR";
   };
-  let chartPackets: ChartPacketType[] = [{ subjects: stackedSubjects, header: "All books" }];
+  let chartPackets: ChartPacketType[] = [{ subjects: stackedSubjects, header: "All books", startingChartType: uxState.initialChart }];
 
   const getDrilldownChart = (index: number, subjects: any, header: any, chartType: "PIE" | "BAR") => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header, startingChartType: chartType }];
