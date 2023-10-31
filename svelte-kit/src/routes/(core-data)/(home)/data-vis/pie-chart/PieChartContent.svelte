@@ -56,7 +56,7 @@
   <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
     <g transform={`translate(${width / 2}, ${height / 2})`}>
       {#each pieSegments as seg (seg.data.groupId)}
-        <SingleSlice {radius} {removeSlice} {labelsReady} {onLabelsReady} {noInitialAnimation} segment={seg} />
+        <SingleSlice {radius} {removeSlice} {labelsReady} {onLabelsReady} {noInitialAnimation} segment={seg} {drilldown} />
       {/each}
     </g>
   </svg>

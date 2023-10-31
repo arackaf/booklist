@@ -11,6 +11,7 @@
   export let onLabelsReady: () => void;
   export let removeSlice: (id: any) => void;
   export let radius: number;
+  export let drilldown: any;
 
   const INFLEXION_PADDING = 50; // space between donut and label inflexion point
   const arcGenerator = arc();
@@ -102,7 +103,7 @@
         position: midPoint < 180 ? "right" : "left",
         data: segment.data,
         hoverTarget: mainArc,
-        drilldown: () => {},
+        drilldown,
         remove: removeSlice
       }}
       cx={tooltipAnchor[0]}
