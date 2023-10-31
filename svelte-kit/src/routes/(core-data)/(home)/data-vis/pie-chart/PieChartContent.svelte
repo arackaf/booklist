@@ -2,7 +2,11 @@
   import { arc, pie } from "d3-shape";
   import SingleSlice from "./SingleSlice.svelte";
 
-  export let graphData: any[];
+  export let showingData: any[];
+  export let drilldown: any;
+  export let chartIndex: any;
+  export let removeSlice: (id: any) => void;
+
   let animate = true;
 
   const diameter = 500;
@@ -13,21 +17,8 @@
 
   const pieGenerator = pie().value((d: any) => d.count);
 
-  let excluding: any = {};
-  const removeSlice = (id: any) => {
-    excluding = { ...excluding, [id]: true };
-  };
-
-  $: showingData = graphData
-    .filter(d => !excluding[d.groupId])
-    .map(data => {
-      data.childSubjects = data.entries.reduce((subjects: any, { children: theseChildren }: any) => subjects.concat(theseChildren), [] as any);
-      return data;
-    });
-
   $: pieData = pieGenerator(showingData) as any[];
 
-  const arcGenerator = arc();
   $: pieSegments = pieData.map(segment => {
     const segmentCount = segment.data.entries.length;
 

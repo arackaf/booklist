@@ -147,6 +147,14 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
     });
   }
 
+  // TODO: optimize this and remove when not needed
+  hoverTarget.addEventListener("mousemove", () => {
+    if (tooltipMabager.isDead()) {
+      initializePopper();
+    } else {
+      tooltipMabager.hoverBar();
+    }
+  });
   hoverTarget.addEventListener("mouseenter", () => {
     if (tooltipMabager.isDead()) {
       initializePopper();

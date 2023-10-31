@@ -24,10 +24,12 @@
   }
 }
 
-.tooltip-root.left {
+.tooltip-root.left,
+.tooltip-root.left-start {
   transform: translateX(calc(-1 * var(--arrow-diagonal)));
 }
-.tooltip-root.right {
+.tooltip-root.right,
+.tooltip-root.right-start {
   transform: translateX(calc(var(--arrow-diagonal)));
 }
 .tooltip-root.top,
@@ -48,11 +50,13 @@
 .tooltip-root .arrow {
   visibility: hidden;
 }
-.tooltip-root.left .arrow {
+.tooltip-root.left .arrow,
+.tooltip-root.left-start .arrow {
   top: calc(50% - var(--arrow-offset));
   right: calc(-1 * var(--arrow-offset));
 }
-.tooltip-root.right .arrow {
+.tooltip-root.right .arrow,
+.tooltip-root.right-start .arrow {
   top: calc(50% - var(--arrow-offset));
   left: calc(-1 * var(--arrow-offset));
 }
