@@ -7,7 +7,7 @@
   export let chartIndex: any;
   export let removeSlice: (id: any) => void;
 
-  let animate = true;
+  const noInitialAnimation = chartIndex === 0;
 
   const diameter = 500;
   const width = diameter;
@@ -44,7 +44,7 @@
     };
   }) as any[];
 
-  let labelsReady = !animate;
+  let labelsReady = noInitialAnimation;
   const onLabelsReady = () => {
     setTimeout(() => {
       labelsReady = true;
@@ -56,7 +56,7 @@
   <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
     <g transform={`translate(${width / 2}, ${height / 2})`}>
       {#each pieSegments as seg (seg.data.groupId)}
-        <SingleSlice {radius} {removeSlice} {labelsReady} {onLabelsReady} {animate} segment={seg} />
+        <SingleSlice {radius} {removeSlice} {labelsReady} {onLabelsReady} {noInitialAnimation} segment={seg} />
       {/each}
     </g>
   </svg>

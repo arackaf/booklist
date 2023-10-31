@@ -4,8 +4,9 @@
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
   import { spring } from "svelte/motion";
+
   export let segment: any;
-  export let animate: boolean;
+  export let noInitialAnimation: boolean;
   export let labelsReady: boolean;
   export let onLabelsReady: () => void;
   export let removeSlice: (id: any) => void;
@@ -87,7 +88,7 @@
 
 <g bind:this={mainArc}>
   {#each segment.chunks as chunk, i}
-    <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} />
+    <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
   {/each}
   {#if labelsReady}
     <circle cx={$sliceSpring.centroidX} cy={$sliceSpring.centroidY} r={2} />

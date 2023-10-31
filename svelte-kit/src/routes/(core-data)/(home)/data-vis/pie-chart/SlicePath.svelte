@@ -10,16 +10,16 @@
     color: string;
   };
   export let segmentChunk: ChunkType;
-  export let animate = true;
+  export let noInitialAnimation;
 
-  let initialAnimationDoneCalled = false;
+  let initialAnimationDoneCalled = noInitialAnimation;
   export let initialAnimationDone: () => void;
 
   const arcGenerator = arc();
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
-  const initialSliceAngles = { startAngle: segmentChunk.startAngle, endAngle: animate ? segmentChunk.startAngle : segmentChunk.endAngle };
+  const initialSliceAngles = { startAngle: segmentChunk.startAngle, endAngle: noInitialAnimation ? segmentChunk.endAngle : segmentChunk.startAngle };
   const sliceSpring = spring(initialSliceAngles, springConfig);
 
   $: {
