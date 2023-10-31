@@ -7,10 +7,16 @@
   export let chartIndex: any;
   export let removeSlice: (id: any) => void;
 
+  export let hasScrolledIntoView: boolean;
+  export let onInitialScroll: () => void;
+
   const noInitialAnimation = chartIndex === 0;
 
   const scrollInitial = (el: any) => {
-    el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
+    if (el && chartIndex > 0 && !hasScrolledIntoView) {
+      el.scrollIntoView({ behavior: "smooth" });
+      onInitialScroll();
+    }
   };
 
   const diameter = 500;

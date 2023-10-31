@@ -12,13 +12,22 @@
   export let chartIndex: any;
   export let removeBar: (id: any) => void;
 
+  export let hasScrolledIntoView: boolean;
+  export let onInitialScroll: () => void;
+
   const MAX_SVG_WIDTH = 1200;
   const MAX_SVG_HEIGHT = 390;
   const height = MAX_SVG_HEIGHT;
   const maxHeightStyle = "max-h-[390px]";
 
+  console.log({ hasScrolledIntoView });
+
   const scrollInitial = (el: any) => {
-    el && chartIndex > 0 && el.scrollIntoView({ behavior: "smooth" });
+    if (el && chartIndex > 0 && !hasScrolledIntoView) {
+      el.scrollIntoView({ behavior: "smooth" });
+      onInitialScroll();
+      console.log("on scroll");
+    }
   };
 
   $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
@@ -36,7 +45,6 @@
     .nice();
 
   $: scaleX = scaleBand().domain(displayValues).range([50, adjustedWidth]).paddingInner(0.1).paddingOuter(0.3).align(0.5);
-
   $: scaleY = verticalAxisScale.ticks(Math.min(10, dataMax));
 
   const viewBoxSpring = spring(null as any, { stiffness: 0.1, damping: 0.4 });

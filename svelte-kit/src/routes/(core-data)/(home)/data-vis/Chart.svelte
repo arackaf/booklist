@@ -20,6 +20,9 @@
     chartType = arg;
   };
 
+  let hasScrolledIntoView = false;
+  const onInitialScroll = () => (hasScrolledIntoView = true);
+
   $: isBar = chartType === "BAR";
   $: isPie = chartType === "PIE";
   const activeBtnStyle = "transform: scale(1.2)";
@@ -102,9 +105,9 @@
     </div>
 
     {#if chartType === "BAR"}
-      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} />
+      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} {hasScrolledIntoView} {onInitialScroll} />
     {:else}
-      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} />
+      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} {hasScrolledIntoView} {onInitialScroll} />
     {/if}
   </div>
 {/if}
