@@ -8,6 +8,8 @@
   export let removeSlice: (id: any) => void;
 
   export let hasRendered: boolean;
+  let pieChartHasRendered = false;
+
   export let onInitialRender: () => void;
 
   const noInitialAnimation = chartIndex === 0;
@@ -17,6 +19,7 @@
       el.scrollIntoView({ behavior: "smooth" });
     }
     onInitialRender();
+    pieChartHasRendered = true;
   };
 
   const diameter = 500;
@@ -73,7 +76,7 @@
           {onLabelsReady}
           segment={seg}
           {drilldown}
-          noInitialAnimation={chartIndex === 0 || hasRendered}
+          noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
         />
       {/each}
     </g>

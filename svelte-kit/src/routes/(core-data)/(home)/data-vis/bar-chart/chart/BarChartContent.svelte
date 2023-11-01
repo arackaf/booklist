@@ -13,6 +13,8 @@
   export let removeBar: (id: any) => void;
 
   export let hasRendered: boolean;
+  let barChartHasRendered = false;
+
   export let onInitialRender: () => void;
 
   const MAX_SVG_WIDTH = 1200;
@@ -25,6 +27,7 @@
       el.scrollIntoView({ behavior: "smooth" });
     }
     onInitialRender();
+    barChartHasRendered = true;
   };
 
   $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
@@ -74,7 +77,7 @@
             totalSvgWidth={adjustedWidth}
             drilldown={(...args) => drilldown(...args, "BAR")}
             {removeBar}
-            noInitialAnimation={chartIndex === 0 || hasRendered}
+            noInitialAnimation={(chartIndex === 0 || hasRendered) && !barChartHasRendered}
           />
         {/each}
 
