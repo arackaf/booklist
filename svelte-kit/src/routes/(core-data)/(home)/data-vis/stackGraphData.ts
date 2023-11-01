@@ -83,3 +83,37 @@ export const stackGraphData = (subjectHash: any, subjectIds: number[], books: Bo
     }
   }
 };
+
+type ToyBase = {
+  name: string;
+};
+
+type BoardGame = ToyBase & {
+  kind: "board";
+};
+
+type Puzzle = ToyBase & {
+  kind: "puzzle";
+};
+
+type Toy = BoardGame | Puzzle;
+
+type GroupedToys = {
+  board?: BoardGame[] | undefined;
+  puzzle?: Puzzle[] | undefined;
+};
+
+function groupToys(toys: Toy[]): GroupedToys {
+  const groups: GroupedToys = {};
+
+  for (let toy of toys) {
+    assign(groups, "puzzle", toy);
+  }
+
+  return groups;
+}
+
+function assign<T extends Record<string, K[]>, K>(groups: T, key: keyof T, value: K) {
+  groups[key] = groups[key] ?? [];
+  groups[key]?.push(value);
+}
