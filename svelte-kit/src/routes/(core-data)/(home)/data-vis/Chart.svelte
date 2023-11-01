@@ -14,8 +14,9 @@
   export let drilldown: any;
   export let header: any;
   export let chartIndex: any;
+  export let initialChartType: "PIE" | "BAR";
 
-  export let chartType: "PIE" | "BAR" = "BAR";
+  let chartType: "PIE" | "BAR" = initialChartType;
   const setChartType = (arg: "PIE" | "BAR") => {
     chartType = arg;
 
