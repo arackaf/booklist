@@ -5,6 +5,7 @@ export type UxState = {
   wbg: string;
   bkVw?: string;
   desktopRequested: string;
+  initialChart: "PIE" | "BAR";
 };
 
 export const getUxState = (cookies: any) => {
@@ -31,7 +32,7 @@ const saveUxState = (cookies: any, state: UxState) => {
   cookies.set("ux-state", stringifyUxState(state), { path: "/", maxAge: ONE_YEAR_SECONDS });
 };
 
-export const updateUxState = (cookies: any, updates: object) => {
+export const updateUxState = (cookies: any, updates: Partial<UxState>) => {
   const uxState = getUxState(cookies);
   Object.assign(uxState, updates);
   saveUxState(cookies, uxState);
@@ -61,6 +62,7 @@ const defaultUxState = (): UxState => {
   return {
     theme: "scheme1",
     wbg: "0",
-    desktopRequested: "0"
+    desktopRequested: "0",
+    initialChart: "BAR"
   };
 };

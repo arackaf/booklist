@@ -5,8 +5,10 @@
 
   import { toHash } from "$lib/state/helpers";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
+  import type { UxState } from "$lib/util/uxState";
+  import Chart from "./data-vis/Chart.svelte";
 
-  import BarChart from "./data-vis/bar-chart/chart/BarChart.svelte";
+  $: uxState = $page.data.uxState as UxState;
 
   const subjects: Subject[] = $page.data.subjects;
   $: subjectHash = toHash(subjects);
@@ -14,15 +16,28 @@
 
   const books: BookSubjectStack[] = $page.data.books;
 
-  let chartPackets: { subjects: Subject[]; header: string }[] = [{ subjects: stackedSubjects, header: "All books" }];
+  type ChartPacketType = {
+    subjects: Subject[];
+    header: string;
+    startingChartType?: "PIE" | "BAR";
+  };
+  $: chartPackets = [{ subjects: stackedSubjects, header: "All books", startingChartType: uxState.initialChart }] as ChartPacketType[];
 
-  const getDrilldownChart = (index: number, subjects: any, header: any) => {
-    chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header }];
+  const getDrilldownChart = (index: number, subjects: any, header: any, chartType: "PIE" | "BAR") => {
+    chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header, startingChartType: chartType }];
   };
 </script>
 
 <div>
   {#each chartPackets as packet, i (packet.header)}
-    <BarChart drilldown={getDrilldownChart.bind(null, i)} subjects={packet.subjects} {subjectHash} header={packet.header} {books} chartIndex={i} />
+    <Chart
+      {books}
+      subjects={packet.subjects}
+      {subjectHash}
+      drilldown={getDrilldownChart.bind(null, i)}
+      header={packet.header}
+      chartIndex={i}
+      initialChartType={packet.startingChartType || uxState.initialChart}
+    />
   {/each}
 </div>

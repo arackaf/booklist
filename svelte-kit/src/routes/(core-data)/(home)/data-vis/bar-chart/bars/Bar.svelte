@@ -27,7 +27,7 @@
         position = "top";
       }
     } else {
-      position = index < barCount / 2 ? "right" : "left";
+      position = index < barCount / 2 ? "right-start" : "left-start";
     }
   }
 </script>

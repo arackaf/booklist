@@ -3,12 +3,14 @@ import type { Subject } from "$data/types";
 
 import Tooltip from "./Tooltip.svelte";
 
-export type Position = "left" | "right" | "top" | "top-left" | "top-right";
+export type Position = "left" | "right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
+
 export type PopperOptions = {
   position: Position;
   data: Data;
   drilldown: any;
-  removeBar: (id: string) => void;
+  remove: (id: string) => void;
+  hoverTarget?: Element;
   TooltipComponent?: typeof Tooltip;
 };
 
@@ -97,7 +99,7 @@ export type Data = {
 };
 
 export const tooltip = (node: SVGElement, props: PopperOptions) => {
-  const { data, drilldown, removeBar, TooltipComponent = Tooltip } = props;
+  const { data, drilldown, remove, hoverTarget = node, TooltipComponent = Tooltip } = props;
   let { position } = props;
 
   const tooltipMabager = new TooltipHoverState();
@@ -109,15 +111,17 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
 
     new TooltipComponent({
       target: div,
-      props: { position, data, drilldown, removeBar, targetElement: node }
+      props: { position, data, drilldown, remove, targetElement: node }
     });
 
     const placementMap: { [keys in Position]: Placement } = {
-      left: "left-start",
       top: "top",
       "top-right": "top-end",
       "top-left": "top-start",
-      right: "right-start"
+      left: "left",
+      "left-start": "left-start",
+      right: "right",
+      "right-start": "right-start"
     };
 
     const popperPlacement: Placement = placementMap[position];
@@ -143,14 +147,22 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
     });
   }
 
-  node.addEventListener("mouseenter", () => {
+  // TODO: optimize this and remove when not needed
+  hoverTarget.addEventListener("mousemove", () => {
     if (tooltipMabager.isDead()) {
       initializePopper();
     } else {
       tooltipMabager.hoverBar();
     }
   });
-  node.addEventListener("mouseleave", () => {
+  hoverTarget.addEventListener("mouseenter", () => {
+    if (tooltipMabager.isDead()) {
+      initializePopper();
+    } else {
+      tooltipMabager.hoverBar();
+    }
+  });
+  hoverTarget.addEventListener("mouseleave", () => {
     tooltipMabager.leaveBar();
   });
 

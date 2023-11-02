@@ -10,7 +10,7 @@ export const actions = {
   async setBooksView({ request, cookies }) {
     const formData: FormData = await request.formData();
 
-    const view = formData.get("view");
+    const view = formData.get("view") as string;
     updateUxState(cookies, { bkVw: view });
   },
   async reloadBooks({ cookies }) {

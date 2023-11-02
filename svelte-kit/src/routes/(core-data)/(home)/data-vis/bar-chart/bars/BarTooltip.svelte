@@ -5,7 +5,7 @@
   export let position: Position;
   export let data: Data;
   export let drilldown: any;
-  export let removeBar: (id: string) => void;
+  export let remove: (id: string) => void;
   export let targetElement: SVGElement;
 
   let arrowStyle = "";
@@ -21,4 +21,4 @@
   }
 </script>
 
-<Tooltip {position} {data} {drilldown} {removeBar} {arrowStyle} {targetElement} />
+<Tooltip {position} {data} {drilldown} {remove} {arrowStyle} {targetElement} />
