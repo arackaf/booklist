@@ -12,8 +12,11 @@
   export let removeSlice: (id: any) => void;
   export let radius: number;
   export let drilldown: any;
+  export let segmentCount: number;
+  export let hideLabels: boolean;
 
-  const INFLEXION_PADDING = 50; // space between donut and label inflexion point
+  $: labelsAreHidden = hideLabels;
+
   const arcGenerator = arc();
 
   let mainArc: SVGElement;
@@ -21,25 +24,9 @@
   const PI = 3.141592653;
   $: startAngle = segment.startAngle * (180 / PI);
   $: endAngle = segment.endAngle * (180 / PI);
-
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
 
-  const getCentroid = (startAngle: number, endAngle: number) => {
-    return arcGenerator.centroid({
-      innerRadius: 0,
-      outerRadius: radius,
-      startAngle: startAngle,
-      endAngle: endAngle
-    });
-  };
-  const getInflextionInfo = (startAngle: number, endAngle: number) => {
-    return {
-      innerRadius: radius + INFLEXION_PADDING,
-      outerRadius: radius + INFLEXION_PADDING,
-      startAngle: startAngle,
-      endAngle: endAngle
-    };
-  };
+  $: ({ centroid, inflexionPoint, labelPosX, textAnchor, isRightLabel } = segment);
 
   $: tooltipAnchor = arcGenerator.centroid({
     startAngle: segment.startAngle,
@@ -48,46 +35,29 @@
     outerRadius: radius - 2
   });
 
-  const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
-  const inflexionPoint = arcGenerator.centroid(inflexionInfo);
-
-  let isRightLabel = inflexionPoint[0] > 0;
-  let labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
-  let textAnchor = isRightLabel ? "start" : "end";
-
-  const centroid = getCentroid(segment.startAngle, segment.endAngle);
-
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
   const initialLabelValues = {
-    centroidX: centroid[0],
-    centroidY: centroid[1],
-    inflexionPointX: inflexionPoint[0],
-    inflexionPointY: inflexionPoint[1],
-    labelPosX
+    centroidX: segment.centroid[0],
+    centroidY: segment.centroid[1],
+    inflexionPointX: segment.inflexionPoint[0],
+    inflexionPointY: segment.inflexionPoint[1],
+    labelPosX: segment.labelPosX
   };
   const sliceSpring = spring(initialLabelValues, springConfig);
 
   $: {
-    const newCentroid = getCentroid(segment.startAngle, segment.endAngle);
-    const newInflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
-    const newInflexionPoint = arcGenerator.centroid(newInflexionInfo);
-
-    isRightLabel = newInflexionPoint[0] > 0;
-    labelPosX = newInflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
-    textAnchor = isRightLabel ? "start" : "end";
-
     sliceSpring.set({
-      centroidX: newCentroid[0],
-      centroidY: newCentroid[1],
-      inflexionPointX: newInflexionPoint[0],
-      inflexionPointY: newInflexionPoint[1],
+      centroidX: centroid[0],
+      centroidY: centroid[1],
+      inflexionPointX: inflexionPoint[0],
+      inflexionPointY: inflexionPoint[1],
       labelPosX
     });
   }
 </script>
 
-{#if labelsReady || noInitialAnimation}
+{#if !labelsAreHidden && (labelsReady || noInitialAnimation)}
   <g>
     <line
       x1={$sliceSpring.centroidX}
