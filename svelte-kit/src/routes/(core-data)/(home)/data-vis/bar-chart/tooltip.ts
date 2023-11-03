@@ -140,8 +140,10 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
 
     tooltipMabager.activate(popper, div);
 
-    const contentDiv = div.firstElementChild!;
-    contentDiv.addEventListener("mouseenter", tooltipMabager.hoverTooltip);
+    const contentDiv = div;
+    contentDiv.addEventListener("mouseenter", () => {
+      tooltipMabager.hoverTooltip();
+    });
     contentDiv.addEventListener("mouseleave", () => {
       tooltipMabager.leaveTooltip();
     });
