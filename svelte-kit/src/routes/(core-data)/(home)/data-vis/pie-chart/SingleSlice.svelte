@@ -87,53 +87,53 @@
   }
 </script>
 
+{#if labelsReady || noInitialAnimation}
+  <g>
+    <line
+      x1={$sliceSpring.centroidX}
+      y1={$sliceSpring.centroidY}
+      x2={$sliceSpring.inflexionPointX}
+      y2={$sliceSpring.inflexionPointY}
+      stroke={"black"}
+      fill={"black"}
+    />
+    <line
+      x1={$sliceSpring.inflexionPointX}
+      y1={$sliceSpring.inflexionPointY}
+      x2={$sliceSpring.labelPosX}
+      y2={$sliceSpring.inflexionPointY}
+      stroke={"black"}
+      fill={"black"}
+    />
+    <text
+      x={$sliceSpring.labelPosX + (isRightLabel ? 2 : -2)}
+      y={$sliceSpring.inflexionPointY}
+      text-anchor={textAnchor}
+      dominant-baseline="middle"
+      font-size={14}
+    >
+      {segment.masterLabel}
+    </text>
+  </g>
+{/if}
+
 <g bind:this={mainArc}>
   {#each segment.chunks as chunk, i}
     <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
   {/each}
-  {#if labelsReady || noInitialAnimation}
-    <circle cx={$sliceSpring.centroidX} cy={$sliceSpring.centroidY} r={2} />
-  {/if}
 </g>
-{#if labelsReady || noInitialAnimation}
-  {#if mainArc}
-    <circle
-      style="visibility: hidden"
-      use:tooltip={{
-        position: midPoint < 180 ? "right" : "left",
-        data: segment.data,
-        hoverTarget: mainArc,
-        drilldown: (...args) => drilldown(...args, "PIE"),
-        remove: removeSlice
-      }}
-      cx={tooltipAnchor[0]}
-      cy={tooltipAnchor[1]}
-      r={1}
-    />
-  {/if}
-  <line
-    x1={$sliceSpring.centroidX}
-    y1={$sliceSpring.centroidY}
-    x2={$sliceSpring.inflexionPointX}
-    y2={$sliceSpring.inflexionPointY}
-    stroke={"black"}
-    fill={"black"}
+{#if mainArc && (labelsReady || noInitialAnimation)}
+  <circle
+    style="visibility: hidden"
+    use:tooltip={{
+      position: midPoint < 180 ? "right" : "left",
+      data: segment.data,
+      hoverTarget: mainArc,
+      drilldown: (...args) => drilldown(...args, "PIE"),
+      remove: removeSlice
+    }}
+    cx={tooltipAnchor[0]}
+    cy={tooltipAnchor[1]}
+    r={1}
   />
-  <line
-    x1={$sliceSpring.inflexionPointX}
-    y1={$sliceSpring.inflexionPointY}
-    x2={$sliceSpring.labelPosX}
-    y2={$sliceSpring.inflexionPointY}
-    stroke={"black"}
-    fill={"black"}
-  />
-  <text
-    x={$sliceSpring.labelPosX + (isRightLabel ? 2 : -2)}
-    y={$sliceSpring.inflexionPointY}
-    text-anchor={textAnchor}
-    dominant-baseline="middle"
-    font-size={14}
-  >
-    {segment.masterLabel}
-  </text>
 {/if}
