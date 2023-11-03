@@ -32,15 +32,48 @@
 
   $: pieData = pieGenerator(showingData) as any[];
 
+  const arcGenerator = arc();
+  const INFLEXION_PADDING = 50; // space between donut and label inflexion point
+
+  const getCentroid = (startAngle: number, endAngle: number) => {
+    return arcGenerator.centroid({
+      innerRadius: 0,
+      outerRadius: radius,
+      startAngle: startAngle,
+      endAngle: endAngle
+    });
+  };
+  const getInflextionInfo = (startAngle: number, endAngle: number) => {
+    return {
+      innerRadius: radius + INFLEXION_PADDING,
+      outerRadius: radius + INFLEXION_PADDING,
+      startAngle: startAngle,
+      endAngle: endAngle
+    };
+  };
+
   $: pieSegments = pieData.map(segment => {
     const segmentCount = segment.data.entries.length;
 
     const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
 
+    const centroid = getCentroid(segment.startAngle, segment.endAngle);
+    const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
+    const inflexionPoint = arcGenerator.centroid(inflexionInfo);
+
+    const isRightLabel = inflexionPoint[0] > 0;
+    const labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
+    const textAnchor = isRightLabel ? "start" : "end";
+
     return {
       startAngle: segment.startAngle,
       endAngle: segment.endAngle,
       data: segment.data,
+      centroid,
+      inflexionPoint,
+      labelPosX,
+      isRightLabel,
+      textAnchor,
       masterLabel,
       count: segmentCount,
       chunks: segment.data.entries.map((entry: any, idx: number) => {
@@ -77,6 +110,7 @@
           segment={seg}
           {drilldown}
           noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
+          segmentCount={pieSegments.length}
         />
       {/each}
     </g>
