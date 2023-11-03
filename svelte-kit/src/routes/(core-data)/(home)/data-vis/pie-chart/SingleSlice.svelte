@@ -13,6 +13,9 @@
   export let radius: number;
   export let drilldown: any;
   export let segmentCount: number;
+  export let hideLabels: boolean;
+
+  $: labelsAreHidden = hideLabels;
 
   const arcGenerator = arc();
 
@@ -54,7 +57,7 @@
   }
 </script>
 
-{#if labelsReady || noInitialAnimation}
+{#if !labelsAreHidden && (labelsReady || noInitialAnimation)}
   <g>
     <line
       x1={$sliceSpring.centroidX}

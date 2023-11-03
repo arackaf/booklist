@@ -90,6 +90,39 @@
     };
   }) as any[];
 
+  let hideLabels = false;
+  $: {
+    const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
+    const rightSegments = pieSegments.filter(seg => seg.isRightLabel);
+
+    let overlapFound = false;
+    for (const seg of leftSegments) {
+      const segHasOverlaps = leftSegments.find(segInner => {
+        return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
+      });
+      if (segHasOverlaps) {
+        overlapFound = true;
+        break;
+      }
+    }
+
+    if (overlapFound) {
+      hideLabels = true;
+    } else {
+      for (const seg of rightSegments) {
+        const segHasOverlaps = rightSegments.find(segInner => {
+          return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
+        });
+        if (segHasOverlaps) {
+          overlapFound = true;
+          break;
+        }
+      }
+    }
+
+    hideLabels = overlapFound;
+  }
+
   let labelsReady = noInitialAnimation;
   const onLabelsReady = () => {
     setTimeout(() => {
@@ -109,6 +142,7 @@
           {onLabelsReady}
           segment={seg}
           {drilldown}
+          {hideLabels}
           noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
           segmentCount={pieSegments.length}
         />
