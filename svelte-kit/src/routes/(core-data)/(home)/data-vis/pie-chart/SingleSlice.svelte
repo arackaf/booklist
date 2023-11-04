@@ -103,16 +103,13 @@
   </g>
 {/if}
 
-<g
-  bind:this={mainArc}
-  role="banner"
-  on:mouseenter={mouseEnter}
-  on:mouseleave={mouseLeave}
-  style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)"
->
-  {#each segment.chunks as chunk, i}
-    <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
-  {/each}
+<g bind:this={mainArc} on:mouseenter={mouseEnter} on:mouseleave={mouseLeave}>
+  <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={segment.chunks[0]} {noInitialAnimation} color="#FFFFFF" />
+  <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
+    {#each segment.chunks as chunk, i}
+      <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
+    {/each}
+  </g>
 </g>
 {#if mainArc && (labelsReady || noInitialAnimation)}
   <circle

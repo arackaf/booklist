@@ -11,6 +11,7 @@
   };
   export let segmentChunk: ChunkType;
   export let noInitialAnimation;
+  export let color: string | null = null;
 
   let initialAnimationDoneCalled = noInitialAnimation;
   export let initialAnimationDone: () => void;
@@ -44,4 +45,4 @@
   });
 </script>
 
-<path d={arcPath} fill={segmentChunk.color} />
+<path d={arcPath} fill={color ?? segmentChunk.color} />
