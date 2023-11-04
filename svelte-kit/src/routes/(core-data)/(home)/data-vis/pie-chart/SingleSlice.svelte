@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { arc } from "d3-shape";
-
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
   import { spring } from "svelte/motion";
@@ -17,8 +15,6 @@
 
   $: labelsAreHidden = hideLabels;
 
-  const arcGenerator = arc();
-
   let mainArc: SVGElement;
 
   const PI = 3.141592653;
@@ -26,14 +22,7 @@
   $: endAngle = segment.endAngle * (180 / PI);
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
 
-  $: ({ centroid, inflexionPoint, labelPosX, textAnchor, isRightLabel } = segment);
-
-  $: tooltipAnchor = arcGenerator.centroid({
-    startAngle: segment.startAngle,
-    endAngle: segment.endAngle,
-    innerRadius: radius,
-    outerRadius: radius
-  });
+  $: ({ centroid, inflexionPoint, labelPosX, textAnchor, arcCenterPoint, isRightLabel } = segment);
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
@@ -63,7 +52,7 @@
   let translateX = 0;
   let translateY = 0;
   $: {
-    const [x1, y1] = tooltipAnchor;
+    const [x1, y1] = arcCenterPoint;
 
     const translateTarget = segment.centroidTransition;
     const [x2, y2] = translateTarget;
