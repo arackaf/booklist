@@ -112,8 +112,13 @@
   </g>
 </g>
 {#if mainArc && (labelsReady || noInitialAnimation)}
+  <circle data-style="visibility: hidden" cx={tooltipAnchor[0]} cy={tooltipAnchor[1]} r={4} />
+
+  <!-- {#if transitionPoint} -->
   <circle
-    data-style="visibility: hidden"
+    cx={segment.centroidTransition[0]}
+    cy={segment.centroidTransition[1]}
+    r={4}
     use:tooltip={{
       position: midPoint < 180 ? "right" : "left",
       data: segment.data,
@@ -123,11 +128,6 @@
       onShow: onTooltipShow,
       onHide: onTooltipHide
     }}
-    cx={tooltipAnchor[0]}
-    cy={tooltipAnchor[1]}
-    r={4}
   />
 {/if}
-<!-- {#if transitionPoint} -->
-<circle cx={segment.centroidTransition[0]} cy={segment.centroidTransition[1]} r={4} />
 <!-- {/if} -->
