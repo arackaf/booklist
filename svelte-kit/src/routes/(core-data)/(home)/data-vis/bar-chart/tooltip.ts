@@ -12,6 +12,8 @@ export type PopperOptions = {
   remove: (id: string) => void;
   hoverTarget?: Element;
   TooltipComponent?: typeof Tooltip;
+  onShow?: () => void;
+  onHide?: () => void;
 };
 
 class TooltipHoverState {
@@ -20,15 +22,20 @@ class TooltipHoverState {
   #overBar: boolean = false;
   #overtooltip: boolean = false;
   #cancellationToken: any = null;
+  #onShow?: () => void;
+  #onHide?: () => void;
 
   #popper: PopperInstance | null = null;
   #div: HTMLDivElement | null = null;
 
-  activate(popper: PopperInstance, div: HTMLDivElement) {
+  activate(popper: PopperInstance, div: HTMLDivElement, onShow?: () => void, onHide?: () => void) {
     this.#isDead = false;
     this.#popper = popper;
     this.#div = div;
     this.#div?.classList.add("exists");
+
+    this.#onShow = onShow;
+    this.#onHide = onHide;
 
     requestAnimationFrame(() => {
       this.#div?.classList.add("show");
@@ -47,6 +54,7 @@ class TooltipHoverState {
   };
 
   resurrectIfNeeded() {
+    this.#onShow?.();
     if (this.#isDying) {
       clearTimeout(this.#cancellationToken);
       this.#cancellationToken = null;
@@ -57,14 +65,15 @@ class TooltipHoverState {
 
   leaveTooltip = () => {
     this.#overtooltip = false;
-    this.check();
+    this.startTooltipRemoval();
   };
   leaveBar = () => {
     this.#overBar = false;
-    this.check();
+    this.startTooltipRemoval();
   };
 
-  check() {
+  startTooltipRemoval() {
+    this.#onHide?.();
     setTimeout(() => {
       if (this.isOff()) {
         this.destroy();
@@ -138,7 +147,7 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
       ]
     });
 
-    tooltipMabager.activate(popper, div);
+    tooltipMabager.activate(popper, div, props.onShow, props.onHide);
 
     const contentDiv = div;
     contentDiv.addEventListener("mouseenter", () => {

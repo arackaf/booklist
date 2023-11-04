@@ -56,9 +56,9 @@
     });
   }
 
-  let hovered = false;
-  const mouseEnter = () => (hovered = true);
-  const mouseLeave = () => (hovered = false);
+  let tooltipOn = false;
+  const onTooltipShow = () => (tooltipOn = true);
+  const onTooltipHide = () => (tooltipOn = false);
 
   let translateX = 0;
   let translateY = 0;
@@ -68,8 +68,8 @@
     const translateTarget = segment.centroidTransition;
     const [x2, y2] = translateTarget;
 
-    translateX = hovered ? x2 - x1 : 0;
-    translateY = hovered ? y2 - y1 : 0;
+    translateX = tooltipOn ? x2 - x1 : 0;
+    translateY = tooltipOn ? y2 - y1 : 0;
   }
 </script>
 
@@ -103,7 +103,7 @@
   </g>
 {/if}
 
-<g bind:this={mainArc} on:mouseenter={mouseEnter} on:mouseleave={mouseLeave}>
+<g bind:this={mainArc}>
   <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={segment.chunks[0]} {noInitialAnimation} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
     {#each segment.chunks as chunk, i}
@@ -119,7 +119,9 @@
       data: segment.data,
       hoverTarget: mainArc,
       drilldown: (...args) => drilldown(...args, "PIE"),
-      remove: removeSlice
+      remove: removeSlice,
+      onShow: onTooltipShow,
+      onHide: onTooltipHide
     }}
     cx={tooltipAnchor[0]}
     cy={tooltipAnchor[1]}
