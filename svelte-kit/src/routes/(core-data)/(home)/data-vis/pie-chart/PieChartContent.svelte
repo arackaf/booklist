@@ -43,6 +43,15 @@
       endAngle: endAngle
     });
   };
+  const transitionOffset = 50;
+  const getTransitionPoint = (startAngle: number, endAngle: number) => {
+    return arcGenerator.centroid({
+      innerRadius: radius + transitionOffset,
+      outerRadius: radius + transitionOffset,
+      startAngle: startAngle,
+      endAngle: endAngle
+    });
+  };
   const getInflextionInfo = (startAngle: number, endAngle: number) => {
     return {
       innerRadius: radius + INFLEXION_PADDING,
@@ -58,6 +67,7 @@
     const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
 
     const centroid = getCentroid(segment.startAngle, segment.endAngle);
+    const centroidTransition = getTransitionPoint(segment.startAngle, segment.endAngle);
     const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
     const inflexionPoint = arcGenerator.centroid(inflexionInfo);
 
@@ -70,6 +80,7 @@
       endAngle: segment.endAngle,
       data: segment.data,
       centroid,
+      centroidTransition,
       inflexionPoint,
       labelPosX,
       isRightLabel,

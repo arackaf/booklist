@@ -55,6 +55,22 @@
       labelPosX
     });
   }
+
+  let hovered = false;
+  const mouseEnter = () => (hovered = true);
+  const mouseLeave = () => (hovered = false);
+
+  let translateX = 0;
+  let translateY = 0;
+  $: {
+    const [x1, y1] = tooltipAnchor;
+
+    const translateTarget = segment.centroidTransition;
+    const [x2, y2] = translateTarget;
+
+    translateX = hovered ? x2 - x1 : 0;
+    translateY = hovered ? y2 - y1 : 0;
+  }
 </script>
 
 {#if !labelsAreHidden && (labelsReady || noInitialAnimation)}
@@ -87,14 +103,20 @@
   </g>
 {/if}
 
-<g bind:this={mainArc}>
+<g
+  bind:this={mainArc}
+  role="banner"
+  on:mouseenter={mouseEnter}
+  on:mouseleave={mouseLeave}
+  style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)"
+>
   {#each segment.chunks as chunk, i}
     <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
   {/each}
 </g>
 {#if mainArc && (labelsReady || noInitialAnimation)}
   <circle
-    style="visibility: hidden"
+    data-style="visibility: hidden"
     use:tooltip={{
       position: midPoint < 180 ? "right" : "left",
       data: segment.data,
@@ -104,6 +126,9 @@
     }}
     cx={tooltipAnchor[0]}
     cy={tooltipAnchor[1]}
-    r={1}
+    r={4}
   />
 {/if}
+<!-- {#if transitionPoint} -->
+<circle cx={segment.centroidTransition[0]} cy={segment.centroidTransition[1]} r={4} />
+<!-- {/if} -->
