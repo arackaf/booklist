@@ -32,7 +32,7 @@
     startAngle: segment.startAngle,
     endAngle: segment.endAngle,
     innerRadius: radius,
-    outerRadius: radius - 2
+    outerRadius: radius
   });
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
@@ -112,13 +112,11 @@
   </g>
 </g>
 {#if mainArc && (labelsReady || noInitialAnimation)}
-  <circle data-style="visibility: hidden" cx={tooltipAnchor[0]} cy={tooltipAnchor[1]} r={4} />
-
-  <!-- {#if transitionPoint} -->
   <circle
+    style="visibility: hidden"
     cx={segment.centroidTransition[0]}
     cy={segment.centroidTransition[1]}
-    r={4}
+    r={1}
     use:tooltip={{
       position: midPoint < 180 ? "right" : "left",
       data: segment.data,
@@ -130,4 +128,3 @@
     }}
   />
 {/if}
-<!-- {/if} -->
