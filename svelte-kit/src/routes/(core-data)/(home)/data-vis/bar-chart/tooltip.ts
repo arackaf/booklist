@@ -39,6 +39,8 @@ class TooltipHoverState {
 
     this.#isDying = false;
     this.#div?.classList.add("exists");
+
+    clearTimeout(this.#deathCancellationToken);
     this.#activationCancellationToken = setTimeout(() => {
       this.#div?.classList.add("show");
     }, 200);
