@@ -21,7 +21,8 @@ class TooltipHoverState {
   #isDying: boolean = true;
   #overBar: boolean = false;
   #overtooltip: boolean = false;
-  #cancellationToken: any = null;
+  #activationCancellationToken: any = null;
+  #deathCancellationToken: any = null;
   #onShow?: () => void;
   #onHide?: () => void;
 
@@ -32,14 +33,17 @@ class TooltipHoverState {
     this.#isDead = false;
     this.#popper = popper;
     this.#div = div;
-    this.#div?.classList.add("exists");
 
     this.#onShow = onShow;
     this.#onHide = onHide;
 
-    requestAnimationFrame(() => {
-      this.#div?.classList.add("show");
-    });
+    this.#isDying = false;
+    this.#div?.classList.add("exists");
+    this.#activationCancellationToken = setTimeout(() => {
+      requestAnimationFrame(() => {
+        this.#div?.classList.add("show");
+      });
+    }, 200);
   }
 
   hoverTooltip = () => {
@@ -56,8 +60,8 @@ class TooltipHoverState {
   resurrectIfNeeded() {
     this.#onShow?.();
     if (this.#isDying) {
-      clearTimeout(this.#cancellationToken);
-      this.#cancellationToken = null;
+      clearTimeout(this.#deathCancellationToken);
+      this.#deathCancellationToken = null;
       this.#isDying = false;
       this.#div?.classList.add("show");
     }
@@ -88,7 +92,8 @@ class TooltipHoverState {
     this.#isDying = true;
     this.#div?.classList.remove("show");
 
-    this.#cancellationToken = setTimeout(() => {
+    clearTimeout(this.#activationCancellationToken);
+    this.#deathCancellationToken = setTimeout(() => {
       if (this.#isDying) {
         this.#popper?.destroy();
         if (this.#div) {
@@ -96,7 +101,7 @@ class TooltipHoverState {
         }
         this.#isDead = true;
       }
-    }, 200);
+    }, 150);
   }
 }
 
