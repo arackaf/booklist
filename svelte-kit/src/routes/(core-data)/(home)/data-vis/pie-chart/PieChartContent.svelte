@@ -35,10 +35,19 @@
   const arcGenerator = arc();
   const INFLEXION_PADDING = 50; // space between donut and label inflexion point
 
-  const getCentroid = (startAngle: number, endAngle: number) => {
+  const getCentroid = (startAngle: number, endAngle: number, innerRadius: number = 0) => {
     return arcGenerator.centroid({
-      innerRadius: 0,
+      innerRadius,
       outerRadius: radius,
+      startAngle: startAngle,
+      endAngle: endAngle
+    });
+  };
+  const transitionOffset = 50;
+  const getTransitionPoint = (startAngle: number, endAngle: number) => {
+    return arcGenerator.centroid({
+      innerRadius: radius + transitionOffset,
+      outerRadius: radius + transitionOffset,
       startAngle: startAngle,
       endAngle: endAngle
     });
@@ -58,8 +67,11 @@
     const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
 
     const centroid = getCentroid(segment.startAngle, segment.endAngle);
+    const centroidTransition = getTransitionPoint(segment.startAngle, segment.endAngle);
     const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
     const inflexionPoint = arcGenerator.centroid(inflexionInfo);
+
+    const arcCenterPoint = getCentroid(segment.startAngle, segment.endAngle, radius);
 
     const isRightLabel = inflexionPoint[0] > 0;
     const labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
@@ -70,7 +82,9 @@
       endAngle: segment.endAngle,
       data: segment.data,
       centroid,
+      centroidTransition,
       inflexionPoint,
+      arcCenterPoint,
       labelPosX,
       isRightLabel,
       textAnchor,

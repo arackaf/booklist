@@ -12,6 +12,8 @@ export type PopperOptions = {
   remove: (id: string) => void;
   hoverTarget?: Element;
   TooltipComponent?: typeof Tooltip;
+  onShow?: () => void;
+  onHide?: () => void;
 };
 
 class TooltipHoverState {
@@ -19,20 +21,29 @@ class TooltipHoverState {
   #isDying: boolean = true;
   #overBar: boolean = false;
   #overtooltip: boolean = false;
-  #cancellationToken: any = null;
+  #activationCancellationToken: any = null;
+  #deathCancellationToken: any = null;
+  #onShow?: () => void;
+  #onHide?: () => void;
 
   #popper: PopperInstance | null = null;
   #div: HTMLDivElement | null = null;
 
-  activate(popper: PopperInstance, div: HTMLDivElement) {
+  activate(popper: PopperInstance, div: HTMLDivElement, onShow?: () => void, onHide?: () => void) {
     this.#isDead = false;
     this.#popper = popper;
     this.#div = div;
+
+    this.#onShow = onShow;
+    this.#onHide = onHide;
+
+    this.#isDying = false;
     this.#div?.classList.add("exists");
 
-    requestAnimationFrame(() => {
+    clearTimeout(this.#deathCancellationToken);
+    this.#activationCancellationToken = setTimeout(() => {
       this.#div?.classList.add("show");
-    });
+    }, 200);
   }
 
   hoverTooltip = () => {
@@ -47,9 +58,10 @@ class TooltipHoverState {
   };
 
   resurrectIfNeeded() {
+    this.#onShow?.();
     if (this.#isDying) {
-      clearTimeout(this.#cancellationToken);
-      this.#cancellationToken = null;
+      clearTimeout(this.#deathCancellationToken);
+      this.#deathCancellationToken = null;
       this.#isDying = false;
       this.#div?.classList.add("show");
     }
@@ -57,14 +69,15 @@ class TooltipHoverState {
 
   leaveTooltip = () => {
     this.#overtooltip = false;
-    this.check();
+    this.startTooltipRemoval();
   };
   leaveBar = () => {
     this.#overBar = false;
-    this.check();
+    this.startTooltipRemoval();
   };
 
-  check() {
+  startTooltipRemoval() {
+    this.#onHide?.();
     setTimeout(() => {
       if (this.isOff()) {
         this.destroy();
@@ -79,7 +92,8 @@ class TooltipHoverState {
     this.#isDying = true;
     this.#div?.classList.remove("show");
 
-    this.#cancellationToken = setTimeout(() => {
+    clearTimeout(this.#activationCancellationToken);
+    this.#deathCancellationToken = setTimeout(() => {
       if (this.#isDying) {
         this.#popper?.destroy();
         if (this.#div) {
@@ -87,7 +101,7 @@ class TooltipHoverState {
         }
         this.#isDead = true;
       }
-    }, 200);
+    }, 150);
   }
 }
 
@@ -138,7 +152,7 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
       ]
     });
 
-    tooltipMabager.activate(popper, div);
+    tooltipMabager.activate(popper, div, props.onShow, props.onHide);
 
     const contentDiv = div;
     contentDiv.addEventListener("mouseenter", () => {

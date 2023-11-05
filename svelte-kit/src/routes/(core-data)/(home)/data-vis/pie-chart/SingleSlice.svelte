@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { arc } from "d3-shape";
-
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
   import { spring } from "svelte/motion";
@@ -17,8 +15,6 @@
 
   $: labelsAreHidden = hideLabels;
 
-  const arcGenerator = arc();
-
   let mainArc: SVGElement;
 
   const PI = 3.141592653;
@@ -26,14 +22,7 @@
   $: endAngle = segment.endAngle * (180 / PI);
   $: midPoint = startAngle + (endAngle - startAngle) / 2;
 
-  $: ({ centroid, inflexionPoint, labelPosX, textAnchor, isRightLabel } = segment);
-
-  $: tooltipAnchor = arcGenerator.centroid({
-    startAngle: segment.startAngle,
-    endAngle: segment.endAngle,
-    innerRadius: radius,
-    outerRadius: radius - 2
-  });
+  $: ({ centroid, inflexionPoint, labelPosX, textAnchor, arcCenterPoint, isRightLabel } = segment);
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
@@ -54,6 +43,22 @@
       inflexionPointY: inflexionPoint[1],
       labelPosX
     });
+  }
+
+  let tooltipOn = false;
+  const onTooltipShow = () => (tooltipOn = true);
+  const onTooltipHide = () => (tooltipOn = false);
+
+  let translateX = 0;
+  let translateY = 0;
+  $: {
+    const [x1, y1] = arcCenterPoint;
+
+    const translateTarget = segment.centroidTransition;
+    const [x2, y2] = translateTarget;
+
+    translateX = tooltipOn ? x2 - x1 : 0;
+    translateY = tooltipOn ? y2 - y1 : 0;
   }
 </script>
 
@@ -88,22 +93,27 @@
 {/if}
 
 <g bind:this={mainArc}>
-  {#each segment.chunks as chunk, i}
-    <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
-  {/each}
+  <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={segment.chunks[0]} {noInitialAnimation} color="#FFFFFF" />
+  <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
+    {#each segment.chunks as chunk, i}
+      <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
+    {/each}
+  </g>
 </g>
 {#if mainArc && (labelsReady || noInitialAnimation)}
   <circle
     style="visibility: hidden"
+    cx={segment.centroidTransition[0]}
+    cy={segment.centroidTransition[1]}
+    r={1}
     use:tooltip={{
       position: midPoint < 180 ? "right" : "left",
       data: segment.data,
       hoverTarget: mainArc,
       drilldown: (...args) => drilldown(...args, "PIE"),
-      remove: removeSlice
+      remove: removeSlice,
+      onShow: onTooltipShow,
+      onHide: onTooltipHide
     }}
-    cx={tooltipAnchor[0]}
-    cy={tooltipAnchor[1]}
-    r={1}
   />
 {/if}
