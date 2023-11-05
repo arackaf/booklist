@@ -38,8 +38,8 @@ class TooltipHoverState {
     this.#onHide = onHide;
 
     this.#isDying = false;
+    this.#div?.classList.add("exists");
     this.#activationCancellationToken = setTimeout(() => {
-      this.#div?.classList.add("exists");
       requestAnimationFrame(() => {
         this.#div?.classList.add("show");
       });
@@ -101,7 +101,7 @@ class TooltipHoverState {
         }
         this.#isDead = true;
       }
-    }, 200);
+    }, 150);
   }
 }
 
