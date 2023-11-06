@@ -44,7 +44,7 @@ export const stackGraphData = (subjectHash: any, subjectIds: number[], books: Bo
       let names = _ids
         .map(id => subjectHash[id].name)
         .sort()
-        .join(",");
+        .join(", ");
 
       return {
         groupId: name,
