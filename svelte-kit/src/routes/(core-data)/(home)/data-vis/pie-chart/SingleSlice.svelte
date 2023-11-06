@@ -88,7 +88,7 @@
       y={$sliceSpring.inflexionPointY}
       text-anchor={textAnchor}
       dominant-baseline="middle"
-      font-size={14}
+      font-size={12}
     >
       {segment.masterLabel}
     </text>

@@ -36,7 +36,7 @@
   $: pieData = pieGenerator(showingData) as any[];
 
   const arcGenerator = arc();
-  const INFLEXION_PADDING = 50; // space between donut and label inflexion point
+  const INFLEXION_PADDING = 15; // space between donut and label inflexion point
 
   const getCentroid = (startAngle: number, endAngle: number, innerRadius: number = 0) => {
     return arcGenerator.centroid({
@@ -77,7 +77,7 @@
     const arcCenterPoint = getCentroid(segment.startAngle, segment.endAngle, radius);
 
     const isRightLabel = inflexionPoint[0] > 0;
-    const labelPosX = inflexionPoint[0] + 50 * (isRightLabel ? 1 : -1);
+    const labelPosX = inflexionPoint[0] + 25 * (isRightLabel ? 1 : -1);
     const textAnchor = isRightLabel ? "start" : "end";
 
     return {
