@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { arc, pie } from "d3-shape";
 
@@ -22,8 +23,11 @@
       el.scrollIntoView({ behavior: "smooth" });
     }
     onInitialRender();
-    pieChartHasRendered = true;
   };
+
+  onMount(() => {
+    pieChartHasRendered = true;
+  });
 
   const diameter = 500;
   const width = diameter;
