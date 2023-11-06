@@ -13,7 +13,7 @@ export function syncHeight(el: any) {
 }
 
 export function syncWidth(el: any) {
-  return writable(el.offsetWidth, set => {
+  return writable(el?.offsetWidth ?? 0, set => {
     if (!el) {
       return;
     }

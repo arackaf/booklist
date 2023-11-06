@@ -12,6 +12,7 @@
   export let drilldown: any;
   export let segmentCount: number;
   export let hideLabels: boolean;
+  export let smallContainer: boolean;
 
   $: labelsAreHidden = hideLabels;
 
@@ -60,6 +61,8 @@
     translateX = tooltipOn ? x2 - x1 : 0;
     translateY = tooltipOn ? y2 - y1 : 0;
   }
+
+  $: tooltipAnchorKey = smallContainer ? "small" : "large";
 </script>
 
 {#if !labelsAreHidden && (labelsReady || noInitialAnimation)}
@@ -101,19 +104,21 @@
   </g>
 </g>
 {#if mainArc && (labelsReady || noInitialAnimation)}
-  <circle
-    style="visibility: hidden"
-    cx={segment.centroidTransition[0]}
-    cy={segment.centroidTransition[1]}
-    r={1}
-    use:tooltip={{
-      position: midPoint < 180 ? "right" : "left",
-      data: segment.data,
-      hoverTarget: mainArc,
-      drilldown: (...args) => drilldown(...args, "PIE"),
-      remove: removeSlice,
-      onShow: onTooltipShow,
-      onHide: onTooltipHide
-    }}
-  />
+  {#key tooltipAnchorKey}
+    <circle
+      style="visibility: hidden"
+      cx={smallContainer ? segment.centroid[0] : segment.centroidTransition[0]}
+      cy={smallContainer ? segment.centroid[1] : segment.centroidTransition[1]}
+      r={1}
+      use:tooltip={{
+        position: midPoint < 180 ? "right" : "left",
+        data: segment.data,
+        hoverTarget: mainArc,
+        drilldown: (...args) => drilldown(...args, "PIE"),
+        remove: removeSlice,
+        onShow: onTooltipShow,
+        onHide: onTooltipHide
+      }}
+    />
+  {/key}
 {/if}

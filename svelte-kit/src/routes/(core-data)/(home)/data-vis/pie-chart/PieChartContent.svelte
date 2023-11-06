@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { writable } from "svelte/store";
   import { arc, pie } from "d3-shape";
+
   import SingleSlice from "./SingleSlice.svelte";
+  import { syncWidth } from "$lib/util/animationHelpers";
 
   export let showingData: any[];
   export let drilldown: any;
@@ -143,14 +146,22 @@
       labelsReady = true;
     }, 200);
   };
+
+  let containerDiv;
+  let containerWidthStore = writable(0);
+
+  $: {
+    containerWidthStore = syncWidth(containerDiv);
+  }
 </script>
 
-<div use:scrollInitial class="flex items-center py-10 mx-16">
+<div bind:this={containerDiv} use:scrollInitial class="flex items-center py-10 mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
+            smallContainer={$containerWidthStore < 1000}
             {radius}
             {removeSlice}
             {labelsReady}
