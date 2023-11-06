@@ -110,6 +110,7 @@ export type Data = {
   count: number;
   display: string;
   childSubjects: Subject[];
+  entries: { name: string; color: string }[];
 };
 
 export const tooltip = (node: SVGElement, props: PopperOptions) => {

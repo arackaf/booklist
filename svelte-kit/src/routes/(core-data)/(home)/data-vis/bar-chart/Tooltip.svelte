@@ -15,7 +15,11 @@
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
       <div class="flex items-baseline gap-2 md:text-lg text-xs">
-        <span class="name">{data.display}</span>
+        <div class="flex flex-col gap-1">
+          {#each data.entries as entry}
+            <span class="name">{entry.name}</span>
+          {/each}
+        </div>
         <button class="raw-button flex ml-auto" on:click={() => remove(data.groupId)}><i class="fad fa-times-circle" /></button>
       </div>
       <hr class="border-slate-600 my-0" />
