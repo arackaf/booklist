@@ -145,22 +145,24 @@
   };
 </script>
 
-<div use:scrollInitial class="flex py-24">
-  <svg {width} {height} style="display: inline-block; overflow: visible; margin-left: auto; margin-right: auto;">
-    <g transform={`translate(${width / 2}, ${height / 2})`}>
-      {#each pieSegments as seg (seg.data.groupId)}
-        <SingleSlice
-          {radius}
-          {removeSlice}
-          {labelsReady}
-          {onLabelsReady}
-          segment={seg}
-          {drilldown}
-          {hideLabels}
-          noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
-          segmentCount={pieSegments.length}
-        />
-      {/each}
-    </g>
-  </svg>
+<div use:scrollInitial class="flex items-center py-10 mx-16">
+  <div class="max-w-[500px] flex-1 mx-auto">
+    <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
+      <g transform={`translate(${width / 2}, ${height / 2})`}>
+        {#each pieSegments as seg (seg.data.groupId)}
+          <SingleSlice
+            {radius}
+            {removeSlice}
+            {labelsReady}
+            {onLabelsReady}
+            segment={seg}
+            {drilldown}
+            {hideLabels}
+            noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
+            segmentCount={pieSegments.length}
+          />
+        {/each}
+      </g>
+    </svg>
+  </div>
 </div>
