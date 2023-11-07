@@ -16,7 +16,7 @@
 
   export let onInitialRender: () => void;
 
-  const noInitialAnimation = chartIndex === 0;
+  const noInitialAnimation = chartIndex === 0 || hasRendered;
 
   const scrollInitial = (el: any) => {
     if (el && chartIndex > 0 && !hasRendered) {
@@ -170,12 +170,12 @@
             {containerSize}
             {radius}
             {removeSlice}
-            {labelsReady}
+            labelsReady={labelsReady || hasRendered}
             {onLabelsReady}
             segment={seg}
             {drilldown}
             {hideLabels}
-            noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
+            noInitialAnimation={noInitialAnimation && !pieChartHasRendered}
             disableAnimation={pieSegments.length === 1}
             segmentCount={pieSegments.length}
           />
