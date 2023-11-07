@@ -158,7 +158,7 @@
     containerWidthStore = syncWidth(containerDiv);
   }
 
-  $: containerSize = $containerWidthStore == -1 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
+  $: containerSize = $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
 </script>
 
 <div bind:this={containerDiv} use:scrollInitial class="flex items-center py-10 mx-16">

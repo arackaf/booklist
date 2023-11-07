@@ -105,7 +105,7 @@
     {/each}
   </g>
 </g>
-{#if containerSize !== "UNKNOWN"}
+{#if mainArc && containerSize !== "UNKNOWN"}
   {#key tooltipAnchorKey}
     <circle
       style="visibility: hidden"
