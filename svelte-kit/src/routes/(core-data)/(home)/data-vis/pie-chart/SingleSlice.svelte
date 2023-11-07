@@ -13,6 +13,7 @@
   export let segmentCount: number;
   export let hideLabels: boolean;
   export let containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
+  export let disableAnimation: boolean;
 
   $: labelsAreHidden = hideLabels;
 
@@ -58,8 +59,8 @@
     const translateTarget = segment.centroidTransition;
     const [x2, y2] = translateTarget;
 
-    translateX = tooltipOn ? x2 - x1 : 0;
-    translateY = tooltipOn ? y2 - y1 : 0;
+    translateX = tooltipOn && !disableAnimation ? x2 - x1 : 0;
+    translateY = tooltipOn && !disableAnimation ? y2 - y1 : 0;
   }
 
   $: tooltipAnchorKey = containerSize === "SMALL" ? "small" : containerSize === "NORMAL" ? "large" : "";
@@ -108,8 +109,8 @@
   {#key tooltipAnchorKey}
     <circle
       style="visibility: hidden"
-      cx={smallContainer ? segment.centroid[0] : segment.centroidTransition[0]}
-      cy={smallContainer ? segment.centroid[1] : segment.centroidTransition[1]}
+      cx={smallContainer || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0]}
+      cy={smallContainer || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1]}
       r={1}
       use:tooltip={{
         position: midPoint < 180 ? "right" : "left",

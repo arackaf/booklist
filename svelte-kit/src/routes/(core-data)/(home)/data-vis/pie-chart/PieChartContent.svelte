@@ -176,6 +176,7 @@
             {drilldown}
             {hideLabels}
             noInitialAnimation={(chartIndex === 0 || hasRendered) && !pieChartHasRendered}
+            disableAnimation={pieSegments.length === 1}
             segmentCount={pieSegments.length}
           />
         {/each}
