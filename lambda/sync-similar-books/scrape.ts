@@ -18,14 +18,7 @@ export async function getBookRelatedItems(isbn: string) {
       });
   try {
     const page: Page = await browser.newPage({
-      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-      extraHTTPHeaders: {
-        accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "accept-encoding": "gzip, deflate, br",
-        "accept-language": "en",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
-      }
+      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
     });
 
     console.log("Attempting url", `https://www.amazon.com/dp/${isbn}`);
@@ -40,9 +33,18 @@ export async function getBookRelatedItems(isbn: string) {
 
     for (let i = 1; i <= 15; i++) {
       try {
-        await page.evaluate(() => window.scrollTo(0, i * 300));
-        await page.waitForTimeout(250);
-      } catch (er) {}
+        const scrollAmount = i * 300;
+        await page.evaluate(scrollAmount => window.scrollTo(0, scrollAmount), scrollAmount);
+        await page.waitForTimeout(500);
+        let allCarousels = await page.locator("[data-a-carousel-options]").all();
+        console.log("Scroll", i, "carousels found", allCarousels.length);
+        if (allCarousels.length) {
+          console.log("Breaking");
+          break;
+        }
+      } catch (er) {
+        console.log("Error", er);
+      }
     }
 
     let allCarousels = await page.locator("[data-a-carousel-options]").all();
