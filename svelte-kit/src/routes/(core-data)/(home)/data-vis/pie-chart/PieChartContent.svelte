@@ -152,11 +152,13 @@
   };
 
   let containerDiv;
-  let containerWidthStore = writable(0);
+  let containerWidthStore = writable(-1);
 
   $: {
     containerWidthStore = syncWidth(containerDiv);
   }
+
+  $: containerSize = $containerWidthStore == -1 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
 </script>
 
 <div bind:this={containerDiv} use:scrollInitial class="flex items-center py-10 mx-16">
@@ -165,7 +167,7 @@
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
-            smallContainer={$containerWidthStore < 1000}
+            {containerSize}
             {radius}
             {removeSlice}
             {labelsReady}

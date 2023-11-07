@@ -12,7 +12,7 @@
   export let drilldown: any;
   export let segmentCount: number;
   export let hideLabels: boolean;
-  export let smallContainer: boolean;
+  export let containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
 
   $: labelsAreHidden = hideLabels;
 
@@ -62,7 +62,8 @@
     translateY = tooltipOn ? y2 - y1 : 0;
   }
 
-  $: tooltipAnchorKey = smallContainer ? "small" : "large";
+  $: tooltipAnchorKey = containerSize === "SMALL" ? "small" : containerSize === "NORMAL" ? "large" : "";
+  $: smallContainer = containerSize === "SMALL";
 </script>
 
 {#if !labelsAreHidden && (labelsReady || noInitialAnimation)}
@@ -103,7 +104,7 @@
     {/each}
   </g>
 </g>
-{#if mainArc && (labelsReady || noInitialAnimation)}
+{#if containerSize !== "UNKNOWN"}
   {#key tooltipAnchorKey}
     <circle
       style="visibility: hidden"
