@@ -170,14 +170,12 @@
             {containerSize}
             {radius}
             {removeSlice}
-            labelsReady={labelsReady || hasRendered}
+            labelsReady={!hideLabels && (labelsReady || hasRendered || noInitialAnimation)}
             {onLabelsReady}
             segment={seg}
             {drilldown}
-            {hideLabels}
             noInitialAnimation={noInitialAnimation && !pieChartHasRendered}
             disableAnimation={pieSegments.length === 1}
-            segmentCount={pieSegments.length}
           />
         {/each}
       </g>

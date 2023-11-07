@@ -10,12 +10,8 @@
   export let removeSlice: (id: any) => void;
   export let radius: number;
   export let drilldown: any;
-  export let segmentCount: number;
-  export let hideLabels: boolean;
   export let containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
   export let disableAnimation: boolean;
-
-  $: labelsAreHidden = hideLabels;
 
   let mainArc: SVGElement;
 
@@ -67,7 +63,7 @@
   $: smallContainer = containerSize === "SMALL";
 </script>
 
-{#if !labelsAreHidden && (labelsReady || noInitialAnimation)}
+{#if labelsReady}
   <g>
     <line
       x1={$sliceSpring.centroidX}
