@@ -13,8 +13,9 @@ export const load = async ({ parent, url }) => {
 
   const subjects = url.searchParams.getAll("subjects");
   const myBooks = url.searchParams.get("my-books");
+  const page = parseInt(url.searchParams.get("page") || "1", 10);
 
-  const books = await getBooksWithSimilarBooks({ userId: myBooks == "true" ? parentParams.userId : undefined, subjects });
+  const books = await getBooksWithSimilarBooks({ page, userId: myBooks == "true" ? parentParams.userId : undefined, subjects });
 
   const now = new Date(new Date().toISOString());
   books.forEach(book => {

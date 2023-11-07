@@ -4,11 +4,12 @@ import { booksSubjects, books as booksTable, similarBooks } from "./drizzle-sche
 import type { BookWithSimilarItems } from "./types";
 
 type QueryProps = {
+  page: number;
   userId?: string;
   subjects?: string[];
 };
 
-export const getBooksWithSimilarBooks = async ({ userId, subjects }: QueryProps = {}) => {
+export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: QueryProps = { page: 1 }) => {
   const filters: SQLWrapper[] = [];
 
   if (userId) {
@@ -58,6 +59,7 @@ export const getBooksWithSimilarBooks = async ({ userId, subjects }: QueryProps 
         )
       )
       .orderBy(desc(booksTable.id))
+      .offset((page - 1) * 50)
       .limit(50)
   );
 
