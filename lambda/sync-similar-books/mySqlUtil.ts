@@ -50,7 +50,7 @@ export async function getNextBookToSync() {
         `    
           SELECT id, title, isbn
           FROM books
-          WHERE (similarBooksLastSync IS NULL OR DATEDIFF(NOW(), similarBooksLastSync) > 60) AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
+          WHERE (similarBooksLastSync IS NULL OR DATEDIFF(NOW(), similarBooksLastSync) > 180) AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
           ORDER BY id
           LIMIT 1`
       )) as any[]) || [];

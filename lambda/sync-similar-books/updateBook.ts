@@ -7,13 +7,12 @@ export async function bookSyncFailure(connection: any, id: number, reason: strin
     connection,
     `
     UPDATE books 
-    SET similarBooks = ?,
-        similarBooksLastSyncSuccess = false,
+    SET similarBooksLastSyncSuccess = false,
         similarBooksLastSync = ?,
         similarBooksLastSyncFailureReason = ?
     WHERE id = ?
   `,
-    [JSON.stringify([]), new Date(), reason, id]
+    [new Date(), reason, id]
   );
 }
 
