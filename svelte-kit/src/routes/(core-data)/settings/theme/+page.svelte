@@ -24,8 +24,8 @@
   }
 </script>
 
-<div class="theme-chooser-root">
-  <div class="theme-chooser-list">
+<div class="flex flex-wrap">
+  <div>
     <form bind:this={whiteBgForm} method="POST" action="?/setWhiteBb" use:enhance={setWhiteBg}>
       <label style="font-size: 16px" class="checkbox mb-2">
         <input type="checkbox" name="whitebg" checked={whiteBg == "1"} on:change={() => whiteBgForm.requestSubmit()} />

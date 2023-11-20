@@ -21,7 +21,7 @@
   <div
     on:keypress={() => {}}
     on:click={() => formEl.requestSubmit()}
-    class={classNames("theme-chooser-item flex flex-col", { active: theme == name })}
+    class={classNames("theme-chooser-item flex flex-col rounded-lg border border-neutral-400 cursor-pointer mb-3 p-2", { active: theme == name })}
   >
     <div class={classNames(name, "theme-chooser")}>
       {#each arrayOfTen as val}
