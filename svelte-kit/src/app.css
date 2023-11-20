@@ -168,3 +168,7 @@ td {
   padding: 5px;
   border-top: var(--default-border-width) solid var(--neutral-6);
 }
+
+.generic-label-select .options-root {
+  z-index: 999 !important;
+}

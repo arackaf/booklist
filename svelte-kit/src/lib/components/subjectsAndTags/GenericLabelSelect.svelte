@@ -29,9 +29,3 @@
     </span>
   </AutoSuggest>
 </div>
-
-<style>
-  .generic-label-select :global(.options-root) {
-    z-index: 999 !important;
-  }
-</style>
