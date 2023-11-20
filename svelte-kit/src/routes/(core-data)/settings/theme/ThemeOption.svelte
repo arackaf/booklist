@@ -14,15 +14,15 @@
       invalidate("app:root");
     };
   }
+
+  $: active = theme === name;
+
+  $: addedClasses = active ? "border-4 border-[var(--primary-5)]" : "cursor-pointer border border-neutral-400";
 </script>
 
 <form bind:this={formEl} method="POST" action="?/setTheme" use:enhance={setTheme}>
   <input type="hidden" name="theme" value={name} />
-  <div
-    on:keypress={() => {}}
-    on:click={() => formEl.requestSubmit()}
-    class={classNames("theme-chooser-item flex flex-col rounded-lg border border-neutral-400 cursor-pointer mb-3 p-2", { active: theme == name })}
-  >
+  <div on:keypress={() => {}} on:click={() => formEl.requestSubmit()} class={"p-2 flex flex-col rounded-lg mb-3 " + addedClasses}>
     <div class={classNames(name, "theme-chooser")}>
       {#each arrayOfTen as val}
         <div style={`background-color: var(--primary-${val})`} />
