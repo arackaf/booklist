@@ -36,7 +36,7 @@
       <ThemeOption {theme} {name} />
     {/each}
   </div>
-  <div class="demo-container">
+  <div class="ml-auto demo-container">
     <DemoStyles />
   </div>
 </div>
