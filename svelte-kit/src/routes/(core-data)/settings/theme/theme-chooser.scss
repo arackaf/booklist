@@ -1,22 +1,3 @@
-.theme-chooser {
-  display: inline-flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-
-  > span {
-    margin-right: 0px;
-  }
-  > div {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-  }
-  > div:last-child {
-    margin-right: 0;
-  }
-}
-
 .demo-container {
   margin-left: auto;
 
