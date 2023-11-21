@@ -5,12 +5,12 @@
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 </script>
 
-<div class="demo-root">
-  <div data-reach-dialog-content class="mock-modal">
+<div class="max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
+  <div data-reach-dialog-content class="border-4 border-[var(--primary-3)] rounded-xl lg:p-5 p-3">
     <h4>Book Search</h4>
-    <hr />
+    <hr class="my-4" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="md:col-span-2">
+      <div class="col-span-2">
         <div class="flex flex-col gap-2">
           <InputGroup labelText="Title">
             <Input slot="input" placeholder="Search title" value="The Slefish Gene" />
@@ -19,7 +19,7 @@
           <Alert type="warning">Did you spell this right?</Alert>
         </div>
       </div>
-      <div>
+      <div class="col-span-2 md:col-span-1">
         <div class="flex flex-col gap-2">
           <InputGroup labelText="Publisher">
             <Input slot="input" placeholder="Publisher" value="Basic Books" />
@@ -28,7 +28,7 @@
           <Alert type="success">Looks good to me!</Alert>
         </div>
       </div>
-      <div>
+      <div class="col-span-2 md:col-span-1">
         <div class="flex flex-col gap-2">
           <InputGroup labelText="Author">
             <Input slot="input" placeholder="Author" />

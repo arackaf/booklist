@@ -1,6 +1,4 @@
 <script lang="ts">
-  import "./theme-chooser.scss";
-
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
 
@@ -24,7 +22,7 @@
   }
 </script>
 
-<div class="flex flex-wrap">
+<div class="flex sm:flex-row flex-col">
   <div>
     <form bind:this={whiteBgForm} method="POST" action="?/setWhiteBb" use:enhance={setWhiteBg}>
       <label style="font-size: 16px" class="checkbox mb-2">
@@ -36,7 +34,7 @@
       <ThemeOption {theme} {name} />
     {/each}
   </div>
-  <div class="ml-auto demo-container">
+  <div class="sm:ml-auto ml-0 demo-container">
     <DemoStyles />
   </div>
 </div>
