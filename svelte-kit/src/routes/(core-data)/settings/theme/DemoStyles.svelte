@@ -5,7 +5,7 @@
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 </script>
 
-<div class="max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
+<div class="max-w-[400px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
   <div data-reach-dialog-content class="border-4 border-[var(--primary-3)] rounded-xl lg:p-5 p-3">
     <h4>Book Search</h4>
     <hr class="my-4" />

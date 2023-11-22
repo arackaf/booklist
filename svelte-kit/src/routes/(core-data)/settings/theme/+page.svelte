@@ -22,7 +22,7 @@
   }
 </script>
 
-<div class="flex sm:flex-row flex-col">
+<div class="flex xs:flex-row flex-col">
   <div>
     <form bind:this={whiteBgForm} method="POST" action="?/setWhiteBb" use:enhance={setWhiteBg}>
       <label style="font-size: 16px" class="checkbox mb-2">
@@ -34,7 +34,7 @@
       <ThemeOption {theme} {name} />
     {/each}
   </div>
-  <div class="sm:ml-auto ml-0 demo-container">
+  <div class="xs:ml-auto xs:mr-auto ml-0 mr-0 demo-container">
     <DemoStyles />
   </div>
 </div>

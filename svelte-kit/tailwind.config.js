@@ -63,6 +63,14 @@ export default {
         "danger-10": "var(--danger-10)",
         "danger-11": "var(--danger-11)"
       }
+    },
+    screens: {
+      xs: "501px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px"
     }
   },
   plugins: []
