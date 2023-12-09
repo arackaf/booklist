@@ -48,7 +48,6 @@ export type Book = {
   isbn: string;
   publisher: string;
   publicationDate: string;
-  dateAddedDisplay: string;
   isRead: boolean;
   authors: string[];
   tags: number[];
@@ -65,7 +64,6 @@ export type BookCoversEdits = Partial<
 export type BookDisplay = Book & {
   subjectObjects: any[];
   tagObjects: any[];
-  dateAddedDisplay: string;
 };
 
 type BookSortKeys = "dateAdded" | "title" | "pages";

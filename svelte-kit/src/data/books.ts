@@ -12,7 +12,6 @@ const defaultBookFields = {
   subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
     "subjects"
   ),
-  dateAddedDisplay: sql<string>`DATE_FORMAT(dateAdded, '%c/%e/%Y')`,
   title: booksTable.title,
   pages: booksTable.pages,
   userId: booksTable.userId,

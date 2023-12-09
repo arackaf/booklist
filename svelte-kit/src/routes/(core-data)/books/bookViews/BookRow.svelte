@@ -61,6 +61,11 @@
   };
 
   $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
+
+  $: addedDate = new Date(book.dateAdded);
+  function getDisplayDate(date: Date) {
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  }
 </script>
 
 <tr class="hover:bg-primary-10">
@@ -188,7 +193,7 @@
   </td>
   <td>
     <span class="text-sm">
-      {book.dateAddedDisplay}
+      {getDisplayDate(addedDate)}
     </span>
   </td>
 </tr>
