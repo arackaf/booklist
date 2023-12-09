@@ -60,7 +60,9 @@
   }
 
   $: tooltipAnchorKey = containerSize === "SMALL" ? "small" : containerSize === "NORMAL" ? "large" : "";
-  $: smallContainer = containerSize === "SMALL";
+
+  $: highMiddlePoint = midPoint > 300 || midPoint < 60;
+  $: useCenterTooltipPosition = containerSize === "SMALL" || highMiddlePoint;
 </script>
 
 {#if labelsReady}
@@ -105,8 +107,8 @@
   {#key tooltipAnchorKey}
     <circle
       style="visibility: hidden"
-      cx={smallContainer || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0]}
-      cy={smallContainer || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1]}
+      cx={useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0]}
+      cy={useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1]}
       r={1}
       use:tooltip={{
         position: midPoint < 180 ? "right" : "left",
