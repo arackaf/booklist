@@ -21,7 +21,7 @@
     header: string;
     startingChartType?: "PIE" | "BAR";
   };
-  $: chartPackets = [{ subjects: stackedSubjects, header: "All books", startingChartType: uxState.initialChart }] as ChartPacketType[];
+  $: chartPackets = [{ subjects: stackedSubjects, header: "All books", startingChartType: uxState.initialChart || "BAR" }] as ChartPacketType[];
 
   const getDrilldownChart = (index: number, subjects: any, header: any, chartType: "PIE" | "BAR") => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header, startingChartType: chartType }];
