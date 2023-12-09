@@ -218,6 +218,8 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
 
   const editorialReviews = books.flatMap(b => b.editorialReviews!);
 
+  updateBookImages(similarBooks);
+
   return { editorialReviews, similarBooks };
 };
 

@@ -1,7 +1,7 @@
 import { and, eq, exists, inArray, getTableColumns, or, sql, type SQLWrapper, like, desc, isNotNull } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
 import { booksSubjects, books as booksTable, similarBooks } from "./drizzle-schema";
-import type { BookWithSimilarItems } from "./types";
+import type { BookImages } from "./types";
 
 type QueryProps = {
   page: number;
@@ -63,6 +63,7 @@ export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: Query
       .limit(50)
   );
 
+  updateBookImages(eligibleBooks);
   return eligibleBooks;
 };
 
@@ -79,6 +80,21 @@ export const getSimilarBooksForBook = async (id: number) => {
       .leftJoin(similarBooks, sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooks.isbn})`)
       .where(and(eq(booksTable.id, id), isNotNull(similarBooks.id)))
   );
+  updateBookImages(result);
 
   return result;
 };
+
+function updateBookImages<T extends Partial<BookImages>>(books: T[]): T[] {
+  const fields = ["mobileImage", "smallImage", "mediumImage"] as const;
+  for (const book of books) {
+    for (const field of fields) {
+      const currentVal = book[field];
+      if (currentVal) {
+        book[field] = currentVal.replace("my-library-cover-uploads.s3.amazonaws.com", "d193qjyckdxivp.cloudfront.net");
+      }
+    }
+  }
+
+  return books;
+}
