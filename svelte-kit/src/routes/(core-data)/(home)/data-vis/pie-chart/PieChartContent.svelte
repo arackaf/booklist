@@ -112,36 +112,31 @@
   }) as any[];
 
   let hideLabels = false;
-  $: {
+  $: hideLabels = hasOverlap(pieSegments);
+
+  function hasOverlap(pieSegments: any[]): boolean {
     const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
     const rightSegments = pieSegments.filter(seg => seg.isRightLabel);
 
-    let overlapFound = false;
     for (const seg of leftSegments) {
       const segHasOverlaps = leftSegments.find(segInner => {
         return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
       });
       if (segHasOverlaps) {
-        overlapFound = true;
-        break;
+        return true;
       }
     }
 
-    if (overlapFound) {
-      hideLabels = true;
-    } else {
-      for (const seg of rightSegments) {
-        const segHasOverlaps = rightSegments.find(segInner => {
-          return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
-        });
-        if (segHasOverlaps) {
-          overlapFound = true;
-          break;
-        }
+    for (const seg of rightSegments) {
+      const segHasOverlaps = rightSegments.find(segInner => {
+        return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
+      });
+      if (segHasOverlaps) {
+        return true;
       }
     }
 
-    hideLabels = overlapFound;
+    return false;
   }
 
   let labelsReady = noInitialAnimation;
