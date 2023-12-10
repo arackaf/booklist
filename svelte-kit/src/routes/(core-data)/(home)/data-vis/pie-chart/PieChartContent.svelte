@@ -14,16 +14,7 @@
   export let hasRendered: boolean;
   let pieChartHasRendered = false;
 
-  export let onInitialRender: () => void;
-
   const noInitialAnimation = chartIndex === 0 || hasRendered;
-
-  const scrollInitial = (el: any) => {
-    if (el && chartIndex > 0 && !hasRendered) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-    onInitialRender();
-  };
 
   onMount(() => {
     pieChartHasRendered = true;
@@ -156,7 +147,7 @@
   $: containerSize = $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
 </script>
 
-<div bind:this={containerDiv} use:scrollInitial class="flex items-center py-10 mx-16">
+<div bind:this={containerDiv} class="flex items-center mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
