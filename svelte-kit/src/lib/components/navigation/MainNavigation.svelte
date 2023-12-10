@@ -101,10 +101,9 @@
     <ul class="flex ml-auto">
       {#if !loggedIn}
         <NavBarItem
-          onClick={() =>
-            signIn("google", {
-              callbackUrl: "/books"
-            })}
+          onClick={() => {
+            signIn("", { callbackUrl: "/books" });
+          }}
           label={"Login"}
         >
           <span class="hidden md:block">Login</span>
