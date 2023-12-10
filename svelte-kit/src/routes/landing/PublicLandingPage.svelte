@@ -30,10 +30,9 @@
             <Button
               class="self-start"
               theme="primary"
-              on:click={() =>
-                signIn("google", {
-                  callbackUrl: "/books"
-                })}
+              on:click={() => {
+                signIn("", { callbackUrl: "/books" });
+              }}
             >
               Login or create an account
             </Button>

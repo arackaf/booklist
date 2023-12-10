@@ -1,7 +1,17 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
-import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, DYNAMO_AUTH_TABLE, AUTH_SECRET } from "$env/static/private";
+import GithubProvider from "@auth/core/providers/github";
+import {
+  GITHUB_AUTH_CLIENT_ID,
+  GITHUB_AUTH_CLIENT_SECRET,
+  GOOGLE_AUTH_CLIENT_ID,
+  GOOGLE_AUTH_SECRET,
+  AMAZON_ACCESS_KEY,
+  AMAZON_SECRET_KEY,
+  DYNAMO_AUTH_TABLE,
+  AUTH_SECRET
+} from "$env/static/private";
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
@@ -30,6 +40,10 @@ const auth = SvelteKitAuth({
     GoogleProvider({
       clientId: GOOGLE_AUTH_CLIENT_ID,
       clientSecret: GOOGLE_AUTH_SECRET
+    }),
+    GithubProvider({
+      clientId: GITHUB_AUTH_CLIENT_ID,
+      clientSecret: GITHUB_AUTH_CLIENT_SECRET
     })
   ],
   session: {
