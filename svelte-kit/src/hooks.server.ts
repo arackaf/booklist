@@ -40,7 +40,7 @@ const auth = SvelteKitAuth({
   trustHost: true,
   secret: AUTH_SECRET,
 
-  adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any,
+  adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }),
 
   callbacks: {
     async signIn({ account }) {
