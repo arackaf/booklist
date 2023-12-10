@@ -2,7 +2,7 @@
 
 import { DefaultSession } from "@auth/core";
 
-declare module "@auth/sveltekit/node_modules/@auth/core/types" {
+declare module "@auth/core/types" {
   interface Session {
     userId: string;
     legacySync: boolean;
