@@ -26,15 +26,17 @@
   <form action="/admin/similar-books">
     <div class="flex flex-col gap-3">
       <h1 class="text-lg font-bold">Filter</h1>
-      <label class="checkbox">
-        <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
-        Only show my books
-      </label>
-      <div class="z-[9999999]">
-        <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
-          <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-          <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-        </SelectAndDisplayContainer>
+      <div class="flex flex-row items-center gap-2">
+        <label class="checkbox">
+          <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
+          Only show my books
+        </label>
+        <div class="relative suppress-dropdown">
+          <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+            <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+            <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          </SelectAndDisplayContainer>
+        </div>
       </div>
       <Button theme="primary" class="self-start">Search</Button>
     </div>

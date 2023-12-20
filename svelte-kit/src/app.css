@@ -172,3 +172,7 @@ td {
 .generic-label-select .options-root {
   z-index: 999 !important;
 }
+
+.suppress-dropdown .generic-label-select .options-root {
+  z-index: 1 !important;
+}
