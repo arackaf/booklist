@@ -43,13 +43,13 @@
         </div>
         <div class="flex gap-3">
           <Button size="med" theme="primary" class="self-start">Search</Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", 1)} disabled={pageNumber === 1}>
+          <Button size="med" theme="default" on:click={() => updateSearchParam("page", 1)} data-disabled={pageNumber === 1}>
             <i class="fal fa-fw fa-angle-double-left" />
           </Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
+          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} data-disabled={pageNumber === 1}>
             <i class="fal fa-fw fa-angle-left" />
           </Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
+          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageUp)} data-disabled={books.length < 50}>
             <i class="fal fa-fw fa-angle-right" />
           </Button>
         </div>
