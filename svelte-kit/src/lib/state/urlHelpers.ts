@@ -1,19 +1,23 @@
-import X, { goto } from "$app/navigation";
+import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 import { tick } from "svelte";
 import { derived, get } from "svelte/store";
 
 export async function updateSearchParam(key, value) {
-  // const q = new URLSearchParams(get(page).url.searchParams);
+  const q = new URLSearchParams(get(page).url.searchParams);
 
-  // if (value) {
-  //   q.set(key, value);
-  // } else {
-  //   q.delete(key);
-  // }
+  if (value) {
+    q.set(key, value);
+  } else {
+    q.delete(key);
+  }
+  q.set("s", "d");
 
   // await tick();
-  await goto(`/books`, { replaceState: true })
+  const newUrl = new URL(get(page).url);
+  newUrl.search = q.toString();
+
+  await goto(newUrl, { replaceState: true })
     .then(x => {
       // debugger;
     })

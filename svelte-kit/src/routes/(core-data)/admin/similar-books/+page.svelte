@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
@@ -22,6 +23,31 @@
 
   const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject.id));
   const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(id => id != subject.id));
+
+  function aaa(key, value) {
+    const searchParams = new URLSearchParams($page.url.searchParams);
+
+    // if (value) {
+    //   q.set(key, value);
+    // } else {
+    //   q.delete(key);
+    // }
+    searchParams.set("a", "b");
+
+    // await tick();
+    const newUrl = new URL($page.url);
+    newUrl.search = searchParams.toString();
+
+    goto(newUrl)
+      .then(x => {
+        // debugger;
+        console.log({ x });
+      })
+      .catch(err => {
+        // debugger;
+        console.log({ err });
+      });
+  }
 </script>
 
 <section class="flex flex-col gap-3">
@@ -49,7 +75,7 @@
           <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} data-disabled={pageNumber === 1}>
             <i class="fal fa-fw fa-angle-left" />
           </Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageUp)} data-disabled={books.length < 50}>
+          <Button size="med" theme="default" on:click={() => aaa("page", nextPageUp)} data-disabled={books.length < 50}>
             <i class="fal fa-fw fa-angle-right" />
           </Button>
         </div>
