@@ -2,7 +2,7 @@ import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 import { derived, get } from "svelte/store";
 
-export function updateSearchParam(key, value) {
+export async function updateSearchParam(key, value) {
   const q = new URLSearchParams(get(page).url.searchParams);
 
   if (value) {
@@ -11,9 +11,10 @@ export function updateSearchParam(key, value) {
     q.delete(key);
   }
 
-  return goto(`?${q}`, {
-    noScroll: true
-  });
+  const newUrl = new URL(get(page).url);
+  newUrl.search = q.toString();
+
+  goto(newUrl, { replaceState: true });
 }
 
 export const publicUserIdPersist = derived(page, $page => {

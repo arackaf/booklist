@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
@@ -25,37 +26,35 @@
 </script>
 
 <section class="flex flex-col gap-3">
-  <form action="/admin/similar-books">
-    <div class="flex gap-3">
-      <div class="flex flex-col gap-3">
-        <h1 class="text-lg font-bold">Filter</h1>
-        <div class="flex flex-row items-center gap-4">
-          <label class="checkbox">
-            <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
-            Only show my books
-          </label>
-          <div class="relative suppress-dropdown">
-            <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
-              <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-            </SelectAndDisplayContainer>
-          </div>
-        </div>
-        <div class="flex gap-3">
-          <Button size="med" theme="primary" class="self-start">Search</Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", 1)} disabled={pageNumber === 1}>
-            <i class="fal fa-fw fa-angle-double-left" />
-          </Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
-            <i class="fal fa-fw fa-angle-left" />
-          </Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
-            <i class="fal fa-fw fa-angle-right" />
-          </Button>
+  <div class="flex gap-3">
+    <div class="flex flex-col gap-3">
+      <h1 class="text-lg font-bold">Filter</h1>
+      <div class="flex flex-row items-center gap-4">
+        <label class="checkbox">
+          <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
+          Only show my books
+        </label>
+        <div class="relative suppress-dropdown">
+          <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+            <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+            <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          </SelectAndDisplayContainer>
         </div>
       </div>
+      <div class="flex gap-3">
+        <Button size="med" theme="primary" class="self-start">Search</Button>
+        <Button size="med" theme="default" on:click={() => updateSearchParam("page", "")} disabled={pageNumber === 1}>
+          <i class="fal fa-fw fa-angle-double-left" />
+        </Button>
+        <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
+          <i class="fal fa-fw fa-angle-left" />
+        </Button>
+        <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
+          <i class="fal fa-fw fa-angle-right" />
+        </Button>
+      </div>
     </div>
-  </form>
+  </div>
 
   <div class="list">
     {#each books as book}
