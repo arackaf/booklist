@@ -23,65 +23,38 @@
 
   const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject.id));
   const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(id => id != subject.id));
-
-  function aaa(key, value) {
-    const searchParams = new URLSearchParams($page.url.searchParams);
-
-    // if (value) {
-    //   q.set(key, value);
-    // } else {
-    //   q.delete(key);
-    // }
-    searchParams.set("a", "b");
-
-    // await tick();
-    const newUrl = new URL($page.url);
-    newUrl.search = searchParams.toString();
-
-    goto(newUrl)
-      .then(x => {
-        // debugger;
-        console.log({ x });
-      })
-      .catch(err => {
-        // debugger;
-        console.log({ err });
-      });
-  }
 </script>
 
 <section class="flex flex-col gap-3">
-  <form action="/admin/similar-books">
-    <div class="flex gap-3">
-      <div class="flex flex-col gap-3">
-        <h1 class="text-lg font-bold">Filter</h1>
-        <div class="flex flex-row items-center gap-4">
-          <label class="checkbox">
-            <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
-            Only show my books
-          </label>
-          <div class="relative suppress-dropdown">
-            <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
-              <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-            </SelectAndDisplayContainer>
-          </div>
-        </div>
-        <div class="flex gap-3">
-          <Button size="med" theme="primary" class="self-start">Search</Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", 1)} data-disabled={pageNumber === 1}>
-            <i class="fal fa-fw fa-angle-double-left" />
-          </Button>
-          <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} data-disabled={pageNumber === 1}>
-            <i class="fal fa-fw fa-angle-left" />
-          </Button>
-          <Button size="med" theme="default" on:click={() => aaa("page", nextPageUp)} data-disabled={books.length < 50}>
-            <i class="fal fa-fw fa-angle-right" />
-          </Button>
+  <div class="flex gap-3">
+    <div class="flex flex-col gap-3">
+      <h1 class="text-lg font-bold">Filter</h1>
+      <div class="flex flex-row items-center gap-4">
+        <label class="checkbox">
+          <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
+          Only show my books
+        </label>
+        <div class="relative suppress-dropdown">
+          <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+            <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+            <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          </SelectAndDisplayContainer>
         </div>
       </div>
+      <div class="flex gap-3">
+        <Button size="med" theme="primary" class="self-start">Search</Button>
+        <Button size="med" theme="default" on:click={() => updateSearchParam("page", "")} disabled={pageNumber === 1}>
+          <i class="fal fa-fw fa-angle-double-left" />
+        </Button>
+        <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
+          <i class="fal fa-fw fa-angle-left" />
+        </Button>
+        <Button size="med" theme="default" on:click={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
+          <i class="fal fa-fw fa-angle-right" />
+        </Button>
+      </div>
     </div>
-  </form>
+  </div>
 
   <div class="list">
     {#each books as book}

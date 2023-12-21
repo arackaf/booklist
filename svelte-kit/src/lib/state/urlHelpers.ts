@@ -1,6 +1,5 @@
 import { goto } from "$app/navigation";
 import { page } from "$app/stores";
-import { tick } from "svelte";
 import { derived, get } from "svelte/store";
 
 export async function updateSearchParam(key, value) {
@@ -11,19 +10,11 @@ export async function updateSearchParam(key, value) {
   } else {
     q.delete(key);
   }
-  q.set("s", "d");
 
-  // await tick();
   const newUrl = new URL(get(page).url);
   newUrl.search = q.toString();
 
-  await goto(newUrl, { replaceState: true })
-    .then(x => {
-      // debugger;
-    })
-    .catch(err => {
-      // debugger;
-    });
+  goto(newUrl, { replaceState: true });
 }
 
 export const publicUserIdPersist = derived(page, $page => {
