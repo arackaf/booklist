@@ -11,7 +11,9 @@
   import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
 
-  $: ({ loggedIn, hasPublicId, isAdminUser } = $page.data);
+  $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
+
+  $: isLoggedIn = !!loggedInUser;
 
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
@@ -38,6 +40,13 @@
 
 <header class="master-nav z-10">
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
+    {#if isLoggedIn}
+      <div class="items-center ml-2 my-auto">
+        <button class="raw-button flex">
+          <img class="rounded-full max-h-8 max-w-8" src={loggedInUser.image} />
+        </button>
+      </div>
+    {/if}
     <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
       <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
