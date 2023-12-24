@@ -10,6 +10,7 @@
   import { onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
+  import ProfilePanel from "./ProfilePanel.svelte";
 
   $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
 
@@ -36,13 +37,16 @@
   onMount(() => {
     window.addEventListener("ws-info", handleWsPendingCountUpdate);
   });
+
+  let profilePanelOpen = false;
 </script>
 
-<header class="master-nav z-10">
+<header class="master-nav z-10 relative">
+  <ProfilePanel open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
     {#if isLoggedIn}
       <div class="items-center ml-2 my-auto">
-        <button class="raw-button flex">
+        <button on:click={() => (profilePanelOpen = !profilePanelOpen)} class="raw-button flex profile-menu-trigger">
           <img class="rounded-full max-h-8 max-w-8" src={loggedInUser.image} />
         </button>
       </div>
@@ -133,5 +137,5 @@
       </ul>
     {/if}
   </nav>
-  <div id="main-mobile-menu" class="main-mobile-menu p-2 bg-white absolute border border-neutral-400 z-10 border-t-0 border-l-0 rounded-br" />
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 bg-white absolute border border-neutral-400 z-10 border-t-0 border-l-0 rounded-br" />
 </header>
