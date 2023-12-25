@@ -45,14 +45,14 @@
   <ProfilePanel open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
     {#if isLoggedIn}
-      <div class="items-center ml-2 my-auto">
+      <div class="items-center mx-2 my-auto">
         <button on:click={() => (profilePanelOpen = !profilePanelOpen)} class="raw-button flex profile-menu-trigger">
           <img class="rounded-full max-h-8 max-w-8" src={loggedInUser.image} />
         </button>
       </div>
     {/if}
     <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
-      <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
+      <ModuleLink active={isHome} padding="px-3" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
