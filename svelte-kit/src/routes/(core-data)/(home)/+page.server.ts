@@ -9,6 +9,6 @@ export async function load({ locals, request }) {
   const publicId = getPublicId(request);
 
   return {
-    books: aggregateBooksSubjects(session?.userId || publicId)
+    books: await aggregateBooksSubjects(session?.userId || publicId)
   };
 }

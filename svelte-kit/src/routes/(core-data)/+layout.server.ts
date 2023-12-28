@@ -52,9 +52,9 @@ export async function load({ locals, request, fetch }: any) {
     isPublic,
     hasPublicId: !!publicUserId,
     publicUser,
-    colors,
-    subjects,
-    tags,
+    colors: await colors,
+    subjects: await subjects,
+    tags: await tags,
     loggedInUser
   };
 }
