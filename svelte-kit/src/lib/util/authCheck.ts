@@ -2,7 +2,7 @@ import { redirect } from "@sveltejs/kit";
 import { getPublicId } from "./getPublicId";
 
 export const redirectToLanding = () => {
-  throw redirect(302, "/landing");
+  redirect(302, "/landing");
 };
 
 export const ensureAnyUser = async ({ locals, parent, request, url }: any) => {
