@@ -6,13 +6,7 @@ import { getUser } from "$data/user";
 import { getPublicId } from "$lib/util/getPublicId";
 
 import { ADMIN_USER } from "$env/static/private";
-
-type Login = {
-  name: string;
-  email: string;
-  image: string;
-  provider: string;
-};
+import type { Login } from "$lib/types";
 
 export async function load({ locals, request, fetch }: any) {
   const publicUserId = getPublicId(request);

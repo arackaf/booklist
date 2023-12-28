@@ -40,7 +40,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@auth/core": "^0.18.5",
     "@auth/sveltekit": "^0.3.16",
     "@aws-sdk/client-dynamodb": "^3.199.0",
     "@aws-sdk/client-lambda": "^3.254.0",

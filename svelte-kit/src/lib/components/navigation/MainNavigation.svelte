@@ -14,8 +14,6 @@
 
   $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
 
-  $: isLoggedIn = !!loggedInUser;
-
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
 
@@ -42,9 +40,11 @@
 </script>
 
 <header class="master-nav z-10 relative">
-  <ProfilePanel open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
+  {#if loggedInUser}
+    <ProfilePanel {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
+  {/if}
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
-    {#if isLoggedIn}
+    {#if loggedIn}
       <div class="items-center mx-2 my-auto">
         <button on:click={() => (profilePanelOpen = !profilePanelOpen)} class="raw-button flex profile-menu-trigger">
           <img class="rounded-full max-h-8 max-w-8" src={loggedInUser.image} />
@@ -137,5 +137,5 @@
       </ul>
     {/if}
   </nav>
-  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 bg-white absolute border border-neutral-400 z-10 border-t-0 border-l-0 rounded-br" />
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10" />
 </header>

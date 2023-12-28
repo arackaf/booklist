@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { Login } from "$lib/types";
 
   export let open = false;
   export let onClose = () => {};
+
+  export let loggedInUser: Login;
 
   const windowClickHandler = (evt: MouseEvent) => {
     if (!open) {
@@ -25,4 +28,11 @@
   });
 </script>
 
-<div bind:this={el} class:open class="sliding-mobile-menu absolute z-30 rounded-br-md top-0 left-0 w-64 h-96 bg-red-500" />
+<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96">
+  <div class="flex flex-col p-3">
+    <div class="flex gap-2 items-center">
+      <img class="w-14 h-14 rounded-full" src={loggedInUser.image} />
+      <span class="text-xl">{loggedInUser.name}</span>
+    </div>
+  </div>
+</div>
