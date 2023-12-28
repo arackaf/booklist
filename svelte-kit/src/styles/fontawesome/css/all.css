@@ -264,8 +264,20 @@ readers do not read off random characters that represent icons */
 .fa-filter:before {
   content: "\f0b0"; }
 
+.fa-github:before {
+  content: "\f09b"; }
+
+.fa-github-alt:before {
+  content: "\f113"; }
+
+.fa-github-square:before {
+  content: "\f092"; }
+
 .fa-goodreads-g:before {
   content: "\f3a9"; }
+
+.fa-google:before {
+  content: "\f1a0"; }
 
 .fa-home:before {
   content: "\f015"; }
