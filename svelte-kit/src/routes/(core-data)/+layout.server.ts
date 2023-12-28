@@ -7,6 +7,7 @@ import { getPublicId } from "$lib/util/getPublicId";
 
 import { ADMIN_USER } from "$env/static/private";
 import type { Login } from "$lib/types";
+import { userSummary } from "$data/user-summary";
 
 export async function load({ locals, request, fetch }: any) {
   const publicUserId = getPublicId(request);
@@ -21,6 +22,8 @@ export async function load({ locals, request, fetch }: any) {
   let tags: Promise<Tag[]> | Tag[] = allTags(activeUserId);
   let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
+
+  userSummary();
 
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
