@@ -1,13 +1,14 @@
 import { and, asc, desc, eq, exists, like, or, sql } from "drizzle-orm";
-import { union } from "drizzle-orm/mysql-core";
+import { union, int, mysqlTable, MySqlTable } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, subjects } from "./drizzle-schema";
-import { executeDrizzle, db, executeQuery } from "./dbUtils";
+import { db, executeQuery } from "./dbUtils";
 
-export const userSummary = async (userId: string = ""): Promise<{}> => {
+export const userSummary = async (userId: string): Promise<{}> => {
   try {
-    await executeQuery(
-      "Raw",
-      `
+    false &&
+      (await executeQuery(
+        "Raw",
+        `
       SELECT 'MIN SUBJECT' label, s.name, COUNT(*)
       FROM books b
       JOIN books_subjects bs
@@ -45,33 +46,40 @@ export const userSummary = async (userId: string = ""): Promise<{}> => {
       )
       ORDER BY label, name    
     `
-    ).then(val => {
-      console.log(val);
-    });
+      ).then(val => {
+        console.log(val);
+      }));
 
-    const subjectCounts = db
-      .select({ _: sql<number>`COUNT(*)` })
-      .from(books)
-      .innerJoin(booksSubjects, eq(books.id, booksSubjects.book))
-      .groupBy(booksSubjects.subject);
+    const subjectCounts = () =>
+      db
+        .select({ _: sql<number>`COUNT(*)` })
+        .from(books)
+        .innerJoin(booksSubjects, eq(books.id, booksSubjects.book))
+        .groupBy(booksSubjects.subject);
 
-    const coreQuery = db
-      .select({ label: sql`'Yo'`, name: subjects.name })
-      .from(books)
-      .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, "60a93babcc3928454b5d1cc6")))
-      .innerJoin(subjects, eq(booksSubjects.subject, subjects.id))
-      .groupBy(booksSubjects.subject, subjects.name);
+    const subjectsQuery = (value: "MAX" | "MIN") =>
+      db
+        .select({ label: sql<string>`${value} Subjects`, cnt: sql<number>`COUNT(*)`, name: subjects.name })
+        .from(books)
+        .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
+        .innerJoin(subjects, eq(booksSubjects.subject, subjects.id))
+        .groupBy(booksSubjects.subject, subjects.name)
+        .having(
+          eq(
+            sql`COUNT(*)`,
+            subjectCounts()
+              .orderBy(value === "MAX" ? desc(sql`COUNT(*)`) : asc(sql`COUNT(*)`))
+              .limit(1)
+          )
+        );
 
-    const D = union(
-      coreQuery.having(eq(sql`COUNT(*)`, subjectCounts.orderBy(desc(sql`COUNT(*)`)).limit(1))),
-      coreQuery.having(eq(sql`COUNT(*)`, subjectCounts.orderBy(asc(sql`COUNT(*)`)).limit(1)))
-    );
+    const results = union(subjectsQuery("MIN"), subjectsQuery("MAX"));
 
     try {
-      console.log("\n\n", D.toSQL(), "\n\n");
+      console.log("\n\n", results.toSQL(), "\n\n");
 
-      const XXX = await D;
       console.log("Drizzle");
+      const XXX = await results;
       console.log(XXX);
     } catch (er) {
       console.log("Drizzle Error", er);
