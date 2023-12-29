@@ -59,7 +59,7 @@ export const userSummary = async (userId: string): Promise<{}> => {
 
     const subjectsQuery = (value: "MAX" | "MIN") =>
       db
-        .select({ label: sql<string>`${value} Subjects`, cnt: sql<number>`COUNT(*)`, name: subjects.name })
+        .select({ label: sql.raw(`'${value} Subjects'`), cnt: sql<number>`COUNT(*)`, name: subjects.name })
         .from(books)
         .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
         .innerJoin(subjects, eq(booksSubjects.subject, subjects.id))
