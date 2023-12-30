@@ -23,7 +23,7 @@ export async function load({ locals, request, fetch }: any) {
   let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
-  userSummary("60a93babcc3928454b5d1cc6");
+  const userSummaryData = userSummary("60a93babcc3928454b5d1cc6");
 
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
@@ -52,6 +52,7 @@ export async function load({ locals, request, fetch }: any) {
     colors: await colors,
     subjects: await subjects,
     tags: await tags,
-    loggedInUser
+    loggedInUser,
+    userSummaryData
   };
 }

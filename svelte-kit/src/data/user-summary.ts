@@ -1,9 +1,28 @@
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { SQL, and, asc, desc, eq, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
 import { db } from "./dbUtils";
 
-export const userSummary = async (userId: string): Promise<{}> => {
+type UserSummaryEntry = {
+  label: string;
+  count: number;
+  name: string;
+};
+
+type SubjectOrTagEntry = {
+  books: number;
+  names: string[];
+} | null;
+
+export type UserSummary = {
+  allBooksCount: number;
+  minUsedSubject: SubjectOrTagEntry;
+  maxUsedSubject: SubjectOrTagEntry;
+  minUsedTag: SubjectOrTagEntry;
+  maxUsedTag: SubjectOrTagEntry;
+};
+
+export const userSummary = async (userId: string): Promise<UserSummary | null> => {
   try {
     const tagsCounts = () =>
       db
@@ -14,7 +33,7 @@ export const userSummary = async (userId: string): Promise<{}> => {
 
     const tagsQuery = (value: "MAX" | "MIN") =>
       db
-        .select({ label: sql.raw(`'${value} Tags'`), count: sql<number>`COUNT(*)`, name: tags.name })
+        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: sql<number>`COUNT(*)`, name: tags.name })
         .from(books)
         .innerJoin(booksTags, and(eq(books.id, booksTags.book), eq(books.userId, userId)))
         .innerJoin(tags, eq(booksTags.tag, tags.id))
@@ -37,7 +56,7 @@ export const userSummary = async (userId: string): Promise<{}> => {
 
     const subjectsQuery = (value: "MAX" | "MIN") =>
       db
-        .select({ label: sql.raw(`'${value} Subjects'`), count: sql<number>`COUNT(*)`, name: subjects.name })
+        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: sql<number>`COUNT(*)`, name: subjects.name })
         .from(books)
         .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
         .innerJoin(subjects, eq(booksSubjects.subject, subjects.id))
@@ -51,9 +70,9 @@ export const userSummary = async (userId: string): Promise<{}> => {
           )
         );
 
-    const results = union(
+    const data = await union(
       db
-        .select({ label: sql`'All books'`, count: sql`COUNT(*)`, name: sql`''` })
+        .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, name: sql<string>`''` })
         .from(books)
         .where(eq(books.userId, userId)),
       subjectsQuery("MIN"),
@@ -62,19 +81,30 @@ export const userSummary = async (userId: string): Promise<{}> => {
       tagsQuery("MAX")
     );
 
-    try {
-      console.log("\n\n", results.toSQL(), "\n\n");
+    type DataItem = (typeof data)[0];
 
-      // console.log("Drizzle");
-      const XXX = await results;
-      console.log(XXX);
-    } catch (er) {
-      console.log("Drizzle Error", er);
-    }
+    const projectEntries = (entries: DataItem[]): SubjectOrTagEntry => {
+      if (!entries.length) {
+        return null;
+      }
 
-    return {};
+      return {
+        books: entries[0].count,
+        names: entries.map(entry => entry.name)
+      };
+    };
+
+    await new Promise(res => setTimeout(res, 3000));
+
+    return {
+      allBooksCount: data.find(entry => entry.label === "All books")!.count,
+      minUsedTag: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
+      maxUsedTag: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
+      minUsedSubject: projectEntries(data.filter(entry => entry.label === "MIN Subjects")),
+      maxUsedSubject: projectEntries(data.filter(entry => entry.label === "MIN Subjects"))
+    };
   } catch (err) {
     console.log("Error reading user summary", err);
-    return [];
+    return null;
   }
 };
