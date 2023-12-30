@@ -17,7 +17,7 @@
   let error = false;
   let saving = false;
 
-  const update = ({ cancel, data }: { cancel: any; data: FormData }) => {
+  const update = ({ cancel, formData: data }: { cancel: any; formData: FormData }) => {
     const isPublic = !!data.get("isPublic");
     const publicName = data.get("publicName")?.toString();
 

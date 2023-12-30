@@ -71,7 +71,7 @@
   let currentQuery = "";
   let totalBooks = 0;
 
-  async function executeSearch({ cancel, data }: any) {
+  async function executeSearch({ cancel, formData: data }: any) {
     cancel();
 
     loading = true;
