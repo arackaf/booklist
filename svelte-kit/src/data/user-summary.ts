@@ -1,7 +1,7 @@
-import { and, asc, desc, eq, exists, like, or, sql } from "drizzle-orm";
-import { union, int, mysqlTable, MySqlTable } from "drizzle-orm/mysql-core";
+import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { union } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
-import { db, executeQuery } from "./dbUtils";
+import { db } from "./dbUtils";
 
 export const userSummary = async (userId: string): Promise<{}> => {
   try {
