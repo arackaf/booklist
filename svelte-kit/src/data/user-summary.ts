@@ -3,15 +3,9 @@ import { union } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
 import { db } from "./dbUtils";
 
-type UserSummaryEntry = {
-  label: string;
-  count: number;
-  name: string;
-};
-
 type SubjectOrTagEntry = {
   books: number;
-  names: string[];
+  ids: number[];
 } | null;
 
 export type UserSummary = {
@@ -33,11 +27,10 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
 
     const tagsQuery = (value: "MAX" | "MIN") =>
       db
-        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: sql<number>`COUNT(*)`, name: tags.name })
+        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: sql<number>`COUNT(*)`, id: booksTags.tag })
         .from(books)
         .innerJoin(booksTags, and(eq(books.id, booksTags.book), eq(books.userId, userId)))
-        .innerJoin(tags, eq(booksTags.tag, tags.id))
-        .groupBy(booksTags.tag, tags.name)
+        .groupBy(booksTags.tag)
         .having(
           eq(
             sql`COUNT(*)`,
@@ -56,11 +49,10 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
 
     const subjectsQuery = (value: "MAX" | "MIN") =>
       db
-        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: sql<number>`COUNT(*)`, name: subjects.name })
+        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: sql<number>`COUNT(*)`, id: booksSubjects.subject })
         .from(books)
         .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
-        .innerJoin(subjects, eq(booksSubjects.subject, subjects.id))
-        .groupBy(booksSubjects.subject, subjects.name)
+        .groupBy(booksSubjects.subject)
         .having(
           eq(
             sql`COUNT(*)`,
@@ -72,7 +64,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
 
     const data = await union(
       db
-        .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, name: sql<string>`''` })
+        .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
         .from(books)
         .where(eq(books.userId, userId)),
       subjectsQuery("MIN"),
@@ -90,7 +82,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
 
       return {
         books: entries[0].count,
-        names: entries.map(entry => entry.name)
+        ids: entries.map(entry => entry.id)
       };
     };
 
