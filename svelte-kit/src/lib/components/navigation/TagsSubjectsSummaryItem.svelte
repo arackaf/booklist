@@ -20,7 +20,7 @@
       itemDisplay += "s";
     }
 
-    labelToDisplay = `${prefix} popular popular popular ${itemDisplay} with ${bookDisplay}`;
+    labelToDisplay = `${prefix} popular ${itemDisplay} with ${bookDisplay}`;
   }
 </script>
 
