@@ -36,7 +36,6 @@
     onClose();
   };
 
-  $: console.log({ userSummary });
   let el;
 
   onMount(() => {
@@ -77,7 +76,10 @@
     </div>
     <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,auto)] grid-rows-[auto_auto] leading-none">
       <span>Provider:</span>
-      <span><i class="fab {loggedInUser.provider === 'google' ? 'fa-github' : 'fa-github'}" /></span>
+      <div class="flex gap-1">
+        <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}" />
+        <span>{loggedInUser.provider === "google" ? "Google" : "Github"}</span>
+      </div>
 
       <span>Email:</span>
       <span class="break-words">{loggedInUser.email + loggedInUser.email}</span>
