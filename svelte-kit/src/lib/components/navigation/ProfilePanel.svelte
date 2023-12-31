@@ -9,6 +9,8 @@
 
   export let loggedInUser: Login;
 
+  $: ({ tags, subjects } = $page.data);
+
   $: userSummaryPromise = $page.data.userSummaryData as Promise<UserSummary>;
   let userSummary: UserSummary | undefined;
 
@@ -52,6 +54,22 @@
         <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner" /></div>
       {:else}
         <span>Total Books: {userSummary?.allBooksCount}</span>
+        {#if userSummary.maxUsedSubject}
+          {userSummary.maxUsedSubject.books}
+          {userSummary.maxUsedSubject.ids}
+        {/if}
+        {#if userSummary.minUsedSubject}
+          {userSummary.minUsedSubject.books}
+          {userSummary.minUsedSubject.ids}
+        {/if}
+        {#if userSummary.maxUsedTag}
+          {userSummary.maxUsedTag.books}
+          {userSummary.maxUsedTag.ids}
+        {/if}
+        {#if userSummary.minUsedTag}
+          {userSummary.minUsedTag.books}
+          {userSummary.minUsedTag.ids}
+        {/if}
       {/if}
     </div>
   </div>

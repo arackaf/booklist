@@ -91,9 +91,9 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
     return {
       allBooksCount: data.find(entry => entry.label === "All books")!.count,
       minUsedTag: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
-      maxUsedTag: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
+      maxUsedTag: projectEntries(data.filter(entry => entry.label === "MAX Tags")),
       minUsedSubject: projectEntries(data.filter(entry => entry.label === "MIN Subjects")),
-      maxUsedSubject: projectEntries(data.filter(entry => entry.label === "MIN Subjects"))
+      maxUsedSubject: projectEntries(data.filter(entry => entry.label === "MAX Subjects"))
     };
   } catch (err) {
     console.log("Error reading user summary", err);
