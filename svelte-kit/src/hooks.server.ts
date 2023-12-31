@@ -81,7 +81,7 @@ const auth = SvelteKitAuth({
 
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       session.userId = token.userId as string;
       if (token.legacySync) {
         session.legacySync = true;
