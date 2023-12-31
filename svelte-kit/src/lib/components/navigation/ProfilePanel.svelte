@@ -4,6 +4,9 @@
   import { page } from "$app/stores";
   import type { UserSummary } from "$data/user-summary";
   import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
+  import { signOut } from "@auth/sveltekit/client";
+  import { invalidateAll } from "$app/navigation";
+  import Button from "../ui/Button/Button.svelte";
 
   export let open = false;
   export let onClose = () => {};
@@ -44,9 +47,9 @@
   });
 </script>
 
-<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96 overflow-auto">
-  <div class="flex flex-col gap-3 px-3 bg-white">
-    <div class="flex gap-2 items-center sticky py-3 top-0 bg-white">
+<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96 overflow-y-auto overflow-x-hidden">
+  <div class="flex flex-col gap-3 pb-2 px-3 bg-white">
+    <div class="flex gap-2 items-center py-1 sticky top-0 bg-white">
       <img class="w-14 h-14 rounded-full" src={loggedInUser.image} />
       <span class="text-xl">{loggedInUser.name}</span>
     </div>
@@ -69,5 +72,15 @@
         {/if}
       {/if}
     </div>
+    <div class="grid gap-x-2 grid-cols-[minmax(0,auto)_minmax(0,auto)] grid-rows-[auto_auto]">
+      <span>Provider:</span>
+      <span><i class="fab {loggedInUser.provider === 'google' ? 'fa-github' : 'fa-github'}" /></span>
+
+      <span>Email:</span>
+      <span class="break-words">{loggedInUser.email + loggedInUser.email}</span>
+    </div>
+    <span>
+      <Button size="med" on:click={() => signOut().then(() => invalidateAll())}>Logout</Button>
+    </span>
   </div>
 </div>
