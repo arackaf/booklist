@@ -36,7 +36,15 @@
     onClose();
   };
 
-  let el;
+  let el: HTMLElement;
+
+  $: {
+    if (!open && el) {
+      setTimeout(() => {
+        el.scrollTop = 0;
+      }, 50);
+    }
+  }
 
   onMount(() => {
     window.addEventListener("click", windowClickHandler);
