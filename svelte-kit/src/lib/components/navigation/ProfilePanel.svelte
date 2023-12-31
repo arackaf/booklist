@@ -39,7 +39,6 @@
   };
 
   $: console.log({ userSummary });
-
   let el;
 
   onMount(() => {
@@ -72,6 +71,9 @@
         {/if}
         {#if userSummary.minUsedTags}
           <TagsSubjectsSummaryItem items={tags} label={"MIN-T"} packet={userSummary.minUsedTags} />
+        {/if}
+        {#if userSummary.unusedTags}
+          <TagsSubjectsSummaryItem items={tags} label={"UNUSED-T"} packet={userSummary.unusedTags} />
         {/if}
       {/if}
     </div>

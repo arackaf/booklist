@@ -10,11 +10,12 @@ export type SubjectOrTagSummaryEntry = {
 
 export type UserSummary = {
   allBooksCount: number;
-  unusedSubjects: SubjectOrTagSummaryEntry | null;
   minUsedSubjects: SubjectOrTagSummaryEntry | null;
   maxUsedSubjects: SubjectOrTagSummaryEntry | null;
+  unusedSubjects: SubjectOrTagSummaryEntry | null;
   minUsedTags: SubjectOrTagSummaryEntry | null;
   maxUsedTags: SubjectOrTagSummaryEntry | null;
+  unusedTags: SubjectOrTagSummaryEntry | null;
 };
 
 export const userSummary = async (userId: string): Promise<UserSummary | null> => {
@@ -68,11 +69,30 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .select({ label: sql.raw(`'Unused Subjects'`) as SQL<string>, count: sql<number>`0`, id: subjects.id })
         .from(subjects)
         .where(
-          notExists(
-            db
-              .select({ _: sql`0` })
-              .from(booksSubjects)
-              .where(eq(booksSubjects.subject, subjects.id))
+          and(
+            eq(subjects.userId, userId),
+            notExists(
+              db
+                .select({ _: sql`0` })
+                .from(booksSubjects)
+                .where(and(eq(booksSubjects.subject, subjects.id), eq(subjects.userId, userId)))
+            )
+          )
+        );
+
+    const unusedTagsQuery = () =>
+      db
+        .select({ label: sql.raw(`'Unused Tags'`) as SQL<string>, count: sql<number>`0`, id: tags.id })
+        .from(tags)
+        .where(
+          and(
+            eq(tags.userId, userId),
+            notExists(
+              db
+                .select({ _: sql`0` })
+                .from(booksTags)
+                .where(eq(booksTags.tag, tags.id))
+            )
           )
         );
 
@@ -85,7 +105,8 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
       subjectsQuery("MAX"),
       unusedSubjectsQuery(),
       tagsQuery("MIN"),
-      tagsQuery("MAX")
+      tagsQuery("MAX"),
+      unusedTagsQuery()
     );
 
     type DataItem = (typeof data)[0];
@@ -119,7 +140,8 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
       maxUsedTags: projectEntries(data.filter(entry => entry.label === "MAX Tags")),
       unusedSubjects: projectUnusedEntries(data.filter(entry => entry.label === "Unused Subjects")),
       minUsedSubjects: projectEntries(data.filter(entry => entry.label === "MIN Subjects")),
-      maxUsedSubjects: projectEntries(data.filter(entry => entry.label === "MAX Subjects"))
+      maxUsedSubjects: projectEntries(data.filter(entry => entry.label === "MAX Subjects")),
+      unusedTags: projectUnusedEntries(data.filter(entry => entry.label === "Unused Tags"))
     };
   } catch (err) {
     console.log("Error reading user summary", err);
