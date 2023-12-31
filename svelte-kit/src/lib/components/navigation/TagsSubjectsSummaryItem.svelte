@@ -2,6 +2,7 @@
   import type { Label } from "$data/types";
   import type { SubjectOrTagSummaryEntry } from "$data/user-summary";
   import { toHash } from "$lib/state/helpers";
+  import LabelDisplay from "../subjectsAndTags/LabelDisplay.svelte";
 
   export let packet: SubjectOrTagSummaryEntry;
   export let label: "MAX-S" | "MIN-S" | "MAX-T" | "MIN-T";
@@ -25,9 +26,9 @@
 
 <div class="flex flex-col">
   <span>{labelToDisplay}</span>
-  <div class="ml-auto">
+  <div class="flex flex-wrap gap-1">
     {#each itemsToDisplay as x}
-      <span>{x.name}</span>
+      <LabelDisplay item={x} />
     {/each}
   </div>
 </div>

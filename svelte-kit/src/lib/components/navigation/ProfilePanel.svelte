@@ -44,33 +44,28 @@
   });
 </script>
 
-<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96">
-  <div class="flex flex-col gap-3 p-3">
-    <div class="flex gap-2 items-center">
+<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96 overflow-auto">
+  <div class="flex flex-col gap-3 px-3 bg-white">
+    <div class="flex gap-2 items-center sticky py-3 top-0 bg-white">
       <img class="w-14 h-14 rounded-full" src={loggedInUser.image} />
       <span class="text-xl">{loggedInUser.name}</span>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 mb-3">
       {#if !userSummary}
         <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner" /></div>
       {:else}
         <span>Total Books: {userSummary?.allBooksCount}</span>
         {#if userSummary.maxUsedSubject}
           <TagsSubjectsSummaryItem items={subjects} label={"MAX-S"} packet={userSummary.maxUsedSubject} />
-          {userSummary.maxUsedSubject.books}
-          {userSummary.maxUsedSubject.ids}
         {/if}
         {#if userSummary.minUsedSubject}
-          {userSummary.minUsedSubject.books}
-          {userSummary.minUsedSubject.ids}
+          <TagsSubjectsSummaryItem items={subjects} label={"MIN-S"} packet={userSummary.minUsedSubject} />
         {/if}
         {#if userSummary.maxUsedTag}
-          {userSummary.maxUsedTag.books}
-          {userSummary.maxUsedTag.ids}
+          <TagsSubjectsSummaryItem items={tags} label={"MAX-T"} packet={userSummary.maxUsedTag} />
         {/if}
         {#if userSummary.minUsedTag}
-          {userSummary.minUsedTag.books}
-          {userSummary.minUsedTag.ids}
+          <TagsSubjectsSummaryItem items={tags} label={"MIN-T"} packet={userSummary.minUsedTag} />
         {/if}
       {/if}
     </div>
