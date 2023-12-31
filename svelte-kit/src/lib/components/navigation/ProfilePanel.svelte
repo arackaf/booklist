@@ -24,8 +24,6 @@
     });
   });
 
-  $: console.log({ userSummary });
-
   const windowClickHandler = (evt: MouseEvent) => {
     if (!open) {
       return;
