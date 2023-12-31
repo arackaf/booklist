@@ -13,7 +13,7 @@
   const booksModuleContext: any = getContext("books-module-context");
   const { overrideBookView } = booksModuleContext;
 
-  const uiViewChange = ({ data }: any) => {
+  const uiViewChange = ({ formData: data }: any) => {
     overrideBookView(data.get("view"));
     return async () => {};
   };

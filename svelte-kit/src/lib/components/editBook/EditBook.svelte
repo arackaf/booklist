@@ -22,7 +22,7 @@
   let basicInfoValid: () => boolean;
 
   let saving = false;
-  function executeSave({ cancel, data }: any) {
+  function executeSave({ cancel, formData: data }: any) {
     if (!basicInfoValid()) {
       return cancel();
     }

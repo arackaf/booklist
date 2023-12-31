@@ -61,7 +61,7 @@
   };
 
   let saving = false;
-  function runSave({ data, cancel }: any) {
+  function runSave({ formData: data, cancel }: any) {
     const name = data.get("name");
     if (!name) {
       missingName = true;
