@@ -1,5 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
+
   import type { Book, Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/ui/Button/Button.svelte";
@@ -35,6 +37,7 @@
 
       saving = false;
       syncUpdates(id, updates);
+      invalidate("core-data:root");
     };
   }
 
