@@ -44,13 +44,13 @@
   });
 </script>
 
-<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96 overflow-auto">
-  <div class="flex flex-col gap-3 px-3 bg-white">
-    <div class="flex gap-2 items-center sticky py-3 top-0 bg-white">
+<div bind:this={el} class:open class="sliding-mobile-menu flex z-30 top-0 left-0 w-72 h-96 overflow-hidden">
+  <div class="flex flex-col gap-3 bg-white overflow-hidden">
+    <div class="flex gap-2 items-center sticky p-3 bg-white">
       <img class="w-14 h-14 rounded-full" src={loggedInUser.image} />
       <span class="text-xl">{loggedInUser.name}</span>
     </div>
-    <div class="flex flex-col gap-2 mb-3">
+    <div class="min-h-1 flex-1 px-3 flex flex-col gap-2 mb-3 overflow-auto">
       {#if !userSummary}
         <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner" /></div>
       {:else}
