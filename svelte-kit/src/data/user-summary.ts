@@ -25,6 +25,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .select({ _: sql<number>`COUNT(*)` })
         .from(books)
         .innerJoin(booksTags, eq(books.id, booksTags.book))
+        .where(eq(books.userId, userId))
         .groupBy(booksTags.tag);
 
     const tagsQuery = (value: "MAX" | "MIN") =>
@@ -47,6 +48,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .select({ _: sql<number>`COUNT(*)` })
         .from(books)
         .innerJoin(booksSubjects, eq(books.id, booksSubjects.book))
+        .where(eq(books.userId, userId))
         .groupBy(booksSubjects.subject);
 
     const subjectsQuery = (value: "MAX" | "MIN") =>
