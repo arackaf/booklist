@@ -1,4 +1,4 @@
-import { SQL, and, asc, desc, eq, sql } from "drizzle-orm";
+import { SQL, and, asc, desc, eq, notExists, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
 import { db } from "./dbUtils";
@@ -10,10 +10,11 @@ export type SubjectOrTagSummaryEntry = {
 
 export type UserSummary = {
   allBooksCount: number;
-  minUsedSubject: SubjectOrTagSummaryEntry | null;
-  maxUsedSubject: SubjectOrTagSummaryEntry | null;
-  minUsedTag: SubjectOrTagSummaryEntry | null;
-  maxUsedTag: SubjectOrTagSummaryEntry | null;
+  unusedSubjects: SubjectOrTagSummaryEntry | null;
+  minUsedSubjects: SubjectOrTagSummaryEntry | null;
+  maxUsedSubjects: SubjectOrTagSummaryEntry | null;
+  minUsedTags: SubjectOrTagSummaryEntry | null;
+  maxUsedTags: SubjectOrTagSummaryEntry | null;
 };
 
 export const userSummary = async (userId: string): Promise<UserSummary | null> => {
@@ -62,6 +63,19 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
           )
         );
 
+    const unusedSubjectsQuery = () =>
+      db
+        .select({ label: sql.raw(`'Unused Subjects'`) as SQL<string>, count: sql<number>`0`, id: subjects.id })
+        .from(subjects)
+        .where(
+          notExists(
+            db
+              .select({ _: sql`0` })
+              .from(booksSubjects)
+              .where(eq(booksSubjects.subject, subjects.id))
+          )
+        );
+
     const data = await union(
       db
         .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
@@ -69,6 +83,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .where(eq(books.userId, userId)),
       subjectsQuery("MIN"),
       subjectsQuery("MAX"),
+      unusedSubjectsQuery(),
       tagsQuery("MIN"),
       tagsQuery("MAX")
     );
@@ -85,15 +100,26 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         ids: entries.map(entry => entry.id)
       };
     };
+    const projectUnusedEntries = (entries: DataItem[]): SubjectOrTagSummaryEntry | null => {
+      if (!entries.length) {
+        return null;
+      }
+
+      return {
+        books: 0,
+        ids: entries.map(entry => entry.id)
+      };
+    };
 
     await new Promise(res => setTimeout(res, 30));
 
     return {
       allBooksCount: data.find(entry => entry.label === "All books")!.count,
-      minUsedTag: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
-      maxUsedTag: projectEntries(data.filter(entry => entry.label === "MAX Tags")),
-      minUsedSubject: projectEntries(data.filter(entry => entry.label === "MIN Subjects")),
-      maxUsedSubject: projectEntries(data.filter(entry => entry.label === "MAX Subjects"))
+      minUsedTags: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
+      maxUsedTags: projectEntries(data.filter(entry => entry.label === "MAX Tags")),
+      unusedSubjects: projectUnusedEntries(data.filter(entry => entry.label === "Unused Subjects")),
+      minUsedSubjects: projectEntries(data.filter(entry => entry.label === "MIN Subjects")),
+      maxUsedSubjects: projectEntries(data.filter(entry => entry.label === "MAX Subjects"))
     };
   } catch (err) {
     console.log("Error reading user summary", err);

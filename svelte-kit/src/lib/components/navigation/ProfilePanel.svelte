@@ -38,6 +38,8 @@
     onClose();
   };
 
+  $: console.log({ userSummary });
+
   let el;
 
   onMount(() => {
@@ -56,17 +58,20 @@
         <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner" /></div>
       {:else}
         <span>Total Books: {userSummary?.allBooksCount}</span>
-        {#if userSummary.maxUsedSubject}
-          <TagsSubjectsSummaryItem items={subjects} label={"MAX-S"} packet={userSummary.maxUsedSubject} />
+        {#if userSummary.maxUsedSubjects}
+          <TagsSubjectsSummaryItem items={subjects} label={"MAX-S"} packet={userSummary.maxUsedSubjects} />
         {/if}
-        {#if userSummary.minUsedSubject}
-          <TagsSubjectsSummaryItem items={subjects} label={"MIN-S"} packet={userSummary.minUsedSubject} />
+        {#if userSummary.minUsedSubjects}
+          <TagsSubjectsSummaryItem items={subjects} label={"MIN-S"} packet={userSummary.minUsedSubjects} />
         {/if}
-        {#if userSummary.maxUsedTag}
-          <TagsSubjectsSummaryItem items={tags} label={"MAX-T"} packet={userSummary.maxUsedTag} />
+        {#if userSummary.unusedSubjects}
+          <TagsSubjectsSummaryItem items={subjects} label={"UNUSED-S"} packet={userSummary.unusedSubjects} />
         {/if}
-        {#if userSummary.minUsedTag}
-          <TagsSubjectsSummaryItem items={tags} label={"MIN-T"} packet={userSummary.minUsedTag} />
+        {#if userSummary.maxUsedTags}
+          <TagsSubjectsSummaryItem items={tags} label={"MAX-T"} packet={userSummary.maxUsedTags} />
+        {/if}
+        {#if userSummary.minUsedTags}
+          <TagsSubjectsSummaryItem items={tags} label={"MIN-T"} packet={userSummary.minUsedTags} />
         {/if}
       {/if}
     </div>

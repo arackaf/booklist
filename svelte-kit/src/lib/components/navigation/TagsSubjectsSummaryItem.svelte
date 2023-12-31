@@ -5,7 +5,7 @@
   import LabelDisplay from "../subjectsAndTags/LabelDisplay.svelte";
 
   export let packet: SubjectOrTagSummaryEntry;
-  export let label: "MAX-S" | "MIN-S" | "MAX-T" | "MIN-T";
+  export let label: "UNUSED-S" | "MAX-S" | "MIN-S" | "UNUSED-T" | "MAX-T" | "MIN-T";
   export let items: Label[];
 
   $: itemLookup = toHash(items);
@@ -13,14 +13,19 @@
 
   let labelToDisplay: string;
   $: {
-    let prefix = label.startsWith("MAX") ? "Most" : "Least";
     let itemDisplay = label.endsWith("S") ? "subject" : "tag";
-    let bookDisplay = `${packet.books} book${packet.books > 1 ? "s" : ""}`;
     if (itemsToDisplay.length > 1) {
       itemDisplay += "s";
     }
 
-    labelToDisplay = `${prefix} popular ${itemDisplay} with ${bookDisplay}`;
+    if (label.startsWith("UNUSED")) {
+      labelToDisplay = `Unused ${itemDisplay}`;
+    } else {
+      let prefix = label.startsWith("MAX") ? "Most" : "Least";
+      let bookDisplay = `${packet.books} book${packet.books > 1 ? "s" : ""}`;
+
+      labelToDisplay = `${prefix} popular ${itemDisplay} with ${bookDisplay}`;
+    }
   }
 </script>
 
