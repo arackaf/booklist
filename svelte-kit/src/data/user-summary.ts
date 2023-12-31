@@ -3,17 +3,17 @@ import { union } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
 import { db } from "./dbUtils";
 
-type SubjectOrTagEntry = {
+export type SubjectOrTagSummaryEntry = {
   books: number;
   ids: number[];
-} | null;
+};
 
 export type UserSummary = {
   allBooksCount: number;
-  minUsedSubject: SubjectOrTagEntry;
-  maxUsedSubject: SubjectOrTagEntry;
-  minUsedTag: SubjectOrTagEntry;
-  maxUsedTag: SubjectOrTagEntry;
+  minUsedSubject: SubjectOrTagSummaryEntry | null;
+  maxUsedSubject: SubjectOrTagSummaryEntry | null;
+  minUsedTag: SubjectOrTagSummaryEntry | null;
+  maxUsedTag: SubjectOrTagSummaryEntry | null;
 };
 
 export const userSummary = async (userId: string): Promise<UserSummary | null> => {
@@ -75,7 +75,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
 
     type DataItem = (typeof data)[0];
 
-    const projectEntries = (entries: DataItem[]): SubjectOrTagEntry => {
+    const projectEntries = (entries: DataItem[]): SubjectOrTagSummaryEntry | null => {
       if (!entries.length) {
         return null;
       }
@@ -86,7 +86,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
       };
     };
 
-    await new Promise(res => setTimeout(res, 3000));
+    await new Promise(res => setTimeout(res, 30));
 
     return {
       allBooksCount: data.find(entry => entry.label === "All books")!.count,

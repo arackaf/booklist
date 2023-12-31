@@ -3,6 +3,7 @@
   import type { Login } from "$lib/types";
   import { page } from "$app/stores";
   import type { UserSummary } from "$data/user-summary";
+  import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
 
   export let open = false;
   export let onClose = () => {};
@@ -55,6 +56,7 @@
       {:else}
         <span>Total Books: {userSummary?.allBooksCount}</span>
         {#if userSummary.maxUsedSubject}
+          <TagsSubjectsSummaryItem items={subjects} label={"MAX-S"} packet={userSummary.maxUsedSubject} />
           {userSummary.maxUsedSubject.books}
           {userSummary.maxUsedSubject.ids}
         {/if}
