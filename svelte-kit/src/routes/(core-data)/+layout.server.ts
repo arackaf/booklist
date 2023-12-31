@@ -7,7 +7,7 @@ import { getPublicId } from "$lib/util/getPublicId";
 
 import { ADMIN_USER } from "$env/static/private";
 import type { Login } from "$lib/types";
-import { userSummary } from "$data/user-summary";
+import { userSummary, type UserSummary } from "$data/user-summary";
 
 export async function load({ locals, request, fetch, depends }: any) {
   depends("core-data:root");
@@ -24,8 +24,6 @@ export async function load({ locals, request, fetch, depends }: any) {
   let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
-  const userSummaryData = userSummary("60a93babcc3928454b5d1cc6");
-
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
 
@@ -38,11 +36,14 @@ export async function load({ locals, request, fetch, depends }: any) {
   }
 
   let loggedInUser: Login | null = null;
+  let userSummaryData: Promise<UserSummary | null> | null = null;
+
   if (session?.user) {
     loggedInUser = {
       ...session!.user,
       provider: session.provider
     };
+    userSummaryData = userSummary(session.userId);
   }
 
   return {
