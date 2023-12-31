@@ -18,10 +18,8 @@
   $: userSummaryPromise = $page.data.userSummaryData as Promise<UserSummary>;
   let userSummary: UserSummary | undefined;
 
-  onMount(() => {
-    userSummaryPromise.then(result => {
-      userSummary = result;
-    });
+  $: userSummaryPromise.then(result => {
+    userSummary = result;
   });
 
   const windowClickHandler = (evt: MouseEvent) => {

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
+
   import type { Book, Tag } from "$data/types";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -52,6 +54,7 @@
         updates
       );
       saving = false;
+      invalidate("core-data:root");
       onHide();
     };
   };

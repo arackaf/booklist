@@ -1,6 +1,10 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
+
   import type { Book, Subject } from "$data/types";
+
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
@@ -11,7 +15,6 @@
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import { enhance } from "$app/forms";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   $: subjects = $page.data.subjects;
@@ -51,6 +54,7 @@
         updates
       );
       saving = false;
+      invalidate("core-data:root");
       onHide();
     };
   };

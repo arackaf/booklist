@@ -9,7 +9,9 @@ import { ADMIN_USER } from "$env/static/private";
 import type { Login } from "$lib/types";
 import { userSummary } from "$data/user-summary";
 
-export async function load({ locals, request, fetch }: any) {
+export async function load({ locals, request, fetch, depends }: any) {
+  depends("core-data:root");
+  console.log("RUNNING");
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
