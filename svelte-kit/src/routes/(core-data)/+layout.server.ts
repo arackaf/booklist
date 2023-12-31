@@ -11,7 +11,6 @@ import { userSummary } from "$data/user-summary";
 
 export async function load({ locals, request, fetch, depends }: any) {
   depends("core-data:root");
-  console.log("RUNNING");
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
