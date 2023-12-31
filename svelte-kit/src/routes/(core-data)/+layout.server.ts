@@ -6,15 +6,11 @@ import { getUser } from "$data/user";
 import { getPublicId } from "$lib/util/getPublicId";
 
 import { ADMIN_USER } from "$env/static/private";
+import type { Login } from "$lib/types";
+import { userSummary } from "$data/user-summary";
 
-type Login = {
-  name: string;
-  email: string;
-  image: string;
-  provider: string;
-};
-
-export async function load({ locals, request, fetch }: any) {
+export async function load({ locals, request, fetch, depends }: any) {
+  depends("core-data:root");
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
@@ -27,6 +23,8 @@ export async function load({ locals, request, fetch }: any) {
   let tags: Promise<Tag[]> | Tag[] = allTags(activeUserId);
   let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
+
+  const userSummaryData = userSummary("60a93babcc3928454b5d1cc6");
 
   if (publicUserId) {
     publicUser = await getUser(publicUserId);
@@ -55,6 +53,7 @@ export async function load({ locals, request, fetch }: any) {
     colors: await colors,
     subjects: await subjects,
     tags: await tags,
-    loggedInUser
+    loggedInUser,
+    userSummaryData
   };
 }

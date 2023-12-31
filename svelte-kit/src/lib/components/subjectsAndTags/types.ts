@@ -1,4 +1,5 @@
 export type Label = {
+  id: number;
   name: string;
   textColor: string | null;
   backgroundColor: string | null;

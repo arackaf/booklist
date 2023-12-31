@@ -10,8 +10,9 @@
   import { onMount } from "svelte";
   import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
+  import ProfilePanel from "./ProfilePanel.svelte";
 
-  $: ({ loggedIn, hasPublicId, isAdminUser } = $page.data);
+  $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
 
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
@@ -34,12 +35,24 @@
   onMount(() => {
     window.addEventListener("ws-info", handleWsPendingCountUpdate);
   });
+
+  let profilePanelOpen = false;
 </script>
 
-<header class="master-nav z-10">
+<header class="master-nav z-10 relative">
+  {#if loggedInUser}
+    <ProfilePanel {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
+  {/if}
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
+    {#if loggedIn}
+      <div class="items-center mx-2 my-auto">
+        <button on:click={() => (profilePanelOpen = !profilePanelOpen)} class="raw-button flex profile-menu-trigger">
+          <img class="rounded-full max-h-8 max-w-8" src={loggedInUser.image} />
+        </button>
+      </div>
+    {/if}
     <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
-      <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
+      <ModuleLink active={isHome} padding="px-3" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
@@ -124,5 +137,5 @@
       </ul>
     {/if}
   </nav>
-  <div id="main-mobile-menu" class="main-mobile-menu p-2 bg-white absolute border border-neutral-400 z-10 border-t-0 border-l-0 rounded-br" />
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10" />
 </header>

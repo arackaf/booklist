@@ -25,7 +25,7 @@
 </script>
 
 <div bind:this={rootEl} class="hidden">
-  <div class="mobile-menu-content">
+  <div>
     <div>
       <div class="flex items-center header">
         <RawButton aria-label="Close mobile menu" class="text-[1.4rem] ml-[2px]" on:click={onClose}>
