@@ -82,7 +82,7 @@
         {/if}
       {/if}
     </div>
-    <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,auto)] grid-rows-[auto_auto] leading-none">
+    <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,1fr)] grid-rows-[auto_auto] leading-none">
       <span>Provider:</span>
       <div class="flex gap-1">
         <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}" />
@@ -90,7 +90,7 @@
       </div>
 
       <span>Email:</span>
-      <span class="break-words">{loggedInUser.email + loggedInUser.email}</span>
+      <span class="break-words">{loggedInUser.email}</span>
     </div>
     <span>
       <Button size="med" on:click={() => signOut().then(() => invalidateAll())}>Logout</Button>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { signIn, signOut } from "@auth/sveltekit/client";
+  import { signIn } from "@auth/sveltekit/client";
 
   import NavBarItem from "./NavBarItem.svelte";
   import ModuleLink from "./ModuleLink.svelte";
@@ -8,7 +8,6 @@
   import BookSvg from "./BookSvg.svelte";
 
   import { onMount } from "svelte";
-  import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
   import ProfilePanel from "./ProfilePanel.svelte";
 
@@ -126,16 +125,6 @@
         </NavBarItem>
       {/if}
     </ul>
-    {#if loggedIn}
-      <ul class="flex ml-auto">
-        <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
-          <span class="hidden md:block">Logout</span>
-          <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-sign-out" />
-          </span>
-        </NavBarItem>
-      </ul>
-    {/if}
   </nav>
   <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10" />
 </header>
