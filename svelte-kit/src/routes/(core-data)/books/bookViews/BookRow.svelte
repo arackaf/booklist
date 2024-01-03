@@ -93,7 +93,7 @@
 
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
           {#if detailsLoading}
-            <span><i class="far fa-fw fa-spin fa-spinner" /></span>
+            <span class="text-sm"><i class="far fa-fw fa-spin fa-spinner" /></span>
           {:else if expanded}
             <button
               style={hoverOverride}
