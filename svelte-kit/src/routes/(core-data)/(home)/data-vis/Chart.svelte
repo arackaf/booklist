@@ -27,11 +27,11 @@
   };
 
   let hasRendered = false;
-  let chartContainer;
+  let chartContainer: HTMLElement;
   onMount(() => {
     if (chartContainer && chartIndex > 0 && !hasRendered) {
       // smooth behavior seems to be disabled in chrome :(
-      chartContainer.scrollIntoView({ block: "start", inline: "nearest" /* behavior: "smooth" */ });
+      window.scrollTo({ top: chartContainer.offsetTop, behavior: "smooth" });
     }
     hasRendered = true;
   });
