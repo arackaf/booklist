@@ -30,7 +30,8 @@
   let chartContainer;
   onMount(() => {
     if (chartContainer && chartIndex > 0 && !hasRendered) {
-      chartContainer.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+      // smooth behavior seems to be disabled in chrome :(
+      chartContainer.scrollIntoView({ block: "start", inline: "nearest" /* behavior: "smooth" */ });
     }
     hasRendered = true;
   });
