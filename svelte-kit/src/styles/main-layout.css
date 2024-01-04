@@ -28,6 +28,10 @@ header {
   grid-area: header;
 }
 
+.sticky-sub-content {
+  @apply sticky top-12;
+}
+
 main {
   grid-area: main;
   display: grid;
