@@ -76,7 +76,7 @@
     </Alert>
   {/if}
 {:else}
-  <div class="pb-10">
+  <div class="pb-20">
     <div class="flex items-baseline gap-4">
       <div bind:this={chartContainer} class="flex flex-col {chartIndex > 0 ? 'pt-16 -mt-16' : ''}">
         <h4 style="display: inline; text-wrap: nowrap" class="text-xl font-semibold">{header}</h4>
