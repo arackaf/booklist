@@ -28,7 +28,7 @@ header {
   grid-area: header;
 }
 
-.sticky-sub-content {
+.sticky-content {
   @apply sticky top-12;
 }
 
