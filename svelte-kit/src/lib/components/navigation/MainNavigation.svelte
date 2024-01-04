@@ -38,7 +38,7 @@
   let profilePanelOpen = false;
 </script>
 
-<header class="master-nav z-10 relative">
+<header class="master-nav z-10 sticky top-0">
   {#if loggedInUser}
     <ProfilePanel {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   {/if}
