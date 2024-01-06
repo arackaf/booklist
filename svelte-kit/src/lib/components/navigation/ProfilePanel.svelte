@@ -51,7 +51,7 @@
   });
 </script>
 
-<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 h-96 overflow-y-auto overflow-x-hidden">
+<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 max-h-[600px] overflow-y-auto overflow-x-hidden">
   <div class="flex flex-col gap-6 pb-2 px-3 bg-white">
     <div class="flex gap-2 items-center py-1 -mb-3 sticky top-0 bg-white">
       <img class="w-14 h-14 rounded-full" src={loggedInUser.image} />
