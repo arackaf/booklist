@@ -136,7 +136,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
 
     await new Promise(res => setTimeout(res, 30));
 
-    return {
+    const result = {
       allBooksCount: data.find(entry => entry.label === "All books")!.count,
       minUsedTags: projectEntries(data.filter(entry => entry.label === "MIN Tags")),
       maxUsedTags: projectEntries(data.filter(entry => entry.label === "MAX Tags")),
@@ -145,6 +145,23 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
       maxUsedSubjects: projectEntries(data.filter(entry => entry.label === "MAX Subjects")),
       unusedTags: projectUnusedEntries(data.filter(entry => entry.label === "Unused Tags"))
     };
+
+    if (result.minUsedTags?.ids) {
+      const maxTags = new Set(result.maxUsedTags?.ids);
+      result.minUsedTags.ids = result.minUsedTags.ids.filter(id => !maxTags.has(id));
+      if (!result.minUsedTags.ids.length) {
+        result.minUsedTags = null;
+      }
+    }
+    if (result.minUsedSubjects?.ids) {
+      const maxSubjects = new Set(result.maxUsedSubjects?.ids);
+      result.minUsedSubjects.ids = result.minUsedSubjects.ids.filter(id => !maxSubjects.has(id));
+      if (!result.minUsedSubjects.ids.length) {
+        result.minUsedSubjects = null;
+      }
+    }
+
+    return result;
   } catch (err) {
     console.log("Error reading user summary", err);
     return null;
