@@ -123,19 +123,29 @@
           <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
         </SelectAndDisplayContainer>
 
-        {#if !noSubjects}
-          <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
-            <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-            <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-          </SelectAndDisplayContainer>
+        <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+          <SelectAvailableSubjects
+            inputProps={{ disabled: noSubjects }}
+            slot="select"
+            subjects={allSubjects}
+            currentlySelected={localSubjects}
+            onSelect={selectSubject}
+          />
+          <DisplaySelectedSubjects
+            disabled={noSubjects}
+            slot="display"
+            subjects={allSubjects}
+            currentlySelected={localSubjects}
+            onRemove={removeSubject}
+          />
+        </SelectAndDisplayContainer>
 
-          <div class="md:col-span-2">
-            <label class="checkbox">
-              <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
-              Also search child subjects
-            </label>
-          </div>
-        {/if}
+        <div class="md:col-span-2">
+          <label class="checkbox">
+            <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
+            Also search child subjects
+          </label>
+        </div>
 
         <div class="md:col-span-2">
           <label class="checkbox">

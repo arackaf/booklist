@@ -7,6 +7,7 @@
   export let onSelect: (item: DisablableSubject) => void;
   export let placeholder = "Subjects";
   export let currentlySelected: number[] = [];
+  export let inputProps: any = undefined;
 
   export let subjects: Subject[];
 
@@ -31,4 +32,4 @@
 {#each currentlySelected as id}
   <input type="hidden" name="subjects" value={id} />
 {/each}
-<GenericLabelSelect {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />
+<GenericLabelSelect {inputProps} {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />

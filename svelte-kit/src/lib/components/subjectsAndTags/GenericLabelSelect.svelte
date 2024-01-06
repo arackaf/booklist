@@ -9,6 +9,15 @@
   export let onItemSelected: (option: any, inputEl: HTMLInputElement) => void;
   export let noFiltering = false;
 
+  let inputPropsToUse: any;
+
+  $: {
+    inputPropsToUse = inputProps;
+    if (!inputPropsToUse.class) {
+      inputPropsToUse.class = "md:text-sm text-base";
+    }
+  }
+
   let inputStyles = "width: 100px; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-radius: 0;";
 </script>
 
@@ -16,7 +25,7 @@
   <AutoSuggest
     keyField="id"
     {options}
-    {inputProps}
+    inputProps={inputPropsToUse}
     {placeholder}
     {onItemSelected}
     {inputStyles}
