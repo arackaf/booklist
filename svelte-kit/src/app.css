@@ -137,8 +137,10 @@ select {
   @apply border-r-0 rounded-tr-none rounded-br-none;
 }
 
-.raw-button {
-  @apply p-0 bg-transparent border-0 text-neutral-600 shadow-none;
+@layer base {
+  .raw-button {
+    @apply p-0 bg-transparent border-0 text-neutral-600 shadow-none;
+  }
 }
 
 button::-moz-focus-inner {
