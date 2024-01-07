@@ -13,6 +13,7 @@
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
+  import DeleteBook from "./DeleteBook.svelte";
 
   export let book: Book;
   export let subjects: Subject[];
@@ -20,6 +21,8 @@
 
   export let onCancel: () => void;
   export let syncUpdates: (id: number, updates: UpdatesTo<Book>) => void;
+
+  export let afterDelete: (id: number) => void = () => {};
 
   let basicInfoValid: () => boolean;
 
@@ -58,6 +61,9 @@
     <TabHeaders>
       <TabHeader tabName="basic">Book info</TabHeader>
       <TabHeader tabName="covers">Covers</TabHeader>
+      {#if book?.id}
+        <TabHeader tabName="delete" class="text-red-600">Delete</TabHeader>
+      {/if}
     </TabHeaders>
     <TabContents>
       <TabContent tabName="basic">
@@ -68,6 +74,11 @@
       <TabContent tabName="covers">
         {#if book}
           <EditBookCovers {book} bind:reset={resetCovers} />
+        {/if}
+      </TabContent>
+      <TabContent tabName="delete">
+        {#if book?.id}
+          <DeleteBook id={book?.id} {afterDelete} />
         {/if}
       </TabContent>
     </TabContents>
