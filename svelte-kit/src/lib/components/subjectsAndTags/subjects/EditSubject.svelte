@@ -12,12 +12,12 @@
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
-  import Select from "$lib/components/ui/Select/Select.svelte";
-  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
+  import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
+  import DisplaySelectedSubjects from "./DisplaySelectedSubjects.svelte";
 
   export let subject: Subject;
   export let allSubjects: Subject[];
@@ -122,14 +122,22 @@
           {editingSubject.name.trim() || "<label preview>"}
         </Label>
       </div>
-      <SelectGroup labelText="Parent">
-        <Select slot="select" bind:value={editingSubject.parentId} name="parentId">
-          <option value={0}>No Parent</option>
-          {#each eligibleParents as s}
-            <option value={s.id}>{s.name}</option>
-          {/each}
-        </Select>
-      </SelectGroup>
+      <div>
+        <div class="flex flex-col gap-0.5">
+          <span class="text-sm">Parent</span>
+          <div class="flex flex-col gap-1">
+            <SelectAvailableSubjects
+              placeholder="Select"
+              subjects={eligibleParents}
+              currentlySelected={[editingSubject.parentId]}
+              onSelect={subject => {
+                editingSubject = { ...editingSubject, parentId: subject.id };
+              }}
+            />
+            <DisplaySelectedSubjects subjects={eligibleParents} currentlySelected={[editingSubject.parentId]} />
+          </div>
+        </div>
+      </div>
 
       <div>
         <div class="flex flex-col">
