@@ -113,7 +113,7 @@
   <div style="background-color: white;">
     <MenuBar {isPublic} {bookViewToUse} />
 
-    <div>
+    <div class="overflow-x-auto">
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
         {#if !$books.length}
           <div>
