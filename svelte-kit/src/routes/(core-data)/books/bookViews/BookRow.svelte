@@ -22,6 +22,7 @@
   import BookRowDetails from "./BookRowDetails.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState";
   import BookReadSetter from "../BookReadSetter.svelte";
+  import { afterDelete } from "../state/onDelete";
 
   export let isPublic: boolean;
   export let book: Book;
@@ -49,13 +50,8 @@
     deleting = true;
 
     return async ({ result }: any) => {
-      deleting = false;
-      pendingDelete = false;
-
       if (result.data.success) {
-        runDelete($page.data.books, id);
-        $page.data.totalBooks.update((x: number) => x - 1);
-        selectionState.unSelectBook(id);
+        afterDelete(id);
       }
     };
   };

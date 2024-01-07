@@ -22,6 +22,7 @@
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
   import { searchState } from "./state/searchState";
+  import { afterDelete } from "./state/onDelete";
 
   export let data;
 
@@ -151,6 +152,7 @@
             {subjects}
             {tags}
             header={`Edit: ${editingBook?.title}`}
+            {afterDelete}
           />
 
           <svelte:component
