@@ -111,7 +111,7 @@
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="subject-edit-layout grid gap-x-5 gap-y-0.5 col-span-2">
+      <div class="subject-edit-layout grid gap-x-5 gap-y-0.5 md:col-span-2">
         <label class="subject-label" for="subject-name">Name</label>
         <span class="parent-label text-sm md:mt-0 mt-3.5 md:mb-0 -mb-1">Parent</span>
 
