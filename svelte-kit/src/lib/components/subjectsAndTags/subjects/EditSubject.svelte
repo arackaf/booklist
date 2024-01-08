@@ -127,6 +127,7 @@
         />
 
         <SelectAvailableSubjects
+          noHiddenFields={true}
           class="parent-input self-end"
           placeholder="Select"
           subjects={eligibleParents}
