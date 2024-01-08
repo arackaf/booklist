@@ -1,3 +1,7 @@
+.subject-edit-layout .generic-label-select input {
+  padding-left: 0 !important;
+}
+
 .subject-edit-layout {
   grid-template-areas:
     "name-label"
