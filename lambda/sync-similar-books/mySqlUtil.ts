@@ -47,12 +47,25 @@ export async function getNextBookToSync() {
     const books =
       ((await query(
         mySqlConnection,
-        `    
+        `
+        SELECT * FROM (
           SELECT id, title, isbn
           FROM books
-          WHERE (similarBooksLastSync IS NULL OR DATEDIFF(NOW(), similarBooksLastSync) > 60) AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
+          WHERE similarBooksLastSync IS NULL AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
           ORDER BY id
-          LIMIT 1`
+          LIMIT 1
+        ) t1
+        
+        UNION ALL
+      
+        SELECT * FROM (
+          SELECT id, title, isbn
+          FROM books
+          WHERE DATEDIFF(NOW(), similarBooksLastSync) > 180 AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
+          ORDER BY id
+          LIMIT 1
+        ) as t2    
+        `
       )) as any[]) || [];
 
     return books[0];
