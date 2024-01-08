@@ -111,31 +111,41 @@
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="flex flex-col gap-1">
-        <InputGroup labelText="Name">
-          <Input slot="input" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
-        </InputGroup>
-        {#if missingName}
-          <Label theme="error" class="self-start">Subjects need names!</Label>
-        {/if}
-        <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
-          {editingSubject.name.trim() || "<label preview>"}
-        </Label>
-      </div>
-      <div>
-        <div class="flex flex-col gap-0.5">
-          <span class="text-sm">Parent</span>
-          <div class="flex flex-col gap-1">
-            <SelectAvailableSubjects
-              placeholder="Select"
-              subjects={eligibleParents}
-              currentlySelected={[editingSubject.parentId]}
-              onSelect={subject => {
-                editingSubject = { ...editingSubject, parentId: subject.id };
-              }}
-            />
-            <DisplaySelectedSubjects subjects={eligibleParents} currentlySelected={[editingSubject.parentId]} />
-          </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-0.5 col-span-2">
+        <label for="subject-name">Name</label>
+        <span class="text-sm">Parent</span>
+
+        <Input
+          id="subject-name"
+          slot="input"
+          error={missingName}
+          bind:inputEl
+          bind:value={editingSubject.name}
+          name="name"
+          placeholder="Subject name"
+        />
+
+        <SelectAvailableSubjects
+          class="self-end"
+          placeholder="Select"
+          subjects={eligibleParents}
+          currentlySelected={[editingSubject.parentId]}
+          onSelect={subject => {
+            editingSubject = { ...editingSubject, parentId: subject.id };
+          }}
+        />
+
+        <div class="flex flex-col gap-1 mt-0.5">
+          {#if missingName}
+            <Label theme="error" class="self-start">Subjects need names!</Label>
+          {/if}
+          <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
+            {editingSubject.name.trim() || "<label preview>"}
+          </Label>
+        </div>
+
+        <div class="mt-0.5">
+          <DisplaySelectedSubjects subjects={eligibleParents} currentlySelected={[editingSubject.parentId]} />
         </div>
       </div>
 
