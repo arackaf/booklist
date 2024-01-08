@@ -23,5 +23,8 @@ functions:
     timeout: 10
     handler: handler.getRecommendations
 
+package:
+  individually: true
+
 plugins:
   - serverless-esbuild
