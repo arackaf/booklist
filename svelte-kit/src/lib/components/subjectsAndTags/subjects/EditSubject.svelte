@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "./editSubjectStyles.css";
   import { onMount } from "svelte";
 
   import { enhance } from "$app/forms";
@@ -10,14 +11,13 @@
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
-  import Select from "$lib/components/ui/Select/Select.svelte";
-  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
+  import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
+  import DisplaySelectedSubjects from "./DisplaySelectedSubjects.svelte";
 
   export let subject: Subject;
   export let allSubjects: Subject[];
@@ -110,26 +110,51 @@
     <input type="hidden" name="id" value={editingSubject.id} />
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
+    <input type="hidden" name="parentId" value={editingSubject.parentId || ""} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="flex flex-col gap-1">
-        <InputGroup labelText="Name">
-          <Input slot="input" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
-        </InputGroup>
-        {#if missingName}
-          <Label theme="error" class="self-start">Subjects need names!</Label>
-        {/if}
-        <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
-          {editingSubject.name.trim() || "<label preview>"}
-        </Label>
+      <div class="subject-edit-layout grid gap-x-5 gap-y-0.5 md:col-span-2">
+        <label class="subject-label" for="subject-name">Name</label>
+        <span class="parent-label text-sm md:mt-0 mt-3.5 md:mb-0 -mb-1">Parent</span>
+
+        <Input
+          id="subject-name"
+          class="name-input"
+          slot="input"
+          error={missingName}
+          bind:inputEl
+          bind:value={editingSubject.name}
+          name="name"
+          placeholder="Subject name"
+        />
+
+        <SelectAvailableSubjects
+          noHiddenFields={true}
+          class="parent-input self-end"
+          placeholder="Select"
+          subjects={eligibleParents}
+          currentlySelected={[editingSubject.parentId]}
+          onSelect={subject => {
+            editingSubject = { ...editingSubject, parentId: subject.id };
+          }}
+        />
+
+        <div class="name-info flex flex-col gap-1 mt-0.5">
+          {#if missingName}
+            <Label theme="error" class="self-start">Subjects need names!</Label>
+          {/if}
+          <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
+            {editingSubject.name.trim() || "<label preview>"}
+          </Label>
+        </div>
+
+        <div class="parent-info mt-0.5">
+          <DisplaySelectedSubjects
+            onRemove={() => (editingSubject.parentId = 0)}
+            subjects={eligibleParents}
+            currentlySelected={[editingSubject.parentId]}
+          />
+        </div>
       </div>
-      <SelectGroup labelText="Parent">
-        <Select slot="select" bind:value={editingSubject.parentId} name="parentId">
-          <option value={0}>No Parent</option>
-          {#each eligibleParents as s}
-            <option value={s.id}>{s.name}</option>
-          {/each}
-        </Select>
-      </SelectGroup>
 
       <div>
         <div class="flex flex-col">
