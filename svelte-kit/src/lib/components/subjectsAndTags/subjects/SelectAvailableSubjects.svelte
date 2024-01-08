@@ -11,6 +11,11 @@
 
   export let subjects: Subject[];
 
+  let className = "";
+  export { className as class };
+
+  export let noHiddenFields = false;
+
   let search = "";
 
   const doSelect = (item: DisablableSubject) => {
@@ -29,7 +34,9 @@
   $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, itemHash);
 </script>
 
-{#each currentlySelected as id}
-  <input type="hidden" name="subjects" value={id} />
-{/each}
-<GenericLabelSelect {inputProps} {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />
+{#if !noHiddenFields}
+  {#each currentlySelected as id}
+    <input type="hidden" name="subjects" value={id} />
+  {/each}
+{/if}
+<GenericLabelSelect class={className} {inputProps} {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />

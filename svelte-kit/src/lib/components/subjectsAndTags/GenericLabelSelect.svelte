@@ -9,6 +9,9 @@
   export let onItemSelected: (option: any, inputEl: HTMLInputElement) => void;
   export let noFiltering = false;
 
+  let className = "";
+  export { className as class };
+
   let inputPropsToUse: any;
 
   $: {
@@ -21,7 +24,7 @@
   let inputStyles = "width: 100px; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-radius: 0;";
 </script>
 
-<div class="generic-label-select">
+<div class="generic-label-select {className}">
   <AutoSuggest
     keyField="id"
     {options}
