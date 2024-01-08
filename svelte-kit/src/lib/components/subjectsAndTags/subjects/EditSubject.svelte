@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "./editSubjectStyles.css";
   import { onMount } from "svelte";
 
   import { enhance } from "$app/forms";
@@ -10,7 +11,6 @@
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
@@ -111,12 +111,13 @@
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-0.5 col-span-2">
-        <label for="subject-name">Name</label>
-        <span class="text-sm">Parent</span>
+      <div class="subject-edit-layout grid gap-x-5 gap-y-0.5 col-span-2">
+        <label class="subject-label" for="subject-name">Name</label>
+        <span class="parent-label text-sm md:mt-0 mt-3.5 md:mb-0 -mb-1">Parent</span>
 
         <Input
           id="subject-name"
+          class="name-input"
           slot="input"
           error={missingName}
           bind:inputEl
@@ -126,7 +127,7 @@
         />
 
         <SelectAvailableSubjects
-          class="self-end"
+          class="parent-input self-end"
           placeholder="Select"
           subjects={eligibleParents}
           currentlySelected={[editingSubject.parentId]}
@@ -135,7 +136,7 @@
           }}
         />
 
-        <div class="flex flex-col gap-1 mt-0.5">
+        <div class="name-info flex flex-col gap-1 mt-0.5">
           {#if missingName}
             <Label theme="error" class="self-start">Subjects need names!</Label>
           {/if}
@@ -144,7 +145,7 @@
           </Label>
         </div>
 
-        <div class="mt-0.5">
+        <div class="parent-info mt-0.5">
           <DisplaySelectedSubjects subjects={eligibleParents} currentlySelected={[editingSubject.parentId]} />
         </div>
       </div>
