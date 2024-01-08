@@ -23,6 +23,7 @@
   import type BookTagSetterType from "./BookTagSetter.svelte";
   import { searchState } from "./state/searchState";
   import { afterDelete } from "./state/onDelete";
+  import { afterNavigate } from "$app/navigation";
 
   export let data;
 
@@ -60,11 +61,9 @@
     });
   });
 
-  $: {
-    if (books) {
-      selectionState.clear();
-    }
-  }
+  afterNavigate(() => {
+    selectionState.clear();
+  });
 
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
