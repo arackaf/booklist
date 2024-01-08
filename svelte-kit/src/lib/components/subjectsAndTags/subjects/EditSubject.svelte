@@ -110,6 +110,7 @@
     <input type="hidden" name="id" value={editingSubject.id} />
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
+    <input type="hidden" name="parentId" value={editingSubject.parentId || ""} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div class="subject-edit-layout grid gap-x-5 gap-y-0.5 md:col-span-2">
         <label class="subject-label" for="subject-name">Name</label>
@@ -147,7 +148,11 @@
         </div>
 
         <div class="parent-info mt-0.5">
-          <DisplaySelectedSubjects subjects={eligibleParents} currentlySelected={[editingSubject.parentId]} />
+          <DisplaySelectedSubjects
+            onRemove={() => (editingSubject.parentId = 0)}
+            subjects={eligibleParents}
+            currentlySelected={[editingSubject.parentId]}
+          />
         </div>
       </div>
 
