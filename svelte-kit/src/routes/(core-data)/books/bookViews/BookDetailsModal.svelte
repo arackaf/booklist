@@ -52,7 +52,7 @@
           </div>
         {/if}
 
-        <div class="flex gap-1">
+        <div class="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0 md:gap-y-2 mb-2">
           <span class="self-center">Tags:</span>
 
           <div class="self-center">
@@ -62,9 +62,8 @@
               <span style="fontStyle: italic">None</span>
             {/if}
           </div>
-        </div>
-        <div class="flex gap-1">
-          <span class="self-center">Subjects:</span>
+
+          <span class="self-center mt-2 md:mt-0">Subjects:</span>
           <div class="self-center">
             {#if book?.subjects?.length}
               <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
