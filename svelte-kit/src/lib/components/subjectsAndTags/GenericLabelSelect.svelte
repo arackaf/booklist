@@ -4,7 +4,7 @@
 
   export let options: any;
   export let placeholder = "";
-  export let inputProps = { class: "md:text-sm text-base" };
+  export let inputProps = { class: "md:text-sm text-base leading-5" };
   export let search = "";
   export let onItemSelected: (option: any, inputEl: HTMLInputElement) => void;
   export let noFiltering = false;
@@ -17,7 +17,7 @@
   $: {
     inputPropsToUse = inputProps;
     if (!inputPropsToUse.class) {
-      inputPropsToUse.class = "md:text-sm text-base";
+      inputPropsToUse.class = "md:text-sm text-base leading-5";
     }
   }
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "./editSubjectStyles.css";
   import { onMount } from "svelte";
 
   import { enhance } from "$app/forms";
@@ -112,33 +111,12 @@
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <input type="hidden" name="parentId" value={editingSubject.parentId || ""} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="subject-edit-layout grid gap-x-5 gap-y-0.5 md:col-span-2">
-        <label class="subject-label" for="subject-name">Name</label>
-        <span class="parent-label text-sm md:mt-0 mt-3.5 md:mb-0 -mb-1">Parent</span>
-
-        <Input
-          id="subject-name"
-          class="name-input"
-          slot="input"
-          error={missingName}
-          bind:inputEl
-          bind:value={editingSubject.name}
-          name="name"
-          placeholder="Subject name"
-        />
-
-        <SelectAvailableSubjects
-          noHiddenFields={true}
-          class="parent-input self-end"
-          placeholder="Select"
-          subjects={eligibleParents}
-          currentlySelected={[editingSubject.parentId]}
-          onSelect={subject => {
-            editingSubject = { ...editingSubject, parentId: subject.id };
-          }}
-        />
-
-        <div class="name-info flex flex-col gap-1 mt-0.5">
+      <div class="flex flex-col gap-0.5">
+        <label class="text-sm" for="subject-name">Name</label>
+        <div class="h-8">
+          <Input id="subject-name" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
+        </div>
+        <div class="flex flex-col gap-1 mt-0.5">
           {#if missingName}
             <Label theme="error" class="self-start">Subjects need names!</Label>
           {/if}
@@ -146,8 +124,23 @@
             {editingSubject.name.trim() || "<label preview>"}
           </Label>
         </div>
+      </div>
+      <div class="flex flex-col gap-0.5">
+        <span class="text-sm -mb-0.5 md:mb-0">Parent</span>
 
-        <div class="parent-info mt-0.5">
+        <div class="h-8">
+          <SelectAvailableSubjects
+            noHiddenFields={true}
+            class="self-start"
+            placeholder="Select"
+            subjects={eligibleParents}
+            currentlySelected={[editingSubject.parentId]}
+            onSelect={subject => {
+              editingSubject = { ...editingSubject, parentId: subject.id };
+            }}
+          />
+        </div>
+        <div class="mt-0.5">
           <DisplaySelectedSubjects
             onRemove={() => (editingSubject.parentId = 0)}
             subjects={eligibleParents}
