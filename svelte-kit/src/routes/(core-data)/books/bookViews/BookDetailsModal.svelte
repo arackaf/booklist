@@ -34,7 +34,7 @@
   };
 </script>
 
-<Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title} noClose={true} smallerHeader={true}>
+<Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title} noClose={true}>
   {#if editing}
     <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} />
   {:else}
@@ -44,25 +44,28 @@
           <BookCover size="medium" {book} />
         </div>
       </div>
-      <div class="flex flex-col gap-1">
+      <div class="flex flex-col gap-2">
         {#if book.publisher || book.publicationDate}
           <div class="flex flex-row gap-2">
             <span>{book.publisher}</span>
             <span>{book.publicationDate}</span>
           </div>
         {/if}
-        <div class="grid grid-cols-4 gap-x-4 gap-y-1">
-          <span>Tags:</span>
 
-          <div class="col-span-3 self-center">
+        <div class="flex gap-1">
+          <span class="self-center">Tags:</span>
+
+          <div class="self-center">
             {#if book?.tags?.length}
               <DisplaySelectedTags {tags} currentlySelected={book.tags || []} />
             {:else}
               <span style="fontStyle: italic">None</span>
             {/if}
           </div>
-          <span>Subjects:</span>
-          <div class="col-span-3 self-center">
+        </div>
+        <div class="flex gap-1">
+          <span class="self-center">Subjects:</span>
+          <div class="self-center">
             {#if book?.subjects?.length}
               <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
             {:else}
@@ -70,22 +73,23 @@
             {/if}
           </div>
         </div>
-        {#if book.isbn}
-          <div class="flex flex-row gap-4">
-            <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
-              <i class="fab fa-amazon" />
-            </a>
-            <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
-              <i class="fab fa-goodreads-g" />
-            </a>
-          </div>
-        {/if}
+
         {#if !isPublic}
           <div style="margin-top: auto">
-            <Button size="sm" class="gap-2" on:click={() => (editing = true)}>
-              <span>Edit book</span>
-              <i class="fal fa-pencil-alt" />
-            </Button>
+            <div class="flex gap-5 items-center">
+              {#if book.isbn}
+                <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
+                  <i class="fab fa-amazon" />
+                </a>
+                <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
+                  <i class="fab fa-goodreads-g" />
+                </a>
+              {/if}
+              <Button size="sm" class="gap-2" on:click={() => (editing = true)}>
+                <span>Edit book</span>
+                <i class="fal fa-pencil-alt" />
+              </Button>
+            </div>
           </div>
         {/if}
       </div>
