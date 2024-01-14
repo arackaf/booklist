@@ -1,10 +1,9 @@
 <script lang="ts">
   import { getContext } from "svelte";
 
-  import { page } from "$app/stores";
   import { enhance } from "$app/forms";
 
-  import type { Book, Subject, Tag } from "$data/types";
+  import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/ui/Button/Button.svelte";
   import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
@@ -14,7 +13,6 @@
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
-  import { runDelete } from "$lib/state/dataUpdates";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
   import { changeFilter } from "../state/searchState";
@@ -41,7 +39,8 @@
   $: multiReadSaving = $booksReadSaving[id] == "1";
 
   let expanded = false;
-  let detailsLoading: boolean;
+  let detailsLoading = false;
+  let bookDetails: BookDetails;
 
   let pendingDelete = false;
   let deleting = false;
@@ -61,6 +60,25 @@
   $: addedDate = new Date(book.dateAdded);
   function getDisplayDate(date: Date) {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  }
+
+  function toggleExpand() {
+    if (expanded) {
+      expanded = false;
+    } else {
+      if (bookDetails) {
+        expanded = true;
+      } else {
+        detailsLoading = true;
+        fetch("/api/book-details?id=" + id)
+          .then(resp => resp.json())
+          .then(details => {
+            bookDetails = details;
+            detailsLoading = false;
+            expanded = true;
+          });
+      }
+    }
   }
 </script>
 
@@ -90,21 +108,9 @@
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
           {#if detailsLoading}
             <span class="text-sm"><i class="far fa-fw fa-spin fa-spinner" /></span>
-          {:else if expanded}
-            <button
-              style={hoverOverride}
-              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
-              on:click={() => (expanded = false)}
-            >
-              <i class={`far fa-minus fa-fw`} />
-            </button>
           {:else}
-            <button
-              style={hoverOverride}
-              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
-              on:click={() => (expanded = true)}
-            >
-              <i class={`far fa-plus fa-fw`} />
+            <button on:click={toggleExpand} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
+              <i class="far fa-fw {expanded ? 'fa-minus' : 'fa-plus'}" />
             </button>
           {/if}
 
@@ -193,6 +199,6 @@
     </span>
   </td>
 </tr>
-{#if expanded}
-  <BookRowDetails {isPublic} id={book.id} bind:detailsLoading />
+{#if expanded && bookDetails}
+  <BookRowDetails {isPublic} {bookDetails} />
 {/if}

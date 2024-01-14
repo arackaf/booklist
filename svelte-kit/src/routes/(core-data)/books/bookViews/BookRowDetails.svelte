@@ -2,24 +2,11 @@
   import type { BookDetails } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import { onMount } from "svelte";
-
-  export let id: number;
-  export let detailsLoading: boolean | undefined = true;
 
   export let isPublic: boolean;
-  let bookDetails: BookDetails;
+  export let bookDetails: BookDetails;
 
   $: ({ editorialReviews, similarBooks } = bookDetails || {});
-
-  onMount(() => {
-    fetch("/api/book-details?id=" + id)
-      .then(resp => resp.json())
-      .then(details => {
-        bookDetails = details;
-        detailsLoading = void 0;
-      });
-  });
 </script>
 
 {#if bookDetails}
