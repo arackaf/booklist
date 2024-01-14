@@ -129,11 +129,11 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <BasicView books={$books} {subjects} {tags} {isPublic} />
+              <BasicView books={$books} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={$books} {subjects} {tags} {isPublic} />
+              <GridView books={$books} {isPublic} />
             {:else}
-              <CoversView books={$books} {subjects} {tags} {isPublic} />
+              <CoversView books={$books} {isPublic} />
             {/if}
           </div>
         {/if}

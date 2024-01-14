@@ -1,11 +1,13 @@
 <script lang="ts">
+  import { page } from "$app/stores";
+  import type { Book } from "$data/types";
   import BookDetailsModal from "./BookDetailsModal.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import type { Book, Subject, Tag } from "$data/types";
 
   export let books: Book[];
-  export let subjects: Subject[];
-  export let tags: Tag[];
+
+  $: ({ subjects, tags } = $page.data);
+
   export let isPublic: boolean;
 
   let previewing: boolean = false;

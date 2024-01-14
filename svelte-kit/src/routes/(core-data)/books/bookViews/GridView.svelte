@@ -1,14 +1,13 @@
 <script lang="ts">
-  import type { Book, Subject, Tag } from "$data/types";
+  import { page } from "$app/stores";
+  import type { Book } from "$data/types";
   import BookRow from "./BookRow.svelte";
   import { changeFilter, searchState } from "../state/searchState";
   import { selectedBooks, selectionState } from "../state/selectionState";
 
   export let isPublic: boolean;
   export let books: Book[];
-  export let subjects: Subject[];
-  export let tags: Tag[];
-
+  $: ({ subjects, tags } = $page.data);
   $: ({ sortField, sortDirection } = $searchState);
 
   $: allBooksSelected = books.length === $selectedBooks.length;
