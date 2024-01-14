@@ -61,7 +61,7 @@
   }
 </script>
 
-<Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title} noClose={true}>
+<Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title}>
   {#if editing}
     <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} />
   {:else}

@@ -10,7 +10,6 @@
   export let headerCaption = "";
   export let deferStateChangeOnClose = false;
   export let standardFooter = true;
-  export let noClose = false;
   export let smallerHeader = false;
 
   const dispatch = createEventDispatcher();
@@ -23,7 +22,7 @@
 <Modal on:mount={onMount} on:close={onHide} on:closed={() => dispatch("closed")} open={isOpen} {deferStateChangeOnClose}>
   <div>
     {#if headerCaption}
-      <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {noClose} />
+      <StandardModalHeader caption={headerCaption} smaller={smallerHeader} />
     {/if}
     <slot />
     {#if standardFooter}
