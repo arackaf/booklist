@@ -18,7 +18,9 @@
   };
 </script>
 
-<BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
+{#key bookPreviewing}
+  <BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
+{/key}
 
 <div>
   <div style="padding-bottom: 15px">
