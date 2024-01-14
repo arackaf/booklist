@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import type { Book } from "$data/types";
 
-  import BasicViewItem from "./BasicViewItem.svelte";
+  import MobileViewItem from "./MobileViewItem.svelte";
   import BookDetailsModal from "./BookDetailsModal.svelte";
 
   export let isPublic: boolean;
@@ -24,7 +24,7 @@
   <div style="padding-bottom: 15px">
     <div style="border: 0">
       {#each books as book (book.id)}
-        <BasicViewItem {book} {previewBook} />
+        <MobileViewItem {book} {previewBook} />
       {/each}
     </div>
   </div>

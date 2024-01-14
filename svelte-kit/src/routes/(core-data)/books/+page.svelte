@@ -6,7 +6,7 @@
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
 
   import GridView from "./bookViews/GridView.svelte";
-  import BasicView from "./bookViews/BasicView.svelte";
+  import MobileView from "./bookViews/MobileView.svelte";
   import CoversView from "./bookViews/CoversView.svelte";
 
   import MenuBar from "./menuBar/MenuBar.svelte";
@@ -129,7 +129,7 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <BasicView books={$books} {isPublic} />
+              <MobileView books={$books} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
               <GridView books={$books} {isPublic} />
             {:else}
