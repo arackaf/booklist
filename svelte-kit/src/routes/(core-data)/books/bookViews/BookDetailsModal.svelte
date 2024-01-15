@@ -41,6 +41,13 @@
   $: ({ editorialReviews, similarBooks } = bookDetails || {});
   let detailsLoading = false;
 
+  $: {
+    if (book) {
+      bookDetails = null;
+      expanded = false;
+    }
+  }
+
   function toggleDetails() {
     if (expanded) {
       expanded = false;

@@ -19,9 +19,7 @@
   };
 </script>
 
-{#key bookPreviewing}
-  <BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
-{/key}
+<BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
 <div>
   <div class="flex flex-col items-center mt-4">
