@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Book } from "$data/types";
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
-  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
+  import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
+  import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
 
   export let book: Book;
 </script>

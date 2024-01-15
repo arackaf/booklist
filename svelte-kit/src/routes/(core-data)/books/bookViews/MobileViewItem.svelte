@@ -3,7 +3,7 @@
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/ui/BookCover.svelte";
-  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
+  import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
 
   export let book: Book;
   export let previewBook: (book: Book) => void;
