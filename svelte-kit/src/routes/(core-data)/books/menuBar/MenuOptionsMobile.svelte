@@ -4,7 +4,7 @@
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import Input from "$lib/components/ui/Input/Input.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
   import Button from "$lib/components/Button/Button.svelte";
 
   import { getContext } from "svelte";

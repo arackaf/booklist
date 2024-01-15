@@ -2,8 +2,8 @@
   import { createEventDispatcher, onMount } from "svelte";
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import Label from "$lib/components/ui/Label/Label.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
 
   export let focused: boolean;
   export let selected: boolean;

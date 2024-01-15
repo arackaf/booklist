@@ -9,8 +9,8 @@
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import Label from "$lib/components/ui/Label/Label.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
 

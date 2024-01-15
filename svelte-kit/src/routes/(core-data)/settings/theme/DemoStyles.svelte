@@ -1,8 +1,8 @@
 <script lang="ts">
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 </script>
 
 <div class="max-w-[400px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
