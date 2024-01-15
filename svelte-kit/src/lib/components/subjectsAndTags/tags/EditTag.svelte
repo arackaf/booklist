@@ -8,7 +8,7 @@
 
   import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
-  import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
+  import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";

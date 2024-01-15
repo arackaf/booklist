@@ -12,7 +12,7 @@
   import Input from "$lib/components/ui/Input/Input.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
-  import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
+  import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
