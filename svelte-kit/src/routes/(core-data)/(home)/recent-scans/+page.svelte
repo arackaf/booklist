@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 

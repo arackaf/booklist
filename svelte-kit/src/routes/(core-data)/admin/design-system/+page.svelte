@@ -1,7 +1,7 @@
 <script lang="ts">
   import ActionButtonNew from "$lib/components/Button/ActionButton.svelte";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import Select from "$lib/components/ui/Select/Select.svelte";
   import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";

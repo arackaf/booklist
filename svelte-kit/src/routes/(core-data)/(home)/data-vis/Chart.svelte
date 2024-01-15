@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
 
   import { stackGraphData } from "./stackGraphData";
   import BarChartContent from "./bar-chart/chart/BarChartContent.svelte";

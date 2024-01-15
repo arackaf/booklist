@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
 

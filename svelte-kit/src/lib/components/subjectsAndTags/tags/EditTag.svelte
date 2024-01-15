@@ -6,7 +6,7 @@
 
   import type { Color, Tag } from "$data/types";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
   import Button from "$lib/components/Button/Button.svelte";

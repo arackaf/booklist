@@ -3,7 +3,7 @@
   import { fade } from "svelte/transition";
   import { quadIn } from "svelte/easing";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import useReducer from "$lib/state/useReducer";
