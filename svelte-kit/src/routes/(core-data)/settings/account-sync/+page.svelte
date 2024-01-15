@@ -4,7 +4,7 @@
   import { enhance } from "$app/forms";
 
   import Alert from "$lib/components/ui/Alert.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import { invalidateAll } from "$app/navigation";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";

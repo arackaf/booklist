@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   export const closeModal = (getContext("svelte-helpers-modal") as any).closeModal;
 </script>

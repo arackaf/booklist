@@ -3,7 +3,7 @@
   import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
 

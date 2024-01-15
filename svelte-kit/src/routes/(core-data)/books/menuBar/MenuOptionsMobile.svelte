@@ -5,7 +5,7 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
   import Input from "$lib/components/ui/Input/Input.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   import { getContext } from "svelte";
   import BookReadSetter from "../BookReadSetter.svelte";

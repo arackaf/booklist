@@ -5,8 +5,8 @@
 
   import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";

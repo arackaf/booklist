@@ -1,5 +1,5 @@
 <script lang="ts">
-  import RawButton from "../ui/Button/RawButton.svelte";
+  import RawButton from "../Button/RawButton.svelte";
 
   export let href: string;
   export let style = "";

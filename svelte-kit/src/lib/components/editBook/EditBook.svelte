@@ -4,13 +4,13 @@
 
   import type { Book, Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import EditBookCovers from "./EditBookCovers.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
 
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
   import DeleteBook from "./DeleteBook.svelte";

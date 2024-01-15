@@ -1,13 +1,13 @@
 <script lang="ts">
-  import ActionButtonNew from "$lib/components/ui/Button/ActionButton.svelte";
+  import ActionButtonNew from "$lib/components/Button/ActionButton.svelte";
 
   import Alert from "$lib/components/ui/Alert.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   import Select from "$lib/components/ui/Select/Select.svelte";
   import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
-  import IconButton from "$lib/components/ui/Button/IconButton.svelte";
+  import IconButton from "$lib/components/Button/IconButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
 

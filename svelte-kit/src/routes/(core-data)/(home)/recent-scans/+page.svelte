@@ -1,6 +1,6 @@
 <script lang="ts">
   import Alert from "$lib/components/ui/Alert.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
 
   export let data;

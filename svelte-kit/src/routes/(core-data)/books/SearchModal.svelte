@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Subject, Tag, UnwrapReadable } from "$data/types";
 
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   import Modal from "$lib/components/ui/Modal.svelte";
 

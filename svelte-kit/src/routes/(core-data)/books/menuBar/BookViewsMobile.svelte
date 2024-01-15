@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { enhance } from "$app/forms";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
 

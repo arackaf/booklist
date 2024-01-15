@@ -12,7 +12,7 @@
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import Input from "$lib/components/ui/Input/Input.svelte";
-  import RawButton from "$lib/components/ui/Button/RawButton.svelte";
+  import RawButton from "$lib/components/Button/RawButton.svelte";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;

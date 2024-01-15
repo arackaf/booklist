@@ -3,7 +3,7 @@
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
 
   import Alert from "$lib/components/ui/Alert.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 

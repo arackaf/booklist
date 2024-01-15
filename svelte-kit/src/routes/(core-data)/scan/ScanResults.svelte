@@ -4,7 +4,7 @@
   import { quadIn } from "svelte/easing";
 
   import Alert from "$lib/components/ui/Alert.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   import BookCover from "$lib/components/ui/BookCover.svelte";
   import useReducer from "$lib/state/useReducer";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";

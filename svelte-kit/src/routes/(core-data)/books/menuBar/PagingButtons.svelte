@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   import { changeFilter } from "../state/searchState";
 
   $: ({ page, totalPages } = $pageStore.data);

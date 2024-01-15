@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
 
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { signIn } from "@auth/sveltekit/client";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 </script>
 
 <section>
