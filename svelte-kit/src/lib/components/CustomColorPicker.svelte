@@ -3,7 +3,7 @@
 </script>
 
 <script lang="ts">
-  import "./ui/jscolor";
+  import "./jscolor";
   import { onMount } from "svelte";
 
   export let onColorChosen: (color: string) => void;
