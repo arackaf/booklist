@@ -31,7 +31,9 @@
 
   <AlertDialog.Content>
     <AlertDialog.Header>
-      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+      <AlertDialog.Title>
+        <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
+      </AlertDialog.Title>
       <AlertDialog.Description>
         This action cannot be undone. This will permanently delete your account and remove your data from our servers.
       </AlertDialog.Description>
