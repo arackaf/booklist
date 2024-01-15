@@ -1,6 +1,4 @@
 <script>
-  import { getContext } from "svelte";
-
   export let caption = "";
   export let smaller = false;
   export let onHide = () => {};

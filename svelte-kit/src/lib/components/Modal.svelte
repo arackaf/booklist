@@ -36,12 +36,11 @@
       </AlertDialog.Title>
       <AlertDialog.Description>
         <slot />
+        {#if standardFooter}
+          <StandardModalFooter {onHide} />
+        {/if}
       </AlertDialog.Description>
     </AlertDialog.Header>
-    <!-- <AlertDialog.Footer>
-      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-      <AlertDialog.Action>Continue</AlertDialog.Action>
-    </AlertDialog.Footer> -->
   </AlertDialog.Content>
 </AlertDialog.Root>
 
