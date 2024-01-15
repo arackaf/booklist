@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { BookDetails } from "$data/types";
 
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
 
   export let isPublic: boolean;
   export let bookDetails: BookDetails;

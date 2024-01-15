@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import type { Book } from "$data/types";
   import BookDetailsModal from "./BookDetailsModal.svelte";
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
 
   export let books: Book[];
 

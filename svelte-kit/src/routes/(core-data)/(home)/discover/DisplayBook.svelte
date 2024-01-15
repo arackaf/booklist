@@ -3,7 +3,7 @@
   import { springIn } from "svelte-helpers/spring-transitions";
   import type { Book } from "$data/types";
 
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import Button from "$lib/components/Button/Button.svelte";

@@ -5,7 +5,7 @@
 
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
   import useReducer from "$lib/state/useReducer";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 

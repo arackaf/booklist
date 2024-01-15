@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { MinimalBookInfo } from "$data/types";
 
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   export let book: MinimalBookInfo;

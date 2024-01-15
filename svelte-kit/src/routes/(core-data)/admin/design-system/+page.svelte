@@ -8,7 +8,7 @@
   import Input from "$lib/components/ui/Input/Input.svelte";
   import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
   import IconButton from "$lib/components/Button/IconButton.svelte";
-  import BookCover from "$lib/components/ui/BookCover.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
   import Label from "$lib/components/ui/Label/Label.svelte";
 
   let running = false;
