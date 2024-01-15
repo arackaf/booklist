@@ -2,11 +2,11 @@
   import { getContext } from "svelte";
   import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
-  import Modal from "$lib/components/ui/Modal.svelte";
+  import Modal from "$lib/components/Modal.svelte";
   import EditBook from "$lib/components/editBook/EditBook.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-  import BookCover from "$lib/components/ui/BookCover.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
 
   import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import BookCover from "../ui/BookCover.svelte";
+  import BookCover from "../BookCover.svelte";
 
   import type { Book } from "$data/types";
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ajaxUtil } from "$lib/util/ajaxUtil";
-  import ActionButton from "../ui/Button/ActionButton.svelte";
-  import Button from "../ui/Button/Button.svelte";
+  import ActionButton from "../Button/ActionButton.svelte";
+  import Button from "../Button/Button.svelte";
 
   export let id: number;
   export let afterDelete: (id: number) => void = () => {};

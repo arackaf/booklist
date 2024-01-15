@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
 
   export let data;

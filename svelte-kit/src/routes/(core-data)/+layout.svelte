@@ -7,7 +7,7 @@
 
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
   import type { Book } from "$data/types";
-  import ScanToasterContent from "$lib/components/ui/ScanToasterContent.svelte";
+  import ScanToasterContent from "$lib/components/ScanToasterContent.svelte";
 
   export let data;
 

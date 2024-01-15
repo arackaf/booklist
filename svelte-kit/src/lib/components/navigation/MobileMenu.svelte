@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import RawButton from "../ui/Button/RawButton.svelte";
+  import RawButton from "../Button/RawButton.svelte";
 
   export let onClose: () => void;
   export let title = "";

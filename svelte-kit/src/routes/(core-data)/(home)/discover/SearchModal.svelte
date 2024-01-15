@@ -9,12 +9,12 @@
 
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import Modal from "$lib/components/ui/Modal.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Alert from "$lib/components/Alert.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";

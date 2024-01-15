@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Label from "$lib/components/ui/Label/Label.svelte";
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
   import type { Label as LabelType, LabelColors } from "./types";
 
   export let item: Partial<LabelType> | null = null;

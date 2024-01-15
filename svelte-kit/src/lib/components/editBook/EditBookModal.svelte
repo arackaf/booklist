@@ -4,7 +4,7 @@
 
   import EditBook from "./EditBook.svelte";
 
-  import Modal from "../ui/Modal.svelte";
+  import Modal from "../Modal.svelte";
 
   export let book: any;
   export let isOpen = false;

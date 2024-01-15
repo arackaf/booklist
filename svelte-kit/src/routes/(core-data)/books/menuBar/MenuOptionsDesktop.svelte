@@ -7,7 +7,7 @@
   import { endSaving, startSaving } from "../state/booksReadSavingState";
 
   import { selectedBooksLookup } from "../state/selectionState";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
   export let isPublic: boolean;
 
   let bulkReadSaving: boolean;

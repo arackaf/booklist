@@ -8,10 +8,10 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
-  import Modal from "$lib/components/ui/Modal.svelte";
-  import StandardModalFooter from "$lib/components/ui/StandardModalFooter.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 

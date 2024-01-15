@@ -2,7 +2,7 @@
   import { onMount, setContext } from "svelte";
 
   import type { Book } from "$data/types";
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
 
   import GridView from "./bookViews/GridView.svelte";

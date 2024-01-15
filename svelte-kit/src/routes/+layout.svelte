@@ -7,7 +7,7 @@
 
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
   import Footer from "$lib/components/Footer.svelte";
-  import Loading from "$lib/components/ui/Loading.svelte";
+  import Loading from "$lib/components/Loading.svelte";
 
   import { NUM_THEMES } from "$lib/util/constants";
 

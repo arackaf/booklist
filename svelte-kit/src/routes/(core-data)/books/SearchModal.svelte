@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Subject, Tag, UnwrapReadable } from "$data/types";
 
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
-  import Modal from "$lib/components/ui/Modal.svelte";
+  import Modal from "$lib/components/Modal.svelte";
 
   import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
@@ -15,10 +15,10 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import { get } from "svelte/store";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
-  import Select from "$lib/components/ui/Select/Select.svelte";
+  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
+  import Select from "$lib/components/form-elements/Select/Select.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};

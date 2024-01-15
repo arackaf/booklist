@@ -6,7 +6,7 @@
   import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
   import { signOut } from "@auth/sveltekit/client";
   import { invalidateAll } from "$app/navigation";
-  import Button from "../ui/Button/Button.svelte";
+  import Button from "../Button/Button.svelte";
 
   export let open = false;
   export let onClose = () => {};

@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import Input from "../ui/Input/Input.svelte";
-  import InputGroup from "../ui/Input/InputGroup.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import Input from "../form-elements/Input/Input.svelte";
+  import InputGroup from "../form-elements/Input/InputGroup.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
