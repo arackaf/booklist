@@ -9,7 +9,7 @@
 
   import Button from "$lib/components/Button/Button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
-  import Modal from "$lib/components/ui/Modal.svelte";
+  import Modal from "$lib/components/Modal.svelte";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
 
   import SubjectDisplay from "./SubjectDisplay.svelte";

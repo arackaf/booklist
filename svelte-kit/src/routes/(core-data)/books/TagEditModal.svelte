@@ -2,7 +2,7 @@
   import type { Color, Tag } from "$data/types";
 
   import Button from "$lib/components/Button/Button.svelte";
-  import Modal from "$lib/components/ui/Modal.svelte";
+  import Modal from "$lib/components/Modal.svelte";
 
   import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";

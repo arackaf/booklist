@@ -3,7 +3,7 @@
 
   import Button from "$lib/components/Button/Button.svelte";
 
-  import Modal from "$lib/components/ui/Modal.svelte";
+  import Modal from "$lib/components/Modal.svelte";
 
   import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
