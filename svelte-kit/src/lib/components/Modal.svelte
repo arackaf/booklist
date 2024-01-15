@@ -35,13 +35,13 @@
         <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
       </AlertDialog.Title>
       <AlertDialog.Description>
-        This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+        <slot />
       </AlertDialog.Description>
     </AlertDialog.Header>
-    <AlertDialog.Footer>
+    <!-- <AlertDialog.Footer>
       <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
       <AlertDialog.Action>Continue</AlertDialog.Action>
-    </AlertDialog.Footer>
+    </AlertDialog.Footer> -->
   </AlertDialog.Content>
 </AlertDialog.Root>
 
