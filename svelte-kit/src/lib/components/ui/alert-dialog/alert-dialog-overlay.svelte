@@ -2,13 +2,15 @@
   import { AlertDialog as AlertDialogPrimitive } from "bits-ui";
   import { cn } from "$lib/utils";
   import { fade } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
 
   type $$Props = AlertDialogPrimitive.OverlayProps;
 
   let className: $$Props["class"] = undefined;
   export let transition: $$Props["transition"] = fade;
   export let transitionConfig: $$Props["transitionConfig"] = {
-    duration: 150
+    duration: 150,
+    easing: cubicOut
   };
   export { className as class };
 </script>

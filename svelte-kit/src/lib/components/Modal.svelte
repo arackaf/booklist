@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { createEventDispatcher } from "svelte";
   import Modal from "svelte-helpers/Modal.svelte";
 
@@ -17,9 +18,32 @@
   function onMount() {
     dispatch("mount");
   }
+
+  function onChange(open: boolean) {
+    if (!open) {
+      onHide();
+    }
+  }
 </script>
 
-<Modal on:mount={onMount} on:close={onHide} on:closed={() => dispatch("closed")} open={isOpen} {deferStateChangeOnClose}>
+<AlertDialog.Root bind:open={isOpen} closeOnOutsideClick={true} onOpenChange={onChange}>
+  <AlertDialog.Trigger asChild let:builder />
+
+  <AlertDialog.Content>
+    <AlertDialog.Header>
+      <AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+      <AlertDialog.Description>
+        This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+      </AlertDialog.Description>
+    </AlertDialog.Header>
+    <AlertDialog.Footer>
+      <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+      <AlertDialog.Action>Continue</AlertDialog.Action>
+    </AlertDialog.Footer>
+  </AlertDialog.Content>
+</AlertDialog.Root>
+
+<!-- <Modal on:mount={onMount} on:close={onHide} on:closed={() => dispatch("closed")} open={isOpen} {deferStateChangeOnClose}>
   <div>
     {#if headerCaption}
       <StandardModalHeader caption={headerCaption} smaller={smallerHeader} />
@@ -29,4 +53,4 @@
       <StandardModalFooter />
     {/if}
   </div>
-</Modal>
+</Modal> -->
