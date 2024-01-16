@@ -81,7 +81,7 @@
     </Button>
   </Popover.Trigger>
   <Popover.Content class="w-[200px] p-0">
-    <div id="sss" on:click={trap} on:mouseup={trap} on:pointerup={trap}>
+    <div on:click={trap} on:mouseup={trap} on:pointerup={trap}>
       <Command.Root>
         <Command.Input placeholder="Search framework..." />
         <Command.Empty>No framework found.</Command.Empty>
