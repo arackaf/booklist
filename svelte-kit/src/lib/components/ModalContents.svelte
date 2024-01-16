@@ -42,7 +42,7 @@
   });
 </script>
 
-<div style={dimensionStyles} class="overflow-hidden">
+<div style={dimensionStyles} class="overflow-hidden text-base text-neutral-800">
   <div bind:this={innerContent}>
     <slot />
   </div>
