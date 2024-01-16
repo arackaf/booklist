@@ -13,7 +13,7 @@
 </script>
 
 <AlertDialog.Portal>
-  <AlertDialog.Overlay />
+  <AlertDialog.Overlay class="backdrop-blur-[2px] bg-background/50" />
   <AlertDialogPrimitive.Content
     {transition}
     {transitionConfig}
