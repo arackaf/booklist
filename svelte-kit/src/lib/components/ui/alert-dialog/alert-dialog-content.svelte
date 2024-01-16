@@ -3,17 +3,19 @@
   import * as AlertDialog from ".";
   import { cn, flyAndScale } from "$lib/utils";
 
-  type $$Props = AlertDialogPrimitive.ContentProps;
+  type $$Props = AlertDialogPrimitive.ContentProps & { onHide(): void };
 
   export let transition: $$Props["transition"] = flyAndScale;
   export let transitionConfig: $$Props["transitionConfig"] = undefined;
 
   let className: $$Props["class"] = undefined;
   export { className as class };
+
+  export let onHide = () => {};
 </script>
 
 <AlertDialog.Portal>
-  <AlertDialog.Overlay class="backdrop-blur-[2px] bg-background/50" />
+  <AlertDialog.Overlay {onHide} class="backdrop-blur-[2px] bg-background/50" />
   <AlertDialogPrimitive.Content
     {transition}
     {transitionConfig}
