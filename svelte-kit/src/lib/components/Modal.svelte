@@ -35,15 +35,15 @@
       <AlertDialog.Title>
         <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
       </AlertDialog.Title>
-      <AlertDialog.Description>
-        <ModalContents>
-          <slot />
-        </ModalContents>
-        {#if standardFooter}
-          <StandardModalFooter {onHide} />
-        {/if}
-      </AlertDialog.Description>
     </AlertDialog.Header>
+    <AlertDialog.Description>
+      <ModalContents>
+        <slot />
+      </ModalContents>
+      {#if standardFooter}
+        <StandardModalFooter {onHide} />
+      {/if}
+    </AlertDialog.Description>
   </AlertDialog.Content>
 </AlertDialog.Root>
 
