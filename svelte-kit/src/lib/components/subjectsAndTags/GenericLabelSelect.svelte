@@ -55,7 +55,7 @@
   ];
   let open = false;
   let value = "";
-  $: selectedValue = frameworks.find(f => f.value === value)?.label ?? "Select a framework...";
+  //$: selectedValue = frameworks.find(f => f.value === value)?.name ?? "Select a framework...";
   // We want to refocus the trigger button when the user selects
   // an item from the list so users can continue navigating the
   // rest of the form with the keyboard.
@@ -76,26 +76,25 @@
 <Popover.Root portal={document.body} bind:open let:ids>
   <Popover.Trigger asChild let:builder>
     <Button builders={[builder]} variant="outline" role="combobox" aria-expanded={open} class="w-[200px] justify-between">
-      {selectedValue}
+      x
       <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   </Popover.Trigger>
   <Popover.Content class="w-[200px] p-0">
-    <div on:click={trap} on:mouseup={trap} on:pointerup={trap}>
-      <Command.Root>
-        <Command.Input placeholder="Search framework..." />
+    <div on:click={trap}>
+      <Command.Root shouldFilter={false}>
+        <Command.Input bind:value={search} placeholder="Search framework..." />
         <Command.Empty>No framework found.</Command.Empty>
         <Command.Group>
-          {#each frameworks as framework}
+          {#each options() as option (option.id)}
             <Command.Item
-              value={framework.value}
               onSelect={currentValue => {
+                console.log(currentValue);
                 value = currentValue;
                 closeAndFocusTrigger(ids.trigger);
               }}
             >
-              <Check class={cn("mr-2 h-4 w-4", value !== framework.value && "text-transparent")} />
-              {framework.label}
+              <GenericLabelDisplayItem item={option} />
             </Command.Item>
           {/each}
         </Command.Group>
