@@ -18,7 +18,7 @@
     {transition}
     {transitionConfig}
     class={cn(
-      "fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] z-50",
+      "fixed left-[50%] top-[50px] translate-x-[-50%] z-50 max-h-[calc(100vh-100px)] overflow-auto",
       "w-[min(95vw,600px)] sm:w-[600px]",
       "grid gap-4 border bg-background p-6 shadow-lg sm:rounded-lg",
       className
