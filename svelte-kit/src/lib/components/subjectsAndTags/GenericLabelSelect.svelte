@@ -80,14 +80,16 @@
       <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   </Popover.Trigger>
-  <Popover.Content class="w-[200px] p-0">
-    <div on:click={trap}>
+  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
+    <div on:click={trap} class="max-h-72 overflow-auto">
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search framework..." />
         <Command.Empty>No framework found.</Command.Empty>
         <Command.Group>
           {#each options() as option (option.id)}
             <Command.Item
+              disabled={option.id == 6755}
+              value={option.id + ""}
               onSelect={currentValue => {
                 console.log(currentValue);
                 value = currentValue;
