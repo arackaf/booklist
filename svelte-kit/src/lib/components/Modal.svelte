@@ -2,6 +2,7 @@
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { createEventDispatcher } from "svelte";
   import Modal from "svelte-helpers/Modal.svelte";
+  import ModalContents from "./ModalContents.svelte";
 
   import StandardModalHeader from "./StandardModalHeader.svelte";
   import StandardModalFooter from "./StandardModalFooter.svelte";
@@ -29,13 +30,15 @@
 <AlertDialog.Root bind:open={isOpen} closeOnOutsideClick={true} onOpenChange={onChange}>
   <AlertDialog.Trigger asChild let:builder />
 
-  <AlertDialog.Content>
+  <AlertDialog.Content class="translate-y-[0] top-16 pb-5">
     <AlertDialog.Header>
       <AlertDialog.Title>
         <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
       </AlertDialog.Title>
       <AlertDialog.Description>
-        <slot />
+        <ModalContents>
+          <slot />
+        </ModalContents>
         {#if standardFooter}
           <StandardModalFooter {onHide} />
         {/if}
