@@ -14,6 +14,8 @@
   export let onItemSelected: (option: any) => void;
   export let noFiltering = false;
 
+  export let size: "sm" | "default" = "default";
+
   let className = "";
   export { className as class };
 
@@ -47,7 +49,14 @@
 
 <Popover.Root portal={document.body} bind:open let:ids>
   <Popover.Trigger asChild let:builder>
-    <Button size="sm" builders={[builder]} variant="outline" role="combobox" aria-expanded={open} class="w-[200px] justify-between h-8">
+    <Button
+      size="sm"
+      builders={[builder]}
+      variant="outline"
+      role="combobox"
+      aria-expanded={open}
+      class="w-[200px] justify-between {size === 'sm' ? 'h-8' : ''}"
+    >
       <slot name="placeholder">
         {placeholder ?? "Select"}
       </slot>

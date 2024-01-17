@@ -11,6 +11,8 @@
 
   export let subjects: Subject[];
 
+  export let size: "sm" | "default" = "default";
+
   let className = "";
   export { className as class };
 
@@ -39,6 +41,6 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect class={className} {inputProps} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect}>
+<GenericLabelSelect {size} class={className} {inputProps} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect}>
   <slot name="placeholder" slot="placeholder">{placeholder}</slot>
 </GenericLabelSelect>
