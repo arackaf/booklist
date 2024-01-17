@@ -25,12 +25,24 @@
       onHide();
     }
   }
+
+  let el: HTMLDivElement;
+
+  function overlayClick(evt: MouseEvent) {
+    onHide();
+  }
+
+  $: {
+    if (el) {
+      el.addEventListener("click", overlayClick);
+    }
+  }
 </script>
 
 <AlertDialog.Root bind:open={isOpen} closeOnOutsideClick={false} onOpenChange={onChange}>
   <AlertDialog.Trigger asChild let:builder />
 
-  <AlertDialog.Content {onHide} class="translate-y-[0] top-16 pb-5">
+  <AlertDialog.Content bind:el class="translate-y-[0] top-16 pb-5">
     <AlertDialog.Header>
       <AlertDialog.Title>
         <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />

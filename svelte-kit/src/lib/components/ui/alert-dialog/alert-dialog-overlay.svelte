@@ -4,7 +4,7 @@
   import { fade } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
 
-  type $$Props = AlertDialogPrimitive.OverlayProps & { onHide(): void };
+  type $$Props = AlertDialogPrimitive.OverlayProps & { el: HTMLDivElement };
 
   let className: $$Props["class"] = undefined;
   export let transition: $$Props["transition"] = fade;
@@ -14,19 +14,7 @@
   };
   export { className as class };
 
-  export let onHide = () => {};
-
-  let el: HTMLDivElement;
-
-  function overlayClick(evt: MouseEvent) {
-    onHide();
-  }
-
-  $: {
-    if (el) {
-      el.addEventListener("click", overlayClick);
-    }
-  }
+  export let el: HTMLDivElement;
 </script>
 
 <AlertDialogPrimitive.Overlay
