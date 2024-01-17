@@ -65,6 +65,8 @@
     originalParentId = editingSubject.parentId;
   }
 
+  $: selectedParent = editingSubject.parentId ? eligibleParents.find(p => p.id == editingSubject.parentId) : null;
+
   export const reset = () => {
     inputEl?.focus();
     deleteShowing = false;
@@ -130,6 +132,7 @@
 
         <div class="h-8">
           <SelectAvailableSubjects
+            display={selectedParent?.name}
             noHiddenFields={true}
             class="self-start"
             placeholder="Select"
