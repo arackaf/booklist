@@ -118,12 +118,14 @@
           </Select>
         </SelectGroup>
 
-        <SelectAndDisplayContainer isEmpty={!localTags.length}>
+        <div />
+
+        <SelectAndDisplayContainer isEmpty={!localTags.length} class="md:col-span-2">
           <SelectAvailableTags slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
           <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
         </SelectAndDisplayContainer>
 
-        <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+        <SelectAndDisplayContainer isEmpty={!localSubjects.length} class="md:col-span-2">
           <SelectAvailableSubjects
             inputProps={{ disabled: noSubjects }}
             slot="select"

@@ -1,14 +1,15 @@
 <script lang="ts">
   export let isEmpty: boolean;
 
-  $: verticalGap = isEmpty ? "gap-0" : "gap-2";
+  let className = "";
+  export { className as class };
 </script>
 
-<div class={`grid grid-cols-1 ${verticalGap} md:grid-cols-4 md:col-span-2 md:gap-0`}>
+<div class="grid grid-cols-1 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-2 {className}">
   <div>
     <slot name="select" />
   </div>
-  <div class="md:col-span-3 flex items-center">
+  <div class="flex items-center">
     <slot name="display" />
   </div>
 </div>
