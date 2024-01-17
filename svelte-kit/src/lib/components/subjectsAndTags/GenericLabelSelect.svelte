@@ -55,7 +55,7 @@
   <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
     <div role="button" tabindex={-1} on:click={trap} class="max-h-72 overflow-auto">
       <Command.Root shouldFilter={false}>
-        <Command.Input bind:value={search} placeholder="Search framework..." />
+        <Command.Input bind:value={search} placeholder="Search" />
         <Command.Empty>No framework found.</Command.Empty>
         <Command.Group>
           {#each options() as option (option.id)}
