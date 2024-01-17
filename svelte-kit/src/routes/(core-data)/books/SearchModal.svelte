@@ -121,12 +121,13 @@
         <div />
 
         <SelectAndDisplayContainer isEmpty={!localTags.length} class="md:col-span-2">
-          <SelectAvailableTags slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
+          <SelectAvailableTags placeholder="Tags" slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
           <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
         </SelectAndDisplayContainer>
 
         <SelectAndDisplayContainer isEmpty={!localSubjects.length} class="md:col-span-2">
           <SelectAvailableSubjects
+            placeholder="Subjects"
             inputProps={{ disabled: noSubjects }}
             slot="select"
             subjects={allSubjects}

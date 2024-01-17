@@ -15,7 +15,6 @@
   export { className as class };
 
   export let noHiddenFields = false;
-  export let display: string | null = null;
 
   let search = "";
 
@@ -40,13 +39,4 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect
-  {display}
-  class={className}
-  {inputProps}
-  {placeholder}
-  noFiltering={true}
-  bind:search
-  options={() => eligible}
-  onItemSelected={doSelect}
-/>
+<GenericLabelSelect class={className} {inputProps} {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />

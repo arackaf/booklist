@@ -132,10 +132,9 @@
 
         <div class="h-8">
           <SelectAvailableSubjects
-            display={selectedParent?.name}
+            placeholder={selectedParent?.name}
             noHiddenFields={true}
             class="self-start"
-            placeholder="Select"
             subjects={eligibleParents}
             currentlySelected={[editingSubject.parentId]}
             onSelect={subject => {

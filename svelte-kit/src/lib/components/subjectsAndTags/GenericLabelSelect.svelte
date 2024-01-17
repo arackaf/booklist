@@ -18,7 +18,6 @@
   export { className as class };
 
   let inputPropsToUse: any;
-  export let display: string | null = null;
 
   $: {
     inputPropsToUse = inputProps;
@@ -49,7 +48,7 @@
 <Popover.Root portal={document.body} bind:open let:ids>
   <Popover.Trigger asChild let:builder>
     <Button size="sm" builders={[builder]} variant="outline" role="combobox" aria-expanded={open} class="w-[200px] justify-between h-8">
-      {display ?? "Select"}
+      {placeholder ?? "Select"}
       <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   </Popover.Trigger>
