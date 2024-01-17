@@ -14,7 +14,7 @@
   export let placeholder = "";
   export let inputProps = { class: "md:text-sm text-base leading-5" };
   export let search = "";
-  export let onItemSelected: (option: any, inputEl: HTMLInputElement) => void;
+  export let onItemSelected: (option: any) => void;
   export let noFiltering = false;
 
   let className = "";
@@ -75,9 +75,8 @@
 
 <Popover.Root portal={document.body} bind:open let:ids>
   <Popover.Trigger asChild let:builder>
-    <Button builders={[builder]} variant="outline" role="combobox" aria-expanded={open} class="w-[200px] justify-between">
-      x
-      <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    <Button size="sm" builders={[builder]} variant="outline" role="combobox" aria-expanded={open} class="w-[200px] justify-between h-8">
+      Select <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   </Popover.Trigger>
   <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
@@ -88,11 +87,12 @@
         <Command.Group>
           {#each options() as option (option.id)}
             <Command.Item
-              disabled={option.id == 6755}
               value={option.id + ""}
               onSelect={currentValue => {
-                console.log(currentValue);
-                value = currentValue;
+                const item = options().find(opt => opt.id == currentValue);
+                if (item) {
+                  onItemSelected(item);
+                }
                 closeAndFocusTrigger(ids.trigger);
               }}
             >
