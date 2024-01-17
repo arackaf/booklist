@@ -1,13 +1,10 @@
 <script lang="ts">
-  import { Check, ChevronsUpDown } from "lucide-svelte";
+  import { ChevronsUpDown } from "lucide-svelte";
   import * as Command from "$lib/components/ui/command";
   import * as Popover from "$lib/components/ui/popover";
   import { Button } from "$lib/components/ui/button";
-  import { cn } from "$lib/utils";
   import { tick } from "svelte";
-  import * as AlertDialog from "$lib/components/ui/alert-dialog";
 
-  import AutoSuggest from "svelte-helpers/AutoSuggest.svelte";
   import GenericLabelDisplayItem from "./GenericLabelDisplayItem.svelte";
 
   export let options: any;
@@ -29,33 +26,8 @@
     }
   }
 
-  let inputStyles = "width: 100px; border-top-width: 0; border-right-width: 0; border-left-width: 0; border-radius: 0;";
-
-  const frameworks = [
-    {
-      value: "sveltekit",
-      label: "SvelteKit"
-    },
-    {
-      value: "next.js",
-      label: "Next.js"
-    },
-    {
-      value: "nuxt.js",
-      label: "Nuxt.js"
-    },
-    {
-      value: "remix",
-      label: "Remix"
-    },
-    {
-      value: "astro",
-      label: "Astro"
-    }
-  ];
   let open = false;
-  let value = "";
-  //$: selectedValue = frameworks.find(f => f.value === value)?.name ?? "Select a framework...";
+
   // We want to refocus the trigger button when the user selects
   // an item from the list so users can continue navigating the
   // rest of the form with the keyboard.
