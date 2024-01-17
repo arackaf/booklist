@@ -48,7 +48,9 @@
 <Popover.Root portal={document.body} bind:open let:ids>
   <Popover.Trigger asChild let:builder>
     <Button size="sm" builders={[builder]} variant="outline" role="combobox" aria-expanded={open} class="w-[200px] justify-between h-8">
-      {placeholder ?? "Select"}
+      <slot name="placeholder">
+        {placeholder ?? "Select"}
+      </slot>
       <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
     </Button>
   </Popover.Trigger>

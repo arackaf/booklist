@@ -18,6 +18,8 @@
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
   import DisplaySelectedSubjects from "./DisplaySelectedSubjects.svelte";
 
+  import LabelDisplay from "../LabelDisplay.svelte";
+
   export let subject: Subject;
   export let allSubjects: Subject[];
   export let colors: Color[];
@@ -65,7 +67,7 @@
     originalParentId = editingSubject.parentId;
   }
 
-  $: selectedParent = editingSubject.parentId ? eligibleParents.find(p => p.id == editingSubject.parentId) : null;
+  $: selectedParent = editingSubject.parentId ? allSubjects.find(p => p.id == editingSubject.parentId) : null;
 
   export const reset = () => {
     inputEl?.focus();
@@ -140,7 +142,15 @@
             onSelect={subject => {
               editingSubject = { ...editingSubject, parentId: subject.id };
             }}
-          />
+          >
+            <span slot="placeholder">
+              {#if selectedParent}
+                <LabelDisplay item={selectedParent} />
+              {:else}
+                <span>Select</span>
+              {/if}
+            </span>
+          </SelectAvailableSubjects>
         </div>
         <div class="mt-0.5">
           <DisplaySelectedSubjects
