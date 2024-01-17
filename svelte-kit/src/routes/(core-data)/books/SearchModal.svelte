@@ -80,7 +80,7 @@
       {#if $publicUser}
         <input type="hidden" name="user" value={$publicUser} />
       {/if}
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
         <InputGroup labelText="Title">
           <Input bind:inputEl={titleEl} slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
         </InputGroup>
@@ -95,7 +95,7 @@
 
         <div class="flex flex-col">
           <label for="isReadE" class="text-sm">Is Read?</label>
-          <div class="flex-1 flex flex-row gap-4 items-center mt-1 md:mt-0">
+          <div class="flex-1 flex flex-row gap-4 items-center mt-1 sm:mt-0">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
               <label for="isReadE">Either</label>
@@ -118,14 +118,12 @@
           </Select>
         </SelectGroup>
 
-        <div />
-
-        <SelectAndDisplayContainer isEmpty={!localTags.length} class="md:col-span-2">
+        <SelectAndDisplayContainer isEmpty={!localTags.length} class="sm:col-span-2 pt-2">
           <SelectAvailableTags placeholder="Tags" slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
           <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
         </SelectAndDisplayContainer>
 
-        <SelectAndDisplayContainer isEmpty={!localSubjects.length} class="md:col-span-2">
+        <SelectAndDisplayContainer isEmpty={!localSubjects.length} class="sm:col-span-2">
           <SelectAvailableSubjects
             placeholder="Subjects"
             inputProps={{ disabled: noSubjects }}
@@ -143,14 +141,14 @@
           />
         </SelectAndDisplayContainer>
 
-        <div class="md:col-span-2">
+        <div class="sm:col-span-2">
           <label class="checkbox">
             <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
             Also search child subjects
           </label>
         </div>
 
-        <div class="md:col-span-2">
+        <div class="sm:col-span-2">
           <label class="checkbox">
             <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
             Search books with no subjects set
