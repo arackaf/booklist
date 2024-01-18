@@ -16,6 +16,7 @@
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
   import type { UpdatesTo } from "$lib/state/dataUpdates";
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   $: tags = $page.data.tags;
   export let modifyingBooks: any[];
@@ -67,8 +68,6 @@
 
   const dontAddTag = addingTagSet.bind(null, false);
   const dontRemoveTag = removingTagSet.bind(null, false);
-
-  let closeModal: () => void;
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" standardFooter={false}>
@@ -89,22 +88,18 @@
           {#each removingTags as t}
             <input type="hidden" name="remove" value={t} />
           {/each}
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
-            </div>
-            <div class="md:col-span-3 flex items-center">
-              <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
-            </div>
+          <div class="flex flex-col gap-4 pt-3">
+            <SelectAndDisplayContainer>
+              <SelectAvailableTags slot="select" {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
+              <DisplaySelectedTags slot="display" {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
+            </SelectAndDisplayContainer>
+
+            <SelectAndDisplayContainer>
+              <SelectAvailableTags slot="select" {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
+              <DisplaySelectedTags slot="display" {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+            </SelectAndDisplayContainer>
 
             <div>
-              <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
-            </div>
-            <div class="md:col-span-3 flex items-center">
-              <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
-            </div>
-
-            <div class="md:col-span-4">
               <Button size="sm" type="button" on:click={resetTags}>Reset tags</Button>
             </div>
           </div>
@@ -118,11 +113,11 @@
         </TabContent>
       </TabContents>
     </Tabs>
-    <StandardModalFooter bind:closeModal>
+    <StandardModalFooter>
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
 
-        <Button type="button" class="ml-auto" on:click={closeModal}>Cancel</Button>
+        <Button type="button" class="ml-auto" on:click={onHide}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>
