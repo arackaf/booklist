@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let isEmpty: boolean;
+  export let isEmpty: boolean = false;
 
   let className = "";
   export { className as class };
