@@ -13,9 +13,6 @@
 
   export let size: "sm" | "default" = "default";
 
-  let className = "";
-  export { className as class };
-
   export let noHiddenFields = false;
 
   let search = "";

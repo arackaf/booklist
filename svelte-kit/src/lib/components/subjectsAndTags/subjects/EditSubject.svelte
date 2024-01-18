@@ -123,7 +123,6 @@
           <SelectAvailableSubjects
             placeholder={selectedParent?.name}
             noHiddenFields={true}
-            class="self-start"
             subjects={eligibleParents}
             currentlySelected={[editingSubject.parentId]}
             onSelect={subject => {
