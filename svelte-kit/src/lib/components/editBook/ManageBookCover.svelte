@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
+  import Dropzone from "svelte-file-dropzone";
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
   import Button from "$lib/components/Button/Button.svelte";
