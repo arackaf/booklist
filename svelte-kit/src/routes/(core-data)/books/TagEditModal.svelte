@@ -24,7 +24,7 @@
   let deleteShowing: boolean;
 </script>
 
-<Modal {isOpen} {onHide} headerCaption="Edit Tags" deferStateChangeOnClose={true}>
+<Modal {isOpen} {onHide} headerCaption="Edit Tags">
   <div class="flex flex-col gap-3">
     {#if !deleteShowing}
       <div class="flex flex-col-reverse sm:flex-row gap-5">

@@ -71,7 +71,7 @@
   let closeModal: () => void;
 </script>
 
-<Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" deferStateChangeOnClose={true} standardFooter={false}>
+<Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" standardFooter={false}>
   <form method="post" action="?/setBooksTags" use:enhance={save}>
     <Tabs defaultTab="tags">
       <TabHeaders>

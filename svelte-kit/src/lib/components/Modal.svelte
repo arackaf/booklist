@@ -9,7 +9,6 @@
   export let isOpen: boolean;
   export let onHide: () => void;
   export let headerCaption = "";
-  export let deferStateChangeOnClose = false;
   export let standardFooter = true;
   export let smallerHeader = false;
   export let openFocus: HTMLElement | null = null;
