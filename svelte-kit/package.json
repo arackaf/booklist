@@ -68,7 +68,7 @@
     "lodash.debounce": "^4.0.8",
     "sass": "^1.56.1",
     "svelte": "^4.2.8",
-    "svelte-file-dropzone": "2.0.2",
+    "svelte-file-dropzone": "^2.0.3",
     "svelte-gestures": "^1.5.2",
     "svelte-helpers": "0.2.26",
     "toastify-js": "^1.11.1",
