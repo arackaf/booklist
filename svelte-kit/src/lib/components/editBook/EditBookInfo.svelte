@@ -90,7 +90,7 @@
     <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
       {#each book.authors || [] as author, index (index)}
         <InputGroup labelText="Author">
-          <Input slot="input" name="authors" value={author} placeholder={`Author ${index + 1}`} />
+          <Input slot="input" name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
         </InputGroup>
       {/each}
     </div>
