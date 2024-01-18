@@ -12,5 +12,5 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Subjects">
-  <SubjectEditModalContents {isOpen} {onHide} {colors} {subjects} />
+  <SubjectEditModalContents {colors} {subjects} />
 </Modal>
