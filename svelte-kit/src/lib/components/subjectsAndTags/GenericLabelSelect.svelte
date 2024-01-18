@@ -12,7 +12,6 @@
   export let inputProps = { class: "md:text-sm text-base leading-5" };
   export let search = "";
   export let onItemSelected: (option: any) => void;
-  export let noFiltering = false;
 
   export let size: "sm" | "default" = "default";
 
@@ -88,21 +87,3 @@
     </div>
   </Popover.Content>
 </Popover.Root>
-
-<!-- <div class="generic-label-select {className}">
-  <AutoSuggest
-    keyField="id"
-    {options}
-    inputProps={inputPropsToUse}
-    {placeholder}
-    {onItemSelected}
-    {inputStyles}
-    {noFiltering}
-    filterField="name"
-    bind:currentSearch={search}
-  >
-    <span slot="result" let:option>
-      <GenericLabelDisplayItem item={option} />
-    </span>
-  </AutoSuggest>
-</div> -->

@@ -41,6 +41,6 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect {size} class={className} {inputProps} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect}>
+<GenericLabelSelect {size} class={className} {inputProps} bind:search options={() => eligible} onItemSelected={doSelect}>
   <slot name="placeholder" slot="placeholder">{placeholder}</slot>
 </GenericLabelSelect>
