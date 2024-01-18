@@ -22,6 +22,12 @@
   const editTag = (tag: Tag) => (editingTag = tag);
 
   let deleteShowing: boolean;
+
+  $: {
+    if (isOpen) {
+      cancelEdit();
+    }
+  }
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Tags">
