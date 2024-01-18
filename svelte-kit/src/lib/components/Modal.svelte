@@ -12,6 +12,7 @@
   export let deferStateChangeOnClose = false;
   export let standardFooter = true;
   export let smallerHeader = false;
+  export let openFocus: HTMLElement | null = null;
 
   function onChange(open: boolean) {
     if (!open) {
@@ -34,7 +35,7 @@
   }
 </script>
 
-<AlertDialog.Root bind:open={isOpen} closeOnOutsideClick={false}>
+<AlertDialog.Root openFocus={() => openFocus} bind:open={isOpen} closeOnOutsideClick={false}>
   <AlertDialog.Trigger asChild let:builder />
 
   <AlertDialog.Content bind:el class="translate-y-[0] top-16 pb-5">
