@@ -20,10 +20,6 @@
   };
   let uploadResults: BookImages | null = null;
 
-  export const reset = () => {
-    uploadResults = null;
-  };
-
   const onCoverError = () => {
     error = true;
     status = "error";

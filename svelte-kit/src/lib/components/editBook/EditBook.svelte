@@ -43,21 +43,11 @@
       invalidate("core-data:root");
     };
   }
-
-  let init: () => void;
-  let setTab: (tab: string) => void;
-  let resetCovers: () => void;
-
-  export const reset = () => {
-    setTab("basic");
-    resetCovers();
-    init();
-  };
 </script>
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <input type="hidden" name="id" value={book?.id ?? null} />
-  <Tabs bind:setTab defaultTab="basic">
+  <Tabs defaultTab="basic">
     <TabHeaders>
       <TabHeader tabName="basic">Book info</TabHeader>
       <TabHeader tabName="covers">Covers</TabHeader>
@@ -68,12 +58,12 @@
     <TabContents>
       <TabContent tabName="basic">
         {#if book}
-          <EditBookInfo bind:validate={basicInfoValid} bind:init {saving} {book} {subjects} {tags} />
+          <EditBookInfo bind:validate={basicInfoValid} {saving} {book} {subjects} {tags} />
         {/if}
       </TabContent>
       <TabContent tabName="covers">
         {#if book}
-          <EditBookCovers {book} bind:reset={resetCovers} />
+          <EditBookCovers {book} />
         {/if}
       </TabContent>
       <TabContent tabName="delete">

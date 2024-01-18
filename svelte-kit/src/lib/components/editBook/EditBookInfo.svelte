@@ -45,12 +45,6 @@
     missingTitle = !titleEl.value;
     return !missingTitle;
   };
-
-  export const init: () => void = () => {
-    setTimeout(() => {
-      titleEl?.focus();
-    });
-  };
 </script>
 
 <fieldset disabled={saving}>

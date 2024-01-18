@@ -1,4 +1,6 @@
 <script lang="ts">
+  import cloneDeep from "lodash.clonedeep";
+
   import type { Book, Subject, Tag } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
@@ -17,8 +19,6 @@
 
   export let afterDelete: (id: number) => void = () => {};
 
-  let editBookInst: EditBook;
-
   const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     onSave(id, updates);
     if (closeOnSave) {
@@ -30,10 +30,20 @@
     afterDelete?.(book.id);
     onHide();
   }
+
+  let key = 0;
+
+  $: {
+    if (isOpen) {
+      key++;
+    }
+  }
+
+  $: editingBook = book ? cloneDeep(book) : book;
 </script>
 
-<Modal on:mount={() => editBookInst.reset()} headerCaption={header} {isOpen} {onHide} standardFooter={false}>
-  {#key book}
-    <EditBook bind:this={editBookInst} {book} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
+<Modal headerCaption={header} {isOpen} {onHide} standardFooter={false}>
+  {#key key}
+    <EditBook book={editingBook} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
   {/key}
 </Modal>
