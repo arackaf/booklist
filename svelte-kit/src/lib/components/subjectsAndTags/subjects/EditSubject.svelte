@@ -32,18 +32,10 @@
   const textColors = ["#ffffff", "#000000"];
 
   let missingName = false;
-  let inputEl: HTMLInputElement;
+  export let inputEl: HTMLInputElement | null = null;
 
   let originalName = "";
   let originalParentId = 0;
-
-  onMount(() => {
-    inputEl?.focus({ preventScroll: true });
-
-    return () => {
-      deleteShowing = false;
-    };
-  });
 
   let editingSubject = { ...subject, parentId: computeParentId(subject.path) };
 
@@ -68,11 +60,6 @@
   }
 
   $: selectedParent = editingSubject.parentId ? allSubjects.find(p => p.id == editingSubject.parentId) : null;
-
-  export const reset = () => {
-    inputEl?.focus();
-    deleteShowing = false;
-  };
 
   let saving = false;
   function runSave({ formData: data, cancel }: any) {

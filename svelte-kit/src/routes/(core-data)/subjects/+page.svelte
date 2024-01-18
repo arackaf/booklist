@@ -30,9 +30,9 @@
 
   const newSubject = () => ({ id: 0, name: "", backgroundColor: "#847E71", textColor: "#ffffff" });
 
-  let resetEditSubject: () => void;
-
   setContext("subject-chain-disable-animation", writable(false));
+
+  let inputEl;
 </script>
 
 <section class="flush-bottom grid grid-rows-[auto_1fr]">
@@ -50,21 +50,8 @@
     </ul>
   </div>
 
-  <Modal
-    isOpen={editModalOpen}
-    on:mount={resetEditSubject}
-    onHide={() => (editModalOpen = false)}
-    headerCaption={"Edit Subject"}
-    standardFooter={false}
-  >
-    <EditSubject
-      bind:reset={resetEditSubject}
-      allSubjects={subjects}
-      {colors}
-      subject={editingSubject}
-      onComplete={closeEditModal}
-      onCancelEdit={closeEditModal}
-    />
+  <Modal openFocus={inputEl} isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
+    <EditSubject allSubjects={subjects} {colors} subject={editingSubject} onComplete={closeEditModal} onCancelEdit={closeEditModal} />
     <hr class="my-3" />
     <Button on:click={closeEditModal}>Close</Button>
   </Modal>
