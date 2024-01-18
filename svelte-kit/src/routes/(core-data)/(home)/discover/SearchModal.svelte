@@ -149,11 +149,11 @@
         <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
       </SelectAndDisplayContainer>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
       </div>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div class="flex flex-row gap-3">
           <ActionButton running={loading}>Search</ActionButton>
 
@@ -173,7 +173,7 @@
         </div>
       </div>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div>
           {#if totalBooks}
             <div class="flex flex-row gap-1 items-center">
