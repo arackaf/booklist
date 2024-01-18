@@ -32,7 +32,7 @@
   const textColors = ["#ffffff", "#000000"];
 
   let missingName = false;
-  export let inputEl: HTMLInputElement | null = null;
+  export let inputEl: HTMLInputElement | undefined;
 
   let originalName = "";
   let originalParentId = 0;
