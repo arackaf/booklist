@@ -31,19 +31,9 @@
     onHide();
   }
 
-  let key = 0;
-
-  $: {
-    if (isOpen) {
-      key++;
-    }
-  }
-
   $: editingBook = book ? cloneDeep(book) : book;
 </script>
 
 <Modal headerCaption={header} {isOpen} {onHide} standardFooter={false}>
-  {#key key}
-    <EditBook book={editingBook} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
-  {/key}
+  <EditBook book={editingBook} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
 </Modal>
