@@ -8,7 +8,6 @@
   export let labelsReady: boolean;
   export let onLabelsReady: () => void;
   export let removeSlice: (id: any) => void;
-  export let radius: number;
   export let drilldown: any;
   export let containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
   export let disableAnimation: boolean;

@@ -154,7 +154,6 @@
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
             {containerSize}
-            {radius}
             {removeSlice}
             labelsReady={!hideLabels && (labelsReady || hasRendered || noInitialAnimation)}
             {onLabelsReady}

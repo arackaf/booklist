@@ -15,9 +15,6 @@
 
   export let size: "sm" | "default" = "default";
 
-  let className = "";
-  export { className as class };
-
   let inputPropsToUse: any;
 
   $: {
