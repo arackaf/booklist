@@ -35,7 +35,7 @@
           Only show my books
         </label>
         <div class="relative suppress-dropdown">
-          <SelectAndDisplayContainer isEmpty={!localSubjects.length}>
+          <SelectAndDisplayContainer>
             <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
             <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
           </SelectAndDisplayContainer>

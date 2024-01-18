@@ -139,12 +139,12 @@
         </div>
       </div>
 
-      <SelectAndDisplayContainer isEmpty={!tags.length} class="sm:col-span-2">
+      <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
         <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
       </SelectAndDisplayContainer>
 
-      <SelectAndDisplayContainer isEmpty={!subjects.length} class="sm:col-span-2">
+      <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
         <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
       </SelectAndDisplayContainer>
