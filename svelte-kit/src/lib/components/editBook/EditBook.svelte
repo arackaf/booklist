@@ -43,11 +43,13 @@
       invalidate("core-data:root");
     };
   }
+
+  let tab;
 </script>
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <input type="hidden" name="id" value={book?.id ?? null} />
-  <Tabs defaultTab="basic">
+  <Tabs bind:currentTab={tab} defaultTab="basic">
     <TabHeaders>
       <TabHeader tabName="basic">Book info</TabHeader>
       <TabHeader tabName="covers">Covers</TabHeader>
@@ -76,7 +78,7 @@
 
   <hr class="my-3" />
   <div class="flex flex-row">
-    <ActionButton theme="primary" type="submit" running={saving}>Save</ActionButton>
+    <ActionButton disabled={tab === "delete"} theme="primary" type="submit" running={saving}>Save</ActionButton>
     <Button disabled={saving} class="ml-auto" type="button" on:click={onCancel}>Cancel</Button>
   </div>
 </form>
