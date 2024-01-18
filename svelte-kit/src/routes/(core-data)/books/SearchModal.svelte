@@ -42,6 +42,12 @@
     });
   };
 
+  $: {
+    if (isOpen) {
+      onOpen();
+    }
+  }
+
   function syncSearchState() {
     localSearchValues = { ...get(searchState) };
     localSubjects = localSearchValues.subjects;
@@ -74,7 +80,7 @@
   };
 </script>
 
-<Modal on:mount={onOpen} on:closed={() => key++} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
+<Modal on:closed={() => key++} {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
   {#key key}
     <form action="/books" on:formdata={onFormData} on:submit={onHide}>
       {#if $publicUser}
@@ -111,7 +117,7 @@
           </div>
         </div>
         <SelectGroup labelText="Sort">
-          <Select slot="select" name="sort" value={localSearchValues.sortPacket}>
+          <Select slot="select" name="sort" value={localSearchValues.sortPacket || "id-desc"}>
             {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
               <option value={sortVal}>{display}</option>
             {/each}
