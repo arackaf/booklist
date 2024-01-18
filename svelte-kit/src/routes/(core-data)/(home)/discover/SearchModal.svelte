@@ -111,7 +111,7 @@
   };
 </script>
 
-<Modal on:mount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal openFocus={titleEl} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
