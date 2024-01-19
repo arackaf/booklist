@@ -5,6 +5,7 @@
 
   import SingleSlice from "./SingleSlice.svelte";
   import { syncWidth } from "$lib/util/animationHelpers";
+  import SingleSliceLabel from "./SingleSliceLabel.svelte";
 
   export let showingData: any[];
   export let drilldown: any;
@@ -152,11 +153,16 @@
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
+          <SingleSliceLabel
+            labelsReady={!hideLabels && (labelsReady || hasRendered || noInitialAnimation)}
+            segment={seg}
+            disableAnimation={pieSegments.length === 1}
+          />
+        {/each}
+        {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
             {containerSize}
-            {radius}
             {removeSlice}
-            labelsReady={!hideLabels && (labelsReady || hasRendered || noInitialAnimation)}
             {onLabelsReady}
             segment={seg}
             {drilldown}
