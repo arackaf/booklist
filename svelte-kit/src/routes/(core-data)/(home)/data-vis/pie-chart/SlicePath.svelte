@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { spring } from "svelte/motion";
+  import { spring, type Spring } from "svelte/motion";
   import { arc } from "d3-shape";
 
   type ChunkType = {
@@ -13,29 +13,9 @@
   export let noInitialAnimation;
   export let color: string | null = null;
 
-  let initialAnimationDoneCalled = noInitialAnimation;
-  export let initialAnimationDone: () => void;
+  export let sliceSpring: Spring<any>;
 
   const arcGenerator = arc();
-
-  const springConfig = { stiffness: 0.1, damping: 0.7 };
-
-  const initialSliceAngles = { startAngle: segmentChunk.startAngle, endAngle: noInitialAnimation ? segmentChunk.endAngle : segmentChunk.startAngle };
-  const sliceSpring = spring(initialSliceAngles, springConfig);
-
-  $: {
-    sliceSpring
-      .set({
-        startAngle: segmentChunk.startAngle,
-        endAngle: segmentChunk.endAngle
-      })
-      .then(() => {
-        if (!initialAnimationDoneCalled) {
-          initialAnimationDone();
-        }
-        initialAnimationDoneCalled = true;
-      });
-  }
 
   $: arcPath = arcGenerator({
     innerRadius: segmentChunk.innerRadius,

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { spring } from "svelte/motion";
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
 
@@ -39,13 +40,38 @@
 
   $: highMiddlePoint = midPoint > 300 || midPoint < 60;
   $: useCenterTooltipPosition = containerSize === "SMALL" || highMiddlePoint;
+
+  const springConfig = { stiffness: 0.1, damping: 0.7 };
+
+  let initialAnimationDoneCalled = noInitialAnimation;
+
+  $: segmentChunkReference = segment.chunks[0];
+  $: initialSliceAngles = {
+    startAngle: segmentChunkReference.startAngle,
+    endAngle: noInitialAnimation ? segmentChunkReference.endAngle : segmentChunkReference.startAngle
+  };
+  const sliceSpring = spring(initialSliceAngles, springConfig);
+
+  $: {
+    sliceSpring
+      .set({
+        startAngle: segmentChunkReference.startAngle,
+        endAngle: segmentChunkReference.endAngle
+      })
+      .then(() => {
+        if (!initialAnimationDoneCalled) {
+          onLabelsReady();
+        }
+        initialAnimationDoneCalled = true;
+      });
+  }
 </script>
 
 <g bind:this={mainArc}>
-  <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={segment.chunks[0]} {noInitialAnimation} color="#FFFFFF" />
+  <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} {noInitialAnimation} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
     {#each segment.chunks as chunk, i}
-      <SlicePath initialAnimationDone={onLabelsReady} segmentChunk={chunk} {noInitialAnimation} />
+      <SlicePath {sliceSpring} segmentChunk={chunk} {noInitialAnimation} />
     {/each}
   </g>
 </g>
