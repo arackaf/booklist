@@ -7,7 +7,7 @@
 
   import GenericLabelDisplayItem from "./GenericLabelDisplayItem.svelte";
 
-  export let options: any;
+  export let options: () => any[];
   export let placeholder = "";
   export let inputProps = { class: "md:text-sm text-base leading-5" };
   export let search = "";
@@ -67,6 +67,7 @@
         <Command.Group>
           {#each options() as option (option.id)}
             <Command.Item
+              disabled={option.disabled}
               value={option.id + ""}
               onSelect={currentValue => {
                 const item = options().find(opt => opt.id == currentValue);
