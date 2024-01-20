@@ -44,7 +44,7 @@
   $: subjectHash = getSubjectsHash(allSubjects);
   $: childSubjects = getChildSubjectsSorted(subject.id, subjectHash);
 
-  $: eligibleParents = getEligibleParents(subjectHash, editingSubject.id) || [];
+  $: eligibleParents = [{ id: -1, name: "None", path: null } as Subject, ...(getEligibleParents(subjectHash, editingSubject.id) || [])];
   $: {
     if (editingSubject.name) {
       missingName = false;
@@ -126,7 +126,7 @@
             subjects={eligibleParents}
             currentlySelected={[editingSubject.parentId]}
             onSelect={subject => {
-              editingSubject = { ...editingSubject, parentId: subject.id };
+              editingSubject = { ...editingSubject, parentId: !subject || subject.id <= 0 ? 0 : subject.id };
             }}
           >
             <span slot="placeholder">
