@@ -14,6 +14,7 @@
   export let onItemSelected: (option: any) => void;
 
   export let size: "sm" | "default" = "default";
+  export let triggerClasses = "";
 
   let inputPropsToUse: any;
 
@@ -51,7 +52,7 @@
       variant="outline"
       role="combobox"
       aria-expanded={open}
-      class="w-[200px] justify-between {size === 'sm' ? 'h-8' : ''}"
+      class="w-[150px] justify-between {size === 'sm' ? 'h-8' : ''} border rounded border-neutral-400 {triggerClasses}"
     >
       <slot name="placeholder">
         {placeholder ?? "Select"}
