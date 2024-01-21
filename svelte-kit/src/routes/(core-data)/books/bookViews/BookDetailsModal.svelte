@@ -13,6 +13,8 @@
   import { isbn13To10 } from "$lib/util/isbn13to10";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
+  import { afterDelete as updateStateAfterDelete } from "../state/onDelete";
+
   export let viewingBook: Book | null;
   export let subjects: Subject[];
   export let tags: Tag[];
@@ -66,11 +68,16 @@
       }
     }
   }
+
+  $: afterDelete = () => {
+    updateStateAfterDelete(book.id);
+    onHide();
+  };
 </script>
 
 <Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title}>
   {#if editing}
-    <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} />
+    <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} {afterDelete} />
   {:else}
     <div class="flex flex-col gap-2">
       <div class="flex flex-row gap-3">
