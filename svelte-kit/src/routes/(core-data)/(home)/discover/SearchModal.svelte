@@ -1,12 +1,8 @@
 <script lang="ts">
-  import { quadIn, quintOut } from "svelte/easing";
-
-  // @ts-ignore
-  import { springIn } from "svelte-helpers/spring-transitions";
-
-  import { enhance } from "$app/forms";
   import type { Book, Subject, Tag } from "$data/types";
 
+  import { fade } from "svelte/transition";
+  import { enhance } from "$app/forms";
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
   import Alert from "$lib/components/Alert.svelte";
@@ -94,21 +90,6 @@
     loading = false;
     active = true;
   }
-
-  const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
-  const resultsMessageIn: any = () => {
-    const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
-    return {
-      duration,
-      css: (t: number) => `transform: translate3d(${tickToValue(t)}px, 0, 0); opacity: ${quintOut(t)}`
-    };
-  };
-  const resultsMessageOut: any = () => {
-    return {
-      duration: 150,
-      css: (t: number) => `position: absolute; opacity: ${quadIn(t)}`
-    };
-  };
 </script>
 
 <Modal openFocus={titleEl} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
@@ -159,13 +140,13 @@
 
           <div class="flex relative flex-1 self-stretch">
             {#if noAvailableBooks}
-              <div in:resultsMessageIn|local>
+              <div in:fade={{ duration: 150 }}>
                 <Alert type="info" layout="slimmer">You've added all of the books from this page</Alert>
               </div>
             {/if}
 
             {#if noResults}
-              <div class="flex items-start justify-start" style="backface-visibility: hidden;" in:resultsMessageIn|local out:resultsMessageOut>
+              <div class="flex items-start justify-start" style="backface-visibility: hidden;" transition:fade={{ duration: 150 }}>
                 <Alert type="warning" layout="slimmer">No results</Alert>
               </div>
             {/if}
