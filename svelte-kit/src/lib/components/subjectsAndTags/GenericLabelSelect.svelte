@@ -42,9 +42,11 @@
     evt.stopImmediatePropagation();
     evt.preventDefault();
   }
+
+  const portal = typeof document === "object" ? document.body : null;
 </script>
 
-<Popover.Root portal={document.body} bind:open let:ids>
+<Popover.Root {portal} bind:open let:ids>
   <Popover.Trigger asChild let:builder>
     <Button
       size="sm"
