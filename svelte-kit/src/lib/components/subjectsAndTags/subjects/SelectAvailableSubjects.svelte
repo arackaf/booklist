@@ -11,8 +11,8 @@
 
   export let subjects: Subject[];
 
-  let className = "";
-  export { className as class };
+  export let size: "sm" | "default" = "default";
+  export let triggerClasses = "";
 
   export let noHiddenFields = false;
 
@@ -27,11 +27,11 @@
   };
 
   type LookupHash = { [id: string]: true };
-  $: itemHash = currentlySelected.reduce<LookupHash>((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
+  $: selectedHash = currentlySelected.reduce<LookupHash>((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
 
   $: subjectsPacket = subjectState(subjects);
 
-  $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, itemHash);
+  $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, selectedHash);
 </script>
 
 {#if !noHiddenFields}
@@ -39,4 +39,6 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect class={className} {inputProps} {placeholder} noFiltering={true} bind:search options={() => eligible} onItemSelected={doSelect} />
+<GenericLabelSelect {size} {inputProps} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
+  <slot name="placeholder" slot="placeholder">{placeholder}</slot>
+</GenericLabelSelect>

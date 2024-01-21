@@ -111,10 +111,10 @@
   };
 </script>
 
-<Modal on:mount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal openFocus={titleEl} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
       <InputGroup labelText="Title">
         <Input slot="input" bind:inputEl={titleEl} name="search" placeholder="Search title" />
       </InputGroup>
@@ -139,21 +139,21 @@
         </div>
       </div>
 
-      <SelectAndDisplayContainer isEmpty={!tags.length}>
+      <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
         <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
       </SelectAndDisplayContainer>
 
-      <SelectAndDisplayContainer isEmpty={!subjects.length}>
+      <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
         <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
       </SelectAndDisplayContainer>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
       </div>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div class="flex flex-row gap-3">
           <ActionButton running={loading}>Search</ActionButton>
 
@@ -173,7 +173,7 @@
         </div>
       </div>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div>
           {#if totalBooks}
             <div class="flex flex-row gap-1 items-center">

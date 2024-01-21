@@ -37,9 +37,16 @@
   let expanded = false;
   $: detailsBtnClass = expanded ? "fa-angle-double-up" : "fa-angle-double-down";
 
-  let bookDetails: BookDetails;
-  $: ({ editorialReviews, similarBooks } = bookDetails || {});
+  let bookDetails: BookDetails | null;
+  $: ({ editorialReviews, similarBooks } = bookDetails || ({} as any));
   let detailsLoading = false;
+
+  $: {
+    if (book) {
+      bookDetails = null;
+      expanded = false;
+    }
+  }
 
   function toggleDetails() {
     if (expanded) {

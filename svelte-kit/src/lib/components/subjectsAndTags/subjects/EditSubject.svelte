@@ -18,6 +18,8 @@
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
   import DisplaySelectedSubjects from "./DisplaySelectedSubjects.svelte";
 
+  import LabelDisplay from "../LabelDisplay.svelte";
+
   export let subject: Subject;
   export let allSubjects: Subject[];
   export let colors: Color[];
@@ -30,18 +32,10 @@
   const textColors = ["#ffffff", "#000000"];
 
   let missingName = false;
-  let inputEl: HTMLInputElement;
+  export let inputEl: HTMLInputElement | undefined = undefined;
 
   let originalName = "";
   let originalParentId = 0;
-
-  onMount(() => {
-    inputEl?.focus({ preventScroll: true });
-
-    return () => {
-      deleteShowing = false;
-    };
-  });
 
   let editingSubject = { ...subject, parentId: computeParentId(subject.path) };
 
@@ -50,7 +44,7 @@
   $: subjectHash = getSubjectsHash(allSubjects);
   $: childSubjects = getChildSubjectsSorted(subject.id, subjectHash);
 
-  $: eligibleParents = getEligibleParents(subjectHash, editingSubject.id) || [];
+  $: eligibleParents = [{ id: -1, name: "None", path: null } as Subject, ...(getEligibleParents(subjectHash, editingSubject.id) || [])];
   $: {
     if (editingSubject.name) {
       missingName = false;
@@ -65,10 +59,7 @@
     originalParentId = editingSubject.parentId;
   }
 
-  export const reset = () => {
-    inputEl?.focus();
-    deleteShowing = false;
-  };
+  $: selectedParent = editingSubject.parentId ? allSubjects.find(p => p.id == editingSubject.parentId) : null;
 
   let saving = false;
   function runSave({ formData: data, cancel }: any) {
@@ -111,12 +102,20 @@
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <input type="hidden" name="parentId" value={editingSubject.parentId || ""} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="flex flex-col gap-0.5">
+      <div class="flex flex-col gap-1">
         <label class="text-sm" for="subject-name">Name</label>
-        <div class="h-8">
-          <Input id="subject-name" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
-        </div>
-        <div class="flex flex-col gap-1 mt-0.5">
+
+        <Input
+          id="subject-name"
+          class="h-9"
+          error={missingName}
+          bind:inputEl
+          bind:value={editingSubject.name}
+          name="name"
+          placeholder="Subject name"
+        />
+
+        <div class="flex flex-col gap-1">
           {#if missingName}
             <Label theme="error" class="self-start">Subjects need names!</Label>
           {/if}
@@ -125,27 +124,28 @@
           </Label>
         </div>
       </div>
-      <div class="flex flex-col gap-0.5">
+      <div class="flex flex-col gap-1">
         <span class="text-sm -mb-0.5 md:mb-0">Parent</span>
 
-        <div class="h-8">
+        <div>
           <SelectAvailableSubjects
+            placeholder={selectedParent?.name}
             noHiddenFields={true}
-            class="self-start"
-            placeholder="Select"
             subjects={eligibleParents}
             currentlySelected={[editingSubject.parentId]}
             onSelect={subject => {
-              editingSubject = { ...editingSubject, parentId: subject.id };
+              editingSubject = { ...editingSubject, parentId: !subject || subject.id <= 0 ? 0 : subject.id };
             }}
-          />
-        </div>
-        <div class="mt-0.5">
-          <DisplaySelectedSubjects
-            onRemove={() => (editingSubject.parentId = 0)}
-            subjects={eligibleParents}
-            currentlySelected={[editingSubject.parentId]}
-          />
+            triggerClasses="w-full"
+          >
+            <span slot="placeholder">
+              {#if selectedParent}
+                <LabelDisplay item={selectedParent} />
+              {:else}
+                <span>Select</span>
+              {/if}
+            </span>
+          </SelectAvailableSubjects>
         </div>
       </div>
 

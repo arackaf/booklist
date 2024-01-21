@@ -7,10 +7,14 @@
   export let defaultTab = "";
   export let localStorageName = "";
 
-  let currentTab = localStorageManager.get(localStorageName) || defaultTab;
+  export let currentTab = localStorageManager.get(localStorageName) || defaultTab;
 
   export const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
   let tabState = writable({ localStorageName, currentTab, setTab });
+
+  $: {
+    currentTab = $tabState.currentTab;
+  }
 
   setContext("tabs-state", tabState);
 </script>

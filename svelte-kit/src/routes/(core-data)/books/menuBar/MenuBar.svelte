@@ -63,12 +63,13 @@
               <input type="hidden" name="user" value={$publicUser} />
             {/if}
             <Input
+              size="sm"
               autocomplete="off"
               bind:inputEl={quickSearchEl}
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+              class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"
             />
             <QuickFormFiller />
