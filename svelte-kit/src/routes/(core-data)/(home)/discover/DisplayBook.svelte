@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { quadIn, quadOut } from "svelte/easing";
-  import { springIn } from "svelte-helpers/spring-transitions";
+  import { quadIn, quadOut, quintIn, circIn } from "svelte/easing";
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/BookCover.svelte";
@@ -11,13 +10,13 @@
   export let book: Book;
   export let unselectBook: (book: Book) => void;
 
-  const SLIDE_IN_SPRING = { stiffness: 0.1, damping: 0.4 };
-
   const slideIn: any = () => {
-    const { duration, tickToValue } = springIn(-25, 0, SLIDE_IN_SPRING);
     return {
-      duration: duration,
-      css: (t: number) => `opacity: ${quadOut(t)}; transform: translateX(${tickToValue(t)}%)`
+      duration: 200,
+      css: (t: number) => {
+        console.log(t, circIn(-25 * (1 - t)));
+        return `opacity: ${quadOut(t)}; transform: translateX(${-25 * quintIn(1 - t)}%)`;
+      }
     };
   };
   const slideOut: any = (node: HTMLElement) => {
