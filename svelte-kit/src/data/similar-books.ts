@@ -72,7 +72,7 @@ export const clearSync = async (id: number) => {
     "clear sync",
     db
       .update(booksTable)
-      .set({ similarBooksLastSync: "1990-01-01" as any })
+      .set({ similarBooksLastSync: new Date("01-01-1990") })
       .where(eq(booksTable.id, id))
   );
 };
