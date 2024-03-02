@@ -18,7 +18,7 @@ export async function getBookRelatedItems(isbn: string) {
       });
   try {
     const page: Page = await browser.newPage({
-      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
     });
 
     console.log("Attempting url", `https://www.amazon.com/dp/${isbn}`);
@@ -30,6 +30,10 @@ export async function getBookRelatedItems(isbn: string) {
       console.log("Page not found when syncing related items");
       return null;
     }
+
+    const entireHtml = await page.content();
+    console.log("Entire page:");
+    console.log(entireHtml);
 
     for (let i = 1; i <= 15; i++) {
       try {
