@@ -68,7 +68,13 @@ export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: Query
 };
 
 export const clearSync = async (id: number) => {
-  await executeDrizzle("clear sync", db.update(booksTable).set({ similarBooksLastSync: null }).where(eq(booksTable.id, id)));
+  await executeDrizzle(
+    "clear sync",
+    db
+      .update(booksTable)
+      .set({ similarBooksLastSync: "1990-01-01" as any })
+      .where(eq(booksTable.id, id))
+  );
 };
 
 export const getSimilarBooksForBook = async (id: number) => {
