@@ -46,7 +46,7 @@
     {#if loggedIn}
       <div class="items-center mx-2 my-auto">
         <button on:click={() => (profilePanelOpen = !profilePanelOpen)} class="raw-button flex profile-menu-trigger">
-          <img class="rounded-full max-h-8 max-w-8" src={loggedInUser.image} />
+          <img class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
         </button>
       </div>
     {/if}
