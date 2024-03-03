@@ -51,7 +51,27 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .where(eq(books.userId, userId))
         .groupBy(booksSubjects.subject);
 
-    const subjectsQuery = (value: "MAX" | "MIN") =>
+    const subjectCountRank = (value: "MAX" | "MIN") =>
+      db
+        .select({
+          subject: sql`books_subjects.subject`.as("subject"),
+          count: sql<number>`COUNT(*)`.as("count"),
+          rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
+        })
+        .from(books)
+        .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
+        .groupBy(sql`books_subjects.subject`)
+        .as("t");
+
+    const subjectsQuery = (value: "MAX" | "MIN") => {
+      const subQuery = subjectCountRank(value);
+      return db
+        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: subQuery.count, id: subQuery.subject })
+        .from(subQuery)
+        .where(eq(subQuery.rank, 1));
+    };
+
+    const subjectsQueryOld = (value: "MAX" | "MIN") =>
       db
         .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: sql<number>`COUNT(*)`, id: booksSubjects.subject })
         .from(books)
@@ -97,6 +117,10 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
             )
           )
         );
+
+    console.log("\n\n");
+    //console.log(subjectsQuery("MIN").toSQL());
+    console.log("\n\n");
 
     const data = await union(
       db
