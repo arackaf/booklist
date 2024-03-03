@@ -10,6 +10,7 @@
   import { onMount } from "svelte";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
   import ProfilePanel from "./ProfilePanel.svelte";
+  import type { UserSummary } from "$data/user-summary";
 
   $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
 
@@ -36,16 +37,45 @@
   });
 
   let profilePanelOpen = false;
+
+  let userSummaryFetched = false;
+  let userSummaryStale = false;
+  let userSummary: UserSummary | undefined;
+
+  function fetchUserSummaryIfNeeded() {
+    if (userSummaryFetched && !userSummaryStale) {
+      return;
+    }
+
+    userSummaryFetched = true;
+    userSummaryStale = false;
+
+    fetch("/api/user-summary")
+      .then(resp => resp.json())
+      .then(userSummaryData => {
+        userSummary = userSummaryData;
+      });
+  }
+
+  onMount(() => {
+    window.addEventListener("reload-user-summary", () => {
+      userSummaryStale = true;
+    });
+  });
 </script>
 
 <header class="master-nav z-10 sticky top-0">
   {#if loggedInUser}
-    <ProfilePanel {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
+    <ProfilePanel {userSummary} {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   {/if}
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
     {#if loggedIn}
       <div class="items-center mx-2 my-auto">
-        <button on:click={() => (profilePanelOpen = !profilePanelOpen)} class="raw-button flex profile-menu-trigger">
+        <button
+          on:mouseenter={fetchUserSummaryIfNeeded}
+          on:click={() => (profilePanelOpen = !profilePanelOpen)}
+          class="raw-button flex profile-menu-trigger"
+        >
           <img class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
         </button>
       </div>

@@ -72,6 +72,7 @@
     saving = true;
 
     return async () => {
+      window.dispatchEvent(new CustomEvent("reload-user-summary"));
       invalidateAll().then(() => {
         saving = false;
         onComplete();
@@ -84,6 +85,7 @@
     deleting = true;
 
     return async () => {
+      window.dispatchEvent(new CustomEvent("reload-user-summary"));
       invalidateAll().then(() => {
         deleting = false;
         onComplete();

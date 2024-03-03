@@ -12,15 +12,9 @@
   export let onClose = () => {};
 
   export let loggedInUser: Login;
+  export let userSummary: UserSummary | undefined;
 
   $: ({ tags, subjects } = $page.data);
-
-  $: userSummaryPromise = $page.data.userSummaryData as Promise<UserSummary>;
-  let userSummary: UserSummary | undefined;
-
-  $: userSummaryPromise.then(result => {
-    userSummary = result;
-  });
 
   const windowClickHandler = (evt: MouseEvent) => {
     if (!open) {

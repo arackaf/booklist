@@ -7,10 +7,8 @@ import { getPublicId } from "$lib/util/getPublicId";
 
 import { ADMIN_USER } from "$env/static/private";
 import type { Login } from "$lib/types";
-import { userSummary, type UserSummary } from "$data/user-summary";
 
-export async function load({ locals, request, fetch, depends }: any) {
-  depends("core-data:root");
+export async function load({ locals, request, fetch }: any) {
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
@@ -36,14 +34,12 @@ export async function load({ locals, request, fetch, depends }: any) {
   }
 
   let loggedInUser: Login | null = null;
-  let userSummaryData: Promise<UserSummary | null> | null = null;
 
   if (session?.user) {
     loggedInUser = {
       ...session!.user,
       provider: session.provider
     };
-    userSummaryData = userSummary(session.userId);
   }
 
   return {
@@ -54,7 +50,6 @@ export async function load({ locals, request, fetch, depends }: any) {
     colors: await colors,
     subjects: await subjects,
     tags: await tags,
-    loggedInUser,
-    userSummaryData
+    loggedInUser
   };
 }

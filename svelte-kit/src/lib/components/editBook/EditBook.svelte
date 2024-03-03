@@ -40,7 +40,7 @@
 
       saving = false;
       syncUpdates(id, updates);
-      invalidate("core-data:root");
+      window.dispatchEvent(new CustomEvent("reload-user-summary"));
     };
   }
 
