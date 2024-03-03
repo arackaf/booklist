@@ -8,7 +8,6 @@ export async function GET({ url, locals }) {
   }
 
   const userId = session.userId;
-
   const userSummaryResult = await userSummary(userId);
 
   return json(userSummaryResult);
