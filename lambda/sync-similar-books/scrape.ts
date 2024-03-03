@@ -18,7 +18,16 @@ export async function getBookRelatedItems(isbn: string) {
       });
   try {
     const page: Page = await browser.newPage({
-      userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+      extraHTTPHeaders: {
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-user": "?1",
+        "sec-fetch-dest": "document",
+        referer: "https://www.amazon.com/",
+        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
+      }
     });
 
     console.log("Attempting url", `https://www.amazon.com/dp/${isbn}`);
