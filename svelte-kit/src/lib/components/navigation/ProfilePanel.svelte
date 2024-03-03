@@ -18,10 +18,6 @@
   $: userSummaryPromise = $page.data.userSummaryData as Promise<UserSummary>;
   let userSummary: UserSummary | undefined;
 
-  $: userSummaryPromise.then(result => {
-    userSummary = result;
-  });
-
   const windowClickHandler = (evt: MouseEvent) => {
     if (!open) {
       return;

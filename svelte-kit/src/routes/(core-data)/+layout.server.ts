@@ -36,14 +36,12 @@ export async function load({ locals, request, fetch, depends }: any) {
   }
 
   let loggedInUser: Login | null = null;
-  let userSummaryData: Promise<UserSummary | null> | null = null;
 
   if (session?.user) {
     loggedInUser = {
       ...session!.user,
       provider: session.provider
     };
-    userSummaryData = userSummary(session.userId);
   }
 
   return {
@@ -54,7 +52,6 @@ export async function load({ locals, request, fetch, depends }: any) {
     colors: await colors,
     subjects: await subjects,
     tags: await tags,
-    loggedInUser,
-    userSummaryData
+    loggedInUser
   };
 }
