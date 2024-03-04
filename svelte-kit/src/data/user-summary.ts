@@ -1,4 +1,4 @@
-import { SQL, and, asc, desc, eq, notExists, sql } from "drizzle-orm";
+import { SQL, and, asc, desc, eq, notExists, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/mysql-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
 import { db } from "./dbUtils";
@@ -20,46 +20,56 @@ export type UserSummary = {
 
 export const userSummary = async (userId: string): Promise<UserSummary | null> => {
   try {
-    const tagsCountRank = (value: "MAX" | "MIN") =>
+    const tagsCountRank = () =>
       db
         .select({
           tag: booksTags.tag,
           count: sql<number>`COUNT(*)`.as("count"),
-          rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
+          rankMin: sql<number>`RANK() OVER (ORDER BY COUNT(*) ASC)`.as("rankMin"),
+          rankMax: sql<number>`RANK() OVER (ORDER BY COUNT(*) DESC)`.as("rankMax")
         })
         .from(booksTags)
         .where(eq(booksTags.userId, userId))
         .groupBy(sql.raw("books_tags.tag").as("tag"))
         .as("t");
 
-    const tagsQuery = (value: "MAX" | "MIN") => {
-      const subQuery = tagsCountRank(value);
+    const tagsQuery = () => {
+      const subQuery = tagsCountRank();
 
       return db
-        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: subQuery.count, id: subQuery.tag })
+        .select({
+          label: sql<string>`CASE WHEN t.rankMin = 1 THEN 'MIN Tags' ELSE 'MAX Tags' END`.as("label"),
+          count: subQuery.count,
+          id: subQuery.tag
+        })
         .from(subQuery)
-        .where(eq(subQuery.rank, 1));
+        .where(or(eq(subQuery.rankMin, 1), eq(subQuery.rankMax, 1)));
     };
 
-    const subjectCountRank = (value: "MAX" | "MIN") =>
+    const subjectCountRank = () =>
       db
         .select({
           subject: booksSubjects.subject,
           count: sql<number>`COUNT(*)`.as("count"),
-          rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
+          rankMin: sql<number>`RANK() OVER (ORDER BY COUNT(*) ASC)`.as("rankMin"),
+          rankMax: sql<number>`RANK() OVER (ORDER BY COUNT(*) DESC)`.as("rankMax")
         })
         .from(booksSubjects)
         .where(eq(booksSubjects.userId, userId))
         .groupBy(sql.raw("books_subjects.subject").as("subject"))
         .as("t");
 
-    const subjectsQuery = (value: "MAX" | "MIN") => {
-      const subQuery = subjectCountRank(value);
+    const subjectsQuery = () => {
+      const subQuery = subjectCountRank();
 
       return db
-        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: subQuery.count, id: subQuery.subject })
+        .select({
+          label: sql<string>`CASE WHEN t.rankMin = 1 THEN 'MIN Subjects' ELSE 'MAX Subjects' END`.as("label"),
+          count: subQuery.count,
+          id: subQuery.subject
+        })
         .from(subQuery)
-        .where(eq(subQuery.rank, 1));
+        .where(or(eq(subQuery.rankMin, 1), eq(subQuery.rankMax, 1)));
     };
 
     const unusedSubjectsQuery = () =>
@@ -99,11 +109,9 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
         .from(books)
         .where(eq(books.userId, userId)),
-      subjectsQuery("MIN"),
-      subjectsQuery("MAX"),
+      subjectsQuery(),
       unusedSubjectsQuery(),
-      tagsQuery("MIN"),
-      tagsQuery("MAX"),
+      tagsQuery(),
       unusedTagsQuery()
     );
 
