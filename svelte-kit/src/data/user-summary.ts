@@ -64,11 +64,21 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .as("t");
 
     const subjectsQuery = (value: "MAX" | "MIN") => {
-      const subQuery = subjectCountRank(value);
       return db
-        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: subQuery.count, id: subQuery.subject })
-        .from(subQuery)
-        .where(eq(subQuery.rank, 1));
+        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: sql<number>`count`, id: sql<number>`subject` })
+        .from(
+          db
+            .select({
+              subject: booksSubjects.subject,
+              count: sql<number>`COUNT(*)`.as("count"),
+              rank_val: sql<number>`RANK() OVER (ORDER BY COUNT(*) ASC)`.as("rank_val")
+            })
+            .from(books)
+            .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
+            .groupBy(sql.raw(`${booksSubjects.subject}`).as("subject"))
+            .as("t")
+        )
+        .where(eq(sql.raw("rank_val"), 1));
     };
 
     const subjectsQueryOld = (value: "MAX" | "MIN") =>
@@ -119,21 +129,29 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         );
 
     console.log("\n\n");
-    //console.log(subjectsQuery("MIN").toSQL());
+    console.log(subjectsQuery("MIN").toSQL());
     console.log("\n\n");
 
-    const data = await union(
+    const data = union(
       db
         .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
         .from(books)
         .where(eq(books.userId, userId)),
       subjectsQuery("MIN"),
-      subjectsQuery("MAX"),
-      unusedSubjectsQuery(),
-      tagsQuery("MIN"),
-      tagsQuery("MAX"),
-      unusedTagsQuery()
+      subjectsQuery("MAX")
+      // unusedSubjectsQuery(),
+      // tagsQuery("MIN"),
+      // tagsQuery("MAX"),
+      // unusedTagsQuery()
     );
+
+    console.log("\nRunning\n\n");
+    console.log(data.toSQL());
+    await data;
+
+    console.log("\n\nGOOD\n\n");
+
+    return {} as any;
 
     type DataItem = (typeof data)[0];
 
