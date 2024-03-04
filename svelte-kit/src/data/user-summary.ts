@@ -27,8 +27,8 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
           count: sql<number>`COUNT(*)`.as("count"),
           rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
         })
-        .from(books)
-        .innerJoin(booksTags, and(eq(books.id, booksTags.book), eq(books.userId, userId)))
+        .from(booksTags)
+        .where(eq(booksTags.userId, userId))
         .groupBy(sql.raw("books_tags.tag").as("tag"))
         .as("t");
 
@@ -48,8 +48,8 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
           count: sql<number>`COUNT(*)`.as("count"),
           rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
         })
-        .from(books)
-        .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
+        .from(booksSubjects)
+        .where(eq(booksSubjects.userId, userId))
         .groupBy(sql.raw("books_subjects.subject").as("subject"))
         .as("t");
 
