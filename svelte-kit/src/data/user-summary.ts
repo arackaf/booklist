@@ -94,10 +94,6 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
           )
         );
 
-    console.log("\n\n");
-    console.log(subjectsQuery("MIN").toSQL());
-    console.log("\n\n");
-
     const data = await union(
       db
         .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
