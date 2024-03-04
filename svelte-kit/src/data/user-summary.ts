@@ -20,51 +20,47 @@ export type UserSummary = {
 
 export const userSummary = async (userId: string): Promise<UserSummary | null> => {
   try {
-    const tagsCounts = () =>
+    const tagsCountRank = (value: "MAX" | "MIN") =>
       db
-        .select({ _: sql<number>`COUNT(*)` })
-        .from(books)
-        .innerJoin(booksTags, eq(books.id, booksTags.book))
-        .where(eq(books.userId, userId))
-        .groupBy(booksTags.tag);
-
-    const tagsQuery = (value: "MAX" | "MIN") =>
-      db
-        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: sql<number>`COUNT(*)`, id: booksTags.tag })
+        .select({
+          tag: booksTags.tag,
+          count: sql<number>`COUNT(*)`.as("count"),
+          rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
+        })
         .from(books)
         .innerJoin(booksTags, and(eq(books.id, booksTags.book), eq(books.userId, userId)))
-        .groupBy(booksTags.tag)
-        .having(
-          eq(
-            sql`COUNT(*)`,
-            tagsCounts()
-              .orderBy(value === "MAX" ? desc(sql`COUNT(*)`) : asc(sql`COUNT(*)`))
-              .limit(1)
-          )
-        );
+        .groupBy(sql.raw("books_tags.tag").as("tag"))
+        .as("t");
 
-    const subjectCounts = () =>
-      db
-        .select({ _: sql<number>`COUNT(*)` })
-        .from(books)
-        .innerJoin(booksSubjects, eq(books.id, booksSubjects.book))
-        .where(eq(books.userId, userId))
-        .groupBy(booksSubjects.subject);
+    const tagsQuery = (value: "MAX" | "MIN") => {
+      const subQuery = tagsCountRank(value);
 
-    const subjectsQuery = (value: "MAX" | "MIN") =>
+      return db
+        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: subQuery.count, id: subQuery.tag })
+        .from(subQuery)
+        .where(eq(subQuery.rank, 1));
+    };
+
+    const subjectCountRank = (value: "MAX" | "MIN") =>
       db
-        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: sql<number>`COUNT(*)`, id: booksSubjects.subject })
+        .select({
+          subject: booksSubjects.subject,
+          count: sql<number>`COUNT(*)`.as("count"),
+          rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
+        })
         .from(books)
         .innerJoin(booksSubjects, and(eq(books.id, booksSubjects.book), eq(books.userId, userId)))
-        .groupBy(booksSubjects.subject)
-        .having(
-          eq(
-            sql`COUNT(*)`,
-            subjectCounts()
-              .orderBy(value === "MAX" ? desc(sql`COUNT(*)`) : asc(sql`COUNT(*)`))
-              .limit(1)
-          )
-        );
+        .groupBy(sql.raw("books_subjects.subject").as("subject"))
+        .as("t");
+
+    const subjectsQuery = (value: "MAX" | "MIN") => {
+      const subQuery = subjectCountRank(value);
+
+      return db
+        .select({ label: sql.raw(`'${value} Subjects'`) as SQL<string>, count: subQuery.count, id: subQuery.subject })
+        .from(subQuery)
+        .where(eq(subQuery.rank, 1));
+    };
 
     const unusedSubjectsQuery = () =>
       db
