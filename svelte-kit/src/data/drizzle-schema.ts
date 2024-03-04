@@ -49,6 +49,7 @@ export const tags = mysqlTable("tags", {
 
 export const booksTags = mysqlTable("books_tags", {
   id: int("id").notNull().autoincrement(),
+  userId: varchar("userId", { length: 50 }).notNull(),
   book: int("book").notNull(),
   tag: int("tag").notNull()
 });
@@ -64,6 +65,7 @@ export const subjects = mysqlTable("subjects", {
 
 export const booksSubjects = mysqlTable("books_subjects", {
   id: int("id").notNull().autoincrement(),
+  userId: varchar("userId", { length: 50 }).notNull(),
   book: int("book").notNull(),
   subject: int("subject").notNull()
 });
