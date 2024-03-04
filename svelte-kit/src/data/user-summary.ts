@@ -20,28 +20,26 @@ export type UserSummary = {
 
 export const userSummary = async (userId: string): Promise<UserSummary | null> => {
   try {
-    const tagsCounts = () =>
+    const tagsCountRank = (value: "MAX" | "MIN") =>
       db
-        .select({ _: sql<number>`COUNT(*)` })
-        .from(books)
-        .innerJoin(booksTags, eq(books.id, booksTags.book))
-        .where(eq(books.userId, userId))
-        .groupBy(booksTags.tag);
-
-    const tagsQuery = (value: "MAX" | "MIN") =>
-      db
-        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: sql<number>`COUNT(*)`, id: booksTags.tag })
+        .select({
+          tag: booksTags.tag,
+          count: sql<number>`COUNT(*)`.as("count"),
+          rank: sql<number>`RANK() OVER (ORDER BY COUNT(*) ${sql.raw(value === "MIN" ? "ASC" : "DESC")})`.as("rank")
+        })
         .from(books)
         .innerJoin(booksTags, and(eq(books.id, booksTags.book), eq(books.userId, userId)))
-        .groupBy(booksTags.tag)
-        .having(
-          eq(
-            sql`COUNT(*)`,
-            tagsCounts()
-              .orderBy(value === "MAX" ? desc(sql`COUNT(*)`) : asc(sql`COUNT(*)`))
-              .limit(1)
-          )
-        );
+        .groupBy(sql.raw("books_tags.tag").as("tag"))
+        .as("t");
+
+    const tagsQuery = (value: "MAX" | "MIN") => {
+      const subQuery = tagsCountRank(value);
+
+      return db
+        .select({ label: sql.raw(`'${value} Tags'`) as SQL<string>, count: subQuery.count, id: subQuery.tag })
+        .from(subQuery)
+        .where(eq(subQuery.rank, 1));
+    };
 
     const subjectCountRank = (value: "MAX" | "MIN") =>
       db
@@ -100,26 +98,18 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
     console.log(subjectsQuery("MIN").toSQL());
     console.log("\n\n");
 
-    const data = union(
+    const data = await union(
       db
         .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
         .from(books)
         .where(eq(books.userId, userId)),
       subjectsQuery("MIN"),
       subjectsQuery("MAX"),
-      unusedSubjectsQuery()
-      // tagsQuery("MIN"),
-      // tagsQuery("MAX"),
-      // unusedTagsQuery()
+      unusedSubjectsQuery(),
+      tagsQuery("MIN"),
+      tagsQuery("MAX"),
+      unusedTagsQuery()
     );
-
-    console.log("\nRunning\n\n");
-    console.log(data.toSQL());
-    await data;
-
-    console.log("\n\nGOOD\n\n");
-
-    return {} as any;
 
     type DataItem = (typeof data)[0];
 
