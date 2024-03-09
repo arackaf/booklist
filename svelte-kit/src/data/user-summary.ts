@@ -30,7 +30,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         })
         .from(booksTags)
         .where(eq(booksTags.userId, userId))
-        .groupBy(sql.raw("books_tags.tag").as("tag"))
+        .groupBy(booksTags.tag)
         .as("t");
 
     const tagsQuery = () => {
@@ -56,7 +56,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         })
         .from(booksSubjects)
         .where(eq(booksSubjects.userId, userId))
-        .groupBy(sql.raw("books_subjects.subject").as("subject"))
+        .groupBy(booksSubjects.subject)
         .as("t");
 
     const subjectsQuery = () => {
