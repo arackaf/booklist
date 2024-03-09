@@ -10,7 +10,7 @@ export const mySqlConnectionFactory = new Client({
   url: MYSQL_CONNECTION_STRING
 });
 
-export const db = drizzle(mySqlConnectionFactory.connection(), { schema });
+export const db = drizzle(mySqlConnectionFactory, { schema });
 
 type ExtractTypeFromMySqlColumn<T extends MySqlColumn> = T extends MySqlColumn<infer U>
   ? U extends { notNull: true }
