@@ -4,6 +4,7 @@
   import BookRow from "./BookRow.svelte";
   import { changeFilter, searchState } from "../state/searchState";
   import { selectedBooks, selectionState } from "../state/selectionState";
+  import BookDetailsModal from "./BookDetailsModal.svelte";
 
   export let isPublic: boolean;
   export let books: Book[];
@@ -18,7 +19,17 @@
       selectionState.selectAll(books);
     }
   }
+
+  let previewing: boolean = false;
+  let bookPreviewing: Book | null = null;
+
+  const previewBook = (book: Book) => {
+    previewing = true;
+    bookPreviewing = book;
+  };
 </script>
+
+<BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
 <table style="position: relative; align-self: start;" class="table w-full max-w-full">
   <thead>
@@ -57,7 +68,7 @@
   </thead>
   <tbody>
     {#each books as book (book.id)}
-      <BookRow {book} {subjects} {tags} {isPublic} />
+      <BookRow {book} {subjects} {tags} {isPublic} {previewBook} />
     {/each}
   </tbody>
 </table>
