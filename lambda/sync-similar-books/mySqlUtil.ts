@@ -55,6 +55,7 @@ export async function getNextBookToSync() {
         `
         SELECT id, title, isbn
         FROM books
+        USE INDEX (idx_syncEligible_similarBooksLastSync_id)
         WHERE syncEligible = 1 AND similarBooksLastSync < ?
         ORDER BY id
         LIMIT 1
