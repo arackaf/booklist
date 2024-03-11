@@ -509,6 +509,40 @@ home:
     - light
   unicode: f015
   voted: false
+hourglass:
+  changes:
+    - '4.4'
+    - 5.0.0
+    - 5.10.1
+  label: Hourglass
+  search:
+    terms:
+      - hour
+      - minute
+      - sand
+      - stopwatch
+      - time
+  styles:
+    - light
+  unicode: f254
+  voted: false
+hourglass-half:
+  changes:
+    - '4.4'
+    - 5.0.0
+    - 5.10.1
+  label: Hourglass Half
+  search:
+    terms:
+      - hour
+      - minute
+      - sand
+      - stopwatch
+      - time
+  styles:
+    - duotone
+  unicode: f252
+  voted: false
 level-up:
   changes:
     - '3.1'
@@ -708,6 +742,7 @@ search:
       - zoom
   styles:
     - light
+    - regular
   unicode: f002
   voted: false
 sign-in:
