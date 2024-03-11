@@ -3,7 +3,7 @@
 
   import { enhance } from "$app/forms";
 
-  import type { Book, BookDetails, Subject, Tag } from "$data/types";
+  import type { Book, Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
@@ -28,6 +28,8 @@
   export let subjects: Subject[];
   export let tags: Tag[];
 
+  export let previewBook: (book: Book) => void;
+
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
 
@@ -37,10 +39,6 @@
 
   let readSaving: boolean;
   $: multiReadSaving = $booksReadSaving[id] == "1";
-
-  let expanded = false;
-  let detailsLoading = false;
-  let bookDetails: BookDetails;
 
   let pendingDelete = false;
   let deleting = false;
@@ -60,25 +58,6 @@
   $: addedDate = new Date(book.dateAdded);
   function getDisplayDate(date: Date) {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-  }
-
-  function toggleExpand() {
-    if (expanded) {
-      expanded = false;
-    } else {
-      if (bookDetails) {
-        expanded = true;
-      } else {
-        detailsLoading = true;
-        fetch("/api/book-details?id=" + id)
-          .then(resp => resp.json())
-          .then(details => {
-            bookDetails = details;
-            detailsLoading = false;
-            expanded = true;
-          });
-      }
-    }
   }
 </script>
 
@@ -106,14 +85,9 @@
         </div>
 
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
-          {#if detailsLoading}
-            <span class="text-sm"><i class="far fa-fw fa-spin fa-spinner" /></span>
-          {:else}
-            <button on:click={toggleExpand} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
-              <i class="far fa-fw {expanded ? 'fa-minus' : 'fa-plus'}" />
-            </button>
-          {/if}
-
+          <button on:click={() => previewBook(book)} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
+            <i class="fa-fw fal fa-search" />
+          </button>
           {#if isbn10}
             <a
               style="padding-top: 1px; {hoverOverride}"
@@ -199,6 +173,3 @@
     </span>
   </td>
 </tr>
-{#if expanded && bookDetails}
-  <BookRowDetails {isPublic} {bookDetails} />
-{/if}
