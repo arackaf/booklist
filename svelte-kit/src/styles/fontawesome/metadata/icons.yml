@@ -743,6 +743,7 @@ search:
   styles:
     - light
     - regular
+    - solid
   unicode: f002
   voted: false
 sign-in:
