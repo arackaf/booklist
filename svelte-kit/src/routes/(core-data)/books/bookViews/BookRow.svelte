@@ -86,7 +86,7 @@
 
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
           <button on:click={() => previewBook(book)} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
-            <i class="fa-fw fal fa-search" />
+            <i class="fa-fw far fa-search" />
           </button>
           {#if isbn10}
             <a
