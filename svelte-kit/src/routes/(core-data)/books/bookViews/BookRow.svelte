@@ -17,7 +17,6 @@
 
   import { changeFilter } from "../state/searchState";
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
-  import BookRowDetails from "./BookRowDetails.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState";
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
