@@ -88,16 +88,21 @@
             </div>
           </div>
           <div class="flex flex-col gap-2">
-            {#if book.publisher || book.publicationDate}
-              <div class="flex flex-row gap-2">
+            <div class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0.5 mb-2">
+              {#if book.publisher}
+                <span class="self-center">Publisher:</span>
                 <span>{book.publisher}</span>
+              {/if}
+              {#if book.publicationDate}
+                <span class="self-center">Published:</span>
                 <span>{book.publicationDate}</span>
-              </div>
-            {/if}
+              {/if}
+              {#if book.isbn}
+                <span class="self-center">ISBN:</span>
+                <span>{book.isbn}</span>
+              {/if}
 
-            <div class="grid grid-cols-1 md:grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0 md:gap-y-2 mb-2">
               <span class="self-center">Tags:</span>
-
               <div class="self-center">
                 {#if book?.tags?.length}
                   <DisplaySelectedTags {tags} currentlySelected={book.tags || []} />
@@ -106,7 +111,7 @@
                 {/if}
               </div>
 
-              <span class="self-center mt-2 md:mt-0">Subjects:</span>
+              <span class="self-center">Subjects:</span>
               <div class="self-center">
                 {#if book?.subjects?.length}
                   <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
