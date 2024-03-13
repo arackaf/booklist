@@ -9,13 +9,10 @@
 
   export let showingData: any[];
   export let drilldown: any;
-  export let chartIndex: any;
   export let removeSlice: (id: any) => void;
 
   export let hasRendered: boolean;
   let pieChartHasRendered = false;
-
-  const noInitialAnimation = chartIndex === 0 || hasRendered;
 
   onMount(() => {
     pieChartHasRendered = true;
@@ -131,7 +128,7 @@
     return false;
   }
 
-  let labelsReady = noInitialAnimation;
+  let labelsReady = hasRendered;
   const onLabelsReady = () => {
     setTimeout(() => {
       labelsReady = true;
@@ -153,11 +150,7 @@
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
-          <SingleSliceLabel
-            labelsReady={!hideLabels && (labelsReady || hasRendered || noInitialAnimation)}
-            segment={seg}
-            disableAnimation={pieSegments.length === 1}
-          />
+          <SingleSliceLabel labelsReady={!hideLabels && (labelsReady || hasRendered)} segment={seg} disableAnimation={pieSegments.length === 1} />
         {/each}
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
@@ -166,7 +159,7 @@
             {onLabelsReady}
             segment={seg}
             {drilldown}
-            noInitialAnimation={noInitialAnimation && !pieChartHasRendered}
+            noInitialAnimation={!pieChartHasRendered}
             disableAnimation={pieSegments.length === 1}
           />
         {/each}

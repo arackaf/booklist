@@ -119,9 +119,9 @@
     </div>
 
     {#if chartType === "BAR"}
-      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} {hasRendered} />
+      <BarChartContent {showingData} removeBar={remove} {drilldown} {hasRendered} />
     {:else}
-      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} {hasRendered} />
+      <PieChartContent {showingData} removeSlice={remove} {drilldown} {hasRendered} />
     {/if}
   </div>
 {/if}

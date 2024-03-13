@@ -10,7 +10,6 @@
 
   export let showingData: any[];
   export let drilldown: any;
-  export let chartIndex: any;
   export let removeBar: (id: any) => void;
 
   export let hasRendered: boolean;
@@ -71,7 +70,7 @@
             totalSvgWidth={adjustedWidth}
             drilldown={(...args) => drilldown(...args, "BAR")}
             {removeBar}
-            noInitialAnimation={(chartIndex === 0 || hasRendered) && !barChartHasRendered}
+            noInitialAnimation={!barChartHasRendered}
           />
         {/each}
 
