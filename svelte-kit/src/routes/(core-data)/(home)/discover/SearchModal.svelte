@@ -1,20 +1,16 @@
 <script lang="ts">
-  import { quadIn, quintOut } from "svelte/easing";
-
-  // @ts-ignore
-  import { springIn } from "svelte-helpers/spring-transitions";
-
-  import { enhance } from "$app/forms";
   import type { Book, Subject, Tag } from "$data/types";
 
+  import { fade } from "svelte/transition";
+  import { enhance } from "$app/forms";
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import Modal from "$lib/components/ui/Modal.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import Alert from "$lib/components/Alert.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
@@ -71,7 +67,7 @@
   let currentQuery = "";
   let totalBooks = 0;
 
-  async function executeSearch({ cancel, data }: any) {
+  async function executeSearch({ cancel, formData: data }: any) {
     cancel();
 
     loading = true;
@@ -94,27 +90,12 @@
     loading = false;
     active = true;
   }
-
-  const NO_RESULTS_SPRING = { stiffness: 0.2, damping: 0.5 };
-  const resultsMessageIn: any = () => {
-    const { duration, tickToValue } = springIn(30, 0, NO_RESULTS_SPRING);
-    return {
-      duration,
-      css: (t: number) => `transform: translate3d(${tickToValue(t)}px, 0, 0); opacity: ${quintOut(t)}`
-    };
-  };
-  const resultsMessageOut: any = () => {
-    return {
-      duration: 150,
-      css: (t: number) => `position: absolute; opacity: ${quadIn(t)}`
-    };
-  };
 </script>
 
-<Modal on:mount={() => titleEl.focus()} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
+<Modal openFocus={titleEl} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
       <InputGroup labelText="Title">
         <Input slot="input" bind:inputEl={titleEl} name="search" placeholder="Search title" />
       </InputGroup>
@@ -139,33 +120,33 @@
         </div>
       </div>
 
-      <SelectAndDisplayContainer isEmpty={!tags.length}>
+      <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
         <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
       </SelectAndDisplayContainer>
 
-      <SelectAndDisplayContainer isEmpty={!subjects.length}>
+      <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
         <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
       </SelectAndDisplayContainer>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
       </div>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div class="flex flex-row gap-3">
           <ActionButton running={loading}>Search</ActionButton>
 
           <div class="flex relative flex-1 self-stretch">
             {#if noAvailableBooks}
-              <div in:resultsMessageIn|local>
+              <div in:fade={{ duration: 150 }}>
                 <Alert type="info" layout="slimmer">You've added all of the books from this page</Alert>
               </div>
             {/if}
 
             {#if noResults}
-              <div class="flex items-start justify-start" style="backface-visibility: hidden;" in:resultsMessageIn|local out:resultsMessageOut>
+              <div class="flex items-start justify-start" style="backface-visibility: hidden;" transition:fade={{ duration: 150 }}>
                 <Alert type="warning" layout="slimmer">No results</Alert>
               </div>
             {/if}
@@ -173,7 +154,7 @@
         </div>
       </div>
 
-      <div class="md:col-span-2">
+      <div class="sm:col-span-2">
         <div>
           {#if totalBooks}
             <div class="flex flex-row gap-1 items-center">

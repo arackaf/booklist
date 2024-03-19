@@ -4,6 +4,9 @@
 
   export let tabName = "";
 
+  let className = "";
+  export { className as class };
+
   const tabsState: any = getContext("tabs-state");
   $: ({ currentTab, setTab, localStorageName } = $tabsState);
 
@@ -18,7 +21,7 @@
 </script>
 
 <div class="border-primary-9" class:bg-primary-10={active} class:border-b={active}>
-  <button on:click={onClick} type="button" class="raw-button overlay-holder" style="padding: 4px 8px" class:cursor-default={active}>
+  <button on:click={onClick} type="button" class="raw-button overlay-holder {className}" style="padding: 4px 8px" class:cursor-default={active}>
     <span class:font-bold={active}><slot /></span>
     <span class="invisible font-bold"><slot /></span>
   </button>

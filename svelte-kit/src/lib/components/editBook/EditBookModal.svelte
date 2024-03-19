@@ -1,10 +1,12 @@
 <script lang="ts">
+  import cloneDeep from "lodash.clonedeep";
+
   import type { Book, Subject, Tag } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import EditBook from "./EditBook.svelte";
 
-  import Modal from "../ui/Modal.svelte";
+  import Modal from "../Modal.svelte";
 
   export let book: any;
   export let isOpen = false;
@@ -15,7 +17,7 @@
   export let closeOnSave: boolean = false;
   export let header: string;
 
-  let editBookInst: EditBook;
+  export let afterDelete: (id: number) => void = () => {};
 
   const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     onSave(id, updates);
@@ -23,10 +25,15 @@
       onHide();
     }
   };
+
+  function onDeleteComplete() {
+    afterDelete?.(book.id);
+    onHide();
+  }
+
+  $: editingBook = book ? cloneDeep(book) : book;
 </script>
 
-<Modal on:mount={() => editBookInst.reset()} headerCaption={header} {isOpen} {onHide} standardFooter={false}>
-  {#key book}
-    <EditBook bind:this={editBookInst} {book} {syncUpdates} onCancel={onHide} {subjects} {tags} />
-  {/key}
+<Modal headerCaption={header} {isOpen} {onHide} standardFooter={false}>
+  <EditBook book={editingBook} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
 </Modal>

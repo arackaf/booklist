@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { BookImages } from "$data/types";
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
 
   import UploadResult from "./UploadResult.svelte";
 

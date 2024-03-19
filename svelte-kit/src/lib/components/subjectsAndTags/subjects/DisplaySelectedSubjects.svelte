@@ -11,16 +11,17 @@
   export let subjects: Subject[];
   export let vertical: boolean = false;
   export let href: ((s: Subject) => string | null) | null = null;
+  export let disabled = false;
 
   $: subjectHash = toHash(subjects);
 
   $: selectedLabels = currentlySelected.filter(id => subjectHash[id]).map(id => subjectHash[id]);
 </script>
 
-<div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
+<div class="flex gap-1" class:opacity-50={disabled} class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
   {#each selectedLabels as s (s.id)}
     {#if onRemove}
-      <RemovableLabelDisplay item={s} doRemove={() => onRemove?.(s)} />
+      <RemovableLabelDisplay {disabled} item={s} doRemove={() => onRemove?.(s)} />
     {:else}
       <LabelDisplay class="flex" item={s} href={href != null ? href(s) : null} />
     {/if}

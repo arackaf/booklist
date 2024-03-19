@@ -1,6 +1,6 @@
 <script lang="ts">
   import { signIn } from "@auth/sveltekit/client";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 </script>
 
 <section>
@@ -30,10 +30,9 @@
             <Button
               class="self-start"
               theme="primary"
-              on:click={() =>
-                signIn("google", {
-                  callbackUrl: "/books"
-                })}
+              on:click={() => {
+                signIn("", { callbackUrl: "/books" });
+              }}
             >
               Login or create an account
             </Button>

@@ -5,25 +5,14 @@
 
   import SingleSlice from "./SingleSlice.svelte";
   import { syncWidth } from "$lib/util/animationHelpers";
+  import SingleSliceLabel from "./SingleSliceLabel.svelte";
 
   export let showingData: any[];
   export let drilldown: any;
-  export let chartIndex: any;
   export let removeSlice: (id: any) => void;
 
   export let hasRendered: boolean;
   let pieChartHasRendered = false;
-
-  export let onInitialRender: () => void;
-
-  const noInitialAnimation = chartIndex === 0 || hasRendered;
-
-  const scrollInitial = (el: any) => {
-    if (el && chartIndex > 0 && !hasRendered) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-    onInitialRender();
-  };
 
   onMount(() => {
     pieChartHasRendered = true;
@@ -112,39 +101,34 @@
   }) as any[];
 
   let hideLabels = false;
-  $: {
+  $: hideLabels = hasOverlap(pieSegments);
+
+  function hasOverlap(pieSegments: any[]): boolean {
     const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
     const rightSegments = pieSegments.filter(seg => seg.isRightLabel);
 
-    let overlapFound = false;
     for (const seg of leftSegments) {
       const segHasOverlaps = leftSegments.find(segInner => {
         return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
       });
       if (segHasOverlaps) {
-        overlapFound = true;
-        break;
+        return true;
       }
     }
 
-    if (overlapFound) {
-      hideLabels = true;
-    } else {
-      for (const seg of rightSegments) {
-        const segHasOverlaps = rightSegments.find(segInner => {
-          return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
-        });
-        if (segHasOverlaps) {
-          overlapFound = true;
-          break;
-        }
+    for (const seg of rightSegments) {
+      const segHasOverlaps = rightSegments.find(segInner => {
+        return seg.masterLabel !== segInner.masterLabel && Math.abs(seg.inflexionPoint[1] - segInner.inflexionPoint[1]) < 17;
+      });
+      if (segHasOverlaps) {
+        return true;
       }
     }
 
-    hideLabels = overlapFound;
+    return false;
   }
 
-  let labelsReady = noInitialAnimation;
+  let labelsReady = hasRendered;
   const onLabelsReady = () => {
     setTimeout(() => {
       labelsReady = true;
@@ -161,20 +145,21 @@
   $: containerSize = $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
 </script>
 
-<div bind:this={containerDiv} use:scrollInitial class="flex items-center py-10 mx-16">
+<div bind:this={containerDiv} class="flex items-center mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
+          <SingleSliceLabel labelsReady={!hideLabels && (labelsReady || hasRendered)} segment={seg} disableAnimation={pieSegments.length === 1} />
+        {/each}
+        {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
             {containerSize}
-            {radius}
             {removeSlice}
-            labelsReady={!hideLabels && (labelsReady || hasRendered || noInitialAnimation)}
             {onLabelsReady}
             segment={seg}
             {drilldown}
-            noInitialAnimation={noInitialAnimation && !pieChartHasRendered}
+            noInitialAnimation={!pieChartHasRendered}
             disableAnimation={pieSegments.length === 1}
           />
         {/each}

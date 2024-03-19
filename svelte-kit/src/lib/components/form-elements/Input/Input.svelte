@@ -9,6 +9,7 @@
   export let inputEl: HTMLInputElement = null as any;
 
   export let value: string = "";
+  export let size: "sm" | "default" = "default";
 </script>
 
 <input
@@ -21,7 +22,9 @@
   class:focus:shadow-md={!error}
   class:focus:shadow-sm={error}
   class:focus:shadow-danger-7={error}
-  class="bg-white text-neutral-600 border rounded h-8 py-1 px-3 text-base block w-full transition-box-shadow {className}"
+  class:h-8={size === "sm"}
+  class:h-9={size === "default"}
+  class="bg-white text-neutral-600 border rounded py-1 px-3 text-base block w-full transition-box-shadow {className}"
   bind:this={inputEl}
   bind:value
   {...rest}

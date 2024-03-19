@@ -4,8 +4,8 @@
 
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   import { getContext } from "svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
@@ -71,7 +71,9 @@
 
     const newUrl = new URL($page.url);
     newUrl.search = searchParams.toString();
-    goto(newUrl);
+    goto(newUrl).then(val => {
+      console.log({ val });
+    });
     closeMobileMenu?.();
   };
   const resetSearch = () => {

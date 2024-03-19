@@ -2,11 +2,11 @@
   import { onMount, setContext } from "svelte";
 
   import type { Book } from "$data/types";
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
 
   import GridView from "./bookViews/GridView.svelte";
-  import BasicView from "./bookViews/BasicView.svelte";
+  import MobileView from "./bookViews/MobileView.svelte";
   import CoversView from "./bookViews/CoversView.svelte";
 
   import MenuBar from "./menuBar/MenuBar.svelte";
@@ -22,6 +22,8 @@
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
   import { searchState } from "./state/searchState";
+  import { afterDelete } from "./state/onDelete";
+  import { afterNavigate } from "$app/navigation";
 
   export let data;
 
@@ -59,11 +61,9 @@
     });
   });
 
-  $: {
-    if (books) {
-      selectionState.clear();
-    }
-  }
+  afterNavigate(() => {
+    selectionState.clear();
+  });
 
   let filterModalOpen = false;
   let openFilterModal = () => (filterModalOpen = true);
@@ -113,7 +113,7 @@
   <div style="background-color: white;">
     <MenuBar {isPublic} {bookViewToUse} />
 
-    <div>
+    <div class:overflow-x-auto={bookViewToUse === "tbl"}>
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
         {#if !$books.length}
           <div>
@@ -129,11 +129,11 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <BasicView books={$books} {isPublic} />
+              <MobileView books={$books} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={$books} {subjects} {tags} {isPublic} />
+              <GridView books={$books} {isPublic} />
             {:else}
-              <CoversView books={$books} {subjects} {tags} {isPublic} />
+              <CoversView books={$books} {isPublic} />
             {/if}
           </div>
         {/if}
@@ -151,6 +151,7 @@
             {subjects}
             {tags}
             header={`Edit: ${editingBook?.title}`}
+            {afterDelete}
           />
 
           <svelte:component

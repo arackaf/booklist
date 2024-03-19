@@ -261,6 +261,7 @@ chart-pie:
       - graph
       - pie
   styles:
+    - regular
     - duotone
     - light
   unicode: f200
@@ -435,6 +436,42 @@ filter:
     - light
   unicode: f0b0
   voted: false
+github:
+  changes:
+    - '2'
+    - 5.0.0
+  label: GitHub
+  search:
+    terms:
+      - octocat
+  styles:
+    - brands
+  unicode: f09b
+  voted: false
+github-alt:
+  changes:
+    - '3'
+    - 5.0.0
+  label: Alternate GitHub
+  search:
+    terms:
+      - octocat
+  styles:
+    - brands
+  unicode: f113
+  voted: false
+github-square:
+  changes:
+    - '1'
+    - 5.0.0
+  label: GitHub Square
+  search:
+    terms:
+      - octocat
+  styles:
+    - brands
+  unicode: f092
+  voted: false
 goodreads-g:
   changes:
     - 5.0.0
@@ -444,6 +481,17 @@ goodreads-g:
   styles:
     - brands
   unicode: f3a9
+  voted: false
+google:
+  changes:
+    - '4.1'
+    - 5.0.0
+  label: Google Logo
+  search:
+    terms: []
+  styles:
+    - brands
+  unicode: f1a0
   voted: false
 home:
   changes:
@@ -460,6 +508,40 @@ home:
   styles:
     - light
   unicode: f015
+  voted: false
+hourglass:
+  changes:
+    - '4.4'
+    - 5.0.0
+    - 5.10.1
+  label: Hourglass
+  search:
+    terms:
+      - hour
+      - minute
+      - sand
+      - stopwatch
+      - time
+  styles:
+    - light
+  unicode: f254
+  voted: false
+hourglass-half:
+  changes:
+    - '4.4'
+    - 5.0.0
+    - 5.10.1
+  label: Hourglass Half
+  search:
+    terms:
+      - hour
+      - minute
+      - sand
+      - stopwatch
+      - time
+  styles:
+    - duotone
+  unicode: f252
   voted: false
 level-up:
   changes:
@@ -525,6 +607,7 @@ pencil:
       - write
   styles:
     - regular
+    - light
   unicode: f040
   voted: false
 pencil-alt:
@@ -659,6 +742,8 @@ search:
       - zoom
   styles:
     - light
+    - regular
+    - solid
   unicode: f002
   voted: false
 sign-in:

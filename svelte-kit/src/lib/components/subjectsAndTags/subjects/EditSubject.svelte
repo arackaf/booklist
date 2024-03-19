@@ -6,18 +6,19 @@
 
   import type { Color, Subject } from "$data/types";
 
-  import Alert from "$lib/components/ui/Alert.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
-  import Label from "$lib/components/ui/Label/Label.svelte";
-  import Select from "$lib/components/ui/Select/Select.svelte";
-  import SelectGroup from "$lib/components/ui/Select/SelectGroup.svelte";
-  import ColorsPalette from "$lib/components/ui/ColorsPalette.svelte";
-  import CustomColorPicker from "$lib/components/ui/CustomColorPicker.svelte";
+  import Alert from "$lib/components/Alert.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
+  import ColorsPalette from "$lib/components/ColorsPalette.svelte";
+  import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
+  import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
+  import DisplaySelectedSubjects from "./DisplaySelectedSubjects.svelte";
+
+  import LabelDisplay from "../LabelDisplay.svelte";
 
   export let subject: Subject;
   export let allSubjects: Subject[];
@@ -31,18 +32,10 @@
   const textColors = ["#ffffff", "#000000"];
 
   let missingName = false;
-  let inputEl: HTMLInputElement;
+  export let inputEl: HTMLInputElement | undefined = undefined;
 
   let originalName = "";
   let originalParentId = 0;
-
-  onMount(() => {
-    inputEl?.focus({ preventScroll: true });
-
-    return () => {
-      deleteShowing = false;
-    };
-  });
 
   let editingSubject = { ...subject, parentId: computeParentId(subject.path) };
 
@@ -51,7 +44,7 @@
   $: subjectHash = getSubjectsHash(allSubjects);
   $: childSubjects = getChildSubjectsSorted(subject.id, subjectHash);
 
-  $: eligibleParents = getEligibleParents(subjectHash, editingSubject.id) || [];
+  $: eligibleParents = [{ id: -1, name: "None", path: null } as Subject, ...(getEligibleParents(subjectHash, editingSubject.id) || [])];
   $: {
     if (editingSubject.name) {
       missingName = false;
@@ -66,13 +59,10 @@
     originalParentId = editingSubject.parentId;
   }
 
-  export const reset = () => {
-    inputEl?.focus();
-    deleteShowing = false;
-  };
+  $: selectedParent = editingSubject.parentId ? allSubjects.find(p => p.id == editingSubject.parentId) : null;
 
   let saving = false;
-  function runSave({ data, cancel }: any) {
+  function runSave({ formData: data, cancel }: any) {
     const name = data.get("name");
     if (!name) {
       missingName = true;
@@ -83,6 +73,7 @@
     saving = true;
 
     return async () => {
+      window.dispatchEvent(new CustomEvent("reload-user-summary"));
       invalidateAll().then(() => {
         saving = false;
         onComplete();
@@ -95,6 +86,7 @@
     deleting = true;
 
     return async () => {
+      window.dispatchEvent(new CustomEvent("reload-user-summary"));
       invalidateAll().then(() => {
         deleting = false;
         onComplete();
@@ -110,26 +102,54 @@
     <input type="hidden" name="id" value={editingSubject.id} />
     <input type="hidden" name="path" value={editingSubject.path} />
     <input type="hidden" name="originalParentId" value={originalParentId} />
+    <input type="hidden" name="parentId" value={editingSubject.parentId || ""} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div class="flex flex-col gap-1">
-        <InputGroup labelText="Name">
-          <Input slot="input" error={missingName} bind:inputEl bind:value={editingSubject.name} name="name" placeholder="Subject name" />
-        </InputGroup>
-        {#if missingName}
-          <Label theme="error" class="self-start">Subjects need names!</Label>
-        {/if}
-        <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
-          {editingSubject.name.trim() || "<label preview>"}
-        </Label>
+        <label class="text-sm" for="subject-name">Name</label>
+
+        <Input
+          id="subject-name"
+          class="h-9"
+          error={missingName}
+          bind:inputEl
+          bind:value={editingSubject.name}
+          name="name"
+          placeholder="Subject name"
+        />
+
+        <div class="flex flex-col gap-1">
+          {#if missingName}
+            <Label theme="error" class="self-start">Subjects need names!</Label>
+          {/if}
+          <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
+            {editingSubject.name.trim() || "<label preview>"}
+          </Label>
+        </div>
       </div>
-      <SelectGroup labelText="Parent">
-        <Select slot="select" bind:value={editingSubject.parentId} name="parentId">
-          <option value={0}>No Parent</option>
-          {#each eligibleParents as s}
-            <option value={s.id}>{s.name}</option>
-          {/each}
-        </Select>
-      </SelectGroup>
+      <div class="flex flex-col gap-1">
+        <span class="text-sm -mb-0.5 md:mb-0">Parent</span>
+
+        <div>
+          <SelectAvailableSubjects
+            placeholder={selectedParent?.name}
+            noHiddenFields={true}
+            subjects={eligibleParents}
+            currentlySelected={[editingSubject.parentId]}
+            onSelect={subject => {
+              editingSubject = { ...editingSubject, parentId: !subject || subject.id <= 0 ? 0 : subject.id };
+            }}
+            triggerClasses="w-full"
+          >
+            <span slot="placeholder">
+              {#if selectedParent}
+                <LabelDisplay item={selectedParent} />
+              {:else}
+                <span>Select</span>
+              {/if}
+            </span>
+          </SelectAvailableSubjects>
+        </div>
+      </div>
 
       <div>
         <div class="flex flex-col">

@@ -264,11 +264,29 @@ readers do not read off random characters that represent icons */
 .fa-filter:before {
   content: "\f0b0"; }
 
+.fa-github:before {
+  content: "\f09b"; }
+
+.fa-github-alt:before {
+  content: "\f113"; }
+
+.fa-github-square:before {
+  content: "\f092"; }
+
 .fa-goodreads-g:before {
   content: "\f3a9"; }
 
+.fa-google:before {
+  content: "\f1a0"; }
+
 .fa-home:before {
   content: "\f015"; }
+
+.fa-hourglass:before {
+  content: "\f254"; }
+
+.fa-hourglass-half:before {
+  content: "\f252"; }
 
 .fa-level-up:before {
   content: "\f148"; }
@@ -434,6 +452,9 @@ readers do not read off random characters that represent icons */
 
 .fad.fa-chevron-right:after {
   content: "\10f054"; }
+
+.fad.fa-hourglass-half:after {
+  content: "\10f252"; }
 
 .fad.fa-times-circle:after {
   content: "\10f057"; }

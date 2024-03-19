@@ -12,7 +12,6 @@ const defaultBookFields = {
   subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
     "subjects"
   ),
-  dateAddedDisplay: sql<string>`DATE_FORMAT(dateAdded, '%c/%e/%Y')`,
   title: booksTable.title,
   pages: booksTable.pages,
   userId: booksTable.userId,
@@ -218,6 +217,8 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
 
   const editorialReviews = books.flatMap(b => b.editorialReviews!);
 
+  updateBookImages(similarBooks);
+
   return { editorialReviews, similarBooks };
 };
 
@@ -268,10 +269,10 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
       const { id } = idRes[0];
 
       if (book.subjects) {
-        await syncBookSubjects(tx, id, book.subjects);
+        await syncBookSubjects(tx, userId, id, book.subjects);
       }
       if (book.tags) {
-        await syncBookTags(tx, id, book.tags);
+        await syncBookTags(tx, userId, id, book.tags);
       }
     })
   );
@@ -309,27 +310,33 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
         })
         .where(and(eq(booksTable.userId, userId), eq(booksTable.id, book.id!)));
 
-      await syncBookSubjects(tx, book.id!, book.subjects ?? [], true);
-      await syncBookTags(tx, book.id!, book.tags ?? [], true);
+      await syncBookSubjects(tx, userId, book.id!, book.subjects ?? [], true);
+      await syncBookTags(tx, userId, book.id!, book.tags ?? [], true);
     })
   );
 };
 
-const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, bookId: number, tags: number[], clearExisting = false) => {
+const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksTags).where(eq(booksTags.book, bookId));
   }
   if (tags.length) {
-    await tx.insert(booksTags).values(tags.map(tag => ({ book: bookId, tag })));
+    await tx.insert(booksTags).values(tags.map(tag => ({ userId, book: bookId, tag })));
   }
 };
 
-const syncBookSubjects = async (tx: MySqlTransaction<any, any, any, any>, bookId: number, subjects: number[], clearExisting = false) => {
+const syncBookSubjects = async (
+  tx: MySqlTransaction<any, any, any, any>,
+  userId: string,
+  bookId: number,
+  subjects: number[],
+  clearExisting = false
+) => {
   if (clearExisting) {
     await tx.delete(booksSubjects).where(eq(booksSubjects.book, bookId));
   }
   if (subjects.length) {
-    await tx.insert(booksSubjects).values(subjects.map(subject => ({ book: bookId, subject })));
+    await tx.insert(booksSubjects).values(subjects.map(subject => ({ userId: userId, book: bookId, subject })));
   }
 };
 
@@ -357,8 +364,8 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
       tx =>
         tx.execute(
           `
-          INSERT INTO books_subjects (book, subject)
-          SELECT DISTINCT tmp.book, tmp.subject
+          INSERT INTO books_subjects (userId, book, subject)
+          SELECT DISTINCT ?, tmp.book, tmp.subject
           FROM tmp
           JOIN books b
           ON tmp.book = b.id
@@ -366,7 +373,7 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
           ON existing.book = tmp.book AND existing.subject = tmp.subject
           WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
           `,
-          [userId]
+          [userId, userId]
         ),
       tx => tx.execute(`DELETE FROM tmp`)
     );
@@ -408,8 +415,8 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
       tx =>
         tx.execute(
           `
-          INSERT INTO books_tags (book, tag)
-          SELECT DISTINCT tmp.book, tmp.tag
+          INSERT INTO books_tags (userId, book, tag)
+          SELECT DISTINCT ?, tmp.book, tmp.tag
           FROM tmp
           JOIN books b
           ON tmp.book = b.id
@@ -417,7 +424,7 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
           ON existing.book = tmp.book AND existing.tag = tmp.tag
           WHERE b.userId = ? AND existing.book IS NULL AND existing.tag IS NULL
           `,
-          [userId]
+          [userId, userId]
         ),
       tx => tx.execute(`DELETE FROM tmp`)
     );
@@ -453,7 +460,18 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
 };
 
 export const deleteBook = async (userId: string, id: number) => {
-  await executeDrizzle("delete book", db.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id))));
+  await executeDrizzle(
+    "delete book",
+    db.transaction(async tx => {
+      const result = await tx.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id)));
+      if (result.rowsAffected !== 1) {
+        throw new Error("No access");
+      }
+
+      await tx.delete(booksSubjects).where(and(eq(booksSubjects.book, id)));
+      await tx.delete(booksTags).where(and(eq(booksTags.book, id)));
+    })
+  );
 };
 
 function updateBookImages<T extends Partial<BookImages>>(books: T[]): T[] {

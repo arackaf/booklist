@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Dropzone from "svelte-file-dropzone/Dropzone.svelte";
+  import Dropzone from "svelte-file-dropzone";
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import Label from "$lib/components/ui/Label/Label.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
 
   export let onResults: (results: any) => void;
   export let onError: () => void;

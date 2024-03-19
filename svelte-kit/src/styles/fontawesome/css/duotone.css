@@ -58,5 +58,8 @@
 .fad.fa-chevron-right:after {
   content: "\10f054"; }
 
+.fad.fa-hourglass-half:after {
+  content: "\10f252"; }
+
 .fad.fa-times-circle:after {
   content: "\10f057"; }

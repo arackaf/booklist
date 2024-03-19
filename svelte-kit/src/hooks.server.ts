@@ -1,7 +1,17 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
-import { GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, DYNAMO_AUTH_TABLE, AUTH_SECRET } from "$env/static/private";
+import GithubProvider from "@auth/core/providers/github";
+import {
+  GITHUB_AUTH_CLIENT_ID,
+  GITHUB_AUTH_CLIENT_SECRET,
+  GOOGLE_AUTH_CLIENT_ID,
+  GOOGLE_AUTH_SECRET,
+  AMAZON_ACCESS_KEY,
+  AMAZON_SECRET_KEY,
+  DYNAMO_AUTH_TABLE,
+  AUTH_SECRET
+} from "$env/static/private";
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
@@ -27,10 +37,13 @@ const client = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
 
 const auth = SvelteKitAuth({
   providers: [
-    // @ts-ignore
     GoogleProvider({
       clientId: GOOGLE_AUTH_CLIENT_ID,
       clientSecret: GOOGLE_AUTH_SECRET
+    }),
+    GithubProvider({
+      clientId: GITHUB_AUTH_CLIENT_ID,
+      clientSecret: GITHUB_AUTH_CLIENT_SECRET
     })
   ],
   session: {
@@ -41,7 +54,7 @@ const auth = SvelteKitAuth({
   trustHost: true,
   secret: AUTH_SECRET,
 
-  adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }) as any,
+  adapter: DynamoDBAdapter(client, { tableName: DYNAMO_AUTH_TABLE }),
 
   callbacks: {
     async signIn({ account }) {
@@ -62,13 +75,21 @@ const auth = SvelteKitAuth({
       if (account?.syncdId) {
         token.legacySync = true;
       }
+      if (account?.provider) {
+        token.provider = account?.provider;
+      }
+
       return token;
     },
-    async session({ session, token }) {
-      (session as any).userId = token.userId;
-      if ((token as any).legacySync) {
-        (session as any).legacySync = true;
+    async session({ session, token }: any) {
+      session.userId = token.userId as string;
+      if (token.legacySync) {
+        session.legacySync = true;
       }
+      if (token.provider) {
+        session.provider = token.provider as string;
+      }
+
       return session;
     }
   }

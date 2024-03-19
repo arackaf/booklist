@@ -3,9 +3,9 @@
   import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import InputGroup from "$lib/components/ui/Input/InputGroup.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 
   export let user: DynamoUser;
   export let isPublic: boolean;
@@ -17,7 +17,7 @@
   let error = false;
   let saving = false;
 
-  const update = ({ cancel, data }: { cancel: any; data: FormData }) => {
+  const update = ({ cancel, formData: data }: { cancel: any; formData: FormData }) => {
     const isPublic = !!data.get("isPublic");
     const publicName = data.get("publicName")?.toString();
 

@@ -8,7 +8,7 @@ import { clearSync, getBooksWithSimilarBooks } from "$data/similar-books";
 export const load = async ({ parent, url }) => {
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
-    throw redirect(302, "/");
+    redirect(302, "/");
   }
 
   const subjects = url.searchParams.getAll("subjects");

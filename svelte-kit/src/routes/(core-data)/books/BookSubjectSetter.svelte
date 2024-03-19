@@ -1,18 +1,22 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { enhance } from "$app/forms";
+  import { invalidate } from "$app/navigation";
+
   import type { Book, Subject } from "$data/types";
+
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
-  import Modal from "$lib/components/ui/Modal.svelte";
-  import StandardModalFooter from "$lib/components/ui/StandardModalFooter.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import ActionButton from "$lib/components/ui/Button/ActionButton.svelte";
+  import Modal from "$lib/components/Modal.svelte";
+  import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import { enhance } from "$app/forms";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   $: subjects = $page.data.subjects;
   export let modifyingBooks: any[];
@@ -51,6 +55,7 @@
         updates
       );
       saving = false;
+      window.dispatchEvent(new CustomEvent("reload-user-summary"));
       onHide();
     };
   };
@@ -64,8 +69,6 @@
 
   const dontAddSubject = addingSubjectSet.bind(null, false);
   const dontRemoveSubject = removingSubjectSet.bind(null, false);
-
-  let closeModal: () => void;
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" standardFooter={false}>
@@ -86,22 +89,30 @@
           {#each removingSubjects as s}
             <input type="hidden" name="remove" value={s} />
           {/each}
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
-            </div>
-            <div class="md:col-span-3 flex items-center">
-              <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
-            </div>
+          <div class="flex flex-col gap-4 pt-3">
+            <SelectAndDisplayContainer>
+              <SelectAvailableSubjects
+                slot="select"
+                {subjects}
+                placeholder="Adding"
+                currentlySelected={addingSubjects}
+                onSelect={subjectSelectedToAdd}
+              />
+              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+            </SelectAndDisplayContainer>
+
+            <SelectAndDisplayContainer>
+              <SelectAvailableSubjects
+                slot="select"
+                {subjects}
+                placeholder="Removing"
+                currentlySelected={removingSubjects}
+                onSelect={subjectSelectedToRemove}
+              />
+              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+            </SelectAndDisplayContainer>
 
             <div>
-              <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
-            </div>
-            <div class="md:col-span-3 flex items-center">
-              <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
-            </div>
-
-            <div class="md:col-span-4">
               <Button size="sm" type="button" on:click={resetSubjects}>Reset subjects</Button>
             </div>
           </div>
@@ -115,11 +126,11 @@
         </TabContent>
       </TabContents>
     </Tabs>
-    <StandardModalFooter bind:closeModal>
+    <StandardModalFooter>
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
 
-        <Button type="button" class="ml-auto" on:click={closeModal}>Cancel</Button>
+        <Button type="button" class="ml-auto" on:click={onHide}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>

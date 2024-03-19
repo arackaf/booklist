@@ -1,7 +1,7 @@
 <script lang="ts">
   import cn from "classnames";
 
-  import Label from "$lib/components/ui/Label/Label.svelte";
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
   import type { Label as LabelType } from "$data/types";
 
   export let item: LabelType;

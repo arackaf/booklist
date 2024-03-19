@@ -43,16 +43,24 @@ export async function getBook(id: number) {
 export async function getNextBookToSync() {
   const mySqlConnection = await getMySqlConnection();
 
+  const today = new Date();
+  today.setMonth(today.getMonth() - 6);
+
+  const dateStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today.getDate().toString().padStart(2, "0")}`;
+
   try {
     const books =
       ((await query(
         mySqlConnection,
-        `    
-          SELECT id, title, isbn
-          FROM books
-          WHERE (similarBooksLastSync IS NULL OR DATEDIFF(NOW(), similarBooksLastSync) > 60) AND (CHAR_LENGTH(isbn) = 10 OR CHAR_LENGTH(isbn) = 13)
-          ORDER BY id
-          LIMIT 1`
+        `
+        SELECT id, title, isbn
+        FROM books
+        USE INDEX (idx_syncEligible_similarBooksLastSync_id)
+        WHERE syncEligible = 1 AND similarBooksLastSync < ?
+        ORDER BY id
+        LIMIT 1
+        `,
+        [dateStr]
       )) as any[]) || [];
 
     return books[0];

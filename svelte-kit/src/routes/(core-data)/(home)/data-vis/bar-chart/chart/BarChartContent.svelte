@@ -6,29 +6,22 @@
   import VerticalAxis from "../vertical-axis/Axis.svelte";
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
+  import { onMount } from "svelte";
 
   export let showingData: any[];
   export let drilldown: any;
-  export let chartIndex: any;
   export let removeBar: (id: any) => void;
 
   export let hasRendered: boolean;
   let barChartHasRendered = false;
-
-  export let onInitialRender: () => void;
+  onMount(() => {
+    barChartHasRendered = true;
+  });
 
   const MAX_SVG_WIDTH = 1200;
   const MAX_SVG_HEIGHT = 390;
   const height = MAX_SVG_HEIGHT;
   const maxHeightStyle = "max-h-[390px]";
-
-  const scrollInitial = (el: any) => {
-    if (el && chartIndex > 0 && !hasRendered) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-    onInitialRender();
-    barChartHasRendered = true;
-  };
 
   $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
 
@@ -62,7 +55,7 @@
   }
 </script>
 
-<div use:scrollInitial>
+<div>
   <div class="h-[500px] mx-auto mb-36" style="max-width: {MAX_SVG_WIDTH}px">
     <svg width="100%" class="{sizeClass} block mt-7 overflow-visible {maxHeightStyle}" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
@@ -77,7 +70,7 @@
             totalSvgWidth={adjustedWidth}
             drilldown={(...args) => drilldown(...args, "BAR")}
             {removeBar}
-            noInitialAnimation={(chartIndex === 0 || hasRendered) && !barChartHasRendered}
+            noInitialAnimation={!barChartHasRendered}
           />
         {/each}
 

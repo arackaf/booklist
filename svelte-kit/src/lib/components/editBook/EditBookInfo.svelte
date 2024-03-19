@@ -1,14 +1,15 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/ui/Button/Button.svelte";
-  import Input from "../ui/Input/Input.svelte";
-  import InputGroup from "../ui/Input/InputGroup.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
+  import Input from "../form-elements/Input/Input.svelte";
+  import InputGroup from "../form-elements/Input/InputGroup.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
+  import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   export let book: any;
   export let tags: Tag[];
@@ -44,16 +45,10 @@
     missingTitle = !titleEl.value;
     return !missingTitle;
   };
-
-  export const init: () => void = () => {
-    setTimeout(() => {
-      titleEl?.focus();
-    });
-  };
 </script>
 
 <fieldset disabled={saving}>
-  <div class="grid grid-cols-2 gap-x-5 gap-y-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
     <InputGroup labelText="Title">
       <Input
         slot="input"
@@ -82,37 +77,25 @@
       <Input slot="input" name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
     </InputGroup>
 
-    <div class="col-span-2">
-      <div class="flex flex-row">
-        <div class="basis-full md:basis-1/4">
-          <SelectAvailableTags {tags} currentlySelected={book.tags} onSelect={addTag} />
-        </div>
-        <div class="basis-full md:basis-3/4 flex items-center">
-          <DisplaySelectedTags {tags} currentlySelected={book.tags} onRemove={removeTag} />
-        </div>
-      </div>
-    </div>
+    <SelectAndDisplayContainer class="sm:col-span-2">
+      <SelectAvailableTags slot="select" {tags} currentlySelected={book.tags} onSelect={addTag} />
+      <DisplaySelectedTags slot="display" {tags} currentlySelected={book.tags} onRemove={removeTag} />
+    </SelectAndDisplayContainer>
 
-    <div class="col-span-2">
-      <div class="flex flex-row">
-        <div class="basis-full md:basis-1/4">
-          <SelectAvailableSubjects {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
-        </div>
-        <div class="basis-full md:basis-3/4 flex items-center">
-          <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
-        </div>
-      </div>
-    </div>
+    <SelectAndDisplayContainer class="sm:col-span-2">
+      <SelectAvailableSubjects slot="select" {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
+      <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
+    </SelectAndDisplayContainer>
 
-    <div class="col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
+    <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
       {#each book.authors || [] as author, index (index)}
         <InputGroup labelText="Author">
-          <Input slot="input" name="authors" value={author} placeholder={`Author ${index + 1}`} />
+          <Input slot="input" name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
         </InputGroup>
       {/each}
     </div>
 
-    <div class="col-span-2">
+    <div class="sm:col-span-2">
       <Button size="sm" type="button" disabled={saving} on:click={addAuthor}><i class="far fa-fw fa-plus" />Add author</Button>
     </div>
   </div>

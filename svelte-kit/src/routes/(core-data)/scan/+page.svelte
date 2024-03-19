@@ -3,7 +3,7 @@
 
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";

@@ -11,8 +11,8 @@
   import { publicUser, searchState } from "../state/searchState";
   import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
-  import Input from "$lib/components/ui/Input/Input.svelte";
-  import RawButton from "$lib/components/ui/Button/RawButton.svelte";
+  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import RawButton from "$lib/components/Button/RawButton.svelte";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
@@ -34,7 +34,7 @@
   }
 </script>
 
-<div class="sticky top-0 z-[3] bg-white mt-[-2px] pt-[2px] pb-[1px]">
+<div class="sticky-content z-[3] bg-white mt-[-2px] pt-[2px] pb-[1px]">
   <MobileMenu title="Search options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="flex flex-col gap-2 w-[175px] mt-4 mb-2">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
@@ -63,12 +63,13 @@
               <input type="hidden" name="user" value={$publicUser} />
             {/if}
             <Input
+              size="sm"
               autocomplete="off"
               bind:inputEl={quickSearchEl}
               value={$searchState.search}
               on:blur={resetSearch}
               name="search"
-              class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+              class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"
             />
             <QuickFormFiller />

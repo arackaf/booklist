@@ -99,7 +99,9 @@ currency:
   icons: []
   label: Currency
 date-time:
-  icons: []
+  icons:
+    - hourglass
+    - hourglass-half
   label: Date & Time
 design:
   icons:
@@ -261,6 +263,7 @@ objects:
     - cogs
     - eye
     - home
+    - hourglass
     - pencil
     - pencil-alt
     - save

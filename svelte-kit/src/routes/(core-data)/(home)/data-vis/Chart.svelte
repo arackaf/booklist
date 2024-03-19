@@ -1,11 +1,12 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import Alert from "$lib/components/ui/Alert.svelte";
+  import Alert from "$lib/components/Alert.svelte";
 
   import { stackGraphData } from "./stackGraphData";
   import BarChartContent from "./bar-chart/chart/BarChartContent.svelte";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";
   import PieChartContent from "./pie-chart/PieChartContent.svelte";
+  import { onMount } from "svelte";
 
   export let books: BookSubjectStack[];
   export let subjectHash: Hash<Subject>;
@@ -26,7 +27,14 @@
   };
 
   let hasRendered = false;
-  const onInitialRender = () => (hasRendered = true);
+  let chartContainer: HTMLElement;
+  onMount(() => {
+    if (chartContainer && chartIndex > 0 && !hasRendered) {
+      // smooth behavior seems to be disabled in chrome :(
+      window.scrollTo({ top: chartContainer.offsetTop, behavior: "smooth" });
+    }
+    hasRendered = true;
+  });
 
   $: isBar = chartType === "BAR";
   $: isPie = chartType === "PIE";
@@ -69,9 +77,9 @@
     </Alert>
   {/if}
 {:else}
-  <div>
+  <div class="pb-20">
     <div class="flex items-baseline gap-4">
-      <div class="flex flex-col">
+      <div bind:this={chartContainer} class="flex flex-col {chartIndex > 0 ? 'pt-16 -mt-16' : ''}">
         <h4 style="display: inline; text-wrap: nowrap" class="text-xl font-semibold">{header}</h4>
         <div class="flex items-center gap-3 ml-1">
           <button
@@ -94,6 +102,7 @@
           </button>
         </div>
       </div>
+
       <div class="flex flex-wrap">
         {#if excludedCount}
           <span>Excluding: </span>
@@ -110,9 +119,9 @@
     </div>
 
     {#if chartType === "BAR"}
-      <BarChartContent {showingData} removeBar={remove} {drilldown} {chartIndex} {hasRendered} {onInitialRender} />
+      <BarChartContent {showingData} removeBar={remove} {drilldown} {hasRendered} />
     {:else}
-      <PieChartContent {showingData} removeSlice={remove} {drilldown} {chartIndex} {hasRendered} {onInitialRender} />
+      <PieChartContent {showingData} removeSlice={remove} {drilldown} {hasRendered} />
     {/if}
   </div>
 {/if}

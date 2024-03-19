@@ -14,7 +14,7 @@
 <div class="section-nav-item flex p-0" class:active class:opacity-60={disabled} class:cursor-default={active || disabled}>
   <svelte:element
     this={active || disabled ? "span" : "a"}
-    class="p-4 {addedClasses}"
+    class="p-2 xs:p-3 sm:p-4 {addedClasses}"
     class:text-neutral-500={disabled}
     class:font-bold={active}
     href={active || disabled ? null : href}

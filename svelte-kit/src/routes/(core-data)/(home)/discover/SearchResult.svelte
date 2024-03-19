@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import { quadIn } from "svelte/easing";
 
-  import BookCover from "$lib/components/ui/BookCover.svelte";
-  import BookTitle from "$lib/components/ui/BookDisplay/BookTitle.svelte";
-  import SubTitleText from "$lib/components/ui/BookDisplay/SubTitleText.svelte";
-  import Button from "$lib/components/ui/Button/Button.svelte";
+  import BookCover from "$lib/components/BookCover.svelte";
+  import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
+  import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
+  import Button from "$lib/components/Button/Button.svelte";
 
   import type { Book } from "$data/types";
 
   let numberAnimating = 0;
-  const modalContext: any = getContext("svelte-helpers-modal");
 
   export let book: Book;
   export let selectBook: (book: Book) => void;
@@ -29,12 +27,9 @@
       css: (t: number) => `opacity: ${quadIn(t)}; height: ${t * height}px; transform: translateX(${quadIn(1 - t) * 90}%)`
     };
   };
-
-  const leaving = () => modalContext.isAnimatingResizing.set(!numberAnimating);
-  const left = () => adding && setTimeout(() => modalContext.isAnimatingResizing.set(!--numberAnimating), 1);
 </script>
 
-<div on:outrostart={leaving} on:outroend={left} out:slideOut|local style="overflow: hidden">
+<div out:slideOut|local style="overflow: hidden">
   <div class="flex">
     <div class="min-w-[60px]">
       <BookCover size="small" {book} />

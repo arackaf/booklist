@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import RawButton from "../ui/Button/RawButton.svelte";
+  import RawButton from "../Button/RawButton.svelte";
 
   export let onClose: () => void;
   export let title = "";
@@ -25,7 +25,7 @@
 </script>
 
 <div bind:this={rootEl} class="hidden">
-  <div class="mobile-menu-content">
+  <div>
     <div>
       <div class="flex items-center header">
         <RawButton aria-label="Close mobile menu" class="text-[1.4rem] ml-[2px]" on:click={onClose}>

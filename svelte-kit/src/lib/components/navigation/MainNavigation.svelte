@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { signIn, signOut } from "@auth/sveltekit/client";
+  import { signIn } from "@auth/sveltekit/client";
 
   import NavBarItem from "./NavBarItem.svelte";
   import ModuleLink from "./ModuleLink.svelte";
@@ -8,10 +8,11 @@
   import BookSvg from "./BookSvg.svelte";
 
   import { onMount } from "svelte";
-  import { invalidateAll } from "$app/navigation";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
+  import ProfilePanel from "./ProfilePanel.svelte";
+  import type { UserSummary } from "$data/user-summary";
 
-  $: ({ loggedIn, hasPublicId, isAdminUser } = $page.data);
+  $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
 
   $: pathname = $page.url.pathname;
   $: isSettings = /\/settings/.test(pathname);
@@ -34,12 +35,53 @@
   onMount(() => {
     window.addEventListener("ws-info", handleWsPendingCountUpdate);
   });
+
+  let profilePanelOpen = false;
+
+  let userSummaryFetched = false;
+  let userSummaryStale = false;
+  let userSummary: UserSummary | undefined;
+
+  function fetchUserSummaryIfNeeded() {
+    if (userSummaryFetched && !userSummaryStale) {
+      return;
+    }
+
+    userSummaryFetched = true;
+    userSummaryStale = false;
+
+    fetch("/api/user-summary")
+      .then(resp => resp.json())
+      .then(userSummaryData => {
+        userSummary = userSummaryData;
+      });
+  }
+
+  onMount(() => {
+    window.addEventListener("reload-user-summary", () => {
+      userSummaryStale = true;
+    });
+  });
 </script>
 
-<header class="master-nav z-10">
+<header class="master-nav z-10 sticky top-0">
+  {#if loggedInUser}
+    <ProfilePanel {userSummary} {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
+  {/if}
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
+    {#if loggedIn}
+      <div class="items-center mx-2 my-auto">
+        <button
+          on:mouseenter={fetchUserSummaryIfNeeded}
+          on:click={() => (profilePanelOpen = !profilePanelOpen)}
+          class="raw-button flex profile-menu-trigger"
+        >
+          <img class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
+        </button>
+      </div>
+    {/if}
     <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
-      <ModuleLink active={isHome} padding="px-5" href={$publicUserIdPersist.urlTo("/")}>
+      <ModuleLink active={isHome} padding="px-3" href={$publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
@@ -101,10 +143,9 @@
     <ul class="flex ml-auto">
       {#if !loggedIn}
         <NavBarItem
-          onClick={() =>
-            signIn("google", {
-              callbackUrl: "/books"
-            })}
+          onClick={() => {
+            signIn("", { callbackUrl: "/books" });
+          }}
           label={"Login"}
         >
           <span class="hidden md:block">Login</span>
@@ -114,16 +155,6 @@
         </NavBarItem>
       {/if}
     </ul>
-    {#if loggedIn}
-      <ul class="flex ml-auto">
-        <NavBarItem onClick={() => signOut().then(() => invalidateAll())} label={"Logout"}>
-          <span class="hidden md:block">Logout</span>
-          <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-sign-out" />
-          </span>
-        </NavBarItem>
-      </ul>
-    {/if}
   </nav>
-  <div id="main-mobile-menu" class="main-mobile-menu p-2 bg-white absolute border border-neutral-400 z-10 border-t-0 border-l-0 rounded-br" />
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10" />
 </header>

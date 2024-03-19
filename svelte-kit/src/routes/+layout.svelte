@@ -7,13 +7,13 @@
 
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
   import Footer from "$lib/components/Footer.svelte";
-  import Loading from "$lib/components/ui/Loading.svelte";
+  import Loading from "$lib/components/Loading.svelte";
 
   import { NUM_THEMES } from "$lib/util/constants";
 
   export let data;
 
-  $: ({ showMobile, uxState } = data);
+  $: ({ uxState } = data);
   $: ({ theme, wbg: whiteBg } = uxState);
 
   $: {
@@ -43,7 +43,7 @@
   });
 </script>
 
-<div class={`app-container overflow-hidden h-screen w-screen ${theme}`} class:white-bg={whiteBg === "1"}>
+<div class={`app-container h-screen w-screen ${theme}`} class:white-bg={whiteBg === "1"}>
   <div id="app">
     <MainNavigation />
     <main>
@@ -52,13 +52,8 @@
       {/if}
 
       <slot />
-
-      {#if showMobile}
-        <Footer />
-      {/if}
     </main>
-    {#if !showMobile}
-      <Footer />
-    {/if}
+
+    <Footer />
   </div>
 </div>
