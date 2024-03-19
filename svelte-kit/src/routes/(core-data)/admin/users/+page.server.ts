@@ -1,3 +1,19 @@
+import { getUserUsageInfo } from "$data/user-usage-info.js";
+import { redirect } from "@sveltejs/kit";
+
+export const load = async ({ parent }) => {
+  const parentParams = await parent();
+  if (!parentParams.isAdminUser) {
+    redirect(302, "/");
+  }
+
+  const userUsageInfo = await getUserUsageInfo();
+
+  console.log(Array.isArray(userUsageInfo));
+
+  return { userUsageInfo };
+};
+
 /*
 
 SELECT userId, DATEDIFF(NOW(), MAX(dateAdded)) daysAgo, MAX(dateAdded) latest
