@@ -1,5 +1,8 @@
-import { getUserUsageInfo } from "$data/user-usage-info.js";
+import { getUserInfoFromDynamo, getUserUsageInfo, type DynamoUserInfo } from "$data/user-usage-info.js";
 import { redirect } from "@sveltejs/kit";
+
+// 7 days
+const syncDelta = 1000 * 60 * 60 * 24 * 7;
 
 export const load = async ({ parent }) => {
   const parentParams = await parent();
@@ -9,9 +12,26 @@ export const load = async ({ parent }) => {
 
   const userUsageInfo = await getUserUsageInfo();
 
-  console.log(Array.isArray(userUsageInfo));
+  const currentTime = +new Date();
+  const missingUsers = userUsageInfo.filter(row => row.userName == null || row.lastSync == null || currentTime - row.lastSync > syncDelta);
 
-  return { userUsageInfo };
+  const missingUserInfo = Promise.all(
+    missingUsers.map<Promise<DynamoUserInfo | null>>(row => {
+      return Promise.race([
+        getUserInfoFromDynamo(row.userId),
+        // 2 seconds
+        new Promise<DynamoUserInfo | null>(res => setTimeout(() => res(null), 2000))
+      ]);
+    })
+  );
+
+  Promise.resolve(missingUserInfo).then(allUsers => {
+    allUsers.forEach(user => {
+      console.log(user?.name ?? "Not gotten from Dynamo");
+    });
+  });
+
+  return { userUsageInfo, missingUserInfo };
 };
 
 /*

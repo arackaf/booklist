@@ -72,22 +72,6 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
         .where(or(eq(subQuery.rankMin, 1), eq(subQuery.rankMax, 1)));
     };
 
-    const unusedSubjectsQuery = () =>
-      db
-        .select({ label: sql.raw(`'Unused Subjects'`) as SQL<string>, count: sql<number>`0`, id: subjects.id })
-        .from(subjects)
-        .where(
-          and(
-            eq(subjects.userId, userId),
-            notExists(
-              db
-                .select({ _: sql`0` })
-                .from(booksSubjects)
-                .where(and(eq(booksSubjects.subject, subjects.id), eq(subjects.userId, userId)))
-            )
-          )
-        );
-
     const unusedTagsQuery = () =>
       db
         .select({ label: sql.raw(`'Unused Tags'`) as SQL<string>, count: sql<number>`0`, id: tags.id })
@@ -100,6 +84,22 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
                 .select({ _: sql`0` })
                 .from(booksTags)
                 .where(eq(booksTags.tag, tags.id))
+            )
+          )
+        );
+
+    const unusedSubjectsQuery = () =>
+      db
+        .select({ label: sql.raw(`'Unused Subjects'`) as SQL<string>, count: sql<number>`0`, id: subjects.id })
+        .from(subjects)
+        .where(
+          and(
+            eq(subjects.userId, userId),
+            notExists(
+              db
+                .select({ _: sql`0` })
+                .from(booksSubjects)
+                .where(and(eq(booksSubjects.subject, subjects.id), eq(subjects.userId, userId)))
             )
           )
         );
