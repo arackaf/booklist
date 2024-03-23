@@ -3,7 +3,7 @@
 
   $: ({ userUsageInfo, missingUserInfo } = data);
 
-  Promise.resolve(missingUserInfo).then(val => {
+  $: Promise.resolve(missingUserInfo).then(val => {
     console.log({ val });
   });
 </script>

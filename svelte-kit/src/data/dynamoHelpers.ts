@@ -22,6 +22,13 @@ export const getAuthQueryPacket = (keyExpression: string, rest = {}): QueryComma
   ...rest
 });
 
+export const getAuthGSI1QueryPacket = (keyExpression: string, rest = {}): QueryCommandInput => ({
+  TableName: DYNAMO_AUTH_TABLE,
+  IndexName: "GSI1",
+  KeyConditionExpression: keyExpression,
+  ...rest
+});
+
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
     accessKeyId: AMAZON_ACCESS_KEY,

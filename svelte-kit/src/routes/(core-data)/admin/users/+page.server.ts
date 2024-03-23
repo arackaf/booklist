@@ -1,4 +1,4 @@
-import { getUserInfoFromDynamo, getUserUsageInfo, type DynamoUserInfo } from "$data/user-usage-info.js";
+import { getUserInfoFromDynamo, getUserUsageInfo, type DynamoUserInfo } from "$data/user-usage-info";
 import { redirect } from "@sveltejs/kit";
 
 // 7 days
@@ -26,6 +26,7 @@ export const load = async ({ parent }) => {
   );
 
   Promise.resolve(missingUserInfo).then(allUsers => {
+    console.log("------\n\n");
     allUsers.forEach(user => {
       console.log(user?.name ?? "Not gotten from Dynamo");
     });
