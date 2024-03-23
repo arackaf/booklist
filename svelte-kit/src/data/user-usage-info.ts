@@ -1,11 +1,11 @@
 import { eq, max, count, desc } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
 import { books, userInfoCache } from "./drizzle-schema";
-import { db as dynamo, getQueryPacket } from "./dynamoHelpers";
+import { db as dynamo, getAuthQueryPacket } from "./dynamoHelpers";
 
 export const getUserUsageInfo = () => {
   const subQuery = db
-    .select({ userId: books.userId, books: count(), latest: max(books.dateAdded).as("dateAdded") })
+    .select({ userId: books.userId, books: count().as("books"), latest: max(books.dateAdded).as("latest") })
     .from(books)
     .groupBy(books.userId)
     .as("bookUser");
@@ -25,7 +25,7 @@ export const getUserUsageInfo = () => {
       })
       .from(subQuery)
       .leftJoin(userInfoCache, eq(userInfoCache.userId, subQuery.userId))
-      .orderBy(desc(max(books.dateAdded)))
+      .orderBy(desc(subQuery.latest))
   );
 };
 
@@ -39,8 +39,13 @@ export type DynamoUserInfo = {
 
 export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserInfo | null> => {
   const key = `USER#${userId}`;
+  const queryPacket = getAuthQueryPacket(` pk = :key `, {
+    ExpressionAttributeValues: { ":key": key }
+  });
 
-  const userInfo = await dynamo.query(getQueryPacket(key, key));
+  console.log({ queryPacket });
+
+  const userInfo = await dynamo.query(queryPacket);
 
   if (!userInfo.length) {
     return null;

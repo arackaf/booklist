@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-
   export let data;
 
-  $: ({ userUsageInfo } = data);
+  $: ({ userUsageInfo, missingUserInfo } = data);
+
+  Promise.resolve(missingUserInfo).then(val => {
+    console.log({ val });
+  });
 </script>
 
 <h1>Hello World</h1>
