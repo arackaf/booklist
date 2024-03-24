@@ -4,7 +4,9 @@
   $: ({ userUsageInfo, missingUserInfo } = data);
 
   $: Promise.resolve(missingUserInfo).then(val => {
-    console.log({ val });
+    if (typeof window === "object") {
+      console.log({ val });
+    }
   });
 </script>
 

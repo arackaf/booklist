@@ -38,6 +38,52 @@ export type DynamoUserInfo = {
 };
 
 export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserInfo | null> => {
+  try {
+    let user = await getProviderUser(userId);
+    if (user != null) {
+      return user;
+    }
+
+    const aliasId = await lookupAliasId(userId);
+    console.log({ aliasId });
+
+    if (aliasId) {
+      const userAttempt2 = await getProviderUser(aliasId);
+      if (userAttempt2) {
+        return userAttempt2;
+      }
+    }
+
+    return {
+      userId: userId,
+      avatar: "",
+      email: "",
+      name: "",
+      provider: "Legacy"
+    };
+  } catch (err) {
+    console.log("Error retrieving user from Dyanmo", err);
+    return null;
+  }
+};
+
+const lookupAliasId = async (userId: string): Promise<string | null> => {
+  const pk = `UserReverseAlias#${userId}`;
+
+  const aliasRecordMaybe = await dynamo.query(
+    getQueryPacket(` pk = :pk `, {
+      ExpressionAttributeValues: { ":pk": pk }
+    })
+  );
+
+  if (!aliasRecordMaybe.length) {
+    return null;
+  }
+
+  return aliasRecordMaybe[0].sk;
+};
+
+const getProviderUser = async (userId: string): Promise<DynamoUserInfo | null> => {
   const googleKey = "ACCOUNT#google";
   const githubKey = "ACCOUNT#github";
 
