@@ -34,6 +34,7 @@ export type DynamoUserInfo = {
   name: string;
   email: string;
   avatar: string;
+  aliasUserId?: string;
   provider?: string;
 };
 
@@ -50,7 +51,7 @@ export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserI
     if (aliasId) {
       const userAttempt2 = await getProviderUser(aliasId);
       if (userAttempt2) {
-        return userAttempt2;
+        return { ...userAttempt2, userId, aliasUserId: userAttempt2.userId };
       }
     }
 

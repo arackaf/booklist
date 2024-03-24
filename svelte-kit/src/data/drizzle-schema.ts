@@ -76,5 +76,6 @@ export const userInfoCache = mysqlTable("user_info_cache", {
   provider: varchar("provider", { length: 50 }),
   email: varchar("email", { length: 50 }),
   avatar: varchar("avatar", { length: 50 }),
+  aliasUserId: varchar("aliasUserId", { length: 50 }),
   lastSync: int("lastSync").notNull()
 });

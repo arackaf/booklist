@@ -39,7 +39,6 @@ export const load = async ({ parent }) => {
       if (user && user.provider !== "Legacy") {
         console.log(user.userId, user.provider);
 
-        continue;
         const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
         if (!existingUser.length) {
           await executeDrizzle(
