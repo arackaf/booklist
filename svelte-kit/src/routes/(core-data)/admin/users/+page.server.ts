@@ -51,10 +51,13 @@ export const load = async ({ parent }) => {
         } else {
           await executeDrizzle(
             "Update user cache",
-            db.update(userInfoCache).set({
-              lastSync: +new Date(),
-              ...user
-            })
+            db
+              .update(userInfoCache)
+              .set({
+                lastSync: +new Date(),
+                ...user
+              })
+              .where(eq(userInfoCache.userId, user.userId))
           );
         }
       }
