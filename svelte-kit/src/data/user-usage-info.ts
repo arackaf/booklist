@@ -26,7 +26,7 @@ export const getUserUsageInfo = () => {
       })
       .from(subQuery)
       .leftJoin(userInfoCache, eq(userInfoCache.userId, subQuery.userId))
-      .orderBy(desc(subQuery.latest))
+      .orderBy(desc(subQuery.books))
   );
 };
 

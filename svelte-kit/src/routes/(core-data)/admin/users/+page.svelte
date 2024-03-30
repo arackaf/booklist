@@ -15,21 +15,22 @@
   });
 </script>
 
-{#each userUsageInfo as x}
-  <div>
-    <div>
-      {x.latest}
-    </div>
-    <div>
-      {x.userId}
-    </div>
-    <div>
-      {x.books}
-    </div>
-    <div>
-      {x.provider}
-    </div>
+<div class="flex flex-col gap-6">
+  {#each userUsageInfo as x}
+    <div class="flex flex-row gap-2">
+      <div>
+        {x.userId}
+      </div>
 
-    <br />
-  </div>
-{/each}
+      <div>
+        {x.provider}
+      </div>
+      <div>
+        {x.books}
+      </div>
+      <div>
+        {x.latest?.getFullYear()}
+      </div>
+    </div>
+  {/each}
+</div>
