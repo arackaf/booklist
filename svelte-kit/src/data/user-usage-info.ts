@@ -34,6 +34,7 @@ export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserI
   try {
     let user = await getProviderUser(userId);
     if (user != null) {
+      console.log("Found", user.userId, user.provider);
       return user;
     }
 
@@ -42,10 +43,12 @@ export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserI
     if (aliasId) {
       const userAttempt2 = await getProviderUser(aliasId);
       if (userAttempt2) {
+        console.log("Found with alias", userId, userAttempt2.provider);
         return { ...userAttempt2, userId, aliasUserId: userAttempt2.userId };
       }
     }
 
+    console.log("Legacy user", userId);
     return {
       userId,
       avatar: "",

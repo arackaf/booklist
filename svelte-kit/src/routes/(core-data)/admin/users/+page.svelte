@@ -1,15 +1,13 @@
 <script lang="ts">
-  import type { DynamoUserInfo } from "$data/types.js";
-
   export let data;
 
   $: ({ userUsageInfo, missingUserInfo } = data);
-  let lookup: Record<string, DynamoUserInfo> = {};
+  let lookup: Record<string, string> = {};
 
   $: Promise.resolve(missingUserInfo).then(val => {
     if (typeof window === "object") {
       val.forEach(user => {
-        lookup[user.userId] = user;
+        lookup[user.userId] = user.provider ?? "";
       });
     }
   });
@@ -23,7 +21,7 @@
       </div>
 
       <div>
-        {x.provider}
+        {x.provider || lookup[x.userId] || ""}
       </div>
       <div>
         {x.books}
