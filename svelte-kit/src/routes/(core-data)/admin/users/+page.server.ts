@@ -1,6 +1,7 @@
 import { db, executeDrizzle } from "$data/dbUtils";
 import { userInfoCache } from "$data/drizzle-schema.js";
-import { getUserInfoFromDynamo, getUserUsageInfo, type DynamoUserInfo } from "$data/user-usage-info";
+import type { DynamoUserInfo } from "$data/types.js";
+import { getUserInfoFromDynamo, getUserUsageInfo } from "$data/user-usage-info";
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
@@ -22,14 +23,16 @@ export const load = async ({ parent }) => {
     console.log("Missing", x.userId);
   }
 
-  const missingUserInfo = Promise.all(
-    missingUsers.map<Promise<DynamoUserInfo | null>>(row => {
-      return Promise.race([
-        getUserInfoFromDynamo(row.userId),
-        // 2 seconds
-        new Promise<DynamoUserInfo | null>(res => setTimeout(() => res(null), 2000))
-      ]);
-    })
+  const missingUserInfo: Promise<DynamoUserInfo[]> = Promise.all(
+    missingUsers
+      .map(row => {
+        return Promise.race([
+          getUserInfoFromDynamo(row.userId),
+          // 2 seconds
+          new Promise<null>(res => setTimeout(() => res(null), 2000))
+        ]);
+      })
+      .filter(val => val != null) as Promise<DynamoUserInfo>[]
   );
 
   Promise.resolve(missingUserInfo).then(async allUsers => {

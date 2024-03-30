@@ -2,6 +2,7 @@ import { eq, max, count, desc } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
 import { books, userInfoCache } from "./drizzle-schema";
 import { db as dynamo, getAuthGSI1QueryPacket, getAuthQueryPacket, getQueryPacket } from "./dynamoHelpers";
+import type { DynamoUserInfo } from "./types";
 
 export const getUserUsageInfo = () => {
   const subQuery = db
@@ -27,15 +28,6 @@ export const getUserUsageInfo = () => {
       .leftJoin(userInfoCache, eq(userInfoCache.userId, subQuery.userId))
       .orderBy(desc(subQuery.latest))
   );
-};
-
-export type DynamoUserInfo = {
-  userId: string;
-  name: string;
-  email: string;
-  avatar: string;
-  aliasUserId?: string;
-  provider?: string;
 };
 
 export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserInfo | null> => {
