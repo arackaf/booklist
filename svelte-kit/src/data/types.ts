@@ -134,3 +134,12 @@ export type BookWithSimilarItems = {
   similarBooksLastSync: string;
   similarBooksLastSyncDisplay: string;
 } & Partial<BookImages>;
+
+export type DynamoUserInfo = {
+  userId: string;
+  name: string;
+  email: string;
+  avatar: string;
+  aliasUserId?: string;
+  provider?: string;
+};

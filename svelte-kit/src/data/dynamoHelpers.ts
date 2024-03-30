@@ -1,4 +1,4 @@
-import { BOOKLIST_DYNAMO, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+import { BOOKLIST_DYNAMO, DYNAMO_AUTH_TABLE, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 
@@ -15,6 +15,19 @@ export const getQueryPacket = (keyExpression: string, rest = {}): QueryCommandIn
 });
 export const getPutPacket = (obj: object, rest = {}): PutCommandInput => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 export const getUpdatePacket = (pk: string, sk: string, rest: object): UpdateCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
+
+export const getAuthQueryPacket = (keyExpression: string, rest = {}): QueryCommandInput => ({
+  TableName: DYNAMO_AUTH_TABLE,
+  KeyConditionExpression: keyExpression,
+  ...rest
+});
+
+export const getAuthGSI1QueryPacket = (keyExpression: string, rest = {}): QueryCommandInput => ({
+  TableName: DYNAMO_AUTH_TABLE,
+  IndexName: "GSI1",
+  KeyConditionExpression: keyExpression,
+  ...rest
+});
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {

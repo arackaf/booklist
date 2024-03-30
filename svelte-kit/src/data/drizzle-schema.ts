@@ -69,3 +69,13 @@ export const booksSubjects = mysqlTable("books_subjects", {
   book: int("book").notNull(),
   subject: int("subject").notNull()
 });
+
+export const userInfoCache = mysqlTable("user_info_cache", {
+  userId: varchar("userId", { length: 50 }).notNull(),
+  name: varchar("name", { length: 50 }),
+  provider: varchar("provider", { length: 50 }),
+  email: varchar("email", { length: 50 }),
+  avatar: varchar("avatar", { length: 50 }),
+  aliasUserId: varchar("aliasUserId", { length: 50 }),
+  lastSync: int("lastSync").notNull()
+});
