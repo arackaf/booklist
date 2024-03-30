@@ -34,9 +34,7 @@ export const load = async ({ parent }) => {
         ]);
       })
       .filter(val => val != null) as Promise<StoredUserInfo>[]
-  );
-
-  await Promise.resolve(missingUserInfo).then(async allUsers => {
+  ).then(async allUsers => {
     for (const user of allUsers) {
       const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
       if (!existingUser.length) {
@@ -71,6 +69,8 @@ export const load = async ({ parent }) => {
         }
       }
     }
+
+    return allUsers;
   });
 
   return { userUsageInfo, missingUserInfo };
