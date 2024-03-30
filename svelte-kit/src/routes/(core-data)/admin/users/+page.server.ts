@@ -36,31 +36,38 @@ export const load = async ({ parent }) => {
       .filter(val => val != null) as Promise<StoredUserInfo>[]
   );
 
-  Promise.resolve(missingUserInfo).then(async allUsers => {
+  await Promise.resolve(missingUserInfo).then(async allUsers => {
     for (const user of allUsers) {
-      console.log(user.userId, user.provider);
-
       const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
       if (!existingUser.length) {
-        await executeDrizzle(
-          "Insert into user cache",
-          db.insert(userInfoCache).values({
-            lastSync: +new Date(),
-            ...user
-          })
-        );
+        try {
+          console.log("Inserting user", user.userId, user.provider);
+          await executeDrizzle(
+            "Insert into user cache",
+            db.insert(userInfoCache).values({
+              lastSync: +new Date(),
+              ...user
+            })
+          );
+        } catch (er) {
+          console.log("Error inserting into user info cache for", user.userId, er);
+        }
       } else {
         if (user.provider !== "Legacy") {
-          await executeDrizzle(
-            "Update user cache",
-            db
-              .update(userInfoCache)
-              .set({
-                lastSync: +new Date(),
-                ...user
-              })
-              .where(eq(userInfoCache.userId, user.userId))
-          );
+          try {
+            await executeDrizzle(
+              "Update user cache",
+              db
+                .update(userInfoCache)
+                .set({
+                  lastSync: +new Date(),
+                  ...user
+                })
+                .where(eq(userInfoCache.userId, user.userId))
+            );
+          } catch (er) {
+            console.log("Error updating user info cache for", user.userId, er);
+          }
         }
       }
     }
