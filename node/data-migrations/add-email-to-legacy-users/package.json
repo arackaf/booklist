@@ -1,0 +1,17 @@
+{
+  "name": "add-email-to-legacy-users",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.540.0",
+    "@aws-sdk/lib-dynamodb": "^3.540.0",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.4.3"
+  }
+}
