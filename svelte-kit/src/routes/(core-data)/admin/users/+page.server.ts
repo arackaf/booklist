@@ -25,6 +25,7 @@ export const load = async ({ parent }) => {
 
   const missingUserInfo: Promise<StoredUserInfo[]> = Promise.all(
     missingUsers
+      .filter((user, idx) => idx <= 10)
       .map(row => {
         return Promise.race([
           getUserInfoFromDynamo(row.userId),
@@ -36,8 +37,6 @@ export const load = async ({ parent }) => {
   );
 
   Promise.resolve(missingUserInfo).then(async allUsers => {
-    console.log("------\n\n");
-
     for (const user of allUsers) {
       console.log(user.userId, user.provider);
 
@@ -51,16 +50,18 @@ export const load = async ({ parent }) => {
           })
         );
       } else {
-        await executeDrizzle(
-          "Update user cache",
-          db
-            .update(userInfoCache)
-            .set({
-              lastSync: +new Date(),
-              ...user
-            })
-            .where(eq(userInfoCache.userId, user.userId))
-        );
+        if (user.provider !== "Legacy") {
+          await executeDrizzle(
+            "Update user cache",
+            db
+              .update(userInfoCache)
+              .set({
+                lastSync: +new Date(),
+                ...user
+              })
+              .where(eq(userInfoCache.userId, user.userId))
+          );
+        }
       }
     }
   });

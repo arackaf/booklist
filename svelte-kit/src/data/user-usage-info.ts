@@ -38,7 +38,6 @@ export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserI
     }
 
     const aliasId = await lookupAliasId(userId);
-    console.log({ aliasId });
 
     if (aliasId) {
       const userAttempt2 = await getProviderUser(aliasId);
