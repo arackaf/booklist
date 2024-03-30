@@ -24,8 +24,12 @@
       {x.userId}
     </div>
     <div>
+      {x.books}
+    </div>
+    <div>
       {x.provider}
     </div>
+
     <br />
   </div>
 {/each}

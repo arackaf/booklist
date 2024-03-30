@@ -48,7 +48,7 @@ export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserI
     }
 
     return {
-      userId: userId,
+      userId,
       avatar: "",
       email: "",
       name: "",

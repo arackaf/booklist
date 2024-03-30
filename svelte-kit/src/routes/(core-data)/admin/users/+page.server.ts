@@ -1,6 +1,6 @@
 import { db, executeDrizzle } from "$data/dbUtils";
 import { userInfoCache } from "$data/drizzle-schema.js";
-import type { DynamoUserInfo } from "$data/types.js";
+import type { DynamoUserInfo as StoredUserInfo } from "$data/types.js";
 import { getUserInfoFromDynamo, getUserUsageInfo } from "$data/user-usage-info";
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
@@ -23,7 +23,7 @@ export const load = async ({ parent }) => {
     console.log("Missing", x.userId);
   }
 
-  const missingUserInfo: Promise<DynamoUserInfo[]> = Promise.all(
+  const missingUserInfo: Promise<StoredUserInfo[]> = Promise.all(
     missingUsers
       .map(row => {
         return Promise.race([
@@ -32,37 +32,35 @@ export const load = async ({ parent }) => {
           new Promise<null>(res => setTimeout(() => res(null), 2000))
         ]);
       })
-      .filter(val => val != null) as Promise<DynamoUserInfo>[]
+      .filter(val => val != null) as Promise<StoredUserInfo>[]
   );
 
   Promise.resolve(missingUserInfo).then(async allUsers => {
     console.log("------\n\n");
 
     for (const user of allUsers) {
-      if (user && user.provider !== "Legacy") {
-        console.log(user.userId, user.provider);
+      console.log(user.userId, user.provider);
 
-        const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
-        if (!existingUser.length) {
-          await executeDrizzle(
-            "Insert into user cache",
-            db.insert(userInfoCache).values({
+      const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
+      if (!existingUser.length) {
+        await executeDrizzle(
+          "Insert into user cache",
+          db.insert(userInfoCache).values({
+            lastSync: +new Date(),
+            ...user
+          })
+        );
+      } else {
+        await executeDrizzle(
+          "Update user cache",
+          db
+            .update(userInfoCache)
+            .set({
               lastSync: +new Date(),
               ...user
             })
-          );
-        } else {
-          await executeDrizzle(
-            "Update user cache",
-            db
-              .update(userInfoCache)
-              .set({
-                lastSync: +new Date(),
-                ...user
-              })
-              .where(eq(userInfoCache.userId, user.userId))
-          );
-        }
+            .where(eq(userInfoCache.userId, user.userId))
+        );
       }
     }
   });
