@@ -23,7 +23,7 @@ export default {
     subjects: "StringArray",
     tags: "StringArray",
     isRead: "Boolean",
-    dateAdded: "String",
+    dateAdded1: "String",
     editorialReviews: {
       __isArray: true,
       get type() {
