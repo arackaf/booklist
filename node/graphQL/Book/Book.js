@@ -5,7 +5,7 @@ export default {
   table: "books",
   typeName: "Book",
   fields: {
-    _id: "MongoId",
+    _id: "MongoId2",
     ean: "String",
     isbn: "String",
     title: "String",
