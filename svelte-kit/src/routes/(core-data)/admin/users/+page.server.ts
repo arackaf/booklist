@@ -34,7 +34,11 @@ export const load = async ({ parent }) => {
         ]);
       })
       .filter(val => val != null) as Promise<StoredUserInfo>[]
-  ).then(async allUsers => {
+  );
+
+  // returning even though it's void, so the CF worker will block on it, while allowing
+  // the missingUserInfo promise to stream as soon as ready
+  const syncMissingUserInfo = missingUserInfo.then(async allUsers => {
     for (const user of allUsers) {
       const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
       if (!existingUser.length) {
@@ -69,9 +73,7 @@ export const load = async ({ parent }) => {
         }
       }
     }
-
-    return allUsers;
   });
 
-  return { userUsageInfo, missingUserInfo };
+  return { userUsageInfo, missingUserInfo, syncMissingUserInfo };
 };
