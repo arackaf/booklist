@@ -23,7 +23,7 @@ export const type = `
     editorialReviews: [EditorialReview]
     similarItems: [String]
     similarItemsLastUpdate: Int
-    timestamp: Float
+    timestamp: Float!
     similarBooks(FILTER: BookSummaryFilters, LIMIT: Int, SKIP: Int, PAGE: Int, PAGE_SIZE: Int, SORT: BookSummarySort, SORTS: [BookSummarySort], PREFER_LOOKUP: Boolean, DONT_PREFER_LOOKUP: Boolean): [BookSummary!]!
     similarBooksMeta(FILTER: BookSummaryFilters): QueryRelationshipResultsMetadata
   }
