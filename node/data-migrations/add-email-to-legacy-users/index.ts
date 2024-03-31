@@ -27,8 +27,16 @@ const scanInput: ScanCommandInput = {
   Limit: LIMIT
 };
 
-const results = await dynamo.scan(scanInput);
+let lastKey = undefined;
+do {
+  const results = await getNext(lastKey);
+  lastKey = results.LastEvaluatedKey;
 
-for (const item of results.Items) {
-  console.log(item);
+  for (const item of results.Items) {
+    console.log(item.pk);
+  }
+} while (lastKey);
+
+async function getNext(lastKey: Record<string, string> | undefined) {
+  return dynamo.scan({ ...scanInput, ExclusiveStartKey: lastKey });
 }
