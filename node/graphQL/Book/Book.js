@@ -5,7 +5,7 @@ export default {
   table: "books",
   typeName: "Book",
   fields: {
-    _id: "MongoId2",
+    _id: "MongoId",
     ean: "String",
     isbn: "String",
     title: "String",
@@ -23,7 +23,7 @@ export default {
     subjects: "StringArray",
     tags: "StringArray",
     isRead: "Boolean",
-    dateAdded1: "String",
+    dateAdded: "String",
     editorialReviews: {
       __isArray: true,
       get type() {
