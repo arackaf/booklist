@@ -30,6 +30,8 @@ export const getUserUsageInfo = () => {
   );
 };
 
+// blacklist 5e4071a4496afc003ac61ff4, 5eaf73a50d1a550017a41c74, 60a93babcc3928454b5d1cc6
+
 export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserInfo | null> => {
   try {
     let user = await getProviderUser(userId);
