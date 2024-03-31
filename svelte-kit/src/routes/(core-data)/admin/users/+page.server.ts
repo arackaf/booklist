@@ -23,7 +23,7 @@ export const load = async ({ parent }) => {
     console.log("Missing", x.userId);
   }
 
-  const missingUserInfo: Promise<StoredUserInfo[]> = Promise.all(
+  const missingUserInfo: Promise<(StoredUserInfo | null)[]> = Promise.all(
     missingUsers
       .filter((user, idx) => idx <= 10)
       .map(row => {
@@ -33,13 +33,16 @@ export const load = async ({ parent }) => {
           new Promise<null>(res => setTimeout(() => res(null), 2000))
         ]);
       })
-      .filter(val => val != null) as Promise<StoredUserInfo>[]
   );
 
   // returning even though it's void, so the CF worker will block on it, while allowing
   // the missingUserInfo promise to stream as soon as ready
   const syncMissingUserInfo = missingUserInfo.then(async allUsers => {
     for (const user of allUsers) {
+      if (user == null) {
+        continue;
+      }
+
       const existingUser = await db.select().from(userInfoCache).where(eq(userInfoCache.userId, user.userId));
       if (!existingUser.length) {
         try {

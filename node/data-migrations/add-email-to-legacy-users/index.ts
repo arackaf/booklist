@@ -1,7 +1,12 @@
 import { DynamoDB, type ScanCommandInput, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 
 require("dotenv").config();
+
+export const mySqlConnectionFactory = new Client({
+  url: process.env.MYSQL_CONNECTION_STRING
+});
 
 console.log(DynamoDB, DynamoDBDocument);
 
@@ -27,8 +32,46 @@ const scanInput: ScanCommandInput = {
   Limit: LIMIT
 };
 
-const results = await dynamo.scan(scanInput);
+let lastKey = undefined;
+do {
+  const results = await getNext(lastKey);
+  lastKey = results.LastEvaluatedKey;
 
-for (const item of results.Items) {
-  console.log(item);
+  for (const item of results.Items) {
+    console.log(item.pk);
+
+    if (item.pk.startsWith("User#")) {
+      const { userId, email } = item;
+
+      if (userId && email) {
+        await updateUser(userId, email);
+      }
+    }
+  }
+} while (lastKey);
+
+async function getNext(lastKey: Record<string, string> | undefined) {
+  return dynamo.scan({ ...scanInput, ExclusiveStartKey: lastKey });
+}
+
+async function updateUser(userId: string, email: string) {
+  try {
+    await executeSQLRaw(
+      `
+      UPDATE user_info_cache
+      SET email = ?
+      WHERE userId = ? AND provider = 'Legacy'
+      `,
+      [email, userId]
+    );
+  } catch (er) {
+    console.log("Error updating user", er);
+  }
+}
+
+async function executeSQLRaw(sql: string, args: any[] = []) {
+  const conn = mySqlConnectionFactory.connection();
+  const result = await conn.execute(sql, args);
+
+  console.log("Size --->", result.rowsAffected, "\n");
 }
