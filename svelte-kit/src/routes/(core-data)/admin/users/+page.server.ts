@@ -1,7 +1,7 @@
 import { db, executeDrizzle } from "$data/dbUtils";
 import { userInfoCache } from "$data/drizzle-schema.js";
-import type { DynamoUserInfo as StoredUserInfo } from "$data/types.js";
-import { getUserInfoFromDynamo, getUserUsageInfo } from "$data/user-usage-info";
+import type { StoredUserInfo } from "$data/types.js";
+import { getUserInfoFromDynamo, getUserUsageInfo, type UserUsageEntry } from "$data/user-usage-info";
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
@@ -14,7 +14,7 @@ export const load = async ({ parent }) => {
     redirect(302, "/");
   }
 
-  const userUsageInfo = await getUserUsageInfo();
+  const userUsageInfo: UserUsageEntry[] = await getUserUsageInfo();
 
   const currentTime = +new Date();
   const missingUsers = userUsageInfo.filter(row => row.userName == null || row.lastSync == null || currentTime - row.lastSync > syncDelta);
@@ -23,7 +23,7 @@ export const load = async ({ parent }) => {
     console.log("Missing", x.userId);
   }
 
-  const missingUserInfo: Promise<(StoredUserInfo | null)[]> = Promise.all(
+  const missingUserInfo: Promise<StoredUserInfo[]> = Promise.all(
     missingUsers
       .filter((user, idx) => idx <= 10)
       .map(row => {
@@ -33,7 +33,7 @@ export const load = async ({ parent }) => {
           new Promise<null>(res => setTimeout(() => res(null), 2000))
         ]);
       })
-  );
+  ).then(users => users.filter(u => u != null) as StoredUserInfo[]);
 
   // returning even though it's void, so the CF worker will block on it, while allowing
   // the missingUserInfo promise to stream as soon as ready

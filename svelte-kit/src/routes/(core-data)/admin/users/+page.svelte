@@ -1,13 +1,16 @@
 <script lang="ts">
+  import type { StoredUserInfo } from "$data/types";
+  import UserUsageEntry from "./UserUsageEntry.svelte";
+
   export let data;
 
   $: ({ userUsageInfo, missingUserInfo } = data);
-  let lookup: Record<string, string> = {};
+  let lookup: Record<string, StoredUserInfo | null> = {};
 
   $: Promise.resolve(missingUserInfo).then(val => {
     if (typeof window === "object") {
       val.forEach(user => {
-        lookup[user.userId] = user.provider ?? "";
+        lookup[user.userId] = user ?? null;
       });
     }
   });
@@ -15,20 +18,6 @@
 
 <div class="flex flex-col gap-6">
   {#each userUsageInfo as x}
-    <div class="flex flex-row gap-2">
-      <div>
-        {x.userId}
-      </div>
-
-      <div>
-        {x.provider || lookup[x.userId] || ""}
-      </div>
-      <div>
-        {x.books}
-      </div>
-      <div>
-        {x.latest?.getFullYear()}
-      </div>
-    </div>
+    <UserUsageEntry userUsageEntry={x} missingUserInfo={lookup[x.userId]} />
   {/each}
 </div>

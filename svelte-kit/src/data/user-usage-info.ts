@@ -2,7 +2,9 @@ import { eq, max, count, desc } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
 import { books, userInfoCache } from "./drizzle-schema";
 import { db as dynamo, getAuthGSI1QueryPacket, getAuthQueryPacket, getQueryPacket } from "./dynamoHelpers";
-import type { DynamoUserInfo } from "./types";
+import type { StoredUserInfo } from "./types";
+
+export type UserUsageEntry = Awaited<ReturnType<typeof getUserUsageInfo>>[0];
 
 export const getUserUsageInfo = () => {
   const subQuery = db
@@ -32,7 +34,7 @@ export const getUserUsageInfo = () => {
 
 // blacklist 5e4071a4496afc003ac61ff4, 5eaf73a50d1a550017a41c74, 60a93babcc3928454b5d1cc6
 
-export const getUserInfoFromDynamo = async (userId: string): Promise<DynamoUserInfo | null> => {
+export const getUserInfoFromDynamo = async (userId: string): Promise<StoredUserInfo | null> => {
   try {
     let user = await getProviderUser(userId);
     if (user != null) {
@@ -80,7 +82,7 @@ const lookupAliasId = async (userId: string): Promise<string | null> => {
   return aliasRecordMaybe[0].sk;
 };
 
-const getProviderUser = async (userId: string): Promise<DynamoUserInfo | null> => {
+const getProviderUser = async (userId: string): Promise<StoredUserInfo | null> => {
   const googleKey = "ACCOUNT#google";
   const githubKey = "ACCOUNT#github";
 
@@ -117,7 +119,7 @@ const getProviderUser = async (userId: string): Promise<DynamoUserInfo | null> =
   const userRecord = userRecordMaybe[0];
   const { name, email, image: avatar } = userRecord;
 
-  const result: DynamoUserInfo = { userId, name, email, avatar, provider };
+  const result: StoredUserInfo = { userId, name, email, avatar, provider };
 
   return result;
 };

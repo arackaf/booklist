@@ -135,7 +135,7 @@ export type BookWithSimilarItems = {
   similarBooksLastSyncDisplay: string;
 } & Partial<BookImages>;
 
-export type DynamoUserInfo = {
+export type StoredUserInfo = {
   userId: string;
   name: string;
   email: string;
