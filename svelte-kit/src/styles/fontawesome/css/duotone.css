@@ -63,3 +63,9 @@
 
 .fad.fa-times-circle:after {
   content: "\10f057"; }
+
+.fad.fa-user:after {
+  content: "\10f007"; }
+
+.fad.fa-user-circle:after {
+  content: "\10f2bd"; }

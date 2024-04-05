@@ -366,6 +366,12 @@ readers do not read off random characters that represent icons */
 .fa-undo:before {
   content: "\f0e2"; }
 
+.fa-user:before {
+  content: "\f007"; }
+
+.fa-user-circle:before {
+  content: "\f2bd"; }
+
 .fa-users-cog:before {
   content: "\f509"; }
 
@@ -458,6 +464,12 @@ readers do not read off random characters that represent icons */
 
 .fad.fa-times-circle:after {
   content: "\10f057"; }
+
+.fad.fa-user:after {
+  content: "\10f007"; }
+
+.fad.fa-user-circle:after {
+  content: "\10f2bd"; }
 @font-face {
   font-family: 'Font Awesome 5 Pro';
   font-style: normal;

@@ -742,8 +742,6 @@ search:
       - zoom
   styles:
     - light
-    - regular
-    - solid
   unicode: f002
   voted: false
 sign-in:
@@ -995,6 +993,48 @@ undo:
   styles:
     - light
   unicode: f0e2
+  voted: false
+user:
+  changes:
+    - '1'
+    - 5.0.0
+    - 5.0.3
+    - 5.0.11
+  label: User
+  search:
+    terms:
+      - account
+      - avatar
+      - head
+      - human
+      - man
+      - person
+      - profile
+  styles:
+    - duotone
+  unicode: f007
+  voted: false
+user-circle:
+  changes:
+    - '4.7'
+    - 5.0.0
+    - 5.0.3
+    - 5.0.11
+    - 5.11.0
+    - 5.11.1
+  label: User Circle
+  search:
+    terms:
+      - account
+      - avatar
+      - head
+      - human
+      - man
+      - person
+      - profile
+  styles:
+    - duotone
+  unicode: f2bd
   voted: false
 users-cog:
   changes:

@@ -217,6 +217,8 @@ interfaces:
     - trash
     - trash-alt
     - undo
+    - user
+    - user-circle
   label: Interfaces
 logistics:
   icons:
@@ -308,7 +310,9 @@ shopping:
     - badge
   label: Shopping
 social:
-  icons: []
+  icons:
+    - user
+    - user-circle
   label: Social
 spinners:
   icons:
@@ -334,6 +338,7 @@ status:
     - question-circle
     - sign-in
     - sign-out
+    - user
   label: Status
 summer:
   icons: []
@@ -346,6 +351,8 @@ travel:
   label: Travel
 users-people:
   icons:
+    - user
+    - user-circle
     - users-cog
   label: Users & People
 vehicles:
