@@ -6,7 +6,6 @@
   export let drilldown: any;
   export let remove: (id: string) => void;
   export let arrowStyle = "";
-  export let targetElement: SVGElement;
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>

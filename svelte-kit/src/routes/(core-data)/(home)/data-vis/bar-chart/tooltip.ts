@@ -2,6 +2,7 @@ import { createPopper, type Placement, type Instance as PopperInstance } from "@
 import type { Subject } from "$data/types";
 
 import Tooltip from "./Tooltip.svelte";
+import type BarTooltip from "./bars/BarTooltip.svelte";
 
 export type Position = "left" | "right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
 
@@ -11,7 +12,7 @@ export type PopperOptions = {
   drilldown: any;
   remove: (id: string) => void;
   hoverTarget?: Element;
-  TooltipComponent?: typeof Tooltip;
+  TooltipComponent?: typeof Tooltip | typeof BarTooltip;
   onShow?: () => void;
   onHide?: () => void;
 };
