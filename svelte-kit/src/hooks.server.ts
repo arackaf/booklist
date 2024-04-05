@@ -65,7 +65,7 @@ const auth = SvelteKitAuth({
       const userSync = await getUserSync(account.providerAccountId);
 
       if (userSync) {
-        account.syncdId = userSync;
+        (account as any).syncdId = userSync;
       }
 
       return true;
