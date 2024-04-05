@@ -12,7 +12,6 @@
   export let drilldown: any;
   export let removeBar: (id: any) => void;
 
-  export let hasRendered: boolean;
   let barChartHasRendered = false;
   onMount(() => {
     barChartHasRendered = true;

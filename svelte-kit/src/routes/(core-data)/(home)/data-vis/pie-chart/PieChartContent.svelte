@@ -150,7 +150,7 @@
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
-          <SingleSliceLabel labelsReady={!hideLabels && (labelsReady || hasRendered)} segment={seg} disableAnimation={pieSegments.length === 1} />
+          <SingleSliceLabel labelsReady={!hideLabels && (labelsReady || hasRendered)} segment={seg} />
         {/each}
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice

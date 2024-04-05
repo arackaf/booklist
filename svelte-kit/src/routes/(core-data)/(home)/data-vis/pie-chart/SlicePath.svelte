@@ -10,7 +10,6 @@
     color: string;
   };
   export let segmentChunk: ChunkType;
-  export let noInitialAnimation;
   export let color: string | null = null;
 
   export let sliceSpring: Spring<any>;

@@ -4,7 +4,6 @@
   export let segment: any;
 
   export let labelsReady: boolean;
-  export let disableAnimation: boolean;
 
   $: ({ centroid, inflexionPoint, labelPosX, textAnchor, isRightLabel } = segment);
 
