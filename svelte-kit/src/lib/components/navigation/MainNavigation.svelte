@@ -76,7 +76,7 @@
           on:click={() => (profilePanelOpen = !profilePanelOpen)}
           class="raw-button flex profile-menu-trigger"
         >
-          <img class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
+          <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
         </button>
       </div>
     {/if}
