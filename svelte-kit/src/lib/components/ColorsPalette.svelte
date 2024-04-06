@@ -6,11 +6,11 @@
 
 <div>
   {#each colors as color}
-    <div
+    <button
       class="float-left border border-black h-[20px] w-[20px] m-1 cursor-pointer transition-transform"
       class:scale-125={color == currentColor}
       on:click={() => onColorChosen(color)}
-      on:keydown={() => {}}
+      type="button"
       style="background-color: {color}"
     />
   {/each}
