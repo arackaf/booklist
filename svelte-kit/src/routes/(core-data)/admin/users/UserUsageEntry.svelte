@@ -19,7 +19,7 @@
 </script>
 
 <div class="flex flex-row gap-4">
-  <UserIcon {provider} />
+  <UserIcon avatar={userUsageEntry.avatar} {provider} />
   <div class="flex flex-col gap-2">
     <div class="flex flex-col">
       <div class="text-lg leading-none">
