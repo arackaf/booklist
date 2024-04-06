@@ -33,6 +33,8 @@
 
 <svelte:element
   this={type}
+  role="button"
+  tabindex="0"
   class:bg-primary-5={isPrimary}
   class:border-primary-5={isPrimary}
   class:text-primary-10={isPrimary}
