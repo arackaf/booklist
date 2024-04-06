@@ -7,7 +7,6 @@
   export let theme: string;
 
   const arrayOfTen = Array.from({ length: 10 }, (_, i) => i + 1);
-  let formEl: HTMLFormElement;
 
   function setTheme() {
     return async () => {
@@ -21,14 +20,14 @@
 </script>
 
 <div class="flex">
-  <form bind:this={formEl} method="POST" action="?/setTheme" use:enhance={setTheme}>
+  <form method="POST" action="?/setTheme" use:enhance={setTheme}>
     <input type="hidden" name="theme" value={name} />
-    <div on:keypress={() => {}} on:click={() => formEl.requestSubmit()} class={"p-2 flex flex-col rounded-lg mb-3 " + addedClasses}>
+    <button class={"p-2 flex flex-col rounded-lg mb-3 " + addedClasses}>
       <div class={classNames(name, "inline-flex flex-wrap")}>
         {#each arrayOfTen as val}
           <div class="lg:w-7 lg:h-7 xs:w-5 xs:h-5 w-6 h-6 mr-1 md:mr-2 lg:mr-3 last:mr-0" style={`background-color: var(--primary-${val})`} />
         {/each}
       </div>
-    </div>
+    </button>
   </form>
 </div>
