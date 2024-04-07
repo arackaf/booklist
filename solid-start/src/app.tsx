@@ -1,4 +1,6 @@
-import { createSignal } from "solid-js";
+import { Suspense, createSignal } from "solid-js";
+import { Router } from "@solidjs/router";
+import { FileRoutes } from "@solidjs/start/router";
 import "./app.css";
 
 export default function App() {
@@ -17,6 +19,10 @@ export default function App() {
         </a>{" "}
         to learn how to build SolidStart apps.
       </p>
+
+      <Router root={(props: any) => <Suspense>{props.children}</Suspense>}>
+        <FileRoutes />
+      </Router>
     </main>
   );
 }
