@@ -1,3 +1,6 @@
+import { getJunkValue } from "../../../data/junk";
+
 export default async function Home() {
-  return <div className="m-5">Hello World 13</div>;
+  const val = await getJunkValue();
+  return <div className="m-5">Hello World {val}</div>;
 }
