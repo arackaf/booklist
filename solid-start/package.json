@@ -10,6 +10,7 @@
     "@solidjs/router": "^0.13.1",
     "@solidjs/start": "^1.0.0-rc.0",
     "solid-js": "^1.8.16",
+    "solid-start-vercel": "^0.3.11",
     "vinxi": "^0.3.10"
   },
   "engines": {
