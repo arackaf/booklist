@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
-import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+import { DEFAULT_BOOKS_PAGE_SIZE } from "$data/dataConstants";
 
 export async function GET({ url }) {
   const userId = "573d1b97120426ef0078aa92";

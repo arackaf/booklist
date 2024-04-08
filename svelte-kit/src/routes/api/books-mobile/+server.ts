@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
-import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
+import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$data/dataConstants";
 import { getUserIdFromToken } from "$lib/util/fireBaseAuth.js";
 
 export const config = {
