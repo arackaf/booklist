@@ -1,11 +1,14 @@
-import { BOOKLIST_DYNAMO, DYNAMO_AUTH_TABLE, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
+let BOOKLIST_DYNAMO: string;
+let DYNAMO_AUTH_TABLE: string;
+let AMAZON_ACCESS_KEY: string;
+let AMAZON_SECRET_KEY: string;
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import type { PutCommandInput, GetCommandInput, QueryCommandInput, UpdateCommandInput, TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb";
 
-export const TABLE_NAME = BOOKLIST_DYNAMO;
+let TABLE_NAME: string;
 
 export const getGetPacket = (pk: string, sk: string, rest: object = {}): GetCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 export const getQueryPacket = (keyExpression: string, rest = {}): QueryCommandInput => ({
@@ -29,18 +32,29 @@ export const getAuthGSI1QueryPacket = (keyExpression: string, rest = {}): QueryC
   ...rest
 });
 
-const dynamoConfig: DynamoDBClientConfig = {
-  credentials: {
-    accessKeyId: AMAZON_ACCESS_KEY,
-    secretAccessKey: AMAZON_SECRET_KEY
-  },
+let dynamoConfig: DynamoDBClientConfig;
 
-  region: "us-east-1"
-};
+export let dynamo: ReturnType<typeof DynamoDBDocument.from>;
 
-const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
+export function initializeDynamo(booklistDynamo: string, dynamoAuthTable: string, amazonAccessKey: string, amazonSecretKey: string) {
+  BOOKLIST_DYNAMO = booklistDynamo;
+  DYNAMO_AUTH_TABLE = dynamoAuthTable;
+  AMAZON_ACCESS_KEY = amazonAccessKey;
+  AMAZON_SECRET_KEY = amazonSecretKey;
 
-export { dynamo };
+  TABLE_NAME = BOOKLIST_DYNAMO;
+
+  dynamoConfig = {
+    credentials: {
+      accessKeyId: AMAZON_ACCESS_KEY,
+      secretAccessKey: AMAZON_SECRET_KEY
+    },
+
+    region: "us-east-1"
+  };
+
+  dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
+}
 
 export const db = {
   async put(packet: PutCommandInput) {

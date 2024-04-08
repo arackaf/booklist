@@ -1,9 +1,15 @@
 import { writable, type Writable } from "svelte/store";
 import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
-import { EMPTY_BOOKS_RESULTS_CLIENT } from "$data/dataConstants";
 import { ensureAnyUser } from "$lib/util/authCheck";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 import type { Book } from "$data/types";
+
+const EMPTY_BOOKS_RESULTS_CLIENT = {
+  books: writable([] as Book[]),
+  totalBooks: writable(0),
+  page: 0,
+  totalPages: 0
+};
 
 export async function load({ url, parent, fetch, depends }) {
   depends("reload:books");

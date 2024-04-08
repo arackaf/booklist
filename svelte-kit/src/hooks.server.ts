@@ -7,6 +7,7 @@ import {
   GITHUB_AUTH_CLIENT_SECRET,
   GOOGLE_AUTH_CLIENT_ID,
   GOOGLE_AUTH_SECRET,
+  BOOKLIST_DYNAMO,
   AMAZON_ACCESS_KEY,
   AMAZON_SECRET_KEY,
   DYNAMO_AUTH_TABLE,
@@ -20,8 +21,10 @@ import { getUserSync } from "$data/legacyUser";
 
 import { MYSQL_CONNECTION_STRING } from "$env/static/private";
 import { initialize } from "$data/dbUtils";
+import { initializeDynamo } from "$data/dynamoHelpers";
 
 initialize(MYSQL_CONNECTION_STRING);
+initializeDynamo(BOOKLIST_DYNAMO, DYNAMO_AUTH_TABLE, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY);
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
