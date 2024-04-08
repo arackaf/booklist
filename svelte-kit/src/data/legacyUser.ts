@@ -1,16 +1,13 @@
 import md5 from "blueimp-md5";
-import { SALT } from "$env/static/private";
 
 import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
 const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
 const getUserReverseAliasKey = (userId: string) => `UserReverseAlias#${userId}`;
 
-const salt = SALT;
-
-export async function lookupUser(email: string, password: string) {
+export async function lookupUser(email: string, password: string, salt: string) {
   email = email.toLowerCase();
-  password = saltAndHashPassword(password);
+  password = saltAndHashPassword(password, salt);
   const userKey = `User#${email}`;
 
   try {
@@ -78,6 +75,6 @@ export async function getUserSync(userId: string): Promise<string | null> {
   }
 }
 
-function saltAndHashPassword(password: string) {
+function saltAndHashPassword(password: string, salt: string) {
   return md5(`${salt}${password}${salt}`);
 }

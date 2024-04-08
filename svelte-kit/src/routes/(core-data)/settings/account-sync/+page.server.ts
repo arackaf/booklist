@@ -1,3 +1,4 @@
+import { SALT } from "$env/static/private";
 import { lookupUser, syncUser } from "$data/legacyUser";
 import { ensureLoggedIn } from "$lib/util/authCheck";
 
@@ -29,7 +30,7 @@ export const actions = {
 
       const { email, password } = fields;
 
-      const result = await lookupUser(email, password);
+      const result = await lookupUser(email, password, SALT);
 
       if (result == null || !result.id) {
         return { success: false, error: false };
