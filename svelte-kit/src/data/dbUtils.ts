@@ -1,6 +1,5 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
-import { MYSQL_CONNECTION_STRING } from "$env/static/private";
 
 import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
@@ -8,12 +7,14 @@ import type { SQL } from "drizzle-orm";
 
 let mySqlConnectionFactory: Client;
 
-export let db: ReturnType<typeof drizzle<typeof schema>>; //drizzle(mySqlConnectionFactory, { schema });
+export let db: ReturnType<typeof drizzle<typeof schema>>;
 
 export function initialize(connectionString: string) {
   mySqlConnectionFactory = new Client({
     url: connectionString
   });
+
+  db = drizzle(mySqlConnectionFactory, { schema });
 }
 
 type ExtractTypeFromMySqlColumn<T extends MySqlColumn> =

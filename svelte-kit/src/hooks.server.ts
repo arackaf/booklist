@@ -18,6 +18,11 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 import { getUserSync } from "$data/legacyUser";
 
+import { MYSQL_CONNECTION_STRING } from "$env/static/private";
+import { initialize } from "$data/dbUtils";
+
+initialize(MYSQL_CONNECTION_STRING);
+
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
     accessKeyId: AMAZON_ACCESS_KEY,
