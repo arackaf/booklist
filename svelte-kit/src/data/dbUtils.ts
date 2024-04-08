@@ -6,17 +6,18 @@ import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import type { SQL } from "drizzle-orm";
 
-export const mySqlConnectionFactory = new Client({
-  url: MYSQL_CONNECTION_STRING
-});
+let mySqlConnectionFactory: Client;
 
-export const db = drizzle(mySqlConnectionFactory, { schema });
+export let db: ReturnType<typeof drizzle<typeof schema>>; //drizzle(mySqlConnectionFactory, { schema });
 
-type ExtractTypeFromMySqlColumn<T extends MySqlColumn> = T extends MySqlColumn<infer U>
-  ? U extends { notNull: true }
-    ? U["data"]
-    : U["data"] | null
-  : never;
+export function initialize(connectionString: string) {
+  mySqlConnectionFactory = new Client({
+    url: connectionString
+  });
+}
+
+type ExtractTypeFromMySqlColumn<T extends MySqlColumn> =
+  T extends MySqlColumn<infer U> ? (U extends { notNull: true } ? U["data"] : U["data"] | null) : never;
 
 type ExtractSqlType<T> = T extends MySqlColumn ? ExtractTypeFromMySqlColumn<T> : T extends SQL.Aliased<infer V> ? V : never;
 export type InferSelection<T> = {
