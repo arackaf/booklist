@@ -1,4 +1,4 @@
-import type { EditorialReview, PreviewPacket } from "$data/types";
+import type { EditorialReview, PreviewPacket } from "./types";
 import { int, datetime, tinyint, json, mysqlTable, varchar, longtext } from "drizzle-orm/mysql-core";
 
 export const books = mysqlTable("books", {
