@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { Subject, Tag, UnwrapReadable } from "$data/types";
+  import type { Subject, Tag } from "$data/types";
+  import type { UnwrapReadable } from "$lib/types";
 
   import Button from "$lib/components/Button/Button.svelte";
 
