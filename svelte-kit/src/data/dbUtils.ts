@@ -1,9 +1,9 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
+import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
+import type { SQL } from "drizzle-orm";
 
 import * as schema from "./drizzle-schema";
-import type { MySqlColumn } from "drizzle-orm/mysql-core";
-import type { SQL } from "drizzle-orm";
 
 let mySqlConnectionFactory: Client;
 

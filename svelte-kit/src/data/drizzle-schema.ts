@@ -1,5 +1,5 @@
-import type { EditorialReview, PreviewPacket } from "./types";
 import { int, datetime, tinyint, json, mysqlTable, varchar, longtext } from "drizzle-orm/mysql-core";
+import type { EditorialReview, PreviewPacket } from "./types";
 
 export const books = mysqlTable("books", {
   id: int("id").primaryKey().autoincrement(),
