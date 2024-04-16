@@ -117,4 +117,4 @@ async function deployedAuthOverride({ event, resolve }: any) {
 
   return resolve(event);
 }
-export const handle = sequence(handleFn, auth, deployedAuthOverride);
+export const handle = sequence(handleFn, auth.handle, deployedAuthOverride);
