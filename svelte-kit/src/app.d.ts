@@ -10,10 +10,3 @@ declare module "@auth/core/types" {
     user: DefaultSession["user"];
   }
 }
-
-declare namespace App {
-  // interface Locals {}
-  // interface PageData {}
-  // interface Error {}
-  // interface Platform {}
-}
