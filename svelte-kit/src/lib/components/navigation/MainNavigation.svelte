@@ -69,7 +69,7 @@
     <ProfilePanel {userSummary} {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   {/if}
   <nav class="nav flex bg-[var(--primary-4)] h-12 text-base">
-    {#if loggedInUser}
+    {#if loggedIn}
       <div class="items-center mx-2 my-auto">
         <button
           on:mouseenter={fetchUserSummaryIfNeeded}
