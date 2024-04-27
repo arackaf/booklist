@@ -6,7 +6,6 @@ import { getUser } from "$data/user";
 import { getPublicId } from "$lib/util/getPublicId";
 
 import { ADMIN_USER } from "$env/static/private";
-import type { Login } from "$lib/types";
 
 export async function load({ locals, request, fetch }: any) {
   const publicUserId = getPublicId(request);
@@ -33,15 +32,6 @@ export async function load({ locals, request, fetch }: any) {
     }
   }
 
-  let loggedInUser: Login | null = null;
-
-  if (session?.user) {
-    loggedInUser = {
-      ...session!.user,
-      provider: session.provider
-    };
-  }
-
   return {
     isAdminUser,
     isPublic,
@@ -49,7 +39,6 @@ export async function load({ locals, request, fetch }: any) {
     publicUser,
     colors: await colors,
     subjects: await subjects,
-    tags: await tags,
-    loggedInUser
+    tags: await tags
   };
 }

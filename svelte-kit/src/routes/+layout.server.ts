@@ -1,5 +1,6 @@
 import { BOOKS_CACHE, updateCacheCookie } from "$lib/state/cacheHelpers";
 import { getUxState } from "$lib/util/uxState";
+import type { Login } from "$lib/types";
 
 export async function load({ locals, isDataRequest, request, cookies, depends }) {
   depends("app:root");
@@ -18,8 +19,20 @@ export async function load({ locals, isDataRequest, request, cookies, depends })
     updateCacheCookie(cookies, BOOKS_CACHE, booksCache);
   }
 
+  let loggedInUser: Login | null = null;
+
+  if (session?.user) {
+    loggedInUser = {
+      name: session.user.name!,
+      email: session.user.email!,
+      image: session.user.image!,
+      provider: session.provider
+    };
+  }
+
   return {
     loggedIn: !!session?.user,
+    loggedInUser,
     userId: session?.userId,
     uxState,
     isMobile,
