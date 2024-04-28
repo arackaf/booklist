@@ -14,10 +14,14 @@
   $: ({ loggedIn, userId } = data);
 
   function startWebSocket() {
-    const scanWebSocket = getScanWebSocket();
-    scanWebSocket.send({ action: "sync", userId });
+    if (window.ws) {
+      return;
+    }
 
-    scanWebSocket.addHandler((data: any) => {
+    window.ws = getScanWebSocket();
+    window.ws.send({ action: "sync", userId });
+
+    window.ws.addHandler((data: any) => {
       let packet = JSON.parse(data);
 
       dispatchScanDataUpdate(packet);
