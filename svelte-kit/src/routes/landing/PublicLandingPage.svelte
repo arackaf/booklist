@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { signIn } from "@auth/sveltekit/client";
   import Button from "$lib/components/Button/Button.svelte";
+
+  $: ({ loggedIn } = $page.data);
 </script>
 
 <section>
@@ -13,29 +16,33 @@
               Welcome to <span class="italic">My Library</span>
             </span>
             <span>
-              This site is my own little passion project, which tracks your library. You scan your books (or manually type in the isbn) and the books'
-              info is fetched from ISBN DB, and stored for you. You can then search and categorize your library.
+              This site is my own little passion project, which tracks your library. Scan your books (or manually type in the isbn) and the book info
+              is fetched from ISBN DB, and stored. You can then search and categorize your library.
             </span>
 
             <span>
-              So basically this site is of use to the extremely small percentage of people for whom the following are <i>all</i> true: they read a lot,
-              own the books they read, and read non-eBooks. Again, it's is more of a passion project than anything.
+              So basically this site is of use to the extremely small percentage of people for whom the following are all true: they read a lot, own
+              the books they read, and read non-eBooks. Again, it's is more of a passion project than anything.
             </span>
-            <span> It's free and I won't ever sell your info, so give it a try! </span>
+
             <span>
-              For those interested in seeing the code for this site, the GitHub repository is
+              If you'd like to see the code for this site, the GitHub repository is
               <a target="_blank" rel="noreferrer" href="https://github.com/arackaf/booklist">here</a>
             </span>
 
-            <Button
-              class="self-start"
-              theme="primary"
-              on:click={() => {
-                signIn("", { callbackUrl: "/books" });
-              }}
-            >
-              Login or create an account
-            </Button>
+            {#if !loggedIn}
+              <Button
+                class="self-start"
+                theme="primary"
+                on:click={() => {
+                  signIn("", { callbackUrl: "/books" });
+                }}
+              >
+                Login or create an account
+              </Button>
+            {:else}
+              <Button class="self-start" theme="primary" href="/books">Go to your library</Button>
+            {/if}
           </div>
         </div>
       </div>
