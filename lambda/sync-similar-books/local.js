@@ -1,3 +1,4 @@
-import { syncNextBook } from "./index.js";
+require("dotenv").config();
+const { syncNextBook } = require("./build/sync-similar-books/index");
 
-syncNextBook({ isbn: "1492080519" });
+syncNextBook();

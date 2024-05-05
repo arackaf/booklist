@@ -64,6 +64,7 @@ async function doSync(book: any) {
     );
     return allResults;
   } catch (err) {
+    console.log("Error", err);
     await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
   } finally {
     mySqlConnection?.end();

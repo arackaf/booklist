@@ -2,6 +2,8 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import type { Page } from "playwright";
 
+// aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
+
 const client = new LambdaClient({
   region: "us-east-1"
 });
@@ -14,7 +16,7 @@ export async function getBookRelatedItems(isbn: string) {
         headless: true
       })
     : await playwright.chromium.launch({
-        headless: true
+        headless: false
       });
   try {
     const page: Page = await browser.newPage({
@@ -33,6 +35,10 @@ export async function getBookRelatedItems(isbn: string) {
     console.log("Attempting url", `https://www.amazon.com/dp/${isbn}`);
     await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
     await page.waitForTimeout(100);
+
+    if (!process.env.stage) {
+      await page.waitForTimeout(10000);
+    }
 
     const title = await page.title();
     if (/page not found/i.test(title)) {
@@ -99,6 +105,8 @@ export async function getBookRelatedItems(isbn: string) {
     await processImages(allResults);
 
     return allResults;
+  } catch (er) {
+    console.log("Error", er);
   } finally {
     await browser?.close();
   }

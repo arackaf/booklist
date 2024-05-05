@@ -9,7 +9,7 @@ import type {
   TransactWriteCommandInput
 } from "@aws-sdk/lib-dynamodb";
 
-export const TABLE_NAME = `My_Library_${process.env.STAGE}`;
+export const TABLE_NAME = `My_Library_${process.env.STAGE || "live"}`;
 
 export const getGetPacket = (pk, sk, rest = {}): GetCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
 export const getQueryPacket = (keyExpression, rest = {}): QueryCommandInput => ({
@@ -29,6 +29,7 @@ export const getDeletePacket = (key): DeleteCommandInput => ({ TableName: TABLE_
 const dynamoConfig: DynamoDBClientConfig = {
   region: "us-east-1"
 };
+
 export const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
 
 const wait = ms => new Promise(res => setTimeout(res, ms));
