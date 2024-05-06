@@ -1,6 +1,7 @@
+import { Page } from "playwright-core";
 import { isbn13To10 } from "../util/isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { doScrape, getAuthorFromBookPage, getBookRelatedItems } from "./scrape";
+import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser, getPage } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
 export const syncBook = async ({ id }) => {
@@ -15,6 +16,37 @@ export const syncBook = async ({ id }) => {
     } catch (er) {
       console.log("Error", er);
     }
+  }
+};
+
+export const localSync = async () => {
+  let browser: any;
+  let page: Page;
+  try {
+    let book;
+    book = await getNextBookToSync();
+
+    if (!book) {
+      return;
+    }
+
+    browser = await getBrowser();
+    page = await getPage(browser);
+
+    while (book) {
+      await doSync(book, page);
+      await new Promise(res => setTimeout(res, 4000));
+      book = await getNextBookToSync();
+    }
+  } catch (er) {
+    console.log("Error: ", er);
+  } finally {
+    try {
+      await page?.close();
+    } catch (er) {}
+    try {
+      await browser?.close();
+    } catch (er) {}
   }
 };
 
@@ -33,7 +65,7 @@ export const syncNextBook = async () => {
   }
 };
 
-async function doSync(book: any, browser?: any) {
+async function doSync(book: any, page?: Page) {
   const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
@@ -49,7 +81,7 @@ async function doSync(book: any, browser?: any) {
     console.log("Starting related items sync for", id, isbn, title);
 
     // this is absolutely awful but I don't have time to make it less so
-    const allResults = browser ? await doScrape(browser, isbn, title) : await getBookRelatedItems(isbn, title);
+    const allResults = page ? await doScrape(page, isbn, title) : await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
       await bookSyncFailure(mySqlConnection, id, "No results");

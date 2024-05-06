@@ -14,8 +14,10 @@ const playwright: any = process.env.stage ? require("playwright-aws-lambda") : r
 
 export async function getBookRelatedItems(isbn: string, bookTitle: string) {
   const browser = await getBrowser();
+
   try {
-    return await doScrape(browser, isbn, bookTitle);
+    const page = await getPage(browser);
+    return await doScrape(page, isbn, bookTitle);
   } catch (er) {
     console.log("Error", er);
   } finally {
@@ -23,7 +25,7 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
   }
 }
 
-async function getBrowser() {
+export async function getBrowser() {
   return process.env.stage
     ? await playwright.launchChromium({
         headless: true
@@ -33,8 +35,8 @@ async function getBrowser() {
       });
 }
 
-export async function doScrape(browser: any, isbn: string, bookTitle: string) {
-  const page: Page = await browser.newPage({
+export async function getPage(browser: any) {
+  return browser.newPage({
     extraHTTPHeaders: {
       "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
       accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -46,7 +48,9 @@ export async function doScrape(browser: any, isbn: string, bookTitle: string) {
       "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
     }
   });
+}
 
+export async function doScrape(page: Page | null, isbn: string, bookTitle: string) {
   console.log("Original title", bookTitle);
   const titleForUrl = bookTitle
     .replace(/\//g, "")
@@ -62,7 +66,7 @@ export async function doScrape(browser: any, isbn: string, bookTitle: string) {
   await page.waitForTimeout(100);
 
   if (!process.env.stage) {
-    await page.waitForTimeout(10000);
+    await page.waitForTimeout(15000);
   }
 
   const title = await page.title();
