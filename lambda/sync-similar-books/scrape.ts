@@ -4,13 +4,15 @@ import type { Page } from "playwright";
 
 // aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
 
+// https://www.amazon.com/Programming-TypeScript-Making-JavaScript-Applications/dp/1492037656/ref=sr_1_5?crid=1EYSNI5TQD8HI&keywords=typescript&qid=1655178647&sprefix=ty%2Caps%2C517&sr=8-5
+
 const client = new LambdaClient({
   region: "us-east-1"
 });
 
 const playwright: any = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
 
-export async function getBookRelatedItems(isbn: string) {
+export async function getBookRelatedItems(isbn: string, bookTitle: string) {
   const browser = process.env.stage
     ? await playwright.launchChromium({
         headless: true
@@ -32,8 +34,11 @@ export async function getBookRelatedItems(isbn: string) {
       }
     });
 
-    console.log("Attempting url", `https://www.amazon.com/dp/${isbn}`);
-    await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
+    const titleForUrl = bookTitle.replace(/\s+/g, "-").replace(/[^(\w-)]/g, "");
+    const urlToUse = `https://www.amazon.com/${titleForUrl}/dp/${isbn}`;
+    console.log("Attempting url", urlToUse);
+
+    await page.goto(urlToUse, {});
     await page.waitForTimeout(100);
 
     if (!process.env.stage) {

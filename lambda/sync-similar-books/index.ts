@@ -17,6 +17,7 @@ export const syncBook = async ({ id }) => {
     }
   }
 };
+
 export const syncNextBook = async () => {
   try {
     const book = await getNextBookToSync();
@@ -46,7 +47,7 @@ async function doSync(book: any) {
     }
 
     console.log("Starting related items sync for", id, title);
-    const allResults = await getBookRelatedItems(isbn);
+    const allResults = await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
       await bookSyncFailure(mySqlConnection, id, "No results");
