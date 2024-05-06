@@ -13,108 +13,123 @@ const client = new LambdaClient({
 const playwright: any = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
 
 export async function getBookRelatedItems(isbn: string, bookTitle: string) {
-  const browser = process.env.stage
+  const browser = await getBrowser();
+  try {
+    return await doScrape(browser, isbn, bookTitle);
+  } catch (er) {
+    console.log("Error", er);
+  } finally {
+    await browser?.close();
+  }
+}
+
+async function getBrowser() {
+  return process.env.stage
     ? await playwright.launchChromium({
         headless: true
       })
     : await playwright.chromium.launch({
         headless: false
       });
-  try {
-    const page: Page = await browser.newPage({
-      extraHTTPHeaders: {
-        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "sec-fetch-site": "same-origin",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-user": "?1",
-        "sec-fetch-dest": "document",
-        referer: "https://www.amazon.com/",
-        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
-      }
-    });
+}
 
-    const titleForUrl = bookTitle.replace(/\s+/g, "-").replace(/[^(\w-)]/g, "");
-    const urlToUse = `https://www.amazon.com/${titleForUrl}/dp/${isbn}`;
-    console.log("Attempting url", urlToUse);
-
-    await page.goto(urlToUse, {});
-    await page.waitForTimeout(100);
-
-    if (!process.env.stage) {
-      await page.waitForTimeout(10000);
+export async function doScrape(browser: any, isbn: string, bookTitle: string) {
+  const page: Page = await browser.newPage({
+    extraHTTPHeaders: {
+      "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-user": "?1",
+      "sec-fetch-dest": "document",
+      referer: "https://www.amazon.com/",
+      "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
     }
+  });
 
-    const title = await page.title();
-    if (/page not found/i.test(title)) {
-      console.log("Page not found when syncing related items");
-      return null;
-    }
+  console.log("Original title", bookTitle);
+  const titleForUrl = bookTitle
+    .replace(/\//g, "")
+    .replace(/\s+/g, "-")
+    .replace(/[^(\w-)]/g, "");
 
-    const entireHtml = await page.content();
-    console.log("Entire page:");
-    console.log(entireHtml);
+  console.log("Title for url", titleForUrl);
 
-    for (let i = 1; i <= 15; i++) {
-      try {
-        const scrollAmount = i * 300;
-        await page.evaluate(scrollAmount => window.scrollTo(0, scrollAmount), scrollAmount);
-        await page.waitForTimeout(500);
-        let allCarousels = await page.locator("[data-a-carousel-options]").all();
-        console.log("Scroll", i, "carousels found", allCarousels.length);
-        if (allCarousels.length) {
-          console.log("Breaking");
-          break;
-        }
-      } catch (er) {
-        console.log("Error", er);
-      }
-    }
+  const urlToUse = `https://www.amazon.com/${titleForUrl}/dp/${isbn}`;
+  console.log("Attempting url", urlToUse);
 
-    let allCarousels = await page.locator("[data-a-carousel-options]").all();
-    console.log("Found", allCarousels.length, "carousels");
-    if (!allCarousels.length) {
-      console.log("Trying again ...");
-      try {
-        await page.waitForSelector("[data-a-carousel-options]", { timeout: 5000 });
-        allCarousels = await page.locator("[data-a-carousel-options]").all();
-        console.log("Second attempt found:", allCarousels.length, "carousels");
-      } catch (er) {
-        console.log("Second attemt failed");
-      }
-    }
+  await page.goto(urlToUse, {});
+  await page.waitForTimeout(100);
 
-    const allBookResults = new Map();
-
-    for (const carousel of allCarousels) {
-      console.log("Processing carousel");
-      const carouselEl = await carousel.elementHandle();
-      const headerEl = await carouselEl.$(".a-carousel-heading");
-
-      if (headerEl == null) {
-        console.log("No carousel heading found");
-        continue;
-      } else {
-        const results = await processCarousel(page, carousel);
-        console.log("Found", results.length, "in", (await headerEl.innerText()).replace(/\n/g, " "));
-
-        for (const book of results) {
-          if (!allBookResults.has(book.isbn)) {
-            allBookResults.set(book.isbn, book);
-          }
-        }
-      }
-    }
-
-    const allResults = [...allBookResults.values()];
-    await processImages(allResults);
-
-    return allResults;
-  } catch (er) {
-    console.log("Error", er);
-  } finally {
-    await browser?.close();
+  if (!process.env.stage) {
+    await page.waitForTimeout(10000);
   }
+
+  const title = await page.title();
+  if (/page not found/i.test(title)) {
+    console.log("Page not found when syncing related items");
+    return null;
+  }
+
+  const entireHtml = await page.content();
+  console.log("Entire page:");
+  console.log(entireHtml);
+
+  for (let i = 1; i <= 15; i++) {
+    try {
+      const scrollAmount = i * 300;
+      await page.evaluate(scrollAmount => window.scrollTo(0, scrollAmount), scrollAmount);
+      await page.waitForTimeout(500);
+      let allCarousels = await page.locator("[data-a-carousel-options]").all();
+      console.log("Scroll", i, "carousels found", allCarousels.length);
+      if (allCarousels.length) {
+        console.log("Breaking");
+        break;
+      }
+    } catch (er) {
+      console.log("Error", er);
+    }
+  }
+
+  let allCarousels = await page.locator("[data-a-carousel-options]").all();
+  console.log("Found", allCarousels.length, "carousels");
+  if (!allCarousels.length) {
+    console.log("Trying again ...");
+    try {
+      await page.waitForSelector("[data-a-carousel-options]", { timeout: 5000 });
+      allCarousels = await page.locator("[data-a-carousel-options]").all();
+      console.log("Second attempt found:", allCarousels.length, "carousels");
+    } catch (er) {
+      console.log("Second attemt failed");
+    }
+  }
+
+  const allBookResults = new Map();
+
+  for (const carousel of allCarousels) {
+    console.log("Processing carousel");
+    const carouselEl = await carousel.elementHandle();
+    const headerEl = await carouselEl.$(".a-carousel-heading");
+
+    if (headerEl == null) {
+      console.log("No carousel heading found");
+      continue;
+    } else {
+      const results = await processCarousel(page, carousel);
+      console.log("Found", results.length, "in", (await headerEl.innerText()).replace(/\n/g, " "));
+
+      for (const book of results) {
+        if (!allBookResults.has(book.isbn)) {
+          allBookResults.set(book.isbn, book);
+        }
+      }
+    }
+  }
+
+  const allResults = [...allBookResults.values()];
+  await processImages(allResults);
+
+  return allResults;
 }
 
 async function processImages(books: any[]) {

@@ -1,6 +1,6 @@
 import { isbn13To10 } from "../util/isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { getAuthorFromBookPage, getBookRelatedItems } from "./scrape";
+import { doScrape, getAuthorFromBookPage, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
 export const syncBook = async ({ id }) => {
@@ -33,7 +33,7 @@ export const syncNextBook = async () => {
   }
 };
 
-async function doSync(book: any) {
+async function doSync(book: any, browser?: any) {
   const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
@@ -46,8 +46,10 @@ async function doSync(book: any) {
       }
     }
 
-    console.log("Starting related items sync for", id, title);
-    const allResults = await getBookRelatedItems(isbn, title);
+    console.log("Starting related items sync for", id, isbn, title);
+
+    // this is absolutely awful but I don't have time to make it less so
+    const allResults = browser ? await doScrape(browser, isbn, title) : await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
       await bookSyncFailure(mySqlConnection, id, "No results");
