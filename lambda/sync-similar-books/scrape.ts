@@ -50,7 +50,7 @@ export async function getPage(browser: any) {
   });
 }
 
-export async function doScrape(page: Page | null, isbn: string, bookTitle: string) {
+export async function doScrape(page: Page, isbn: string, bookTitle: string, capctaDone: boolean = false) {
   console.log("Original title", bookTitle);
   const titleForUrl = bookTitle
     .replace(/\//g, "")
@@ -65,8 +65,10 @@ export async function doScrape(page: Page | null, isbn: string, bookTitle: strin
   await page.goto(urlToUse, {});
   await page.waitForTimeout(100);
 
-  if (!process.env.stage) {
+  if (!process.env.stage && !capctaDone) {
     await page.waitForTimeout(15000);
+  } else {
+    await page.waitForTimeout(4000 * Math.random());
   }
 
   const title = await page.title();

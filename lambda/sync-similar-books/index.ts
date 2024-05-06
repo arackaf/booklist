@@ -22,6 +22,7 @@ export const syncBook = async ({ id }) => {
 export const localSync = async () => {
   let browser: any;
   let page: Page;
+  let captchaDone = false;
   try {
     let book;
     book = await getNextBookToSync();
@@ -34,9 +35,10 @@ export const localSync = async () => {
     page = await getPage(browser);
 
     while (book) {
-      await doSync(book, page);
+      await doSync(book, page, captchaDone);
       await new Promise(res => setTimeout(res, 4000));
       book = await getNextBookToSync();
+      captchaDone = true;
     }
   } catch (er) {
     console.log("Error: ", er);
@@ -65,7 +67,7 @@ export const syncNextBook = async () => {
   }
 };
 
-async function doSync(book: any, page?: Page) {
+async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
   const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
@@ -81,7 +83,7 @@ async function doSync(book: any, page?: Page) {
     console.log("Starting related items sync for", id, isbn, title);
 
     // this is absolutely awful but I don't have time to make it less so
-    const allResults = page ? await doScrape(page, isbn, title) : await getBookRelatedItems(isbn, title);
+    const allResults = page ? await doScrape(page, isbn, title, captchaDone) : await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
       await bookSyncFailure(mySqlConnection, id, "No results");
