@@ -39,6 +39,6 @@
   {/if}
 
   {#if editingSubject}
-    <EditSubject {colors} allSubjects={subjects} bind:deleteShowing subject={editingSubject} onComplete={cancelEdit} onCancelEdit={cancelEdit} />
+    <EditSubject {colors} bind:deleteShowing allSubjects={subjects} subject={editingSubject} onComplete={cancelEdit} onCancelEdit={cancelEdit} />
   {/if}
 </div>

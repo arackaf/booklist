@@ -1,7 +1,8 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte";
-  import TagEditModalContents from "./TagEditModalContents.svelte";
+
   import type { Color, Tag } from "$data/types";
+  import TagEditModalContents from "./TagEditModalContents.svelte";
 
   export let isOpen = false;
   export let onHide = () => {};
