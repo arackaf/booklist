@@ -38,6 +38,9 @@ export const updateItems = <T>(store: Writable<T[]>, ids: number[], updates: Upd
   store.set(updatedItems);
 };
 
+type b = true | boolean;
+//   ^?
+
 export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo<T>) => {
   const { fieldsSet, arraySync } = updates;
   item = { ...item };

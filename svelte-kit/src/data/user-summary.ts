@@ -104,7 +104,7 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
           )
         );
 
-    const data = await union(
+    const dataQuery = union(
       db
         .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
         .from(books)
@@ -114,6 +114,10 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
       tagsQuery(),
       unusedTagsQuery()
     );
+
+    console.log({ QUERY: dataQuery.toSQL() });
+
+    const data = await dataQuery;
 
     type DataItem = (typeof data)[0];
 

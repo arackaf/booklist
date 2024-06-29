@@ -5,14 +5,23 @@ import { getUserInfoFromDynamo, getUserUsageInfo, type UserUsageEntry } from "$d
 import { redirect } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 
+import { junk } from "../../../../drizzle-demo/index";
+
 // 7 days
 const syncDelta = 1000 * 60 * 60 * 24 * 7;
 
 export const load = async ({ parent }) => {
+  try {
+    junk();
+  } catch (er) {
+    console.log("Error\n\n", er);
+  }
   const parentParams = await parent();
   if (!parentParams.isAdminUser) {
     redirect(302, "/");
   }
+
+  return {};
 
   const userUsageInfo: UserUsageEntry[] = await getUserUsageInfo();
 

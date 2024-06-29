@@ -12,11 +12,8 @@ export const mySqlConnectionFactory = new Client({
 
 export const db = drizzle(mySqlConnectionFactory, { schema });
 
-type ExtractTypeFromMySqlColumn<T extends MySqlColumn> = T extends MySqlColumn<infer U>
-  ? U extends { notNull: true }
-    ? U["data"]
-    : U["data"] | null
-  : never;
+type ExtractTypeFromMySqlColumn<T extends MySqlColumn> =
+  T extends MySqlColumn<infer U> ? (U extends { notNull: true } ? U["data"] : U["data"] | null) : never;
 
 type ExtractSqlType<T> = T extends MySqlColumn ? ExtractTypeFromMySqlColumn<T> : T extends SQL.Aliased<infer V> ? V : never;
 export type InferSelection<T> = {
