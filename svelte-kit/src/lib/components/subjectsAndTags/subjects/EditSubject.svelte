@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
 
@@ -16,7 +14,6 @@
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
-  import DisplaySelectedSubjects from "./DisplaySelectedSubjects.svelte";
 
   import LabelDisplay from "../LabelDisplay.svelte";
 
