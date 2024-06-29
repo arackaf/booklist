@@ -57,7 +57,7 @@
 
   export const reset = () => {
     inputEl?.focus();
-    deleteShowing = false;
+    //deleteShowing = false;
   };
 
   let saving = false;
