@@ -56,7 +56,7 @@
         <h4 class="text-base my-0 flex gap-1">
           Enter your books here
           <button class="raw-button cursor-pointer" on:click={() => (showScanInstructions = !showScanInstructions)}>
-            <i class="far fa-question-circle" />
+            <i class="far fa-question-circle"></i>
           </button>
         </h4>
         <Button size="sm" class="ml-6" on:click={manuallyEnterBook}>Manual entry</Button>

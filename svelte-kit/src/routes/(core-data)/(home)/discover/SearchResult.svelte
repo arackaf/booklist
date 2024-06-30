@@ -43,7 +43,7 @@
 
       <Button theme="primary" size="sm" class="mt-auto self-start gap-2" disabled={adding} on:click={_selectBook}>
         Add to list
-        <i class="fal fa-plus" />
+        <i class="fal fa-plus"></i>
       </Button>
     </div>
   </div>

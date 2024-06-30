@@ -34,7 +34,7 @@
       X
     </button>
   {/if}
-  <span style="border-left: 1px solid {item?.textColor || 'white'}" />
+  <span style="border-left: 1px solid {item?.textColor || 'white'}"></span>
   {#if $$slots.default}
     <slot />
   {:else}

@@ -27,7 +27,7 @@
 
       <Button size="med" class="sm:ml-auto flex flex-row gap-1 self-start items-center" on:click={newTag}>
         <span>Add new tag </span>
-        <i class="far fa-fw fa-plus-square" />
+        <i class="far fa-fw fa-plus-square"></i>
       </Button>
     </div>
   {/if}

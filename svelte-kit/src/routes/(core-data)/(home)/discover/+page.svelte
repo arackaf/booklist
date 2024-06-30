@@ -48,7 +48,7 @@
 
       <div class="flex flex-row">
         <Button class="gap-2" on:click={openModal}>
-          <i class="fal fa-search" />
+          <i class="fal fa-search"></i>
           <span>Search your books</span>
         </Button>
 

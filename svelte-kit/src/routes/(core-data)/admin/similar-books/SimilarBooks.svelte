@@ -54,9 +54,9 @@
     </span>
     <button disabled={loading} class="raw-button ml-auto" class:cursor-pointer={loading} class:rotate-180={expanded} on:click={expand}>
       {#if loading}
-        <i class="far fa-spinner fa-spin" />
+        <i class="far fa-spinner fa-spin"></i>
       {:else}
-        <i class="far fa-angle-double-down" />
+        <i class="far fa-angle-double-down"></i>
       {/if}
     </button>
   </Alert>

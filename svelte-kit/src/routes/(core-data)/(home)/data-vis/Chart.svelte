@@ -89,7 +89,7 @@
             class:text-neutral-600={!isBar}
             class:text-primary-5={isBar}
           >
-            <i class="fad fa-chart-bar" />
+            <i class="fad fa-chart-bar"></i>
           </button>
           <button
             on:click={() => setChartType("PIE")}
@@ -98,7 +98,7 @@
             class:text-neutral-600={!isPie}
             class:text-primary-5={isPie}
           >
-            <i class="fad fa-chart-pie" />
+            <i class="fad fa-chart-pie"></i>
           </button>
         </div>
       </div>
@@ -110,7 +110,7 @@
             <span style="margin-left: 10px; text-wrap: nowrap">
               {" " + d.display}
               <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)}>
-                <i class="far fa-redo" />
+                <i class="far fa-redo"></i>
               </button>
             </span>
           {/each}

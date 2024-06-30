@@ -19,7 +19,7 @@
             <span class="name">{entry.name}</span>
           {/each}
         </div>
-        <button class="raw-button flex ml-auto" on:click={() => remove(data.groupId)}><i class="fad fa-times-circle" /></button>
+        <button class="raw-button flex ml-auto" on:click={() => remove(data.groupId)}><i class="fad fa-times-circle"></i></button>
       </div>
       <hr class="border-slate-600 my-0" />
     </div>
@@ -30,11 +30,11 @@
       <div class="md:text-base text-xs pl-1">
         <button on:click={runDrilldown} class="raw-button flex gap-2">
           <span class="leading-none text-black">Drilldown</span>
-          <i class="far fa-chart-bar leading-none text-black" />
+          <i class="far fa-chart-bar leading-none text-black"></i>
         </button>
       </div>
     {/if}
   </div>
 
-  <div class="arrow" style={arrowStyle} />
+  <div class="arrow" style={arrowStyle}></div>
 </div>

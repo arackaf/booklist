@@ -126,15 +126,15 @@
                 <div class="flex gap-5 items-center">
                   {#if book.isbn}
                     <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
-                      <i class="fab fa-amazon" />
+                      <i class="fab fa-amazon"></i>
                     </a>
                     <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
-                      <i class="fab fa-goodreads-g" />
+                      <i class="fab fa-goodreads-g"></i>
                     </a>
                   {/if}
                   <Button size="sm" class="gap-2" on:click={() => (editing = true)}>
                     <span>Edit book</span>
-                    <i class="fal fa-pencil-alt" />
+                    <i class="fal fa-pencil-alt"></i>
                   </Button>
                 </div>
               </div>
@@ -142,7 +142,7 @@
           </div>
         </div>
         <Button on:click={toggleDetails} disabled={detailsLoading} size="sm" class="flex gap-1 items-center self-start text-sm">
-          <span>Details</span><i class="far {detailsBtnClass}" />
+          <span>Details</span><i class="far {detailsBtnClass}"></i>
         </Button>
       </div>
       <div class="overflow-auto">
@@ -195,7 +195,7 @@
                                 <br />
                               {/if}
                               <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
-                                <i class="fab fa-amazon" />
+                                <i class="fab fa-amazon"></i>
                               </a>
                             </td>
                           </tr>

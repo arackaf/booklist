@@ -50,13 +50,13 @@
           {pending}
           Book{pending === 1 ? "" : "s"}
           currently outstanding
-          <i class="far ml-1 {toggleClass}" />
+          <i class="far ml-1 {toggleClass}"></i>
         </span>
       </Button>
     {:else}
       <Button size="sm" class="gap-2" on:click={toggleIncomingQueue} theme="success">
         <span> All pending books saved </span>
-        <i style="color: white" class="far fa-white {toggleClass}" />
+        <i style="color: white" class="far fa-white {toggleClass}"></i>
       </Button>
     {/if}
   </div>

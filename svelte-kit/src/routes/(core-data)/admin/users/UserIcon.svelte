@@ -7,8 +7,8 @@
   {#if provider !== "Legacy" && avatar}
     <img alt="User profile" src={avatar} class="w-11 h-11 rounded-full" />
   {:else if provider == "google" || provider == "github"}
-    <i class="fab {provider === 'google' ? 'fa-google' : 'fa-github'}" />
+    <i class="fab {provider === 'google' ? 'fa-google' : 'fa-github'}"></i>
   {:else}
-    <i class="fad fa-user" />
+    <i class="fad fa-user"></i>
   {/if}
 </span>

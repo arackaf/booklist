@@ -96,7 +96,7 @@
     </div>
 
     <div class="sm:col-span-2">
-      <Button size="sm" type="button" disabled={saving} on:click={addAuthor}><i class="far fa-fw fa-plus" />Add author</Button>
+      <Button size="sm" type="button" disabled={saving} on:click={addAuthor}><i class="far fa-fw fa-plus"></i>Add author</Button>
     </div>
   </div>
 </fieldset>

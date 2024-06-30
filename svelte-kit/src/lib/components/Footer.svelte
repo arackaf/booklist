@@ -21,7 +21,7 @@
 </script>
 
 <footer>
-  <i class="fal fa-book" />
+  <i class="fal fa-book"></i>
   <span style="margin-left: 5px; margin-right: 5px">My Library</span>
   {#if showChooseDesktop}
     <button class="raw-button cursor-pointer" name="Use desktop version" on:click={requestDesktop}>Use desktop version</button>

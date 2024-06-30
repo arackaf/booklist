@@ -23,7 +23,7 @@
 <div class="mt-2 leading-none">
   {#if !pendingDelete}
     <Button type="button" size="med" class="flex gap-1" theme="danger" on:click={() => (pendingDelete = true)}>
-      Delete <i class={`fal fa-trash-alt fa-fw`} />
+      Delete <i class={`fal fa-trash-alt fa-fw`}></i>
     </Button>
   {:else}
     <div class="flex gap-3">

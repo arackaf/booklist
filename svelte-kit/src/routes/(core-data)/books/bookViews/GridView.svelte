@@ -37,31 +37,31 @@
       {#if !isPublic}
         <th class="p-0" style="text-align: center; width: 25px;">
           <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
-            <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")} />
+            <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
           </button>
         </th>
       {/if}
-      <th class="p-0" style="width: 60px" />
+      <th class="p-0" style="width: 60px"></th>
       <th class="p-0" style="min-width: 200px">
         <a class="bold" href={$changeFilter.withSort("title")}>
           Title
-          {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
       </th>
       <th class="p-0" style="min-width: 90px;">Subjects</th>
       <th class="p-0" style="min-width: 90px;">Tags</th>
-      <th class="p-0" style="min-width: 90px;" />
-      <th class="p-0" />
+      <th class="p-0" style="min-width: 90px;"></th>
+      <th class="p-0"></th>
       <th class="p-0" style="min-width: 85px; ">
         <a class="bold" href={$changeFilter.withSort("pages")}>
           Pages
-          {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
       </th>
       <th class="p-0">
         <a class="bold" href={$changeFilter.withSort("id")}>
           Added
-          {#if sortField == "id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")} />{/if}
+          {#if sortField == "id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
       </th>
     </tr>
