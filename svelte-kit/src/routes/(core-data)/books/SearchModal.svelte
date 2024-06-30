@@ -129,7 +129,6 @@
       <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableSubjects
           placeholder="Subjects"
-          inputProps={{ disabled: noSubjects }}
           slot="select"
           subjects={allSubjects}
           currentlySelected={localSubjects}

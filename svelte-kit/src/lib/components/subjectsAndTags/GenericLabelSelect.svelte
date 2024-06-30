@@ -9,21 +9,11 @@
 
   export let options: () => any[];
   export let placeholder = "";
-  export let inputProps = { class: "md:text-sm text-base leading-5" };
   export let search = "";
   export let onItemSelected: (option: any) => void;
 
   export let size: "sm" | "default" = "default";
   export let triggerClasses = "";
-
-  let inputPropsToUse: any;
-
-  $: {
-    inputPropsToUse = inputProps;
-    if (!inputPropsToUse.class) {
-      inputPropsToUse.class = "md:text-sm text-base leading-5";
-    }
-  }
 
   let open = false;
 
