@@ -12,6 +12,6 @@
       on:click={() => onColorChosen(color)}
       type="button"
       style="background-color: {color}"
-    />
+   ></button>
   {/each}
 </div>

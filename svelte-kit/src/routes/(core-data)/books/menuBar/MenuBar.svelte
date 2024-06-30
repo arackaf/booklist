@@ -50,7 +50,7 @@
         aria-label="Open mobile menu"
         on:click={() => (mobileMenuOpen = true)}
       >
-        <i class="far fa-fw fa-bars" />
+        <i class="far fa-fw fa-bars"></i>
       </RawButton>
       {#if isPublic}
         <PublicBooksHeader />

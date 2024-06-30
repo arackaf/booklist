@@ -53,7 +53,7 @@
     </div>
     <div class="flex flex-col gap-2">
       {#if !userSummary}
-        <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner" /></div>
+        <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner"></i></div>
       {:else}
         <span>Total Books: {userSummary?.allBooksCount}</span>
         {#if userSummary.maxUsedSubjects}
@@ -79,7 +79,7 @@
     <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,1fr)] grid-rows-[auto_auto] leading-none">
       <span>Provider:</span>
       <div class="flex gap-1">
-        <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}" />
+        <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}"></i>
         <span>{loggedInUser.provider === "google" ? "Google" : "Github"}</span>
       </div>
 

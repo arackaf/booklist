@@ -95,7 +95,7 @@
 </script>
 
 {#if !editingTag}
-  <div />
+  <div></div>
 {:else if !deleteShowing}
   <form method="POST" action="?/saveTag" use:enhance={runSave}>
     <input type="hidden" name="id" value={editingTag.id} />
@@ -157,7 +157,7 @@
               on:click={() => (deleteShowing = true)}
             >
               <span>Delete {originalName}</span>
-              <i class="fal fa-fw fa-trash-alt" />
+              <i class="fal fa-fw fa-trash-alt"></i>
             </Button>
           {/if}
         </div>

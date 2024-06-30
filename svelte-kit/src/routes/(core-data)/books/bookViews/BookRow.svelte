@@ -64,7 +64,7 @@
   {#if !isPublic}
     <td>
       <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(id)}>
-        <i class={"fal fa-fw " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")} />
+        <i class={"fal fa-fw " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
       </button>
     </td>
   {/if}
@@ -85,7 +85,7 @@
 
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
           <button on:click={() => previewBook(book)} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
-            <i class="fa-fw fal fa-eye" />
+            <i class="fa-fw fal fa-eye"></i>
           </button>
           {#if isbn10}
             <a
@@ -94,19 +94,19 @@
               class="invisible text-neutral-500 group-hover:visible text-sm"
               href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
             >
-              <i class={`fab fa-amazon fa-fw`} />
+              <i class={`fab fa-amazon fa-fw`}></i>
             </a>
           {/if}
           {#if !isPublic}
             <button style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm" on:click={() => editBook(book)}>
-              <i class="fal fa-pencil-alt fa-fw" />
+              <i class="fal fa-pencil-alt fa-fw"></i>
             </button>
             <button
               style={hoverOverride}
               class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
               on:click={() => (pendingDelete = true)}
             >
-              <i class={`fal fa-trash-alt fa-fw`} />
+              <i class={`fal fa-trash-alt fa-fw`}></i>
             </button>
           {/if}
           {#if pendingDelete}
@@ -141,12 +141,12 @@
               {book.isRead ? "Read" : "Set read"}
             </span>
             {#if book.isRead}
-              <i class="far fa-fw fa-check" />
+              <i class="far fa-fw fa-check"></i>
             {/if}
           </ActionButton>
         </BookReadSetter>
       {:else if book.isRead}
-        <Label theme="success">Read <i class="far fa-fw fa-check" /></Label>
+        <Label theme="success">Read <i class="far fa-fw fa-check"></i></Label>
       {/if}
     </div>
   </td>

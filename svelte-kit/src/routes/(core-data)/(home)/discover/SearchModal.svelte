@@ -160,19 +160,19 @@
             <div class="flex flex-row gap-1 items-center">
               <div class="flex">
                 <Button type="button" on:click={pageOne} disabled={!canPageDown} icon={true} class="connect-right">
-                  <i class="fal fa-fw fa-angle-double-left" />
+                  <i class="fal fa-fw fa-angle-double-left"></i>
                 </Button>
                 <Button type="button" on:click={pageDown} disabled={!canPageDown} icon={true} class="connect-left">
-                  <i class="fal fa-fw fa-angle-left" />
+                  <i class="fal fa-fw fa-angle-left"></i>
                 </Button>
               </div>
               <span class="text-sm mx-1">{page} of {totalPages}</span>
               <div class="flex">
                 <Button type="button" on:click={pageUp} disabled={!canPageUp} icon={true} class="connect-right">
-                  <i class="fal fa-fw fa-angle-right" />
+                  <i class="fal fa-fw fa-angle-right"></i>
                 </Button>
                 <Button type="button" on:click={pageLast} disabled={!canPageUp} icon={true} class="connect-left">
-                  <i class="fal fa-fw fa-angle-double-right" />
+                  <i class="fal fa-fw fa-angle-double-right"></i>
                 </Button>
               </div>
             </div>

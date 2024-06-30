@@ -36,7 +36,7 @@
 
           <div>{item.title ?? `${item.isbn} Failure`}</div>
         {:else}
-          <div />
+          <div></div>
           <div>
             <Alert type="error" class="w-[40ch] inline-flex">
               Failed to lookup isbn {item.isbn}
@@ -46,7 +46,7 @@
       {/each}
 
       {#if $nextPageKey}
-        <div />
+        <div></div>
         <ActionButton class="w-[40ch]" theme="primary" running={loading} on:click={loadNextScans}>Load More</ActionButton>
       {/if}
     </div>

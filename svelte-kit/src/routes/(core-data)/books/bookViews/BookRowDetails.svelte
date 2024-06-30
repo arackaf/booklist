@@ -60,7 +60,7 @@
                             <br />
                           {/if}
                           <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
-                            <i class="fab fa-amazon" />
+                            <i class="fab fa-amazon"></i>
                           </a>
                         </td>
                       </tr>

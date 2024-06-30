@@ -89,18 +89,18 @@
 
     <ul class="flex nav-items">
       <NavBarItem active={isHome} class="flex md:hidden" href="/" style="margin-top: '2px';" label={"Home"}>
-        <i class="fal fa-fw fa-home text-lg" />
+        <i class="fal fa-fw fa-home text-lg"></i>
       </NavBarItem>
       {#if loggedIn || hasPublicId}
         <NavBarItem disabled={hasPublicId} href="/scan" style="position: relative;" label={"Scan books"}>
           <span class="hidden md:block">Book entry</span>
           <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-scanner" />
+            <i class="text-lg fal fa-fw fa-scanner"></i>
           </span>
           {#if pendingCount}
             <span class="absolute top-[3px] right-[2px] {bigCount ? 'text-[0.7rem]' : 'text-[0.65rem]'}">
               <span class="overlay-holder">
-                <i class="fas fa-badge text-info-6 text-base leading-none" />
+                <i class="fas fa-badge text-info-6 text-base leading-none"></i>
                 <span class="text-primary-2 leading-none self-center justify-self-center">{pendingCount}</span>
               </span>
             </span>
@@ -111,7 +111,7 @@
         <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
           <span class="hidden md:block">Books</span>
           <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-books" />
+            <i class="text-lg fal fa-fw fa-books"></i>
           </span>
         </NavBarItem>
       {/if}
@@ -119,7 +119,7 @@
         <NavBarItem disabled={hasPublicId} href="/subjects" label={"Manage subjects"}>
           <span class="hidden md:block">Subjects</span>
           <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-sitemap" />
+            <i class="text-lg fal fa-fw fa-sitemap"></i>
           </span>
         </NavBarItem>
       {/if}
@@ -127,7 +127,7 @@
         <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
           <span class="hidden md:block">Settings</span>
           <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-cogs" />
+            <i class="text-lg fal fa-fw fa-cogs"></i>
           </span>
         </NavBarItem>
       {/if}
@@ -135,7 +135,7 @@
         <NavBarItem href="/admin/similar-books" label={"Admin"}>
           <span class="hidden md:block">Admin</span>
           <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-users-cog" />
+            <i class="text-lg fal fa-fw fa-users-cog"></i>
           </span>
         </NavBarItem>
       {/if}
@@ -150,11 +150,11 @@
         >
           <span class="hidden md:block">Login</span>
           <span class="md:hidden">
-            <i class="text-lg fal fa-fw fa-sign-in" />
+            <i class="text-lg fal fa-fw fa-sign-in"></i>
           </span>
         </NavBarItem>
       {/if}
     </ul>
   </nav>
-  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10" />
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10"></div>
 </header>

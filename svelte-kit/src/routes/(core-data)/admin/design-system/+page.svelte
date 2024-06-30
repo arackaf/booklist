@@ -30,70 +30,70 @@
     <hr />
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Alert type="info">Hello World</Alert>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Alert type="info" layout="slim">Hello World</Alert>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Alert type="info" layout="slimmer">Hello World</Alert>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Alert type="success">Hello World</Alert>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Alert type="warning">Hello World</Alert>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Alert type="error">Hello World</Alert>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Label display="inline-block">Hello Worlding</Label>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Label display="inline-block">Hello Worlding</Label>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Label theme="success">Success</Label>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Label display="inline-block" theme="success">Success</Label>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Label theme="error">Error Message</Label>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <Label display="inline-block" theme="error">Error Message</Label>
   </div>
 
   <h1>Book cover</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <BookCover
       size="mobile"
@@ -106,7 +106,7 @@
     />
   </div>
 
-  <div />
+  <div></div>
   <div>
     <BookCover
       size="small"
@@ -119,7 +119,7 @@
     />
   </div>
 
-  <div />
+  <div></div>
   <div>
     <BookCover
       size="medium"
@@ -132,39 +132,39 @@
     />
   </div>
 
-  <div />
+  <div></div>
   <div>
     <BookCover size="mobile" />
   </div>
 
-  <div />
+  <div></div>
   <div>
     <BookCover size="small" />
   </div>
 
-  <div />
+  <div></div>
   <div>
     <BookCover size="medium" />
   </div>
 
   <h1>Anchor Button</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <div class="flex">
       <Button href="/foo" icon={true} class="connect-right">
         <span class="sr">Go a page up</span>
-        <i class="fal fa-fw fa-angle-right" />
+        <i class="fal fa-fw fa-angle-right"></i>
       </Button>
       <Button this={"button"} disabled={true} class="connect-left" icon={true}>
         <span class="sr">Go to last page</span>
-        <i class="fal fa-fw fa-angle-double-right" />
+        <i class="fal fa-fw fa-angle-double-right"></i>
       </Button>
     </div>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <SelectGroup labelText="Title">
       <Select slot="select">
@@ -174,7 +174,7 @@
     </SelectGroup>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <select class="border rounded w-36">
       <option value="a">A</option>
@@ -183,9 +183,9 @@
   </div>
 
   <h1>Input Group</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <InputGroup labelText="Title">
       <Input slot="input" id="fc2" />
@@ -193,70 +193,70 @@
   </div>
 
   <h1>Input</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Input />
   </div>
 
   <h1>Input error</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Input error={true} />
   </div>
 
   <h1>Primary</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button theme="primary">Button</Button>
   </div>
 
   <h1>Info</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button theme="info">Button</Button>
   </div>
 
   <h1>Success</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button theme="success">Button</Button>
   </div>
 
   <h1>Danger</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button type="primary" theme="danger">Button</Button>
   </div>
 
   <h1>ActionButton</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
 
   <h1>ActionButton</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <ActionButtonNew theme="primary" {running} on:click={clickButton}>Search</ActionButtonNew>
   </div>
 
-  <div />
+  <div></div>
   <div>
     <ActionButtonNew {running} on:click={clickButton}>
       Search
@@ -265,25 +265,25 @@
   </div>
 
   <h1>Icon Button</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <IconButton>
-      <i class="fal fa-fw fa-search" />
+      <i class="fal fa-fw fa-search"></i>
     </IconButton>
   </div>
 
   <h1>Default</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button>Button</Button>
   </div>
 
   <h1>Med</h1>
-  <div />
+  <div></div>
 
   <div>n/a</div>
   <div>
@@ -291,41 +291,41 @@
   </div>
 
   <h1>sm</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button size="sm">Buttoning</Button>
   </div>
 
   <h1>danger-sm</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button size="sm" theme="danger">Buttoning</Button>
   </div>
 
   <h1>Disabled</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button type="primary" disabled={true}>Button</Button>
   </div>
 
   <h1>Default</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button>Button</Button>
   </div>
 
   <h1>Disabled</h1>
-  <div />
+  <div></div>
 
-  <div />
+  <div></div>
   <div>
     <Button disabled>Button</Button>
   </div>

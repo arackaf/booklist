@@ -45,37 +45,37 @@
 
 {#if !selectedBooksCount}
   <Button title="Filter search" on:click={openFilterModal} class="hidden lg:flex h-8 connect-left connect-right">
-    <i class="fal fa-fw fa-filter" />
+    <i class="fal fa-fw fa-filter"></i>
   </Button>
   {#if !isPublic}
     <Button title="Edit subjects" on:click={editSubjects} class="hidden lg:flex h-8 connect-left connect-right">
-      <i class="fal fa-fw fa-sitemap" />
+      <i class="fal fa-fw fa-sitemap"></i>
     </Button>
     <Button title="Edit tags" on:click={editTags} class="hidden lg:flex h-8 connect-left connect-right">
-      <i class="fal fa-fw fa-tags" />
+      <i class="fal fa-fw fa-tags"></i>
     </Button>
   {/if}
 
   <form method="POST" action="?/reloadBooks" use:enhance={reload}>
     <Button class="hidden lg:flex h-8 connect-left" type="submit" disabled={reloading}>
-      <i class="fal fa-fw fa-sync" class:fa-spin={reloading} />
+      <i class="fal fa-fw fa-sync" class:fa-spin={reloading}></i>
     </Button>
   </form>
 {:else if !isPublic}
   <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" on:click={editSubjectsForSelectedBooks}>
-    <i class="fal fa-fw fa-sitemap" />
+    <i class="fal fa-fw fa-sitemap"></i>
   </Button>
   <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" on:click={editTagsForSelectedBooks}>
-    <i class="fal fa-fw fa-tags" />
+    <i class="fal fa-fw fa-tags"></i>
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
     <Button class="hidden lg:flex h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
-      <i class="fal fa-fw fa-eye" />
+      <i class="fal fa-fw fa-eye"></i>
     </Button>
   </BookReadSetter>
   <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
     <Button class="hidden lg:flex h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
-      <i class="fal fa-fw fa-eye-slash" />
+      <i class="fal fa-fw fa-eye-slash"></i>
     </Button>
   </BookReadSetter>
 {/if}

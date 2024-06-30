@@ -36,7 +36,7 @@
 
       <Button size="med" class="flex flex-row gap-1 items-center self-start sm:ml-auto" on:click={newSubject}>
         <span>New subject </span>
-        <i class="far fa-fw fa-plus-square" />
+        <i class="far fa-fw fa-plus-square"></i>
       </Button>
     </div>
   {/if}

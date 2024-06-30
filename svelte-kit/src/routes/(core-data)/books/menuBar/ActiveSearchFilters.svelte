@@ -28,7 +28,7 @@
   {#if $searchState.isRead == "true" || $searchState.isRead == "false"}
     <RemovableLabelDisplay extraStyles={filterDisplayStyles} href={$changeFilter.withoutIsRead}>
       <span>
-        {#if $searchState.isRead == "true"}Is Read <i class="far fa-check" />{:else}Not Read{/if}
+        {#if $searchState.isRead == "true"}Is Read <i class="far fa-check"></i>{:else}Not Read{/if}
       </span>
     </RemovableLabelDisplay>
   {/if}

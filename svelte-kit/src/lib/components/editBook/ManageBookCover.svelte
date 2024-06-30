@@ -105,7 +105,7 @@
           tabIndex={-1}
         />
         <Button class="h-8 p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
-          <i class="far fa-cloud-upload-alt" />
+          <i class="far fa-cloud-upload-alt"></i>
         </Button>
       </div>
     </div>

@@ -9,7 +9,7 @@
 
   <!-- TODO: -->
   <button style="margin-left: auto; display: flex;" class="close raw-button text-lg font-bold" on:click={onHide}>
-    <i class="far fa-times" />
+    <i class="far fa-times"></i>
   </button>
 </div>
 <hr class="my-3" />
