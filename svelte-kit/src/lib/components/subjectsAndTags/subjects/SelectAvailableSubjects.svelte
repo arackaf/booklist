@@ -1,21 +1,33 @@
 <script lang="ts">
   import type { DisablableSubject, Subject } from "$data/types";
   import { filterSubjects, subjectState } from "$lib/state/subjectsState";
+  import type { Snippet } from "svelte";
 
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
-  export let onSelect: (item: DisablableSubject) => void;
-  export let placeholder = "Subjects";
-  export let currentlySelected: number[] = [];
+  type Props = {
+    onSelect: (item: DisablableSubject) => void;
+    placeholder?: string;
+    currentlySelected?: number[];
+    subjects: Subject[];
+    size?: "sm" | "default";
+    triggerClasses?: string;
+    noHiddenFields?: boolean;
+    renderPlaceholder?: Snippet;
+  };
 
-  export let subjects: Subject[];
+  const {
+    onSelect,
+    placeholder,
+    currentlySelected = [],
+    subjects,
+    size = "default",
+    triggerClasses = "",
+    noHiddenFields = false,
+    renderPlaceholder
+  }: Props = $props();
 
-  export let size: "sm" | "default" = "default";
-  export let triggerClasses = "";
-
-  export let noHiddenFields = false;
-
-  let search = "";
+  let search = $state("");
 
   const doSelect = (item: DisablableSubject) => {
     if (item.disabled) {
@@ -26,11 +38,10 @@
   };
 
   type LookupHash = { [id: string]: true };
-  $: selectedHash = currentlySelected.reduce<LookupHash>((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {});
 
-  $: subjectsPacket = subjectState(subjects);
-
-  $: eligible = filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, selectedHash);
+  const selectedHash = $derived(currentlySelected.reduce<LookupHash>((hash, _idOrObj) => ((hash[_idOrObj] = true), hash), {}));
+  const subjectsPacket = $derived(subjectState(subjects));
+  const eligible = $derived(filterSubjects(subjectsPacket.subjectsUnwound, search, subjectsPacket.subjectHash, selectedHash));
 </script>
 
 {#if !noHiddenFields}
@@ -38,6 +49,12 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
-  <slot name="placeholder" slot="placeholder">{placeholder}</slot>
-</GenericLabelSelect>
+<GenericLabelSelect
+  {renderPlaceholder}
+  {placeholder}
+  {size}
+  bind:search
+  options={() => eligible}
+  onItemSelected={doSelect}
+  {triggerClasses}
+></GenericLabelSelect>
