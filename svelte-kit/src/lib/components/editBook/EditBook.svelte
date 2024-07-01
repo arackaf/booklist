@@ -1,6 +1,5 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import type { Book, Subject, Tag } from "$data/types";
 
@@ -16,13 +15,8 @@
   import DeleteBook from "./DeleteBook.svelte";
 
   export let book: Book;
-  export let subjects: Subject[];
-  export let tags: Tag[];
 
   export let onCancel: () => void;
-  export let syncUpdates: (id: number, updates: UpdatesTo<Book>) => void;
-
-  export let afterDelete: (id: number) => void = () => {};
 
   let basicInfoValid: () => boolean;
 
@@ -39,7 +33,6 @@
       const updates: UpdatesTo<Book> = result.data.updates;
 
       saving = false;
-      syncUpdates(id, updates);
       window.dispatchEvent(new CustomEvent("reload-user-summary"));
     };
   }
@@ -60,17 +53,12 @@
     <TabContents>
       <TabContent tabName="basic">
         {#if book}
-          <EditBookInfo bind:validate={basicInfoValid} {saving} {book} {subjects} {tags} />
+          <EditBookInfo bind:validate={basicInfoValid} {saving} {book} />
         {/if}
       </TabContent>
       <TabContent tabName="covers">
         {#if book}
           <EditBookCovers {book} />
-        {/if}
-      </TabContent>
-      <TabContent tabName="delete">
-        {#if book?.id}
-          <DeleteBook id={book?.id} {afterDelete} />
         {/if}
       </TabContent>
     </TabContents>
