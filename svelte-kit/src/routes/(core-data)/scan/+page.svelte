@@ -1,7 +1,5 @@
 <script lang="ts">
   import type { Book } from "$data/types";
-  import Button from "$lib/components/Button/Button.svelte";
-  import EditBook from "$lib/components/editBook/EditBook.svelte";
 
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
 
@@ -24,16 +22,16 @@
   let editingBook: Book | null = null;
 
   let enteringBook = false;
-
-  const manuallyEnterBook = () => {
-    editingBook = defaultEmptyBook();
-    enteringBook = true;
-  };
 </script>
 
 <section>
-  <Button size="sm" class="ml-6" on:click={manuallyEnterBook}>Manual entry</Button>
-  {#if editingBook}
-    <EditBook book={editingBook} onCancel={() => (editingBook = null)} />
-  {/if}
+  <EditBookModal
+    isOpen={enteringBook}
+    book={editingBook}
+    subjects={allSubjects}
+    {tags}
+    onSave={() => (editingBook = defaultEmptyBook())}
+    onHide={() => (enteringBook = false)}
+    header={"Enter book"}
+  />
 </section>

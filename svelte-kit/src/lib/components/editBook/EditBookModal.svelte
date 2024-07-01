@@ -11,7 +11,8 @@
   export let book: any;
   export let isOpen = false;
   export let onHide: any;
-
+  export let tags: Tag[];
+  export let subjects: Subject[];
   export let onSave: (id: number, updates: UpdatesTo<Book>) => void = () => {};
   export let closeOnSave: boolean = false;
   export let header: string;
@@ -34,5 +35,5 @@
 </script>
 
 <Modal headerCaption={header} {isOpen} {onHide} standardFooter={false}>
-  <EditBook book={editingBook} onCancel={onHide} />
+  <EditBook book={editingBook} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
 </Modal>
