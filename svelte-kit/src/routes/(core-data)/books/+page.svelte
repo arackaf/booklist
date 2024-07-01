@@ -18,7 +18,7 @@
   import type BookSearchModalType from "./SearchModal.svelte";
   import type SubjectEditModalType from "./SubjectEditModal.svelte";
   import type TagEditModalType from "./TagEditModal.svelte";
-  import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
+  import type EditBookModalType from "$lib/components/editBook/EditBookComponent.svelte";
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
   import { searchState } from "./state/searchState";
@@ -52,7 +52,7 @@
       import("./SearchModal.svelte").then(res => res.default),
       import("./SubjectEditModal.svelte").then(res => res.default),
       import("./TagEditModal.svelte").then(res => res.default),
-      import("$lib/components/editBook/EditBookModal.svelte").then(res => res.default),
+      import("$lib/components/editBook/EditBookComponent.svelte").then(res => res.default),
       import("./BookSubjectSetter.svelte").then(res => res.default),
       import("./BookTagSetter.svelte").then(res => res.default)
     ]).then(results => {
