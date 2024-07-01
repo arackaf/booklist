@@ -72,7 +72,7 @@
     "lodash.debounce": "^4.0.8",
     "lucide-svelte": "^0.309.0",
     "sass": "^1.56.1",
-    "svelte": "^5.0.0-next.166",
+    "svelte": "^5.0.0-next.168",
     "svelte-file-dropzone": "^2.0.7",
     "tailwind-merge": "^2.2.0",
     "tailwind-variants": "^0.1.20",
