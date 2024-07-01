@@ -129,7 +129,7 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
     // @ts-ignore
     mount(TooltipComponent, {
       target: div,
-      props: { position, data, drilldown, remove, targetElement: node } as any
+      props: { position, data, drilldown, remove, targetElement: node }
     });
 
     const placementMap: { [keys in Position]: Placement } = {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { mount, onMount } from "svelte";
   import { page } from "$app/stores";
 
   import Toastify from "toastify-js";
@@ -31,7 +31,7 @@
   function showBookToast(book: Book) {
     const node = document.createElement("div");
 
-    new ScanToasterContent({
+    mount(ScanToasterContent, {
       target: node,
       props: { book }
     });
