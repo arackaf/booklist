@@ -35,5 +35,5 @@
 </script>
 
 <Modal headerCaption={header} {isOpen} {onHide} standardFooter={false}>
-  <EditBook book={editingBook} {syncUpdates} onCancel={onHide} {subjects} {tags} afterDelete={onDeleteComplete} />
+  <EditBook book={editingBook} {subjects} {tags} />
 </Modal>
