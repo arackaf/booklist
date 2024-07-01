@@ -1,9 +1,9 @@
 <script lang="ts">
-  import EditBookInfo from "$lib/components/editBook/EditBookInfo.svelte";
+  import EditBookComponent from "$lib/components/editBook/EditBookComponent.svelte";
 
   let editingBook: any = null;
 </script>
 
-{#if editingBook}
-  <EditBookInfo book={editingBook} />
-{/if}
+<section>
+  <EditBookComponent book={editingBook} />
+</section>
