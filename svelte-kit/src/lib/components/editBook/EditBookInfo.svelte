@@ -1,7 +1,5 @@
 <script lang="ts">
-  import Button from "$lib/components/Button/Button.svelte";
   import Input from "../form-elements/Input/Input.svelte";
-  import InputGroup from "../form-elements/Input/InputGroup.svelte";
 
   export let book: any;
 
