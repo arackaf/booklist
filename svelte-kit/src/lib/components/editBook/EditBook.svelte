@@ -1,15 +1,9 @@
 <script lang="ts">
-  import type { Book } from "$data/types";
-
   import EditBookInfo from "./EditBookInfo.svelte";
 
-  export let book: Book;
-
-  let basicInfoValid: () => boolean;
-
-  let saving = false;
+  export let book: any;
 </script>
 
 {#if book}
-  <EditBookInfo {saving} {book} />
+  <EditBookInfo {book} />
 {/if}
