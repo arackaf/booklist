@@ -22,7 +22,7 @@
       authors: [""],
       tags: [],
       subjects: []
-    } as unknown as Book);
+    }) as unknown as Book;
 
   let editingBook: Book | null = null;
 
