@@ -25,13 +25,5 @@
 </script>
 
 <section>
-  <EditBookModal
-    isOpen={enteringBook}
-    book={editingBook}
-    subjects={allSubjects}
-    {tags}
-    onSave={() => (editingBook = defaultEmptyBook())}
-    onHide={() => (enteringBook = false)}
-    header={"Enter book"}
-  />
+  <EditBookModal isOpen={enteringBook} book={editingBook} subjects={allSubjects} {tags} onHide={() => (enteringBook = false)} header={"Enter book"} />
 </section>
