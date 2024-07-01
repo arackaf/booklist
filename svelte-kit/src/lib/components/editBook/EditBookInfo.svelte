@@ -14,18 +14,10 @@
   };
 </script>
 
-<fieldset>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-    <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
-      {#each book.authors || [] as author, index (index)}
-        <InputGroup labelText="Author">
-          <Input slot="input" name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
-        </InputGroup>
-      {/each}
-    </div>
+{#each book.authors || [] as author, index (index)}
+  <Input name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
+{/each}
 
-    <div class="sm:col-span-2">
-      <Button size="sm" type="button" on:click={addAuthor}><i class="far fa-fw fa-plus"></i>Add author</Button>
-    </div>
-  </div>
-</fieldset>
+<div class="sm:col-span-2">
+  <button type="button" on:click={addAuthor}><i class="far fa-fw fa-plus"></i>Add author</button>
+</div>
