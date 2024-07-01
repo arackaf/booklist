@@ -15,7 +15,7 @@
 </script>
 
 {#each book.authors || [] as author, index (index)}
-  <input name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
+  <Input name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
 {/each}
 
 <div class="sm:col-span-2">
