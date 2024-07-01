@@ -7,7 +7,6 @@
 
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
-  import Junk from "./Junk.svelte";
 
   export let data;
 
@@ -23,7 +22,7 @@
       authors: [""],
       tags: [],
       subjects: []
-    }) as unknown as Book;
+    } as unknown as Book);
 
   let editingBook: Book | null = null;
 
@@ -51,8 +50,6 @@
 </script>
 
 <section>
-  <Junk />
-  <br />
   <div class="flex flex-col-reverse md:grid md:grid-cols-2 gap-2">
     <div>
       <div class="flex items-center">
