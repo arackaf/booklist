@@ -19,7 +19,10 @@
 
   let editingSubject: Subject | null = null;
 
-  const cancelEdit = () => (editingSubject = null);
+  const cancelEdit = () => {
+    editingSubject = null;
+    deleteShowing = false;
+  };
   const newSubject = () => (editingSubject = emptySubject);
   const editSubject = (subject: Subject) => (editingSubject = subject);
 
