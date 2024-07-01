@@ -20,10 +20,8 @@
     }) as unknown as Book;
 
   let editingBook: Book | null = null;
-
-  let enteringBook = false;
 </script>
 
 <section>
-  <EditBookModal isOpen={enteringBook} book={editingBook} subjects={allSubjects} {tags} onHide={() => (enteringBook = false)} header={"Enter book"} />
+  <EditBookModal book={editingBook} subjects={allSubjects} {tags} />
 </section>
