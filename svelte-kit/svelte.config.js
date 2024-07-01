@@ -11,11 +11,7 @@ const config = {
       regions: ["iad1"]
     }),
     alias: {
-      $styles: "src/styles",
-      $lib: "src/lib",
-      $db: "src/db",
-      $data: "src/data",
-      $lambda: "src/lambda"
+      $lib: "src/lib"
     }
   }
 };
