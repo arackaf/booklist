@@ -55,11 +55,6 @@
     originalName = tag.name;
   }
 
-  export const reset = () => {
-    inputEl?.focus();
-    //deleteShowing = false;
-  };
-
   let saving = false;
   function runSave({ formData: data, cancel }: any) {
     const name = data.get("name");
