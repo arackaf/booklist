@@ -13,7 +13,7 @@ export type PopperOptions = {
   drilldown: any;
   remove: (id: string) => void;
   hoverTarget?: Element;
-  TooltipComponent?: typeof Tooltip | BarTooltip;
+  TooltipComponent?: typeof Tooltip | typeof BarTooltip;
   onShow?: () => void;
   onHide?: () => void;
 };
