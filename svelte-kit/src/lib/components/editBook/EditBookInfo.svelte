@@ -12,8 +12,6 @@
   import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   export let book: any;
-  export let tags: Tag[];
-  export let subjects: Subject[];
 
   export let saving: boolean;
 
@@ -76,16 +74,6 @@
     <InputGroup labelText="Published">
       <Input slot="input" name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
     </InputGroup>
-
-    <SelectAndDisplayContainer class="sm:col-span-2">
-      <SelectAvailableTags slot="select" {tags} currentlySelected={book.tags} onSelect={addTag} />
-      <DisplaySelectedTags slot="display" {tags} currentlySelected={book.tags} onRemove={removeTag} />
-    </SelectAndDisplayContainer>
-
-    <SelectAndDisplayContainer class="sm:col-span-2">
-      <SelectAvailableSubjects slot="select" {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
-      <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
-    </SelectAndDisplayContainer>
 
     <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
       {#each book.authors || [] as author, index (index)}
