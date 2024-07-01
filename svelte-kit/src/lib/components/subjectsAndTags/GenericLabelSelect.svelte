@@ -12,7 +12,7 @@
     placeholder?: string;
     search?: string;
     onItemSelected: (option: any) => void;
-    size: "sm" | "default";
+    size?: "sm" | "default";
     triggerClasses?: string;
     renderPlaceholder?: Snippet;
   };

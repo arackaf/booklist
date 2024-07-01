@@ -49,12 +49,12 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect
-  {renderPlaceholder}
-  {placeholder}
-  {size}
-  bind:search
-  options={() => eligible}
-  onItemSelected={doSelect}
-  {triggerClasses}
-></GenericLabelSelect>
+<GenericLabelSelect {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
+  {#snippet renderPlaceholder()}
+    {#if $$slots.placeholder}
+      <slot name="placeholder"></slot>
+    {:else}
+      {placeholder ?? "Search"}
+    {/if}
+  {/snippet}
+</GenericLabelSelect>
