@@ -9,21 +9,12 @@
 
   export let saving: boolean;
 
-  let titleEl: HTMLInputElement;
-
   const updateBook = (updates: Partial<Book>) => {
     book = { ...book, ...updates };
   };
 
-  let missingTitle = false;
-
   const addAuthor = () => {
     updateBook({ authors: [...book.authors, ""] });
-  };
-
-  export const validate = () => {
-    missingTitle = !titleEl.value;
-    return !missingTitle;
   };
 </script>
 

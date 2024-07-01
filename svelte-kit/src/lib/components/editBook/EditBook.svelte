@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Book, Subject, Tag } from "$data/types";
+  import type { Book } from "$data/types";
 
   import EditBookInfo from "./EditBookInfo.svelte";
 
@@ -11,5 +11,5 @@
 </script>
 
 {#if book}
-  <EditBookInfo bind:validate={basicInfoValid} {saving} {book} />
+  <EditBookInfo {saving} {book} />
 {/if}
