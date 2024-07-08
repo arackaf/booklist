@@ -8,7 +8,7 @@
   import type { FullSubject, Subject } from "$data/types";
 
   import { syncHeight } from "$lib/util/animationHelpers";
-  import SubjectLabelDisplay from "$lib/components/subjectsAndTags/SubjectLabelDisplay.svelte";
+  import SubjectLabelDisplay from "./SubjectLabelDisplay.svelte";
   import { flip } from "svelte/animate";
   import { exitStart, scaleTransitionProps } from "./animationHelpers";
 

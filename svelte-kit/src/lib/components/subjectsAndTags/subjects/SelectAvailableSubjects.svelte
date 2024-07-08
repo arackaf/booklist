@@ -16,7 +16,7 @@
     renderPlaceholder?: Snippet;
   };
 
-  const {
+  let {
     onSelect,
     placeholder,
     currentlySelected = [],
