@@ -13,6 +13,7 @@
   export let position: Position;
   export let removeBar: (id: string) => void;
   export let noInitialAnimation: boolean;
+  export let xxx = false;
 
   let initialRenderFinished = false;
 
@@ -27,5 +28,5 @@
 </script>
 
 <g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
-  <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={color} />
+  <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={xxx ? "url(#inline-gradient-1)" : color} />
 </g>

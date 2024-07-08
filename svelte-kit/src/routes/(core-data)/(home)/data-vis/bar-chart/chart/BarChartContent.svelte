@@ -57,6 +57,16 @@
 <div>
   <div class="h-[500px] mx-auto mb-36" style="max-width: {MAX_SVG_WIDTH}px">
     <svg width="100%" class="{sizeClass} block mt-7 overflow-visible {maxHeightStyle}" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
+      <defs>
+        <linearGradient id="inline-gradient-1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="33.3%" style="stop-color:red;stop-opacity:1" />
+          <stop offset="33.3%" style="stop-color:green;stop-opacity:1" />
+          <stop offset="66.7%" style="stop-color:green;stop-opacity:1" />
+          <stop offset="66.7%" style="stop-color:blue;stop-opacity:1" />
+          <stop offset="66.7%" style="stop-color:blue;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+
       <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
         {#each showingData as d, i (d.groupId)}
           <Bar
