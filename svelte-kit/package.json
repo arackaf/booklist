@@ -51,7 +51,7 @@
     "@next-auth/dynamodb-adapter": "^3.0.2",
     "@planetscale/database": "^1.16.0",
     "@popperjs/core": "^2.11.6",
-    "@sveltejs/kit": "^2.5.5",
+    "@sveltejs/kit": "^2.5.18",
     "@types/toastify-js": "^1.11.1",
     "bits-ui": "^0.21.12",
     "blueimp-md5": "2.3.0",
