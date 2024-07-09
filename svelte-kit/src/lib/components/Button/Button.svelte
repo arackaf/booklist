@@ -12,7 +12,18 @@
     children: Snippet;
   } & HTMLButtonAttributes;
 
-  let { size = "default", theme, disabled, running = false, icon = false, softDisable = false, href, class: className, ...rest }: Props = $props();
+  let {
+    size = "default",
+    theme,
+    disabled,
+    running = false,
+    icon = false,
+    softDisable = false,
+    href,
+    class: className = "",
+    children,
+    ...rest
+  }: Props = $props();
 
   // export let theme: "primary" | "info" | "success" | "danger" | "default" = "default";
   // export let size: "default" | "med" | "sm" = "default";
@@ -77,5 +88,5 @@
   href={type === "a" ? href : undefined}
   {...rest}
 >
-  <slot />
+  {@render children()}
 </svelte:element>

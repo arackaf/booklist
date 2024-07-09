@@ -132,7 +132,7 @@
                       <i class="fab fa-goodreads-g"></i>
                     </a>
                   {/if}
-                  <Button size="sm" class="gap-2" on:click={() => (editing = true)}>
+                  <Button size="sm" class="gap-2" onclick={() => (editing = true)}>
                     <span>Edit book</span>
                     <i class="fal fa-pencil-alt"></i>
                   </Button>
@@ -141,7 +141,7 @@
             {/if}
           </div>
         </div>
-        <Button on:click={toggleDetails} disabled={detailsLoading} size="sm" class="flex gap-1 items-center self-start text-sm">
+        <Button onclick={toggleDetails} disabled={detailsLoading} size="sm" class="flex gap-1 items-center self-start text-sm">
           <span>Details</span><i class="far {detailsBtnClass}"></i>
         </Button>
       </div>

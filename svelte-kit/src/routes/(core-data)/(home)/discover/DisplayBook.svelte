@@ -41,7 +41,7 @@
             {book.authors.join(", ")}
           </SubTitleText>
         {/if}
-        <Button class="mt-auto self-start" theme="danger" size="sm" on:click={() => unselectBook(book)}>Remove</Button>
+        <Button class="mt-auto self-start" theme="danger" size="sm" onclick={() => unselectBook(book)}>Remove</Button>
       </div>
     </div>
     <hr class="my-2" />

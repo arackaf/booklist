@@ -244,7 +244,7 @@
 
   <div></div>
   <div>
-    <ActionButtonNew {running} on:click={clickButton}>Search</ActionButtonNew>
+    <ActionButtonNew {running} onclick={clickButton}>Search</ActionButtonNew>
   </div>
 
   <h1>ActionButton</h1>
@@ -252,12 +252,12 @@
 
   <div></div>
   <div>
-    <ActionButtonNew theme="primary" {running} on:click={clickButton}>Search</ActionButtonNew>
+    <ActionButtonNew theme="primary" {running} onclick={clickButton}>Search</ActionButtonNew>
   </div>
 
   <div></div>
   <div>
-    <ActionButtonNew {running} on:click={clickButton}>
+    <ActionButtonNew {running} onclick={clickButton}>
       Search
       <span slot="running">Searching</span>
     </ActionButtonNew>
