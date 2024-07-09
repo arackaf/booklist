@@ -4,7 +4,7 @@
 
   type Props = {
     size: "default" | "med" | "sm";
-    theme?: "primary" | "success" | "danger" | "default";
+    theme?: "primary" | "info" | "success" | "danger" | "default";
     disabled?: boolean;
     running: boolean;
   } & HTMLButtonAttributes;
