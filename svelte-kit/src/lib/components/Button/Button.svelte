@@ -14,7 +14,7 @@
 
   let {
     size = "default",
-    theme,
+    theme = "default",
     disabled,
     running = false,
     icon = false,
