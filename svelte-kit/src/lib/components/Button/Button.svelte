@@ -1,17 +1,18 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { HTMLButtonAttributes } from "svelte/elements";
 
   type Props = {
-    size: "default" | "med" | "sm";
+    size?: "default" | "med" | "sm";
     theme?: "primary" | "info" | "success" | "danger" | "default";
-    disabled?: boolean;
-    running: boolean;
+    running?: boolean;
     icon?: boolean;
     softDisable?: boolean;
     href?: string | null;
-  };
+    children: Snippet;
+  } & HTMLButtonAttributes;
 
-  let { size, theme, disabled, running, icon = false, softDisable = false, href, class: className, ...rest }: Props = $props();
+  let { size = "default", theme, disabled, running = false, icon = false, softDisable = false, href, class: className, ...rest }: Props = $props();
 
   // export let theme: "primary" | "info" | "success" | "danger" | "default" = "default";
   // export let size: "default" | "med" | "sm" = "default";

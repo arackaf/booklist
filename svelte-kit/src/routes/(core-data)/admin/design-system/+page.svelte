@@ -7,7 +7,6 @@
   import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
-  import IconButton from "$lib/components/Button/IconButton.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
   import Label from "$lib/components/form-elements/Label/Label.svelte";
 
@@ -157,7 +156,7 @@
         <span class="sr">Go a page up</span>
         <i class="fal fa-fw fa-angle-right"></i>
       </Button>
-      <Button this={"button"} disabled={true} class="connect-left" icon={true}>
+      <Button disabled={true} class="connect-left" icon={true}>
         <span class="sr">Go to last page</span>
         <i class="fal fa-fw fa-angle-double-right"></i>
       </Button>
@@ -237,7 +236,7 @@
 
   <div></div>
   <div>
-    <Button type="primary" theme="danger">Button</Button>
+    <Button theme="danger">Button</Button>
   </div>
 
   <h1>ActionButton</h1>
@@ -262,16 +261,6 @@
       Search
       <span slot="running">Searching</span>
     </ActionButtonNew>
-  </div>
-
-  <h1>Icon Button</h1>
-  <div></div>
-
-  <div></div>
-  <div>
-    <IconButton>
-      <i class="fal fa-fw fa-search"></i>
-    </IconButton>
   </div>
 
   <h1>Default</h1>
@@ -311,7 +300,7 @@
 
   <div></div>
   <div>
-    <Button type="primary" disabled={true}>Button</Button>
+    <Button disabled={true}>Button</Button>
   </div>
 
   <h1>Default</h1>
