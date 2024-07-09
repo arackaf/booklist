@@ -24,19 +24,21 @@
   import { searchState } from "./state/searchState";
   import { afterDelete } from "./state/onDelete";
   import { afterNavigate } from "$app/navigation";
+  import { bookViewOverride } from "./currentUiState";
 
   export let data;
 
   $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books } = data);
-  let bookViewOverride: string | null = null;
-  const overrideBookView = (newBookView: string) => (bookViewOverride = newBookView);
+  const overrideBookView = (newBookView: string) => {
+    bookViewOverride.set(newBookView);
+  };
 
   let hasBooks: boolean;
   $: {
     hasBooks = hasBooks || !!$books.length;
   }
 
-  $: bookViewToUse = bookViewOverride || defaultBookView;
+  $: bookViewToUse = $bookViewOverride || defaultBookView;
 
   let modalsReady = false;
 
