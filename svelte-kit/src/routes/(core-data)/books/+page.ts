@@ -4,6 +4,7 @@ import { EMPTY_BOOKS_RESULTS_CLIENT } from "$lib/state/dataConstants";
 import { ensureAnyUser } from "$lib/util/authCheck";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 import type { Book } from "$data/types";
+import { createState } from "$lib/state/universalReactivityHelpers.svelte";
 
 export async function load({ url, parent, fetch, depends }) {
   depends("reload:books");
@@ -28,7 +29,7 @@ export async function load({ url, parent, fetch, depends }) {
 
   return {
     defaultBookView,
-    totalBooks: writable(totalBooks),
+    totalBooks: createState(totalBooks),
     books: books as Book[],
     page,
     totalPages
