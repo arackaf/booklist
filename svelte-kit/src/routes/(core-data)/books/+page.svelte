@@ -33,11 +33,6 @@
     bookViewOverride.set(newBookView);
   };
 
-  let hasBooks: boolean;
-  $: {
-    hasBooks = hasBooks || !!$books.length;
-  }
-
   $: bookViewToUse = $bookViewOverride || defaultBookView;
 
   let modalsReady = false;
@@ -121,7 +116,7 @@
           <div>
             <Alert type="warning">No books found</Alert>
 
-            {#if !hasPublicId && !hasBooks && $searchState.activeFilterCount === 0}
+            {#if !hasPublicId && $searchState.activeFilterCount === 0}
               <Alert class="mt-4" type="warning">
                 If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
                 <a href="/settings/account-sync">here</a>
