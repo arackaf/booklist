@@ -73,17 +73,8 @@
 
   let editBookModalOpen = $state(false);
   let editingBook = $state<any>(null);
-  const editBook = (_book: any) => {
-    const book = $state.snapshot(_book);
-
-    console.log({ book });
+  const editBook = (book: any) => {
     editingBook = book;
-
-    // editingBook = {
-    //   tags: [],
-    //   subjects: [],
-    //   authors: []
-    // };
     editBookModalOpen = true;
   };
 
