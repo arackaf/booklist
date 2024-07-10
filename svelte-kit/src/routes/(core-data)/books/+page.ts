@@ -29,7 +29,7 @@ export async function load({ url, parent, fetch, depends }) {
   return {
     defaultBookView,
     totalBooks: writable(totalBooks),
-    books: writable(books) as Writable<Book[]>,
+    books: books as Book[],
     page,
     totalPages
   };
