@@ -37,7 +37,7 @@
 
 <section class="flush-bottom grid grid-rows-[auto_1fr]">
   <div>
-    <Button class="mb-4" theme="primary" on:click={() => editSubject(newSubject())}>New Subject</Button>
+    <Button class="mb-4" theme="primary" onclick={() => editSubject(newSubject())}>New Subject</Button>
   </div>
 
   <div class="border-l-2 border-l-primary-4 pl-3 lg:pl-7">
@@ -53,6 +53,6 @@
   <Modal openFocus={inputEl} isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
     <EditSubject allSubjects={subjects} {colors} subject={editingSubject} onComplete={closeEditModal} onCancelEdit={closeEditModal} />
     <hr class="my-3" />
-    <Button on:click={closeEditModal}>Close</Button>
+    <Button onclick={closeEditModal}>Close</Button>
   </Modal>
 </section>

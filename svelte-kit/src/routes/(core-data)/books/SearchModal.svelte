@@ -159,7 +159,7 @@
     </div>
 
     <div class="mt-5">
-      <Button theme="primary" text="Filter">Search</Button>
+      <Button theme="primary">Search</Button>
     </div>
   </form>
 </Modal>

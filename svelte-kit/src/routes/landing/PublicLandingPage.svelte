@@ -34,7 +34,7 @@
               <Button
                 class="self-start"
                 theme="primary"
-                on:click={() => {
+                onclick={() => {
                   signIn("", { callbackUrl: "/books" });
                 }}
               >

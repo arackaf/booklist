@@ -44,14 +44,14 @@
 </script>
 
 {#if !selectedBooksCount}
-  <Button title="Filter search" on:click={openFilterModal} class="hidden lg:flex h-8 connect-left connect-right">
+  <Button title="Filter search" onclick={openFilterModal} class="hidden lg:flex h-8 connect-left connect-right">
     <i class="fal fa-fw fa-filter"></i>
   </Button>
   {#if !isPublic}
-    <Button title="Edit subjects" on:click={editSubjects} class="hidden lg:flex h-8 connect-left connect-right">
+    <Button title="Edit subjects" onclick={editSubjects} class="hidden lg:flex h-8 connect-left connect-right">
       <i class="fal fa-fw fa-sitemap"></i>
     </Button>
-    <Button title="Edit tags" on:click={editTags} class="hidden lg:flex h-8 connect-left connect-right">
+    <Button title="Edit tags" onclick={editTags} class="hidden lg:flex h-8 connect-left connect-right">
       <i class="fal fa-fw fa-tags"></i>
     </Button>
   {/if}
@@ -62,10 +62,10 @@
     </Button>
   </form>
 {:else if !isPublic}
-  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" on:click={editSubjectsForSelectedBooks}>
+  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" onclick={editSubjectsForSelectedBooks}>
     <i class="fal fa-fw fa-sitemap"></i>
   </Button>
-  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" on:click={editTagsForSelectedBooks}>
+  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
     <i class="fal fa-fw fa-tags"></i>
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>

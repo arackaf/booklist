@@ -116,7 +116,7 @@
             </form>
           {/if}
           {#if pendingDelete}
-            <Button size="sm" disabled={deleting} on:click={() => (pendingDelete = false)}>Cancel</Button>
+            <Button size="sm" disabled={deleting} onclick={() => (pendingDelete = false)}>Cancel</Button>
           {/if}
         </div>
       </div>

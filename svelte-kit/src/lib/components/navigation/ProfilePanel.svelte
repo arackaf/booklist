@@ -87,7 +87,7 @@
       <span class="break-words">{loggedInUser.email}</span>
     </div>
     <span>
-      <Button size="med" on:click={() => signOut().then(() => invalidateAll())}>Logout</Button>
+      <Button size="med" onclick={() => signOut().then(() => invalidateAll())}>Logout</Button>
     </span>
   </div>
 </div>

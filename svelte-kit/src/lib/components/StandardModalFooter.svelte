@@ -8,6 +8,6 @@
   {#if $$slots.default}
     <slot />
   {:else}
-    <Button on:click={onHide}>Close</Button>
+    <Button onclick={onHide}>Close</Button>
   {/if}
 </div>
