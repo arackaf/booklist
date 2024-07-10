@@ -45,7 +45,7 @@
 <div>
   <div>
     {#if pending}
-      <Button size="sm" theme="info" on:click={toggleIncomingQueue}>
+      <Button size="sm" theme="info" onclick={toggleIncomingQueue}>
         <span>
           {pending}
           Book{pending === 1 ? "" : "s"}
@@ -54,7 +54,7 @@
         </span>
       </Button>
     {:else}
-      <Button size="sm" class="gap-2" on:click={toggleIncomingQueue} theme="success">
+      <Button size="sm" class="gap-2" onclick={toggleIncomingQueue} theme="success">
         <span> All pending books saved </span>
         <i style="color: white" class="far fa-white {toggleClass}"></i>
       </Button>

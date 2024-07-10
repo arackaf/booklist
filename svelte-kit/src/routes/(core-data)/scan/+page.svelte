@@ -59,7 +59,7 @@
             <i class="far fa-question-circle"></i>
           </button>
         </h4>
-        <Button size="sm" class="ml-6" on:click={manuallyEnterBook}>Manual entry</Button>
+        <Button size="sm" class="ml-6" onclick={manuallyEnterBook}>Manual entry</Button>
       </div>
       <div class="mt-2">
         <SlideAnimate open={showScanInstructions} class="p-3 bg-info-9 text-info-1 border-info-8 border rounded" style="width: 80%">

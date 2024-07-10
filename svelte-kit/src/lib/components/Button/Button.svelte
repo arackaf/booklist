@@ -1,34 +1,56 @@
 <script lang="ts">
-  export let theme: "primary" | "info" | "success" | "danger" | "default" = "default";
-  export let size: "default" | "med" | "sm" = "default";
-  export let disabled: boolean | undefined = undefined;
-  export let softDisable: boolean = false;
-  export let icon: boolean = false;
+  import type { Snippet } from "svelte";
+  import type { HTMLButtonAttributes } from "svelte/elements";
 
-  let className = "";
-  export { className as class };
+  type Props = {
+    size?: "default" | "med" | "sm";
+    theme?: "primary" | "info" | "success" | "danger" | "default";
+    running?: boolean;
+    icon?: boolean;
+    softDisable?: boolean;
+    href?: string | null;
+    children: Snippet;
+  } & HTMLButtonAttributes;
 
-  const { className: ignore, ...rest } = $$restProps;
+  let {
+    size = "default",
+    theme = "default",
+    disabled,
+    running = false,
+    icon = false,
+    softDisable = false,
+    href,
+    class: className = "",
+    children,
+    ...rest
+  }: Props = $props();
 
-  export let href: string | null | undefined = undefined;
+  // export let theme: "primary" | "info" | "success" | "danger" | "default" = "default";
+  // export let size: "default" | "med" | "sm" = "default";
+  // export let disabled: boolean | undefined = undefined;
+  // export let softDisable: boolean = false;
+  // export let icon: boolean = false;
 
-  $: defaultButton = theme === "default";
-  $: isPrimary = theme === "primary";
-  $: isInfo = theme === "info";
-  $: isSuccess = theme === "success";
-  $: isDanger = theme === "danger";
+  // let className = "";
+  // export { className as class };
 
-  $: paddingTop = size === "default" ? "py-1.5" : "py-1";
-  $: paddingSide = icon ? (size === "default" ? "px-1.5" : "px-1") : size === "default" ? "px-3" : "px-1.5";
-  $: fontSize = size === "default" ? "text-base" : size === "med" ? "text-sm" : "text-xs leading-3";
+  // const { className: ignore, ...rest } = $$restProps;
 
-  $: addedClasses = [paddingTop, paddingSide, fontSize, className].join(" ");
+  //export let href: string | null | undefined = undefined;
 
-  let type: "a" | "button";
+  let defaultButton = $derived(theme === "default");
+  let isPrimary = $derived(theme === "primary");
+  let isInfo = $derived(theme === "info");
+  let isSuccess = $derived(theme === "success");
+  let isDanger = $derived(theme === "danger");
 
-  $: {
-    type = disabled ? "button" : href ? "a" : "button";
-  }
+  let paddingTop = $derived(size === "default" ? "py-1.5" : "py-1");
+  let paddingSide = $derived(icon ? (size === "default" ? "px-1.5" : "px-1") : size === "default" ? "px-3" : "px-1.5");
+  let fontSize = $derived(size === "default" ? "text-base" : size === "med" ? "text-sm" : "text-xs leading-3");
+
+  let addedClasses = $derived([paddingTop, paddingSide, fontSize, className].join(" "));
+
+  let type: "a" | "button" = $derived(disabled ? "button" : href ? "a" : "button");
 </script>
 
 <svelte:element
@@ -64,8 +86,7 @@
   class={`flex items-center m-0 rounded border transition-[box-shadow,opacity] ${addedClasses}`}
   disabled={type === "button" ? disabled : undefined}
   href={type === "a" ? href : undefined}
-  on:click
   {...rest}
 >
-  <slot />
+  {@render children()}
 </svelte:element>

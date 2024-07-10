@@ -100,7 +100,7 @@
             </SelectAndDisplayContainer>
 
             <div>
-              <Button size="sm" type="button" on:click={resetTags}>Reset tags</Button>
+              <Button size="sm" type="button" onclick={resetTags}>Reset tags</Button>
             </div>
           </div>
         </TabContent>
@@ -117,7 +117,7 @@
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
 
-        <Button type="button" class="ml-auto" on:click={onHide}>Cancel</Button>
+        <Button type="button" class="ml-auto" onclick={onHide}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>

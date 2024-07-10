@@ -47,7 +47,7 @@
 
       {#if $nextPageKey}
         <div></div>
-        <ActionButton class="w-[40ch]" theme="primary" running={loading} on:click={loadNextScans}>Load More</ActionButton>
+        <ActionButton class="w-[40ch]" theme="primary" running={loading} onclick={loadNextScans}>Load More</ActionButton>
       {/if}
     </div>
   </div>

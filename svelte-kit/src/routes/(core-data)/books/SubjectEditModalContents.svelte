@@ -34,7 +34,7 @@
     <div class="flex flex-col-reverse sm:flex-row gap-5">
       <SelectAvailableSubjects size="sm" {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
 
-      <Button size="med" class="flex flex-row gap-1 items-center self-start sm:ml-auto" on:click={newSubject}>
+      <Button size="med" class="flex flex-row gap-1 items-center self-start sm:ml-auto" onclick={newSubject}>
         <span>New subject </span>
         <i class="far fa-fw fa-plus-square"></i>
       </Button>

@@ -47,13 +47,13 @@
       <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
       <div class="flex flex-row">
-        <Button class="gap-2" on:click={openModal}>
+        <Button class="gap-2" onclick={openModal}>
           <i class="fal fa-search"></i>
           <span>Search your books</span>
         </Button>
 
         {#if selectedBooks.length}
-          <ActionButton theme="primary" class="ml-auto" on:click={getRecommendations} running={recommendationsLoading}>
+          <ActionButton theme="primary" class="ml-auto" onclick={getRecommendations} running={recommendationsLoading}>
             Get Recommendations
           </ActionButton>
         {/if}

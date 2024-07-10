@@ -79,6 +79,6 @@
   <hr class="my-3" />
   <div class="flex flex-row">
     <ActionButton disabled={tab === "delete"} theme="primary" type="submit" running={saving}>Save</ActionButton>
-    <Button disabled={saving} class="ml-auto" type="button" on:click={onCancel}>Cancel</Button>
+    <Button disabled={saving} class="ml-auto" type="button" onclick={onCancel}>Cancel</Button>
   </div>
 </form>
