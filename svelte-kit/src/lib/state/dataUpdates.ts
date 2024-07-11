@@ -26,17 +26,23 @@ export const runUpdate = <T>(currentItems: { get value(): T[] }, id: number | nu
 export const updateItems = <T>(currentItems: T[], ids: number[], updates: UpdatesTo<T>) => {
   const _idLookup = new Set(ids);
 
-  currentItems.forEach((item: any) => {
+  currentItems.forEach((item: any, idx: number) => {
     if (!_idLookup.has(item.id)) {
+      console.log("NO");
       return item;
     }
 
-    updateSingleObject(item, updates);
+    console.log("YES");
+    const update = updateSingleObject(item, updates);
+
+    currentItems[idx] = update;
+    // currentItems.splice(idx, 1, update);
   });
 };
 
 export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo<T>) => {
   const { fieldsSet, arraySync } = updates;
+  item = { ...item };
 
   if (fieldsSet) {
     Object.assign(item, fieldsSet);

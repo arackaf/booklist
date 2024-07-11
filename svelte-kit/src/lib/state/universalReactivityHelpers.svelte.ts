@@ -23,3 +23,22 @@ export function createReactiveArray<T>(values: T[]) {
     }
   };
 }
+
+class ForceNonReactive {
+  constructor(value: any) {
+    Object.assign(this, value);
+  }
+}
+
+export function createShallowReactiveArray<T>(values: T[]) {
+  let stateValue = $state(values.map(item => new ForceNonReactive(item)));
+
+  return {
+    get value() {
+      return stateValue;
+    },
+    set value(newValues: any[]) {
+      stateValue = newValues.map(item => new ForceNonReactive(item));
+    }
+  };
+}
