@@ -16,6 +16,7 @@
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
+  export let totalBooks: number;
 
   let quickSearchEl: any = {};
 
@@ -84,7 +85,7 @@
         <BookViewsDesktop {bookViewToUse} />
       </div>
 
-      <ActiveSearchFilters />
+      <ActiveSearchFilters {totalBooks} />
     </div>
   </div>
 </div>

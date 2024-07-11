@@ -27,7 +27,7 @@
   import { uiState } from "./currentUiState.svelte";
 
   let { data } = $props();
-  let { isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books } = data;
+  let { isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books, totalBooks } = data;
 
   const overrideBookView = (newBookView: string) => {
     uiState.bookViewOverride = newBookView;
@@ -108,7 +108,7 @@
 
 <section class="full pb-0">
   <div style="background-color: white;">
-    <MenuBar {isPublic} {bookViewToUse} />
+    <MenuBar totalBooks={totalBooks.value} {isPublic} {bookViewToUse} />
 
     <div class:overflow-x-auto={bookViewToUse === "tbl"}>
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
