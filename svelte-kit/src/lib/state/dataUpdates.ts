@@ -18,12 +18,51 @@ export type UpdatesTo<T> = {
   arraySync?: Partial<ArraySyncs<T>>;
 };
 
-export const runUpdate = <T>(currentItems: Writable<T[]>, id: number | number[], updates: UpdatesTo<T>) => {
+export const runUpdate = <T>(currentItems: { get value(): T[] }, id: number | number[], updates: UpdatesTo<T>) => {
   const ids: number[] = Array.isArray(id) ? id : [id];
-  updateItems(currentItems, ids, updates);
+  updateItems(currentItems.value, ids, updates);
 };
 
-export const updateItems = <T>(store: Writable<T[]>, ids: number[], updates: UpdatesTo<T>) => {
+export const updateItems = <T>(currentItems: T[], ids: number[], updates: UpdatesTo<T>) => {
+  const _idLookup = new Set(ids);
+
+  currentItems.forEach((item: any) => {
+    if (!_idLookup.has(item.id)) {
+      return item;
+    }
+
+    updateSingleObject(item, updates);
+  });
+};
+
+export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo<T>) => {
+  const { fieldsSet, arraySync } = updates;
+
+  if (fieldsSet) {
+    Object.assign(item, fieldsSet);
+  }
+  if (arraySync) {
+    for (const key of Object.keys(arraySync)) {
+      const updates: ArraySync<unknown> = (arraySync as any)[key];
+
+      // @ts-ignore
+      const lookup = new Set(item[key]);
+      updates.push?.forEach(adding => lookup.add(adding));
+      updates.pull?.forEach(removing => lookup.delete(removing));
+
+      // @ts-ignore
+      item[key] = [...lookup];
+    }
+  }
+  return item;
+};
+
+export const runUpdateOld = <T>(currentItems: Writable<T[]>, id: number | number[], updates: UpdatesTo<T>) => {
+  const ids: number[] = Array.isArray(id) ? id : [id];
+  updateItemsOld(currentItems, ids, updates);
+};
+
+export const updateItemsOld = <T>(store: Writable<T[]>, ids: number[], updates: UpdatesTo<T>) => {
   const currentItems = get(store);
   const _idLookup = new Set(ids);
 
@@ -38,7 +77,7 @@ export const updateItems = <T>(store: Writable<T[]>, ids: number[], updates: Upd
   store.set(updatedItems);
 };
 
-export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo<T>) => {
+export const updateSingleObjectOld = <T extends object>(item: T, updates: UpdatesTo<T>) => {
   const { fieldsSet, arraySync } = updates;
   item = { ...item };
 

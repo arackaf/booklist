@@ -75,18 +75,19 @@
   let editBookModalOpen = $state(false);
   let editingBook = $state<any>(null);
   const editBook = (book: any) => {
-    editingBook = book;
+    let bookSnapshot = $state.snapshot(book);
+    editingBook = bookSnapshot;
     editBookModalOpen = true;
   };
 
   const onBooksUpdated = (id: number | number[], updates: UpdatesTo<Book>) => {
-    //runUpdate(books, id, updates);
+    runUpdate(books, id, updates);
   };
 
   let booksSubjectsModalOpen = $state(false);
   let booksTagsModalOpen = $state(false);
 
-  let booksEditing = $derived(books.filter(b => $selectedBooksLookup[b.id]));
+  let booksEditing = $derived(books.value.filter(b => $selectedBooksLookup[b.id]));
   const editBooksSubjects = () => (booksSubjectsModalOpen = true);
   const editBooksTags = () => (booksTagsModalOpen = true);
 
@@ -113,7 +114,7 @@
 
     <div class:overflow-x-auto={bookViewToUse === "tbl"}>
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
-        {#if !books.length}
+        {#if !books.value.length}
           <div>
             <Alert type="warning">No books found</Alert>
 
@@ -127,11 +128,11 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <MobileView {books} {isPublic} />
+              <MobileView books={books.value} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView {books} {isPublic} />
+              <GridView books={books.value} {isPublic} />
             {:else}
-              <CoversView {books} {isPublic} />
+              <CoversView books={books.value} {isPublic} />
             {/if}
           </div>
         {/if}
