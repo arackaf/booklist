@@ -27,7 +27,8 @@
   import { uiState } from "./currentUiState.svelte";
 
   let { data } = $props();
-  let { isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books, totalBooks } = data;
+  let { isPublic, hasPublicId, colors, subjects, defaultBookView, tags, /*books,*/ totalBooks } = data;
+  let books = $derived(data.books);
 
   const overrideBookView = (newBookView: string) => {
     uiState.bookViewOverride = newBookView;
