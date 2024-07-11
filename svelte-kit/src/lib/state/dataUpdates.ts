@@ -39,6 +39,9 @@ export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo
   const { fieldsSet, arraySync } = updates;
 
   if (fieldsSet) {
+    // @ts-ignore
+    delete fieldsSet.authors;
+    console.log({ fieldsSet });
     Object.assign(item, fieldsSet);
   }
   if (arraySync) {
