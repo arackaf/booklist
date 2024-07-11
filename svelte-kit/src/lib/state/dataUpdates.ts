@@ -28,11 +28,9 @@ export const updateItems = <T>(currentItems: T[], ids: number[], updates: Update
 
   currentItems.forEach((item: any, idx: number) => {
     if (!_idLookup.has(item.id)) {
-      console.log("NO");
       return item;
     }
 
-    console.log("YES");
     const update = updateSingleObject(item, updates);
 
     currentItems[idx] = update;
