@@ -27,8 +27,10 @@
   import { uiState } from "./currentUiState.svelte";
 
   let { data } = $props();
-  let { isPublic, hasPublicId, colors, subjects, defaultBookView, tags, /*books,*/ totalBooks } = data;
+  let { isPublic, hasPublicId, colors, /*subjects,*/ defaultBookView, /*tags,*/ /*books,*/ totalBooks } = data;
   let books = $derived(data.books);
+  let subjects = $derived(data.subjects);
+  let tags = $derived(data.tags);
 
   const overrideBookView = (newBookView: string) => {
     uiState.bookViewOverride = newBookView;
@@ -130,7 +132,7 @@
             {#if bookViewToUse == BASIC_LIST_VIEW}
               <MobileView books={books.value} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={books.value} {isPublic} />
+              <GridView {tags} {subjects} books={books.value} {isPublic} />
             {:else}
               <CoversView books={books.value} {isPublic} />
             {/if}
