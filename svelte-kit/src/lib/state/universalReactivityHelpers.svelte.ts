@@ -31,16 +31,14 @@ class ForceNonReactive {
 }
 
 export function createShallowReactiveArray<T>(values: T[]) {
-  let stateValue = $state(values.map(item => $state.snapshot(item)));
-  // let stateValue = $state(values.map(item => new ForceNonReactive(item)));
+  let stateValue = $state(values.map(item => new ForceNonReactive(item)));
 
   return {
     get value() {
       return stateValue;
     },
     set value(newValues: any[]) {
-      stateValue = newValues.map(item => $state.snapshot(item));
-      // stateValue = newValues.map(item => new ForceNonReactive(item));
+      stateValue = newValues.map(item => new ForceNonReactive(item));
     }
   };
 }
