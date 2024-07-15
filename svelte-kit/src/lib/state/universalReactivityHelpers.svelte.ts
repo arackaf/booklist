@@ -24,9 +24,10 @@ export function createReactiveArray<T>(values: T[]) {
   };
 }
 
-class ForceNonReactive {
-  constructor(value: any) {
-    Object.assign(this, value);
+class ForceNonReactive<T> {
+  payload: T;
+  constructor(value: T) {
+    this.payload = value;
   }
 }
 
