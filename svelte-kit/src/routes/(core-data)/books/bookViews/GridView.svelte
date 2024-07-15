@@ -8,7 +8,7 @@
 
   type Props = {
     isPublic: boolean;
-    books: { payload: Book }[];
+    books: Book[];
     subjects: Subject[];
     tags: Tag[];
   };
@@ -20,7 +20,7 @@
     if (allBooksSelected) {
       selectionState.clear();
     } else {
-      //selectionState.selectAll(books);
+      selectionState.selectAll(books);
     }
   }
 
@@ -71,8 +71,8 @@
     </tr>
   </thead>
   <tbody>
-    {#each books as book (book.payload.id)}
-      <BookRow book={book.payload} {subjects} {tags} {isPublic} {previewBook} />
+    {#each books as book (book.id)}
+      <BookRow {book} {subjects} {tags} {isPublic} {previewBook} />
     {/each}
   </tbody>
 </table>

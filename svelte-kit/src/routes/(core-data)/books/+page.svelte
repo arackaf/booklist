@@ -77,7 +77,6 @@
   let editBookModalOpen = $state(false);
   let editingBook = $state<any>(null);
   const editBook = (book: any) => {
-    debugger;
     let bookSnapshot = $state.snapshot(book);
     editingBook = bookSnapshot;
     editBookModalOpen = true;
@@ -90,7 +89,7 @@
   let booksSubjectsModalOpen = $state(false);
   let booksTagsModalOpen = $state(false);
 
-  let booksEditing = $derived(books.value.filter(b => $selectedBooksLookup[b.payload.id]));
+  let booksEditing = $derived(books.value.filter(b => $selectedBooksLookup[b.id]));
   const editBooksSubjects = () => (booksSubjectsModalOpen = true);
   const editBooksTags = () => (booksTagsModalOpen = true);
 
