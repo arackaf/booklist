@@ -31,9 +31,11 @@
   <path
     d={`
     M${$barSpring.x},0
-    v${$barSpring.height}
-    h${width}
-    v-${$barSpring.height}
+    v${$barSpring.height - 5}
+    a5,5 0 0 0 ${5},${5}
+    h${width - 2 * 5}
+    a5,5 0 0 0 ${5},${-5}
+    v-${$barSpring.height - 5}
     z
     `}
     fill={xxx ? "url(#inline-gradient-1)" : color}
