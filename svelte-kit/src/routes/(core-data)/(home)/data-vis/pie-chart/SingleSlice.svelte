@@ -65,9 +65,15 @@
         initialAnimationDoneCalled = true;
       });
   }
+
+  let c: SVGElement;
+  function hover() {
+    let rect = c.getBoundingClientRect();
+    console.log({ rect });
+  }
 </script>
 
-<g bind:this={mainArc}>
+<g on:mouseover={hover} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
     {#each segment.chunks as chunk, i}
@@ -82,6 +88,7 @@
       cx={useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0]}
       cy={useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1]}
       r={1}
+      bind:this={c}
       use:tooltip={{
         position: midPoint < 180 ? "right" : "left",
         data: segment.data,

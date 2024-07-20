@@ -14,6 +14,13 @@
   export let removeBar: (id: string) => void;
   export let noInitialAnimation: boolean;
 
+  let g: SVGElement;
+
+  function mouseOver() {
+    let bound = g.getBoundingClientRect();
+    console.log({ bound, x });
+  }
+
   let initialRenderFinished = false;
 
   const initialValues = noInitialAnimation ? { height, x } : { height: 0, x: totalSvgWidth };
@@ -26,6 +33,6 @@
   }
 </script>
 
-<g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
+<g on:mouseover={mouseOver} bind:this={g} use:tooltip={{ position, data, drilldown, remove: removeBar }}>
   <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={color} />
 </g>
