@@ -5,12 +5,11 @@
   export let data: Data;
   export let drilldown: any;
   export let remove: (id: string) => void;
-  export let arrowStyle = "";
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
 
-<div class={"tooltip-root flex flex-col gap-3 bg-slate-400 text-black rounded md:p-2 p-[6px] " + position}>
+<div class={"tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] " + position}>
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
       <div class="flex items-baseline gap-2 md:text-lg text-xs">
@@ -35,6 +34,4 @@
       </div>
     {/if}
   </div>
-
-  <div class="arrow" style={arrowStyle}></div>
 </div>

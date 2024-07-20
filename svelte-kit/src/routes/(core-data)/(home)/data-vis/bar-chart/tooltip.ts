@@ -3,7 +3,6 @@ import { createPopper, type Placement, type Instance as PopperInstance } from "@
 import type { Subject } from "$data/types";
 
 import Tooltip from "./Tooltip.svelte";
-import type BarTooltip from "./bars/BarTooltip.svelte";
 
 export type Position = "left" | "right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
 
@@ -13,7 +12,6 @@ export type PopperOptions = {
   drilldown: any;
   remove: (id: string) => void;
   hoverTarget?: Element;
-  TooltipComponent?: typeof Tooltip | typeof BarTooltip;
   onShow?: () => void;
   onHide?: () => void;
 };
@@ -116,7 +114,7 @@ export type Data = {
 };
 
 export const tooltip = (node: SVGElement, props: PopperOptions) => {
-  const { data, drilldown, remove, hoverTarget = node, TooltipComponent = Tooltip } = props;
+  const { data, drilldown, remove, hoverTarget = node } = props;
   let { position } = props;
 
   const tooltipMabager = new TooltipHoverState();
@@ -127,9 +125,9 @@ export const tooltip = (node: SVGElement, props: PopperOptions) => {
     document.body.appendChild(div);
 
     // @ts-ignore
-    mount(TooltipComponent, {
+    mount(Tooltip, {
       target: div,
-      props: { position, data, drilldown, remove, targetElement: node }
+      props: { position, data, drilldown, remove }
     });
 
     const placementMap: { [keys in Position]: Placement } = {
