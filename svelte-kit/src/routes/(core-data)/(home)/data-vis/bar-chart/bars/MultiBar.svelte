@@ -1,7 +1,6 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import { tooltip, type Position } from "../tooltip";
-  import BarTooltip from "./BarTooltip.svelte";
 
   export let drilldown: any;
   export let data: any;
@@ -57,7 +56,7 @@
   }
 </script>
 
-<g use:tooltip={{ position, data, drilldown, remove: removeBar, TooltipComponent: BarTooltip }}>
+<g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
   {#each colors as c}
     <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
   {/each}
