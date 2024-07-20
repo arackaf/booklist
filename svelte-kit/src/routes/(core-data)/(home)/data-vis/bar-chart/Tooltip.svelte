@@ -5,7 +5,6 @@
   export let data: Data;
   export let drilldown: any;
   export let remove: (id: string) => void;
-  export let arrowStyle = "";
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
@@ -35,6 +34,4 @@
       </div>
     {/if}
   </div>
-
-  <div class="arrow hidden" style={arrowStyle}></div>
 </div>
