@@ -67,7 +67,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lucide-svelte": "^0.309.0",
-    "svelte": "^5.0.0-next.184",
+    "svelte": "^5.0.0-next.192",
     "svelte-file-dropzone": "^2.0.7",
     "tailwind-merge": "^2.2.0",
     "tailwind-variants": "^0.1.20",
