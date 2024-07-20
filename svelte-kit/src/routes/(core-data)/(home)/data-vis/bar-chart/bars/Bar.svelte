@@ -34,7 +34,7 @@
 
 {#if data.entries.length == 1}
   <SingleBar
-    xxx={index === 3}
+    xxx={index === 0}
     color={data.entries[0].color}
     {data}
     {height}

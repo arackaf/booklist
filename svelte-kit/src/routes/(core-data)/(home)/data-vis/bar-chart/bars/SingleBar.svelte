@@ -28,5 +28,15 @@
 </script>
 
 <g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
-  <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={xxx ? "url(#inline-gradient-1)" : color} />
+  <path
+    d={`
+    M${$barSpring.x},0
+    v${$barSpring.height}
+    h${width}
+    v-${$barSpring.height}
+    z
+    `}
+    fill={xxx ? "url(#inline-gradient-1)" : color}
+  />
+  <!-- <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={xxx ? "url(#inline-gradient-1)" : color} /> -->
 </g>
