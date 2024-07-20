@@ -52,6 +52,8 @@
     else if (size < 1000) sizeClass += "text-lg sm:text-base lg:text-lg";
     else sizeClass += "text-xl sm:text-lg lg:text-xs";
   }
+
+  // https://medium.com/@dennismphil/one-side-rounded-rectangle-using-svg-fb31cf318d90
 </script>
 
 <div>
