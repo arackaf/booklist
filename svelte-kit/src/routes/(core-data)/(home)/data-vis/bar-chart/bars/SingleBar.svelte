@@ -28,6 +28,13 @@
 </script>
 
 <g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
+  <linearGradient id="inline-gradient-1" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="33.3%" style="stop-color:red;stop-opacity:1" />
+    <stop offset="33.3%" style="stop-color:pink;stop-opacity:1" />
+    <stop offset="66.7%" style="stop-color:pink;stop-opacity:1" />
+    <stop offset="66.7%" style="stop-color:blue;stop-opacity:1" />
+    <stop offset="66.7%" style="stop-color:blue;stop-opacity:1" />
+  </linearGradient>
   <path
     d={`
     M${$barSpring.x},0
@@ -38,7 +45,7 @@
     v-${$barSpring.height - 5}
     z
     `}
-    fill={xxx ? "url(#inline-gradient-1)" : color}
+    fill="url(#inline-gradient-1)"
   />
   <!-- <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={xxx ? "url(#inline-gradient-1)" : color} /> -->
 </g>
