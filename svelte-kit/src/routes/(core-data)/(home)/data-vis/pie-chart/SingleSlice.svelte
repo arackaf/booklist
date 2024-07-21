@@ -68,10 +68,10 @@
 </script>
 
 <g bind:this={mainArc}>
-  <SlicePath {sliceSpring} segmentChunk={segment.sliceInfo} centroid={arcCenterPoint} color="#FFFFFF" />
+  <SlicePath {sliceSpring} segmentChunk={segment.sliceInfo} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
     <!-- {#each segment.chunks as chunk, i} -->
-    <SlicePath {sliceSpring} segmentChunk={segment.sliceInfo} centroid={arcCenterPoint} color={segment.data.entries.map(entry => entry.color)} />
+    <SlicePath {sliceSpring} segmentChunk={segment.sliceInfo} color={segment.data.entries.map(entry => entry.color)} />
     <!-- {/each} -->
   </g>
 </g>
