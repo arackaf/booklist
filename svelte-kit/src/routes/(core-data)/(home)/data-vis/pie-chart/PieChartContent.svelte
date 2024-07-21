@@ -184,6 +184,7 @@
           />
         {/each}
       </g>
+      <rect x="0" y="-250" width="5" height="5" fill="pink"></rect>
     </svg>
   </div>
 </div>

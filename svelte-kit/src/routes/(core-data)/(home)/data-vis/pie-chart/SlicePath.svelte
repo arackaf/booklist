@@ -1,6 +1,7 @@
 <script lang="ts">
   import { spring, type Spring } from "svelte/motion";
   import { arc } from "d3-shape";
+  import PieSliceColor from "./PieSliceColor.svelte";
 
   type ChunkType = {
     innerRadius: number;
@@ -9,9 +10,11 @@
     endAngle: number;
     color: string;
   };
+
+  export let centroid: [number, number];
   export let segmentChunk: ChunkType;
   export let color: string | string[];
-  $: colorToUse = Array.isArray(color) ? color[0] : color;
+  let colorToUse: string;
 
   export let sliceSpring: Spring<any>;
 
@@ -26,3 +29,4 @@
 </script>
 
 <path d={arcPath} fill={colorToUse} />
+<PieSliceColor {color} bind:colorValue={colorToUse} center={[0, 0]} arcCenter={centroid} />
