@@ -45,7 +45,7 @@
 
   let initialAnimationDoneCalled = noInitialAnimation;
 
-  $: segmentChunkReference = segment.chunks[0];
+  $: segmentChunkReference = segment.sliceInfo;
   $: initialSliceAngles = {
     startAngle: segmentChunkReference.startAngle,
     endAngle: noInitialAnimation ? segmentChunkReference.endAngle : segmentChunkReference.startAngle
@@ -68,11 +68,11 @@
 </script>
 
 <g bind:this={mainArc}>
-  <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
+  <SlicePath {sliceSpring} segmentChunk={segment.sliceInfo} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
-    {#each segment.chunks as chunk, i}
-      <SlicePath {sliceSpring} segmentChunk={chunk} />
-    {/each}
+    <!-- {#each segment.chunks as chunk, i} -->
+    <SlicePath {sliceSpring} segmentChunk={segment.sliceInfo} color={segment.data.entries.map(entry => entry.color)} />
+    <!-- {/each} -->
   </g>
 </g>
 {#if mainArc && containerSize !== "UNKNOWN"}
