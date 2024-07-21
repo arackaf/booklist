@@ -11,10 +11,10 @@
   export let colorValue;
 
   $: {
-    if (Array.isArray(color) && color.length > 1) {
+    if (Array.isArray(color)) {
       colorValue = `url(#${id})`;
     } else {
-      colorValue = Array.isArray(color) ? color[0] : color;
+      colorValue = color;
     }
   }
 </script>
