@@ -10,8 +10,7 @@
     color: string;
   };
   export let segmentChunk: ChunkType;
-  export let color: string | string[];
-  $: colorToUse = Array.isArray(color) ? color[0] : color;
+  export let color: string | null = null;
 
   export let sliceSpring: Spring<any>;
 
@@ -25,4 +24,4 @@
   });
 </script>
 
-<path d={arcPath} fill={colorToUse} />
+<path d={arcPath} fill={color ?? segmentChunk.color} />

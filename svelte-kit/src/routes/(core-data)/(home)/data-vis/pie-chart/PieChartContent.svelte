@@ -86,17 +86,17 @@
       textAnchor,
       masterLabel,
       count: segmentCount,
-      sliceInfo: {
-        //segment.data.entries.map((entry: any, idx: number) => {
-        //const arcSectionRadius = radius * ((segmentCount - idx) / segmentCount);
+      chunks: segment.data.entries.map((entry: any, idx: number) => {
+        const arcSectionRadius = radius * ((segmentCount - idx) / segmentCount);
 
-        //color: entry.color,
-        innerRadius: 0,
-        outerRadius: radius,
-        startAngle: segment.startAngle,
-        endAngle: segment.endAngle
-      }
-      //})
+        return {
+          color: entry.color,
+          innerRadius: 0,
+          outerRadius: arcSectionRadius,
+          startAngle: segment.startAngle,
+          endAngle: segment.endAngle
+        };
+      })
     };
   }) as any[];
 
@@ -148,26 +148,6 @@
 <div bind:this={containerDiv} class="flex items-center mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
-      <defs>
-        <linearGradient id="inline-gradient-1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="33.3%" style="stop-color:red;stop-opacity:1" />
-          <stop offset="33.3%" style="stop-color:pink;stop-opacity:1" />
-          <stop offset="66.7%" style="stop-color:pink;stop-opacity:1" />
-          <stop offset="66.7%" style="stop-color:blue;stop-opacity:1" />
-          <stop offset="66.7%" style="stop-color:blue;stop-opacity:1" />
-        </linearGradient>
-
-        <radialGradient id="segmented-gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <!-- Red inner third -->
-          <stop offset="33.3%" stop-color="red" />
-          <stop offset="33.3%" stop-color="red" />
-          <!-- Green middle third -->
-          <stop offset="66.7%" stop-color="green" />
-          <stop offset="66.7%" stop-color="green" />
-          <!-- Blue outer third -->
-          <stop offset="100%" stop-color="blue" />
-        </radialGradient>
-      </defs>
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSliceLabel labelsReady={!hideLabels && (labelsReady || hasRendered)} segment={seg} />
