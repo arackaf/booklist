@@ -9,27 +9,3 @@
 .popper-tooltip.show {
   opacity: 1;
 }
-
-.tooltip-root {
-  --arrow-diagonal: 7px; /* half of sqrt(10^2 + 10^2) which is how far the point protrudes out (once moved over halfway, per the next css var */
-}
-
-@media (max-width: 800px) {
-  .tooltip-root {
-    --arrow-diagonal: 3px; /* same as above but with some fudging */
-  }
-}
-
-.tooltip-root.left,
-.tooltip-root.left-start {
-  transform: translateX(calc(-1 * var(--arrow-diagonal)));
-}
-.tooltip-root.right,
-.tooltip-root.right-start {
-  transform: translateX(calc(var(--arrow-diagonal)));
-}
-.tooltip-root.top,
-.tooltip-root.top-left,
-.tooltip-root.top-right {
-  transform: translateY(calc(-1 * var(--arrow-diagonal)));
-}

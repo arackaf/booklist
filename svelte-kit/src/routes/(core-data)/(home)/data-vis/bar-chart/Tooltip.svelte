@@ -5,11 +5,13 @@
   export let data: Data;
   export let drilldown: any;
   export let remove: (id: string) => void;
+  export let x: number;
+  export let y: number;
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 </script>
 
-<div class={"tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] " + position}>
+<div class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] fixed" style="left: {x}px; top: {y}px;">
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
       <div class="flex items-baseline gap-2 md:text-lg text-xs">
