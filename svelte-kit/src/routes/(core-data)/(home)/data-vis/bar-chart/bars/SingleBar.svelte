@@ -33,6 +33,6 @@
   }
 </script>
 
-<g on:mouseover={mouseOver} bind:this={g} use:tooltip={{ position, data, drilldown, remove: removeBar }}>
+<g role="contentinfo" on:mouseover={mouseOver} bind:this={g} use:tooltip={{ position, data, drilldown, remove: removeBar }}>
   <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={color} />
 </g>
