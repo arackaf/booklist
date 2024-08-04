@@ -28,6 +28,10 @@
     tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
   }
 
+  function mouseOut() {
+    tooltipState.hide();
+  }
+
   let initialRenderFinished = false;
 
   const initialValues = noInitialAnimation ? { height, x } : { height: 0, x: totalSvgWidth };
@@ -41,6 +45,6 @@
   //use:tooltip={{ position, data, drilldown, remove: removeBar }}
 </script>
 
-<g role="contentinfo" on:mouseover={mouseOver} bind:this={g}>
+<g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
   <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={color} />
 </g>

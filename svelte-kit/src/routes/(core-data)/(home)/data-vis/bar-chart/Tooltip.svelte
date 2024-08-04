@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
   import type { Data, Position } from "./tooltip";
+  import { onMount } from "svelte";
 
   export let position: Position;
   export let data: Data;
@@ -9,9 +11,17 @@
   export let y: number;
 
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
+
+  onMount(() => {
+    console.log("Hello!");
+  });
 </script>
 
-<div class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] fixed" style="left: {x}px; top: {y}px;">
+<div
+  transition:fade={{ delay: 100, duration: 200 }}
+  class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] fixed"
+  style="left: {x}px; top: {y}px;"
+>
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
       <div class="flex items-baseline gap-2 md:text-lg text-xs">

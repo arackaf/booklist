@@ -23,7 +23,7 @@ export function createTooltipState() {
       state.set({ shown: true, ...coord });
     },
     hide() {
-      state.set({ shown: false, x: 0, y: 0 });
+      state.update(current => ({ ...current, shown: false }));
     },
     currentState: readOnlyState
   };
