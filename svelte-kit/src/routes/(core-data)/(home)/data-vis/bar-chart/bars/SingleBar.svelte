@@ -4,6 +4,7 @@
   import { tooltip, type Position } from "../tooltip";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../../tooltipState";
+  import { positionTooltip } from "../tooltipPositioner";
 
   export let drilldown: any;
   export let color: any;
@@ -22,8 +23,9 @@
 
   function mouseOver() {
     let bound = g.getBoundingClientRect();
-    console.log({ bound, x });
-    tooltipState.show(bound.x, bound.y, { position, data, drilldown, remove: removeBar });
+    console.log({ position, bound, x });
+    const tooltipPosition = positionTooltip(bound, position);
+    tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
   }
 
   let initialRenderFinished = false;
