@@ -73,7 +73,7 @@
   }
 </script>
 
-<g on:mouseover={hover} bind:this={mainArc}>
+<g role="contentinfo" on:mouseover={hover} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
     {#each segment.chunks as chunk, i}
