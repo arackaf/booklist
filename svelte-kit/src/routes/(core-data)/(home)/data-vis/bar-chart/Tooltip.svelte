@@ -12,6 +12,7 @@
   export let x: string;
   export let y: string;
   export let css: string;
+  export let measure = false;
 
   const positionSpring = spring({ x, y }, { stiffness: 0.1, damping: 0.5 });
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
@@ -31,7 +32,7 @@
 
 <div
   transition:fade={{ delay: 100, duration: 200 }}
-  class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] fixed"
+  class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
   style="transition: transform 200ms ease-out; left: 0; top: 0; transform: translate({$positionSpring.x}, {$positionSpring.y})"
   data-style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; "
 >
