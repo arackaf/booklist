@@ -23,7 +23,7 @@
 
   function mouseOver() {
     let bound = g.getBoundingClientRect();
-    console.log({ position, bound, x });
+    // console.log({ position, bound, x });
     const tooltipPosition = positionTooltip(bound, position);
     tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
   }

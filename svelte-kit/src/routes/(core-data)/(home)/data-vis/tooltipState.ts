@@ -12,15 +12,15 @@ export function createTooltipState() {
   const state = writable({
     shown: false,
     x: 0,
-    y: 0
+    y: 0,
+    css: "" as string,
+    payload: {} as TooltipPayload
   });
 
   const readOnlyState = derived(state, currentState => currentState);
   return {
-    payload: null as unknown as TooltipPayload,
-    show(coord: { x: number; y: number }, payload: TooltipPayload) {
-      this.payload = payload;
-      state.set({ shown: true, ...coord });
+    show(coord: { x: number; y: number; css: string }, payload: TooltipPayload) {
+      state.set({ shown: true, ...coord, payload });
     },
     hide() {
       state.update(current => ({ ...current, shown: false }));
