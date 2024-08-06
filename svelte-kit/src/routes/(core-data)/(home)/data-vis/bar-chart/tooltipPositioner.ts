@@ -3,6 +3,7 @@ import type { Position } from "./tooltip";
 const OFFSET = 10;
 
 export function positionTooltip(anchorNode: DOMRect, position: Position): { x: string; y: string; css: string } {
+  console.log({ position });
   switch (position) {
     case "right-start":
       return { x: `${anchorNode.x + anchorNode.width + OFFSET}px`, y: `${anchorNode.y}px`, css: "" };
@@ -21,6 +22,12 @@ export function positionTooltip(anchorNode: DOMRect, position: Position): { x: s
     case "top-right":
       return {
         x: `calc(${anchorNode.x + anchorNode.width}px - 100%)`,
+        y: `calc(${anchorNode.y}px - 100% - ${OFFSET}px)`,
+        css: `transform: translate(-100%, calc(-100% - ${OFFSET}px))`
+      };
+    case "top-left":
+      return {
+        x: `${anchorNode.x}px`,
         y: `calc(${anchorNode.y}px - 100% - ${OFFSET}px)`,
         css: `transform: translate(-100%, calc(-100% - ${OFFSET}px))`
       };

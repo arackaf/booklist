@@ -1,6 +1,9 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import { tooltip, type Position } from "../tooltip";
+  import { getContext } from "svelte";
+  import { positionTooltip } from "../tooltipPositioner";
+  import type { createTooltipState } from "../../tooltipState";
 
   export let drilldown: any;
   export let data: any;
@@ -54,9 +57,24 @@
       initialRenderFinished = true;
     });
   }
+
+  let g: SVGElement;
+
+  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
+
+  function mouseOver() {
+    let bound = g.getBoundingClientRect();
+    // console.log({ position, bound, x });
+    const tooltipPosition = positionTooltip(bound, position);
+    tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
+  }
+
+  function mouseOut() {
+    tooltipState.hide();
+  }
 </script>
 
-<g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
+<g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
   {#each colors as c}
     <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
   {/each}
