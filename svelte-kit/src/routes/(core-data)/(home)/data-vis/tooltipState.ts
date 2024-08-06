@@ -11,15 +11,15 @@ type TooltipPayload = {
 export function createTooltipState() {
   const state = writable({
     shown: false,
-    x: 0,
-    y: 0,
+    x: "",
+    y: "",
     css: "" as string,
     payload: {} as TooltipPayload
   });
 
   const readOnlyState = derived(state, currentState => currentState);
   return {
-    show(coord: { x: number; y: number; css: string }, payload: TooltipPayload) {
+    show(coord: { x: string; y: string; css: string }, payload: TooltipPayload) {
       state.set({ shown: true, ...coord, payload });
     },
     hide() {
