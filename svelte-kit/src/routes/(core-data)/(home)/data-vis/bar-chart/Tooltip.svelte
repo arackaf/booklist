@@ -19,7 +19,6 @@
   $: currentData = data ?? {};
 
   $: {
-    debugger;
     positionSpring.set(
       {
         x: x,
