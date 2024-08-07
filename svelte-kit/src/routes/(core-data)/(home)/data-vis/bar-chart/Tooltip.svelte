@@ -15,7 +15,7 @@
   let nextPositionImmediate = true;
 
   const positionSpring = spring({ x, y }, { stiffness: 0.1, damping: 0.5 });
-  const opacitySpring = spring(0, { stiffness: 0.1, damping: 0.9 });
+  const opacitySpring = spring(0, { stiffness: 0.1, damping: 0.5 });
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
