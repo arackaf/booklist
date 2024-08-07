@@ -15,9 +15,14 @@
   let nextPositionImmediate = true;
 
   const positionSpring = spring({ x, y }, { stiffness: 0.1, damping: 0.5 });
+  const opacitySpring = spring(0, { stiffness: 0.1, damping: 0.5 });
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 
   $: currentData = data ?? {};
+
+  $: {
+    opacitySpring.set(shown ? 1 : 0);
+  }
 
   $: {
     if (x !== 0 && y !== 0) {
@@ -37,10 +42,8 @@
 </script>
 
 <div
-  transition:fade={{ delay: 100, duration: 200 }}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
-  data-style="transition: transform 200ms ease-out; left: 0; top: 0; transform: translate({$positionSpring.x}, {$positionSpring.y})"
-  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; "
+  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring};"
 >
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
