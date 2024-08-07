@@ -12,6 +12,7 @@
   export let x: number;
   export let y: number;
   export let measure = false;
+  let nextPositionImmediate = true;
 
   const positionSpring = spring({ x, y }, { stiffness: 0.1, damping: 0.5 });
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
@@ -19,13 +20,19 @@
   $: currentData = data ?? {};
 
   $: {
-    positionSpring.set(
-      {
-        x: x,
-        y: y
-      },
-      { hard: false }
-    );
+    if (x !== 0 && y !== 0) {
+      positionSpring
+        .set(
+          {
+            x: x,
+            y: y
+          },
+          { hard: nextPositionImmediate }
+        )
+        .then(() => {
+          nextPositionImmediate = false;
+        });
+    }
   }
 </script>
 
