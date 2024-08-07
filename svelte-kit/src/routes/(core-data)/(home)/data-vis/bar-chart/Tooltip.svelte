@@ -29,6 +29,8 @@
     return fadeTimeout;
   }
 
+  const OPACITY_CHANGE_DELAY = 200;
+
   $: {
     if (!measure) {
       let isShown = shown;
@@ -47,7 +49,7 @@
             opacityChanging = false;
           });
         },
-        opacityChanging ? 0 : 1000
+        opacityChanging ? 0 : OPACITY_CHANGE_DELAY
       );
     }
   }
