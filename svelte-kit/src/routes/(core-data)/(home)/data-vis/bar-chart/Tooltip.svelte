@@ -9,9 +9,8 @@
   export let data: Data;
   export let drilldown: any;
   export let remove: (id: string) => void;
-  export let x: string;
-  export let y: string;
-  export let css: string;
+  export let x: number;
+  export let y: number;
   export let measure = false;
 
   const positionSpring = spring({ x, y }, { stiffness: 0.1, damping: 0.5 });
@@ -25,7 +24,7 @@
         x: x,
         y: y
       },
-      { hard: true }
+      { hard: false }
     );
   }
 </script>
@@ -33,8 +32,8 @@
 <div
   transition:fade={{ delay: 100, duration: 200 }}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
-  style="transition: transform 200ms ease-out; left: 0; top: 0; transform: translate({$positionSpring.x}, {$positionSpring.y})"
-  data-style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; "
+  data-style="transition: transform 200ms ease-out; left: 0; top: 0; transform: translate({$positionSpring.x}, {$positionSpring.y})"
+  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; "
 >
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">

@@ -2,7 +2,7 @@
   import { spring } from "svelte/motion";
   import { tooltip, type Position } from "../tooltip";
   import { getContext } from "svelte";
-  import { positionTooltip } from "../tooltipPositioner";
+  import { getTooltipDimensions, positionTooltip } from "../tooltipPositioner";
   import type { createTooltipState } from "../../tooltipState";
 
   export let drilldown: any;
@@ -65,7 +65,8 @@
   function mouseOver() {
     let bound = g.getBoundingClientRect();
     // console.log({ position, bound, x });
-    const tooltipPosition = positionTooltip(bound, position);
+    const { w, h } = getTooltipDimensions({ position, data, drilldown, remove: removeBar });
+    const tooltipPosition = positionTooltip(bound, position, { w, h });
     tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
   }
 
