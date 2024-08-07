@@ -30,6 +30,7 @@
   }
 
   const OPACITY_CHANGE_DELAY = 200;
+  let gone = true;
 
   $: {
     if (!measure) {
@@ -45,8 +46,10 @@
         () => {
           opacityChanging = true;
           opacitySpring.set(isShown ? 1 : 0).then(() => {
+            gone = false;
             fadeTimeout = null;
             opacityChanging = false;
+            gone = !isShown;
           });
         },
         opacityChanging ? 0 : OPACITY_CHANGE_DELAY
@@ -76,7 +79,7 @@
   on:mouseenter={() => tooltipState.reShow()}
   on:mouseleave={() => tooltipState.hide()}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
-  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring};"
+  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring}; visibility: {gone ? 'hidden' : 'visible'}"
 >
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
@@ -86,7 +89,13 @@
             <span class="name">{entry.name}</span>
           {/each}
         </div>
-        <button class="raw-button flex ml-auto" on:click={() => remove(currentData.groupId)}><i class="fad fa-times-circle"></i></button>
+        <button
+          class="raw-button flex ml-auto"
+          on:click={() => {
+            remove(currentData.groupId);
+            gone = true;
+          }}><i class="fad fa-times-circle"></i></button
+        >
       </div>
       <hr class="border-slate-600 my-0" />
     </div>
@@ -95,7 +104,13 @@
     </div>
     {#if currentData.childSubjects?.length}
       <div class="md:text-base text-xs pl-1">
-        <button on:click={runDrilldown} class="raw-button flex gap-2">
+        <button
+          on:click={() => {
+            runDrilldown();
+            gone = true;
+          }}
+          class="raw-button flex gap-2"
+        >
           <span class="leading-none text-black">Drilldown</span>
           <i class="far fa-chart-bar leading-none text-black"></i>
         </button>
