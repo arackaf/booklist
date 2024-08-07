@@ -21,6 +21,7 @@
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   let fadeTimeout: null | NodeJS.Timeout = null;
+  let opacityChanging = false;
 
   $: currentData = data ?? {};
 
@@ -28,9 +29,6 @@
     return fadeTimeout;
   }
 
-  function setOpacitySpring(value: 0 | 1) {
-    opacitySpring.set(value).then(() => (fadeTimeout = null));
-  }
   $: {
     if (!measure) {
       let isShown = shown;
@@ -41,9 +39,16 @@
         fadeTimeout = null;
       }
 
-      fadeTimeout = setTimeout(() => {
-        setOpacitySpring(isShown ? 1 : 0);
-      }, 1000);
+      fadeTimeout = setTimeout(
+        () => {
+          opacityChanging = true;
+          opacitySpring.set(isShown ? 1 : 0).then(() => {
+            fadeTimeout = null;
+            opacityChanging = false;
+          });
+        },
+        opacityChanging ? 0 : 1000
+      );
     }
   }
 
