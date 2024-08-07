@@ -27,26 +27,24 @@
   function getFadeTimeout() {
     return fadeTimeout;
   }
-  function clearFadeTimeout() {
-    fadeTimeout = null;
+
+  function setOpacitySpring(value: 0 | 1) {
+    opacitySpring.set(value).then(() => (fadeTimeout = null));
   }
   $: {
-    let isShown = shown;
-    console.log({ shown });
+    if (!measure) {
+      let isShown = shown;
 
-    //console.log("In block", { fadeTimeout });
-    const currentTimeout = getFadeTimeout();
-    if (currentTimeout) {
-      console.log("clear", currentTimeout);
-      clearTimeout(currentTimeout);
-      fadeTimeout = null;
+      const currentTimeout = getFadeTimeout();
+      if (currentTimeout) {
+        clearTimeout(currentTimeout);
+        fadeTimeout = null;
+      }
+
+      fadeTimeout = setTimeout(() => {
+        setOpacitySpring(isShown ? 1 : 0);
+      }, 1000);
     }
-
-    fadeTimeout = setTimeout(() => {
-      console.log("Set opacity");
-      opacitySpring.set(isShown ? 1 : 0).then(clearFadeTimeout);
-    }, 1000);
-    console.log("fadeTimeout == ", getFadeTimeout());
   }
 
   $: {
