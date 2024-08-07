@@ -24,6 +24,9 @@ export function createTooltipState() {
     hide() {
       state.update(current => ({ ...current, shown: false }));
     },
+    reShow() {
+      state.update(current => ({ ...current, shown: true }));
+    },
     currentState: readOnlyState
   };
 }

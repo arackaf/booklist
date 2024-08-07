@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
   import type { Data, Position } from "./tooltip";
-  import { onMount } from "svelte";
+  import { getContext } from "svelte";
   import { spring } from "svelte/motion";
+  import type { createTooltipState } from "../tooltipState";
 
   export let shown: boolean;
   export let position: Position;
@@ -18,10 +18,35 @@
   const opacitySpring = spring(0, { stiffness: 0.1, damping: 0.5 });
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 
+  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
+
+  let fadeTimeout: null | NodeJS.Timeout = null;
+
   $: currentData = data ?? {};
 
+  function getFadeTimeout() {
+    return fadeTimeout;
+  }
+  function clearFadeTimeout() {
+    fadeTimeout = null;
+  }
   $: {
-    opacitySpring.set(shown ? 1 : 0);
+    let isShown = shown;
+    console.log({ shown });
+
+    //console.log("In block", { fadeTimeout });
+    const currentTimeout = getFadeTimeout();
+    if (currentTimeout) {
+      console.log("clear", currentTimeout);
+      clearTimeout(currentTimeout);
+      fadeTimeout = null;
+    }
+
+    fadeTimeout = setTimeout(() => {
+      console.log("Set opacity");
+      opacitySpring.set(isShown ? 1 : 0).then(clearFadeTimeout);
+    }, 1000);
+    console.log("fadeTimeout == ", getFadeTimeout());
   }
 
   $: {
@@ -42,6 +67,9 @@
 </script>
 
 <div
+  role="contentinfo"
+  on:mouseenter={() => tooltipState.reShow()}
+  on:mouseleave={() => tooltipState.hide()}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
   style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring};"
 >

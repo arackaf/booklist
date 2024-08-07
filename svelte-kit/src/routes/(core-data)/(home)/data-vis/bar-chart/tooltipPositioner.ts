@@ -25,7 +25,7 @@ export function getTooltipDimensions(payload: TooltipPayload) {
 }
 
 export function positionTooltip(anchorNode: DOMRect, position: Position, tooltipDimensions: { w: number; h: number }): { x: number; y: number } {
-  console.log({ position });
+  // console.log({ position });
   const { w: tooltipWidth, h: tooltipHeight } = tooltipDimensions;
   switch (position) {
     case "right-start":
