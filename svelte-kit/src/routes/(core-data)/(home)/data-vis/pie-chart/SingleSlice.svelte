@@ -24,9 +24,6 @@
   $: ({ arcCenterPoint } = segment);
 
   let tooltipOn = false;
-  const onTooltipShow = () => (tooltipOn = true);
-  const onTooltipHide = () => (tooltipOn = false);
-
   let translateX = 0;
   let translateY = 0;
   $: {
@@ -95,7 +92,6 @@
     const tooltipPosition = positionTooltip(bound, position, { w, h });
     tooltipState.show(tooltipPosition, { position, data, drilldown, remove });
   };
-  $: console.log("B", { tooltipAnchorX, tooltipAnchorY });
 
   function mouseOut() {
     tooltipOn = false;
@@ -105,22 +101,13 @@
   $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
   $: tooltipAnchorY = useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1];
 
-  /*
-  use:tooltip={{
-        position: midPoint < 180 ? "absolute-right" : "absolute-left",
-        data: segment.data,
-        hoverTarget: mainArc,
-        drilldown: (...args) => drilldown(...args, "PIE"),
-        remove: removeSlice,
-        onShow: onTooltipShow,
-        onHide: onTooltipHide
-      }}
-      */
+  const sliceAnimateSpring = spring({ x: 0, y: 0 }, { stiffness: 0.1, damping: 0.5 });
+  $: sliceAnimateSpring.set({ x: translateX, y: translateY });
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
-  <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
+  <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
     {#each segment.chunks as chunk, i}
       <SlicePath {sliceSpring} segmentChunk={chunk} />
     {/each}
