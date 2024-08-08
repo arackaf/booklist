@@ -1,6 +1,6 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import { type Position } from "../tooltip";
+  import { type Position } from "../tooltipUtils";
   import { getContext } from "svelte";
   import { getTooltipDimensions, positionTooltip } from "../tooltipUtils";
   import type { createTooltipState } from "../../tooltipState";

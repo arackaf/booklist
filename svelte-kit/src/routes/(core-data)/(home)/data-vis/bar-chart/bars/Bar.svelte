@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Position } from "../tooltip";
+  import type { Position } from "../tooltipUtils";
   import MultiBar from "./MultiBar.svelte";
   import SingleBar from "./SingleBar.svelte";
 

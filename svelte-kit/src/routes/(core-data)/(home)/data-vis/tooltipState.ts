@@ -1,5 +1,5 @@
 import { derived, writable } from "svelte/store";
-import type { Data, Position } from "./bar-chart/tooltip";
+import type { Data, Position } from "./bar-chart/tooltipUtils";
 
 export type TooltipPayload = {
   position: Position;
