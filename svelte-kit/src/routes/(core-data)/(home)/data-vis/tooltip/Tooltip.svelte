@@ -5,7 +5,6 @@
   import type { createTooltipState } from "./tooltipState";
 
   export let shown: boolean;
-  export let position: Position;
   export let data: Data;
   export let drilldown: any;
   export let remove: (id: string) => void;
