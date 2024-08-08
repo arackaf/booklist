@@ -2,7 +2,7 @@
   import { spring } from "svelte/motion";
   import { type Position } from "../tooltip";
   import { getContext } from "svelte";
-  import { getTooltipDimensions, positionTooltip } from "../tooltipPositioner";
+  import { getTooltipDimensions, positionTooltip } from "../tooltipUtils";
   import type { createTooltipState } from "../../tooltipState";
 
   export let drilldown: any;

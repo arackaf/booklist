@@ -3,7 +3,7 @@
   import SlicePath from "./SlicePath.svelte";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../tooltipState";
-  import { getTooltipDimensions, positionTooltip } from "../bar-chart/tooltipPositioner";
+  import { getTooltipDimensions, positionTooltip } from "../bar-chart/tooltipUtils";
 
   export let segment: any;
   export let noInitialAnimation: boolean;
