@@ -23,7 +23,6 @@
 
   function mouseOver() {
     let bound = g.getBoundingClientRect();
-    // console.log({ position, bound, x });
     const { w, h } = getTooltipDimensions({ position, data, drilldown, remove: removeBar });
     const tooltipPosition = positionTooltip(bound, position, { w, h });
     tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
@@ -43,7 +42,6 @@
       initialRenderFinished = true;
     });
   }
-  //use:tooltip={{ position, data, drilldown, remove: removeBar }}
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
