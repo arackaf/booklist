@@ -45,8 +45,8 @@
       fadeTimeout = setTimeout(
         () => {
           opacityChanging = true;
+          gone = false;
           opacitySpring.set(isShown ? 1 : 0).then(() => {
-            gone = false;
             fadeTimeout = null;
             opacityChanging = false;
             gone = !isShown;
