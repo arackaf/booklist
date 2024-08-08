@@ -1,6 +1,5 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../tooltipState";
