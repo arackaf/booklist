@@ -7,7 +7,7 @@
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
   import { onMount, setContext } from "svelte";
-  import Tooltip from "../../Tooltip.svelte";
+  import Tooltip from "../../tooltip/Tooltip.svelte";
   import { createTooltipState } from "../../tooltipState";
 
   export let showingData: any[];

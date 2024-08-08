@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Data, Position } from "./tooltipUtils";
+  import type { Data, Position } from "../tooltipUtils";
   import { getContext } from "svelte";
   import { spring } from "svelte/motion";
-  import type { createTooltipState } from "./tooltipState";
+  import type { createTooltipState } from "../tooltipState";
 
   export let shown: boolean;
   export let position: Position;
