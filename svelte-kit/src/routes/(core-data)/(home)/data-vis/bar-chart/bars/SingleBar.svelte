@@ -1,10 +1,10 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  import { type Position } from "../../tooltipUtils";
+  import { type Position } from "../../tooltip/tooltipUtils";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../../tooltip/tooltipState";
-  import { getTooltipDimensions, positionTooltip } from "../../tooltipUtils";
+  import { getTooltipDimensions, positionTooltip } from "../../tooltip/tooltipUtils";
 
   export let drilldown: any;
   export let color: any;
