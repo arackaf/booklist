@@ -3,7 +3,7 @@
   import { type Position } from "../../tooltipUtils";
   import { getContext } from "svelte";
   import { getTooltipDimensions, positionTooltip } from "../../tooltipUtils";
-  import type { createTooltipState } from "../../tooltipState";
+  import type { createTooltipState } from "../../tooltip/tooltipState";
 
   export let drilldown: any;
   export let data: any;

@@ -6,7 +6,7 @@
   import SingleSlice from "./SingleSlice.svelte";
   import { syncWidth } from "$lib/util/animationHelpers";
   import SingleSliceLabel from "./SingleSliceLabel.svelte";
-  import { createTooltipState } from "../tooltipState";
+  import { createTooltipState } from "../tooltip/tooltipState";
   import Tooltip from "../tooltip/Tooltip.svelte";
 
   export let showingData: any[];

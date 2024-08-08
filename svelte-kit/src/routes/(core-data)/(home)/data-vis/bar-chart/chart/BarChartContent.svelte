@@ -8,7 +8,7 @@
   import Bar from "../bars/Bar.svelte";
   import { onMount, setContext } from "svelte";
   import Tooltip from "../../tooltip/Tooltip.svelte";
-  import { createTooltipState } from "../../tooltipState";
+  import { createTooltipState } from "../../tooltip/tooltipState";
 
   export let showingData: any[];
   export let drilldown: any;

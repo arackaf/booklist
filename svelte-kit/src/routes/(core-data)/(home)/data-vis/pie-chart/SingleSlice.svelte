@@ -2,7 +2,7 @@
   import { spring } from "svelte/motion";
   import SlicePath from "./SlicePath.svelte";
   import { getContext } from "svelte";
-  import type { createTooltipState } from "../tooltipState";
+  import type { createTooltipState } from "../tooltip/tooltipState";
   import { getTooltipDimensions, positionTooltip } from "../tooltipUtils";
 
   export let segment: any;
