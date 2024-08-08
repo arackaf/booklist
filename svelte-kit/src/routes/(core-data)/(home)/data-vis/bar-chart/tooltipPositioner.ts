@@ -54,6 +54,10 @@ export function positionTooltip(anchorNode: DOMRect, position: Position, tooltip
         y: anchorNode.y - tooltipHeight - OFFSET
         //css: `transform: translate(-100%, calc(-100% - ${OFFSET}px))`
       };
+    case "absolute-right":
+      return { x: anchorNode.x + OFFSET, y: anchorNode.y - tooltipDimensions.h / 2 };
+    case "absolute-left":
+      return { x: anchorNode.x - tooltipDimensions.w - OFFSET, y: anchorNode.y - tooltipDimensions.h / 2 };
   }
   return { x: 0, y: 0 };
 }

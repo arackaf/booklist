@@ -2,6 +2,9 @@
   import { spring } from "svelte/motion";
   import { tooltip } from "../bar-chart/tooltip";
   import SlicePath from "./SlicePath.svelte";
+  import { getContext } from "svelte";
+  import type { createTooltipState } from "../tooltipState";
+  import { getTooltipDimensions, positionTooltip } from "../bar-chart/tooltipPositioner";
 
   export let segment: any;
   export let noInitialAnimation: boolean;
@@ -71,9 +74,51 @@
     let rect = c.getBoundingClientRect();
     console.log({ rect });
   }
+
+  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
+
+  $: mouseOver = () => {
+    if (!(mainArc && containerSize !== "UNKNOWN")) {
+      return;
+    }
+
+    let bound = c.getBoundingClientRect();
+
+    tooltipOn = true;
+    const position = midPoint < 180 ? "absolute-right" : "absolute-left";
+    const data = segment.data;
+
+    const drilldown = (...args) => drilldown(...args, "PIE");
+    const remove = removeSlice;
+
+    const { w, h } = getTooltipDimensions({ position, data, drilldown, remove });
+    const tooltipPosition = positionTooltip(bound, position, { w, h });
+    tooltipState.show(tooltipPosition, { position, data, drilldown, remove });
+  };
+  $: console.log("B", { tooltipAnchorX, tooltipAnchorY });
+
+  function mouseOut() {
+    tooltipOn = false;
+    tooltipState.hide();
+  }
+
+  $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
+  $: tooltipAnchorY = useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1];
+
+  /*
+  use:tooltip={{
+        position: midPoint < 180 ? "absolute-right" : "absolute-left",
+        data: segment.data,
+        hoverTarget: mainArc,
+        drilldown: (...args) => drilldown(...args, "PIE"),
+        remove: removeSlice,
+        onShow: onTooltipShow,
+        onHide: onTooltipHide
+      }}
+      */
 </script>
 
-<g role="contentinfo" on:mouseover={hover} bind:this={mainArc}>
+<g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transition: 200ms ease-in; transform: translate({translateX}px, {translateY}px)">
     {#each segment.chunks as chunk, i}
@@ -83,21 +128,6 @@
 </g>
 {#if mainArc && containerSize !== "UNKNOWN"}
   {#key tooltipAnchorKey}
-    <circle
-      style="visibility: hidden"
-      cx={useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0]}
-      cy={useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1]}
-      r={1}
-      bind:this={c}
-      use:tooltip={{
-        position: midPoint < 180 ? "right" : "left",
-        data: segment.data,
-        hoverTarget: mainArc,
-        drilldown: (...args) => drilldown(...args, "PIE"),
-        remove: removeSlice,
-        onShow: onTooltipShow,
-        onHide: onTooltipHide
-      }}
-    />
+    <circle style="visibility: hidden" cx={tooltipAnchorX} cy={tooltipAnchorY} r={1} bind:this={c} />
   {/key}
 {/if}

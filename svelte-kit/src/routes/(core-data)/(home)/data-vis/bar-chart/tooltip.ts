@@ -3,7 +3,7 @@ import type { Subject } from "$data/types";
 
 import Tooltip from "./Tooltip.svelte";
 
-export type Position = "left" | "right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
+export type Position = "absolute-left" | "absolute-right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
 
 export type PopperOptions = {
   position: Position;
