@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Data, Position } from "./bar-chart/tooltipUtils";
+  import type { Data, Position } from "./tooltipUtils";
   import { getContext } from "svelte";
   import { spring } from "svelte/motion";
   import type { createTooltipState } from "./tooltipState";
