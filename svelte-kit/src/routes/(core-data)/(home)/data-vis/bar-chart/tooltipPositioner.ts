@@ -1,5 +1,5 @@
 import type { TooltipPayload } from "../tooltipState";
-import Tooltip from "./Tooltip.svelte";
+import Tooltip from "../Tooltip.svelte";
 import type { Position } from "./tooltip";
 
 const OFFSET = 10;

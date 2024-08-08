@@ -1,7 +1,7 @@
 import { createPopper, type Placement, type Instance as PopperInstance } from "@popperjs/core";
 import type { Subject } from "$data/types";
 
-import Tooltip from "./Tooltip.svelte";
+import Tooltip from "../Tooltip.svelte";
 
 export type Position = "absolute-left" | "absolute-right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
 
