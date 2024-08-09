@@ -66,10 +66,6 @@
   }
 
   let c: SVGElement;
-  function hover() {
-    let rect = c.getBoundingClientRect();
-    console.log({ rect });
-  }
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
