@@ -37,7 +37,7 @@ export function createTooltipState() {
         if (currentState.hoveringOnPayload?.data === hoveringPayload.data) {
           this.show(node, hoveringPayload);
         }
-      }, 75);
+      }, 500);
     },
     onMouseLeave(leavingData: Data) {
       state.update(current => ({ ...current, hovering: false, hoveringOnPayload: null }));
@@ -45,14 +45,15 @@ export function createTooltipState() {
       const currentState = get(this.currentState);
 
       setTimeout(() => {
-        if (
-          (currentState.hoveringOnPayload === null || currentState.hoveringOnPayload.data !== leavingData) &&
-          currentState.payload.data === leavingData
-        ) {
+        // different tooltip has shown
+        if (currentState.payload.data !== leavingData) {
+          return;
+        }
+        if (currentState.hoveringOnPayload === null || currentState.hoveringOnPayload.data !== leavingData) {
           console.log("HIDE");
           this.hide();
         }
-      }, 200);
+      }, 500);
     },
     hide(skipDelay = false) {
       state.update(current => ({ ...current, skipDelay, shown: false }));

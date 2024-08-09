@@ -89,7 +89,7 @@
     if (!tooltipHovering && !hovering) {
       setTimeout(() => {
         if ((!$currentTooltipState.hovering || $currentTooltipState.payload.data !== segment.data) && !hovering) {
-          slideSliceOut = false;
+          //slideSliceOut = false;
         }
       }, 200);
     }
@@ -97,7 +97,7 @@
 
   $: {
     let currentlyActivePayload = $currentTooltipState.payload;
-    slideSliceOut = currentlyActivePayload.data === segment.data;
+    slideSliceOut = currentlyActivePayload.data === segment.data && $currentTooltipState.shown;
   }
 
   let hovering = false;
