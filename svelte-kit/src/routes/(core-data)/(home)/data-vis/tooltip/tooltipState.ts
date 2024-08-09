@@ -11,6 +11,7 @@ export type TooltipPayload = {
 export function createTooltipState() {
   const state = writable({
     shown: false,
+    hovering: false,
     x: 0,
     y: 0,
     payload: {} as TooltipPayload,
@@ -25,7 +26,13 @@ export function createTooltipState() {
       const bound = bindTo.getBoundingClientRect();
       const coord = positionTooltip(bound, payload.position, { w, h });
 
-      state.set({ shown: true, ...coord, bound: bindTo, payload });
+      state.update(current => ({ ...current, shown: true, ...coord, bound: bindTo, payload }));
+    },
+    onHover() {
+      state.update(current => ({ ...current, hovering: true }));
+    },
+    onMouseLeave() {
+      state.update(current => ({ ...current, hovering: false }));
     },
     hide() {
       state.update(current => ({ ...current, shown: false }));

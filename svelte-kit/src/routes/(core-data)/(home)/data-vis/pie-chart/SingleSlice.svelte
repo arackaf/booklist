@@ -1,9 +1,10 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import SlicePath from "./SlicePath.svelte";
-  import { getContext, onMount } from "svelte";
+  import { getContext, onMount, tick } from "svelte";
   import type { createTooltipState } from "../tooltip/tooltipState";
   import { getTooltipDimensions, positionTooltip } from "../tooltip/tooltipUtils";
+  import { get } from "svelte/store";
 
   export let segment: any;
   export let noInitialAnimation: boolean;
@@ -82,7 +83,22 @@
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
+  const currentTooltipState = tooltipState.currentState;
+
+  $: {
+    let tooltipHovering = $currentTooltipState.hovering;
+    if (!tooltipHovering && !hovering) {
+      setTimeout(() => {
+        if ((!$currentTooltipState.hovering || $currentTooltipState.payload.data !== segment.data) && !hovering) {
+          tooltipOn = false;
+        }
+      }, 50);
+    }
+  }
+
+  let hovering = false;
   $: mouseOver = () => {
+    hovering = true;
     if (sizing || !(mainArc && containerSize !== "UNKNOWN")) {
       return;
     }
@@ -98,8 +114,14 @@
   };
 
   function mouseOut() {
-    tooltipOn = false;
-    tooltipState.hide();
+    hovering = false;
+    setTimeout(() => {
+      if (hovering || get(tooltipState.currentState).hovering) {
+        return;
+      }
+      tooltipOn = false;
+      tooltipState.hide();
+    }, 50);
   }
 
   $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
