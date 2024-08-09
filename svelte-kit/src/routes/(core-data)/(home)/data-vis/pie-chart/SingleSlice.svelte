@@ -85,17 +85,6 @@
   const currentTooltipState = tooltipState.currentState;
 
   $: {
-    let tooltipHovering = $currentTooltipState.hovering;
-    if (!tooltipHovering && !hovering) {
-      setTimeout(() => {
-        if ((!$currentTooltipState.hovering || $currentTooltipState.payload.data !== segment.data) && !hovering) {
-          //slideSliceOut = false;
-        }
-      }, 200);
-    }
-  }
-
-  $: {
     let currentlyActivePayload = $currentTooltipState.payload;
     slideSliceOut = currentlyActivePayload.data === segment.data && $currentTooltipState.shown;
   }
@@ -107,11 +96,6 @@
       return;
     }
 
-    //setTimeout(() => {
-    //if (!hovering) {
-    //return;
-    //}
-    //slideSliceOut = true;
     const position = midPoint < 180 ? "absolute-right" : "absolute-left";
     const data = segment.data;
 
@@ -119,10 +103,9 @@
     const remove = removeSlice;
 
     tooltipState.onHover(c, { position, data, drilldown: doDrilldown, remove });
-    //}, 75);
   };
 
-  function mouseOut(e: Event) {
+  function mouseLeave(e: Event) {
     hovering = false;
     tooltipState.onMouseLeave(segment.data);
   }
@@ -134,7 +117,7 @@
   $: sliceAnimateSpring.set({ x: translateX, y: translateY });
 </script>
 
-<g role="contentinfo" on:mouseover={mouseOver} on:mousemove={mouseOver} on:mouseleave={mouseOut} bind:this={mainArc}>
+<g role="contentinfo" on:mouseover={mouseOver} on:mousemove={mouseOver} on:mouseleave={mouseLeave} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
     {#each segment.chunks as chunk, i}
