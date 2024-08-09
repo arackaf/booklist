@@ -37,7 +37,7 @@ export function createTooltipState() {
         if (currentState.hoveringOnPayload?.data === hoveringPayload.data) {
           this.show(node, hoveringPayload);
         }
-      }, 500);
+      }, 500 /* TODO: 75 */);
     },
     onMouseLeave(leavingData: Data) {
       state.update(current => ({ ...current, hovering: false, hoveringOnPayload: null }));
@@ -52,7 +52,7 @@ export function createTooltipState() {
           console.log("HIDE");
           this.hide();
         }
-      }, 500);
+      }, 500 /* TODO 200 */);
     },
     hide(skipDelay = false) {
       state.update(current => ({ ...current, skipDelay, shown: false }));
