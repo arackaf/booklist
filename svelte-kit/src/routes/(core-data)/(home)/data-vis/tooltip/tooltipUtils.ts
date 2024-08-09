@@ -30,9 +30,10 @@ export function getTooltipDimensions(payload: TooltipPayload) {
   target.style.display = "inline-block";
   document.body.appendChild(target);
 
+  const { position, ...restProps } = payload;
   const temp = new Tooltip({
     target: target,
-    props: { shown: true, measure: true, x: 0, y: 0, ...payload }
+    props: { shown: true, measure: true, x: 0, y: 0, ...restProps }
   });
 
   const tooltipWidth = target.clientWidth;
