@@ -124,7 +124,7 @@
         return;
       } else {
         if ($currentTooltipState.payload.data === segment.data) {
-          tooltipState.hide();
+          tooltipState.hide(true);
         }
         slideSliceOut = false;
       }

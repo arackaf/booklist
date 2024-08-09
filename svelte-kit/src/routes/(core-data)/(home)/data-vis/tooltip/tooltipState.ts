@@ -15,7 +15,8 @@ export function createTooltipState() {
     x: 0,
     y: 0,
     payload: {} as TooltipPayload,
-    bound: null as unknown as SVGElement
+    bound: null as unknown as SVGElement,
+    skipDelay: false
   });
 
   const readOnlyState = derived(state, currentState => currentState);
@@ -34,11 +35,14 @@ export function createTooltipState() {
     onMouseLeave() {
       state.update(current => ({ ...current, hovering: false }));
     },
-    hide() {
-      state.update(current => ({ ...current, shown: false }));
+    hide(skipDelay = false) {
+      state.update(current => ({ ...current, skipDelay, shown: false }));
     },
     reShow() {
       state.update(current => ({ ...current, shown: true }));
+    },
+    delaySkipped() {
+      state.update(current => ({ ...current, skipDelay: false }));
     },
     currentState: readOnlyState
   };

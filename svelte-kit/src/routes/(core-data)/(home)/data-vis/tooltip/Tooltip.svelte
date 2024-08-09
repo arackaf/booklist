@@ -18,6 +18,7 @@
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
+  const currentTooltipState = tooltipState?.currentState;
 
   let fadeTimeout: null | NodeJS.Timeout = null;
   let opacityChanging = false;
@@ -37,6 +38,13 @@
   }
   function isDead() {
     return dead;
+  }
+  function skipDelay() {
+    const result = $currentTooltipState.skipDelay;
+    if (result) {
+      tooltipState.delaySkipped();
+    }
+    return result;
   }
 
   $: {
@@ -63,7 +71,7 @@
             gone = !isShown;
           });
         },
-        getOpacityChanging() ? 0 : OPACITY_CHANGE_DELAY
+        skipDelay() || getOpacityChanging() ? 0 : OPACITY_CHANGE_DELAY
       );
     }
   }
