@@ -3,7 +3,6 @@
   import SlicePath from "./SlicePath.svelte";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../tooltip/tooltipState";
-  import { get } from "svelte/store";
 
   export let segment: any;
   export let noInitialAnimation: boolean;
@@ -81,7 +80,6 @@
   let c: SVGElement;
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
-
   const currentTooltipState = tooltipState.currentState;
 
   $: {
@@ -107,7 +105,7 @@
 
   function mouseLeave(e: Event) {
     hovering = false;
-    tooltipState.onMouseLeave(segment.data);
+    tooltipState.onMouseLeave();
   }
 
   $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
