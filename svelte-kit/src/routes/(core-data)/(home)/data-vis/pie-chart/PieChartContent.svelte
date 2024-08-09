@@ -130,6 +130,12 @@
     return false;
   }
 
+  let chartHasRendered = false;
+
+  onMount(() => {
+    chartHasRendered = true;
+  });
+
   let labelsReady = hasRendered;
   const onLabelsReady = () => {
     setTimeout(() => {
@@ -161,6 +167,7 @@
         {/each}
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
+            {chartHasRendered}
             {containerSize}
             {removeSlice}
             {onLabelsReady}

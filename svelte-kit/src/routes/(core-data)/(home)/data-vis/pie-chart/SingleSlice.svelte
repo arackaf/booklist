@@ -1,7 +1,7 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import SlicePath from "./SlicePath.svelte";
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import type { createTooltipState } from "../tooltip/tooltipState";
   import { getTooltipDimensions, positionTooltip } from "../tooltip/tooltipUtils";
 
@@ -12,6 +12,7 @@
   export let drilldown: any;
   export let containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
   export let disableAnimation: boolean;
+  export let chartHasRendered: boolean;
 
   let mainArc: SVGElement;
 
@@ -44,18 +45,19 @@
 
   let initialAnimationDoneCalled = noInitialAnimation;
 
-  $: segmentChunkReference = segment.chunks[0];
-  $: initialSliceAngles = {
-    startAngle: segmentChunkReference.startAngle,
-    endAngle: noInitialAnimation ? segmentChunkReference.endAngle : segmentChunkReference.startAngle
-  };
-  const sliceSpring = spring(initialSliceAngles, springConfig);
+  const sliceSpring = spring(
+    {
+      startAngle: segment.chunks[0].startAngle,
+      endAngle: chartHasRendered ? segment.chunks[0].startAngle : segment.chunks[0].endAngle
+    },
+    springConfig
+  );
 
   $: {
     sliceSpring
       .set({
-        startAngle: segmentChunkReference.startAngle,
-        endAngle: segmentChunkReference.endAngle
+        startAngle: segment.chunks[0].startAngle,
+        endAngle: segment.chunks[0].endAngle
       })
       .then(() => {
         if (!initialAnimationDoneCalled) {
