@@ -45,11 +45,19 @@
 
   let initialAnimationDoneCalled = noInitialAnimation;
 
+  const initialStartAngle = segment.chunks[0].startAngle;
+  const initialEndAngle = segment.chunks[0].endAngle;
+
   const sliceSpring = spring(
-    {
-      startAngle: segment.chunks[0].startAngle,
-      endAngle: chartHasRendered ? segment.chunks[0].startAngle : segment.chunks[0].endAngle
-    },
+    initialEndAngle < PI
+      ? {
+          startAngle: initialStartAngle,
+          endAngle: chartHasRendered ? initialStartAngle : initialEndAngle
+        }
+      : {
+          startAngle: chartHasRendered ? initialEndAngle : initialStartAngle,
+          endAngle: initialEndAngle
+        },
     springConfig
   );
 
