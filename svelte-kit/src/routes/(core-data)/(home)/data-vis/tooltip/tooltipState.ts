@@ -48,10 +48,10 @@ export function createTooltipState() {
     onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
       const currentState = get(this.currentState);
       clearTimeouts();
+
       if (hoveringPayload.data === currentState.payload?.data) {
         this.show(node, hoveringPayload);
       } else {
-        state.update(current => ({ ...current }));
         showTimeout = setTimeout(() => {
           this.show(node, hoveringPayload);
         }, 500 /* TODO: 75 */);
@@ -59,15 +59,13 @@ export function createTooltipState() {
     },
     onMouseLeave() {
       clearTimeouts();
-      state.update(current => ({ ...current }));
 
       leaveTimeout = setTimeout(() => {
-        clearTimeouts();
-
         this.hide();
       }, 500 /* TODO 200 */);
     },
     hide() {
+      clearTimeouts();
       state.update(current => ({ ...current, shown: false }));
     },
     tooltipGone() {
