@@ -15,7 +15,9 @@
 
   export let noInitialAnimation: boolean;
 
+  let g: SVGElement;
   let initialRenderFinished = false;
+  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   $: _colors = data.entries.map((e: any) => e.color);
   let colors: any[] = [];
@@ -56,10 +58,6 @@
       initialRenderFinished = true;
     });
   }
-
-  let g: SVGElement;
-
-  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   function mouseOver() {
     tooltipState.onHover(g, { position, data, drilldown, remove: removeBar });

@@ -17,8 +17,8 @@
   export let noInitialAnimation: boolean;
 
   let g: SVGElement;
-
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
+  let initialRenderFinished = false;
 
   function mouseOver() {
     tooltipState.onHover(g, { position, data, drilldown, remove: removeBar });
@@ -27,8 +27,6 @@
   function mouseOut() {
     tooltipState.onMouseLeave();
   }
-
-  let initialRenderFinished = false;
 
   const initialValues = noInitialAnimation ? { height, x } : { height: 0, x: totalSvgWidth };
   const barSpring = spring(initialValues, { stiffness: 0.1, damping: 0.4 });
