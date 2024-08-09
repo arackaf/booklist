@@ -1,4 +1,4 @@
-import { derived, writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
 import { getTooltipDimensions, positionTooltip, type Data, type Position } from "./tooltipUtils";
 
 export type TooltipPayload = {
@@ -13,18 +13,19 @@ export function createTooltipState() {
     shown: false,
     x: 0,
     y: 0,
-    payload: {} as TooltipPayload
+    payload: {} as TooltipPayload,
+    bound: null as unknown as SVGElement
   });
 
   const readOnlyState = derived(state, currentState => currentState);
-  return {
+  const result = {
     show(bindTo: SVGElement, payload: TooltipPayload) {
       const { w, h } = getTooltipDimensions(payload);
 
       const bound = bindTo.getBoundingClientRect();
       const coord = positionTooltip(bound, payload.position, { w, h });
 
-      state.set({ shown: true, ...coord, payload });
+      state.set({ shown: true, ...coord, bound: bindTo, payload });
     },
     hide() {
       state.update(current => ({ ...current, shown: false }));
@@ -34,4 +35,15 @@ export function createTooltipState() {
     },
     currentState: readOnlyState
   };
+
+  if (typeof window === "object") {
+    window.addEventListener("scroll", () => {
+      const currentTooltipState = get(state);
+      if (currentTooltipState.shown) {
+        result.show(currentTooltipState.bound, currentTooltipState.payload);
+      }
+    });
+  }
+
+  return result;
 }
