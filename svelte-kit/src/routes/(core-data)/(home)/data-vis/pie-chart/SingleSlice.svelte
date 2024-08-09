@@ -24,7 +24,7 @@
 
   $: ({ arcCenterPoint } = segment);
 
-  let tooltipOn = false;
+  let slideSliceOut = false;
   let translateX = 0;
   let translateY = 0;
   $: {
@@ -33,8 +33,8 @@
     const translateTarget = segment.centroidTransition;
     const [x2, y2] = translateTarget;
 
-    translateX = tooltipOn && !disableAnimation ? x2 - x1 : 0;
-    translateY = tooltipOn && !disableAnimation ? y2 - y1 : 0;
+    translateX = slideSliceOut && !disableAnimation ? x2 - x1 : 0;
+    translateY = slideSliceOut && !disableAnimation ? y2 - y1 : 0;
   }
 
   $: tooltipAnchorKey = containerSize === "SMALL" ? "small" : containerSize === "NORMAL" ? "large" : "";
@@ -90,7 +90,7 @@
     if (!tooltipHovering && !hovering) {
       setTimeout(() => {
         if ((!$currentTooltipState.hovering || $currentTooltipState.payload.data !== segment.data) && !hovering) {
-          tooltipOn = false;
+          slideSliceOut = false;
         }
       }, 200);
     }
@@ -103,7 +103,7 @@
       return;
     }
 
-    tooltipOn = true;
+    slideSliceOut = true;
     const position = midPoint < 180 ? "absolute-right" : "absolute-left";
     const data = segment.data;
 
@@ -119,7 +119,7 @@
       if (hovering || ($currentTooltipState.hovering && $currentTooltipState.payload.data === segment.data)) {
         return;
       } else {
-        tooltipOn = false;
+        slideSliceOut = false;
       }
       if ($currentTooltipState.payload.data === segment.data) {
         tooltipState.hide();
