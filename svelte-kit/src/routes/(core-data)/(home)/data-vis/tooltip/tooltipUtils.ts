@@ -37,7 +37,6 @@ export function getTooltipDimensions(payload: TooltipPayload) {
 
   const tooltipWidth = target.clientWidth;
   const tooltipHeight = target.clientHeight;
-  //console.log("dim", target.clientWidth, target.clientHeight);
 
   temp.$destroy();
   target.parentElement?.removeChild(target);
@@ -46,7 +45,6 @@ export function getTooltipDimensions(payload: TooltipPayload) {
 }
 
 export function positionTooltip(anchorNode: DOMRect, position: Position, tooltipDimensions: { w: number; h: number }): { x: number; y: number } {
-  // console.log({ position });
   const { w: tooltipWidth, h: tooltipHeight } = tooltipDimensions;
   switch (position) {
     case "right-start":
@@ -55,30 +53,25 @@ export function positionTooltip(anchorNode: DOMRect, position: Position, tooltip
       return {
         x: anchorNode.x - tooltipWidth - OFFSET,
         y: anchorNode.y
-        //css: `transform: translate(calc(-100% - ${OFFSET}px), 0)`
       };
     case "top":
       return {
         x: anchorNode.x + anchorNode.width / 2 - tooltipWidth / 2,
         y: anchorNode.y - tooltipHeight - OFFSET
-        //css: `transform: translate(-50%, calc(-100% - ${OFFSET}px))`
       };
     case "top-right":
       return {
         x: anchorNode.x + anchorNode.width - tooltipWidth,
         y: anchorNode.y - tooltipHeight - OFFSET
-        //css: `transform: translate(-100%, calc(-100% - ${OFFSET}px))`
       };
     case "top-left":
       return {
         x: anchorNode.x,
         y: anchorNode.y - tooltipHeight - OFFSET
-        //css: `transform: translate(-100%, calc(-100% - ${OFFSET}px))`
       };
     case "absolute-right":
       return { x: anchorNode.x + OFFSET, y: anchorNode.y - tooltipDimensions.h / 2 };
     case "absolute-left":
       return { x: anchorNode.x - tooltipDimensions.w - OFFSET, y: anchorNode.y - tooltipDimensions.h / 2 };
   }
-  return { x: 0, y: 0 };
 }
