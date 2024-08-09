@@ -42,9 +42,8 @@ export function createTooltipState() {
     onMouseLeave(leavingData: Data) {
       state.update(current => ({ ...current, hovering: false, hoveringOnPayload: null }));
 
-      const currentState = get(this.currentState);
-
       setTimeout(() => {
+        const currentState = get(this.currentState);
         // different tooltip has shown
         if (currentState.payload.data !== leavingData) {
           return;
