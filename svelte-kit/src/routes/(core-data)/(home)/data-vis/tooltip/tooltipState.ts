@@ -54,7 +54,7 @@ export function createTooltipState() {
       } else {
         showTimeout = setTimeout(() => {
           this.show(node, hoveringPayload);
-        }, 500 /* TODO: 75 */);
+        }, 75);
       }
     },
     onMouseLeave() {
@@ -62,7 +62,7 @@ export function createTooltipState() {
 
       leaveTimeout = setTimeout(() => {
         this.hide();
-      }, 500 /* TODO 200 */);
+      }, 200);
     },
     hide() {
       clearTimeouts();
