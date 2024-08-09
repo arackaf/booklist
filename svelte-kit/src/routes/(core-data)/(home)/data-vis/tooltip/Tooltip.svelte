@@ -37,7 +37,6 @@
   $: {
     if (!measure) {
       let isShown = shown;
-      console.log({ isShown });
       if (isShown) {
         dead = false;
       }
