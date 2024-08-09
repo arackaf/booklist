@@ -77,13 +77,13 @@
   role="contentinfo"
   on:mouseenter={() => {
     if (!dead) {
-      tooltipState.reShow();
-      tooltipState.onHover();
+      //tooltipState.reShow();
+      tooltipState.tooltipHover();
     }
   }}
   on:mouseleave={() => {
-    tooltipState.hide();
-    tooltipState.onMouseLeave();
+    tooltipState.tooltipMouseLeave();
+    //tooltipState.onMouseLeave();
   }}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
   style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring}; visibility: {gone || dead ? 'hidden' : 'visible'}"

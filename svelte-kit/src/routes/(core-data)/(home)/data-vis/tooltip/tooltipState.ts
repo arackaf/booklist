@@ -20,7 +20,19 @@ export function createTooltipState() {
     skipDelay: false
   });
 
+  let leaveTimeout: NodeJS.Timer | null = null;
+  let showTimeout: NodeJS.Timer | null = null;
+
   const readOnlyState = derived(state, currentState => currentState);
+
+  function clearTimeouts() {
+    clearTimeout(leaveTimeout!);
+    clearTimeout(showTimeout!);
+
+    leaveTimeout = null;
+    showTimeout = null;
+  }
+
   const result = {
     show(bindTo: SVGElement, payload: TooltipPayload) {
       const { w, h } = getTooltipDimensions(payload);
@@ -30,28 +42,38 @@ export function createTooltipState() {
 
       state.update(current => ({ ...current, shown: true, ...coord, bound: bindTo, payload }));
     },
-    onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
-      state.update(current => ({ ...current, hovering: true, hoveringOnPayload: hoveringPayload }));
-      setTimeout(() => {
-        const currentState = get(this.currentState);
-        if (currentState.hoveringOnPayload?.data === hoveringPayload.data) {
-          this.show(node, hoveringPayload);
-        }
-      }, 500 /* TODO: 75 */);
+    tooltipHover() {
+      clearTimeouts();
+      state.update(current => ({ ...current, shown: true }));
     },
-    onMouseLeave(leavingData: Data) {
+    tooltipMouseLeave() {
+      const currentState = get(this.currentState);
+      this.onMouseLeave(currentState.payload.data);
+    },
+    onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
+      const currentState = get(this.currentState);
+      clearTimeouts();
+      if (hoveringPayload.data === currentState.payload.data) {
+        this.show(node, hoveringPayload);
+      } else {
+        state.update(current => ({ ...current, hovering: true, hoveringOnPayload: hoveringPayload }));
+        showTimeout = setTimeout(() => {
+          const currentState = get(this.currentState);
+          //if (currentState.hoveringOnPayload?.data === hoveringPayload.data) {
+          this.show(node, hoveringPayload);
+          //}
+        }, 500 /* TODO: 75 */);
+      }
+    },
+    onMouseLeave() {
+      clearTimeouts();
       state.update(current => ({ ...current, hovering: false, hoveringOnPayload: null }));
 
-      setTimeout(() => {
-        const currentState = get(this.currentState);
-        // different tooltip has shown
-        if (currentState.payload.data !== leavingData) {
-          return;
-        }
-        if (currentState.hoveringOnPayload === null || currentState.hoveringOnPayload.data !== leavingData) {
-          console.log("HIDE");
-          this.hide();
-        }
+      leaveTimeout = setTimeout(() => {
+        clearTimeouts();
+
+        this.hide();
+        //}
       }, 500 /* TODO 200 */);
     },
     hide(skipDelay = false) {
