@@ -15,6 +15,7 @@ export function createTooltipState() {
     x: 0,
     y: 0,
     payload: {} as TooltipPayload,
+    hoveringOnPayload: null as null | TooltipPayload,
     bound: null as unknown as SVGElement,
     skipDelay: false
   });
@@ -29,11 +30,29 @@ export function createTooltipState() {
 
       state.update(current => ({ ...current, shown: true, ...coord, bound: bindTo, payload }));
     },
-    onHover() {
-      state.update(current => ({ ...current, hovering: true }));
+    onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
+      state.update(current => ({ ...current, hovering: true, hoveringOnPayload: hoveringPayload }));
+      setTimeout(() => {
+        const currentState = get(this.currentState);
+        if (currentState.hoveringOnPayload?.data === hoveringPayload.data) {
+          this.show(node, hoveringPayload);
+        }
+      }, 75);
     },
-    onMouseLeave() {
-      state.update(current => ({ ...current, hovering: false }));
+    onMouseLeave(leavingData: Data) {
+      state.update(current => ({ ...current, hovering: false, hoveringOnPayload: null }));
+
+      const currentState = get(this.currentState);
+
+      setTimeout(() => {
+        if (
+          (currentState.hoveringOnPayload === null || currentState.hoveringOnPayload.data !== leavingData) &&
+          currentState.payload.data === leavingData
+        ) {
+          console.log("HIDE");
+          this.hide();
+        }
+      }, 200);
     },
     hide(skipDelay = false) {
       state.update(current => ({ ...current, skipDelay, shown: false }));

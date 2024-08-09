@@ -95,6 +95,11 @@
     }
   }
 
+  $: {
+    let currentlyActivePayload = $currentTooltipState.payload;
+    slideSliceOut = currentlyActivePayload.data === segment.data;
+  }
+
   let hovering = false;
   $: mouseOver = () => {
     hovering = true;
@@ -102,33 +107,24 @@
       return;
     }
 
-    setTimeout(() => {
-      if (!hovering) {
-        return;
-      }
-      slideSliceOut = true;
-      const position = midPoint < 180 ? "absolute-right" : "absolute-left";
-      const data = segment.data;
+    //setTimeout(() => {
+    //if (!hovering) {
+    //return;
+    //}
+    //slideSliceOut = true;
+    const position = midPoint < 180 ? "absolute-right" : "absolute-left";
+    const data = segment.data;
 
-      const doDrilldown = (...args) => drilldown(...args, "PIE");
-      const remove = removeSlice;
+    const doDrilldown = (...args) => drilldown(...args, "PIE");
+    const remove = removeSlice;
 
-      tooltipState.show(c, { position, data, drilldown: doDrilldown, remove });
-    }, 75);
+    tooltipState.onHover(c, { position, data, drilldown: doDrilldown, remove });
+    //}, 75);
   };
 
-  function mouseOut() {
+  function mouseOut(e: Event) {
     hovering = false;
-    setTimeout(() => {
-      if (hovering || ($currentTooltipState.hovering && $currentTooltipState.payload.data === segment.data)) {
-        return;
-      } else {
-        if ($currentTooltipState.payload.data === segment.data) {
-          tooltipState.hide(true);
-        }
-        slideSliceOut = false;
-      }
-    }, 200);
+    tooltipState.onMouseLeave(segment.data);
   }
 
   $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
@@ -138,7 +134,7 @@
   $: sliceAnimateSpring.set({ x: translateX, y: translateY });
 </script>
 
-<g role="contentinfo" on:mouseover={mouseOver} on:mousemove={mouseOver} on:mouseout={mouseOut} bind:this={mainArc}>
+<g role="contentinfo" on:mouseover={mouseOver} on:mousemove={mouseOver} on:mouseleave={mouseOut} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
     {#each segment.chunks as chunk, i}

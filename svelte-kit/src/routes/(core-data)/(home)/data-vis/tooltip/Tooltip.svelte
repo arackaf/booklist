@@ -39,13 +39,6 @@
   function isDead() {
     return dead;
   }
-  function skipDelay() {
-    const result = $currentTooltipState.skipDelay;
-    if (result) {
-      tooltipState.delaySkipped();
-    }
-    return result;
-  }
 
   $: {
     if (!measure) {
@@ -61,18 +54,13 @@
         fadeTimeout = null;
       }
 
-      fadeTimeout = setTimeout(
-        () => {
-          opacityChanging = true;
-          gone = false;
-          opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
-            fadeTimeout = null;
-            opacityChanging = false;
-            gone = !isShown;
-          });
-        },
-        skipDelay() || getOpacityChanging() ? 0 : OPACITY_CHANGE_DELAY
-      );
+      opacityChanging = true;
+      gone = false;
+      opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
+        fadeTimeout = null;
+        opacityChanging = false;
+        gone = !isShown;
+      });
     }
   }
 
