@@ -52,6 +52,9 @@
       opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
         fadeTimeout = null;
         gone = !isShown;
+        if (!isShown) {
+          tooltipState.tooltipGone();
+        }
       });
     }
   }
@@ -77,13 +80,11 @@
   role="contentinfo"
   on:mouseenter={() => {
     if (!dead) {
-      //tooltipState.reShow();
       tooltipState.tooltipHover();
     }
   }}
   on:mouseleave={() => {
-    tooltipState.tooltipMouseLeave();
-    //tooltipState.onMouseLeave();
+    tooltipState.onMouseLeave();
   }}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
   style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring}; visibility: {gone || dead ? 'hidden' : 'visible'}"

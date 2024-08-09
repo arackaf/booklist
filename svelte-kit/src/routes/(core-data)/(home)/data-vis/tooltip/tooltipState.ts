@@ -14,7 +14,7 @@ export function createTooltipState() {
     hovering: false,
     x: 0,
     y: 0,
-    payload: {} as TooltipPayload,
+    payload: null as null | TooltipPayload,
     hoveringOnPayload: null as null | TooltipPayload,
     bound: null as unknown as SVGElement,
     skipDelay: false
@@ -46,22 +46,15 @@ export function createTooltipState() {
       clearTimeouts();
       state.update(current => ({ ...current, shown: true }));
     },
-    tooltipMouseLeave() {
-      const currentState = get(this.currentState);
-      this.onMouseLeave(currentState.payload.data);
-    },
     onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
       const currentState = get(this.currentState);
       clearTimeouts();
-      if (hoveringPayload.data === currentState.payload.data) {
+      if (hoveringPayload.data === currentState.payload?.data) {
         this.show(node, hoveringPayload);
       } else {
         state.update(current => ({ ...current, hovering: true, hoveringOnPayload: hoveringPayload }));
         showTimeout = setTimeout(() => {
-          const currentState = get(this.currentState);
-          //if (currentState.hoveringOnPayload?.data === hoveringPayload.data) {
           this.show(node, hoveringPayload);
-          //}
         }, 500 /* TODO: 75 */);
       }
     },
@@ -73,17 +66,13 @@ export function createTooltipState() {
         clearTimeouts();
 
         this.hide();
-        //}
       }, 500 /* TODO 200 */);
     },
     hide(skipDelay = false) {
       state.update(current => ({ ...current, skipDelay, shown: false }));
     },
-    reShow() {
-      state.update(current => ({ ...current, shown: true }));
-    },
-    delaySkipped() {
-      state.update(current => ({ ...current, skipDelay: false }));
+    tooltipGone() {
+      state.update(val => ({ ...val, payload: null }));
     },
     currentState: readOnlyState
   };
@@ -92,7 +81,7 @@ export function createTooltipState() {
     window.addEventListener("scroll", () => {
       const currentTooltipState = get(state);
       if (currentTooltipState.shown) {
-        result.show(currentTooltipState.bound, currentTooltipState.payload);
+        result.show(currentTooltipState.bound, currentTooltipState.payload!);
       }
     });
   }

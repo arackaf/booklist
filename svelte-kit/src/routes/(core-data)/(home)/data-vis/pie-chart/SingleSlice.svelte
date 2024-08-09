@@ -86,7 +86,7 @@
 
   $: {
     let currentlyActivePayload = $currentTooltipState.payload;
-    slideSliceOut = currentlyActivePayload.data === segment.data && $currentTooltipState.shown;
+    slideSliceOut = currentlyActivePayload?.data === segment.data && $currentTooltipState.shown;
   }
 
   let hovering = false;
