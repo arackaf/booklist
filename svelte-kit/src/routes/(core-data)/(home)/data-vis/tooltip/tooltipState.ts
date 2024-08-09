@@ -17,7 +17,8 @@ export function createTooltipState() {
     payload: null as null | TooltipPayload,
     hoveringOnPayload: null as null | TooltipPayload,
     bound: null as unknown as SVGElement,
-    skipDelay: false
+    skipDelay: false,
+    onScreen: false
   });
 
   let leaveTimeout: NodeJS.Timer | null = null;
@@ -68,11 +69,14 @@ export function createTooltipState() {
         this.hide();
       }, 500 /* TODO 200 */);
     },
-    hide(skipDelay = false) {
-      state.update(current => ({ ...current, skipDelay, shown: false }));
+    hide() {
+      state.update(current => ({ ...current, shown: false }));
     },
     tooltipGone() {
-      state.update(val => ({ ...val, payload: null }));
+      state.update(val => ({ ...val, onScreen: false, payload: null }));
+    },
+    tooltipVisible() {
+      state.update(val => ({ ...val, onScreen: true }));
     },
     currentState: readOnlyState
   };

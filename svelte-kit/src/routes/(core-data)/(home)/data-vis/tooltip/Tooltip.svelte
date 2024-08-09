@@ -3,6 +3,7 @@
   import { getContext } from "svelte";
   import { spring } from "svelte/motion";
   import type { createTooltipState } from "./tooltipState";
+  import { get } from "svelte/store";
 
   export let shown: boolean;
   export let data: Data;
@@ -17,7 +18,6 @@
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
-  const currentState = tooltipState.currentState;
 
   let fadeTimeout: null | NodeJS.Timeout = null;
 
@@ -60,14 +60,16 @@
   }
 
   $: {
-    if (x !== 0 && y !== 0) {
+    if (!measure && x !== 0 && y !== 0) {
+      const hard = !get(tooltipState.currentState).onScreen;
       positionSpring.set(
         {
           x: x,
           y: y
         },
-        { hard: !$currentState.payload }
+        { hard }
       );
+      tooltipState.tooltipVisible();
     }
   }
 </script>
