@@ -31,6 +31,10 @@
   const OPACITY_CHANGE_DELAY = 200;
   let gone = true;
 
+  function getOpacityChanging() {
+    return opacityChanging;
+  }
+
   $: {
     if (!measure) {
       let isShown = shown;
@@ -51,7 +55,7 @@
             gone = !isShown;
           });
         },
-        opacityChanging ? 0 : OPACITY_CHANGE_DELAY
+        getOpacityChanging() ? 0 : OPACITY_CHANGE_DELAY
       );
     }
   }
