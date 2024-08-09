@@ -11,11 +11,9 @@ export type TooltipPayload = {
 export function createTooltipState() {
   const state = writable({
     shown: false,
-    hovering: false,
     x: 0,
     y: 0,
     payload: null as null | TooltipPayload,
-    hoveringOnPayload: null as null | TooltipPayload,
     bound: null as unknown as SVGElement,
     skipDelay: false,
     onScreen: false
@@ -53,7 +51,7 @@ export function createTooltipState() {
       if (hoveringPayload.data === currentState.payload?.data) {
         this.show(node, hoveringPayload);
       } else {
-        state.update(current => ({ ...current, hovering: true, hoveringOnPayload: hoveringPayload }));
+        state.update(current => ({ ...current }));
         showTimeout = setTimeout(() => {
           this.show(node, hoveringPayload);
         }, 500 /* TODO: 75 */);
@@ -61,7 +59,7 @@ export function createTooltipState() {
     },
     onMouseLeave() {
       clearTimeouts();
-      state.update(current => ({ ...current, hovering: false, hoveringOnPayload: null }));
+      state.update(current => ({ ...current }));
 
       leaveTimeout = setTimeout(() => {
         clearTimeouts();
