@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Data, Position } from "./tooltipUtils";
+  import type { Data } from "./tooltipUtils";
   import { getContext } from "svelte";
   import { spring } from "svelte/motion";
   import type { createTooltipState } from "./tooltipState";
@@ -57,7 +57,6 @@
         () => {
           opacityChanging = true;
           gone = false;
-          let fast = !isShown && isDead();
           opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
             fadeTimeout = null;
             opacityChanging = false;
