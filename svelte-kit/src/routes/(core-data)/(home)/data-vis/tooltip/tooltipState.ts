@@ -1,5 +1,5 @@
 import { derived, writable } from "svelte/store";
-import type { Data, Position } from "./tooltipUtils";
+import { getTooltipDimensions, positionTooltip, type Data, type Position } from "./tooltipUtils";
 
 export type TooltipPayload = {
   position: Position;
@@ -18,7 +18,12 @@ export function createTooltipState() {
 
   const readOnlyState = derived(state, currentState => currentState);
   return {
-    show(coord: { x: number; y: number }, payload: TooltipPayload) {
+    show(bindTo: SVGElement, payload: TooltipPayload) {
+      const { w, h } = getTooltipDimensions(payload);
+
+      const bound = bindTo.getBoundingClientRect();
+      const coord = positionTooltip(bound, payload.position, { w, h });
+
       state.set({ shown: true, ...coord, payload });
     },
     hide() {

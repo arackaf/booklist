@@ -22,10 +22,7 @@
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   function mouseOver() {
-    let bound = g.getBoundingClientRect();
-    const { w, h } = getTooltipDimensions({ position, data, drilldown, remove: removeBar });
-    const tooltipPosition = positionTooltip(bound, position, { w, h });
-    tooltipState.show(tooltipPosition, { position, data, drilldown, remove: removeBar });
+    tooltipState.show(g, { position, data, drilldown, remove: removeBar });
   }
 
   function mouseOut() {

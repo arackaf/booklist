@@ -78,8 +78,6 @@
       return;
     }
 
-    let bound = c.getBoundingClientRect();
-
     tooltipOn = true;
     const position = midPoint < 180 ? "absolute-right" : "absolute-left";
     const data = segment.data;
@@ -87,9 +85,7 @@
     const doDrilldown = (...args) => drilldown(...args, "PIE");
     const remove = removeSlice;
 
-    const { w, h } = getTooltipDimensions({ position, data, drilldown: doDrilldown, remove });
-    const tooltipPosition = positionTooltip(bound, position, { w, h });
-    tooltipState.show(tooltipPosition, { position, data, drilldown: doDrilldown, remove });
+    tooltipState.show(c, { position, data, drilldown: doDrilldown, remove });
   };
 
   function mouseOut() {
