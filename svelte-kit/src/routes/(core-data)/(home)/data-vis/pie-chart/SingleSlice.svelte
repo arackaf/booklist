@@ -61,13 +61,16 @@
     springConfig
   );
 
+  let sizing = false;
   $: {
+    sizing = true;
     sliceSpring
       .set({
         startAngle: segment.chunks[0].startAngle,
         endAngle: segment.chunks[0].endAngle
       })
       .then(() => {
+        sizing = false;
         if (!initialAnimationDoneCalled) {
           onLabelsReady();
         }
@@ -80,7 +83,7 @@
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   $: mouseOver = () => {
-    if (!(mainArc && containerSize !== "UNKNOWN")) {
+    if (sizing || !(mainArc && containerSize !== "UNKNOWN")) {
       return;
     }
 
@@ -106,7 +109,7 @@
   $: sliceAnimateSpring.set({ x: translateX, y: translateY });
 </script>
 
-<g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={mainArc}>
+<g role="contentinfo" on:mouseover={mouseOver} on:mousemove={mouseOver} on:mouseout={mouseOut} bind:this={mainArc}>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
     {#each segment.chunks as chunk, i}
