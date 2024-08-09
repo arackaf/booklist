@@ -18,10 +18,8 @@
   const runDrilldown = () => drilldown(data.childSubjects, data.display);
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
-  const currentTooltipState = tooltipState?.currentState;
 
   let fadeTimeout: null | NodeJS.Timeout = null;
-  let opacityChanging = false;
 
   $: currentData = data ?? {};
 
@@ -29,13 +27,9 @@
     return fadeTimeout;
   }
 
-  const OPACITY_CHANGE_DELAY = 200;
   let gone = true;
   let dead = false;
 
-  function getOpacityChanging() {
-    return opacityChanging;
-  }
   function isDead() {
     return dead;
   }
@@ -54,11 +48,9 @@
         fadeTimeout = null;
       }
 
-      opacityChanging = true;
       gone = false;
       opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
         fadeTimeout = null;
-        opacityChanging = false;
         gone = !isShown;
       });
     }
