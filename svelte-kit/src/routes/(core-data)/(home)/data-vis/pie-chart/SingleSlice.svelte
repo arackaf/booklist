@@ -103,14 +103,19 @@
       return;
     }
 
-    slideSliceOut = true;
-    const position = midPoint < 180 ? "absolute-right" : "absolute-left";
-    const data = segment.data;
+    setTimeout(() => {
+      if (!hovering) {
+        return;
+      }
+      slideSliceOut = true;
+      const position = midPoint < 180 ? "absolute-right" : "absolute-left";
+      const data = segment.data;
 
-    const doDrilldown = (...args) => drilldown(...args, "PIE");
-    const remove = removeSlice;
+      const doDrilldown = (...args) => drilldown(...args, "PIE");
+      const remove = removeSlice;
 
-    tooltipState.show(c, { position, data, drilldown: doDrilldown, remove });
+      tooltipState.show(c, { position, data, drilldown: doDrilldown, remove });
+    }, 75);
   };
 
   function mouseOut() {
@@ -119,10 +124,10 @@
       if (hovering || ($currentTooltipState.hovering && $currentTooltipState.payload.data === segment.data)) {
         return;
       } else {
+        if ($currentTooltipState.payload.data === segment.data) {
+          tooltipState.hide();
+        }
         slideSliceOut = false;
-      }
-      if ($currentTooltipState.payload.data === segment.data) {
-        tooltipState.hide();
       }
     }, 200);
   }
