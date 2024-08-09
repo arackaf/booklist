@@ -30,14 +30,22 @@
 
   const OPACITY_CHANGE_DELAY = 200;
   let gone = true;
+  let dead = false;
 
   function getOpacityChanging() {
     return opacityChanging;
+  }
+  function isDead() {
+    return dead;
   }
 
   $: {
     if (!measure) {
       let isShown = shown;
+      console.log({ isShown });
+      if (isShown) {
+        dead = false;
+      }
 
       const currentTimeout = getFadeTimeout();
       if (currentTimeout) {
@@ -49,7 +57,8 @@
         () => {
           opacityChanging = true;
           gone = false;
-          opacitySpring.set(isShown ? 1 : 0).then(() => {
+          let fast = !isShown && isDead();
+          opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
             fadeTimeout = null;
             opacityChanging = false;
             gone = !isShown;
@@ -79,10 +88,10 @@
 
 <div
   role="contentinfo"
-  on:mouseenter={() => tooltipState.reShow()}
+  on:mouseenter={() => !dead && tooltipState.reShow()}
   on:mouseleave={() => tooltipState.hide()}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
-  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring}; visibility: {gone ? 'hidden' : 'visible'}"
+  style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring}; visibility: {gone || dead ? 'hidden' : 'visible'}"
 >
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
@@ -95,8 +104,9 @@
         <button
           class="raw-button flex ml-auto"
           on:click={() => {
+            dead = true;
+            tooltipState.hide();
             remove(currentData.groupId);
-            gone = true;
           }}><i class="fad fa-times-circle"></i></button
         >
       </div>
