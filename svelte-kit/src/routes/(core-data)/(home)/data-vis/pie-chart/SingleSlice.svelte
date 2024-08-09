@@ -92,7 +92,7 @@
         if ((!$currentTooltipState.hovering || $currentTooltipState.payload.data !== segment.data) && !hovering) {
           tooltipOn = false;
         }
-      }, 50);
+      }, 200);
     }
   }
 
@@ -116,12 +116,15 @@
   function mouseOut() {
     hovering = false;
     setTimeout(() => {
-      if (hovering || get(tooltipState.currentState).hovering) {
+      if (hovering || ($currentTooltipState.hovering && $currentTooltipState.payload.data === segment.data)) {
         return;
+      } else {
+        tooltipOn = false;
       }
-      tooltipOn = false;
-      tooltipState.hide();
-    }, 50);
+      if ($currentTooltipState.payload.data === segment.data) {
+        tooltipState.hide();
+      }
+    }, 200);
   }
 
   $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
