@@ -21,11 +21,11 @@
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   function mouseOver() {
-    tooltipState.show(g, { position, data, drilldown, remove: removeBar });
+    tooltipState.onHover(g, { position, data, drilldown, remove: removeBar });
   }
 
   function mouseOut() {
-    tooltipState.hide();
+    tooltipState.onMouseLeave();
   }
 
   let initialRenderFinished = false;
