@@ -1,9 +1,8 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
   import SlicePath from "./SlicePath.svelte";
-  import { getContext, onMount, tick } from "svelte";
+  import { getContext } from "svelte";
   import type { createTooltipState } from "../tooltip/tooltipState";
-  import { getTooltipDimensions, positionTooltip } from "../tooltip/tooltipUtils";
   import { get } from "svelte/store";
 
   export let segment: any;
