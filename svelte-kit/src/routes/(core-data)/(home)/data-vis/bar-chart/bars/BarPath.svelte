@@ -13,7 +13,7 @@
     v${height - borderRadius}
     a5,5 0 0 0 ${borderRadius},${borderRadius}
     h${width - 2 * borderRadius}
-    a5,5 0 0 0 ${5},${-1 * borderRadius}
+    a5,5 0 0 0 ${borderRadius},${-1 * borderRadius}
     v-${height - borderRadius}
     z
     `}

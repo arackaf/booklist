@@ -37,8 +37,6 @@
       initialRenderFinished = true;
     });
   }
-
-  $: borderRadius = width < 5 ? 0 : width < 15 ? 4 : 5;
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
