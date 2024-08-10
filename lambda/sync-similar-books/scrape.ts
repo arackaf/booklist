@@ -27,7 +27,7 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 
 export async function getBrowser() {
   return process.env.stage
-    ? await playwright.launchChromium({
+    ? await playwright.chromium.launch({
         headless: true
       })
     : await playwright.chromium.launch({

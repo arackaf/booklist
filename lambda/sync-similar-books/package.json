@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "rm -rf build && tsc && sls deploy",
     "tsc": "rm -rf build && tsc",
-    "tscw": "tsc -w",
-    "local": "node ./build/sync-similar-books/local-author"
+    "tscw": "rm -rf build && tsc -w",
+    "run-local": "npm run tsc && node ./build/sync-similar-books/local",
+    "local": "npm run tsc && node ./build/sync-similar-books/local"
   },
   "author": "",
   "license": "ISC",
