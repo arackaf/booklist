@@ -1,6 +1,9 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
-  import { tooltip, type Position } from "../tooltip";
+  import { type Position } from "../../tooltip/tooltipUtils";
+  import { getContext } from "svelte";
+  import type { createTooltipState } from "../../tooltip/tooltipState";
+  import BarPath from "./BarPath.svelte";
 
   export let drilldown: any;
   export let data: any;
@@ -13,7 +16,9 @@
 
   export let noInitialAnimation: boolean;
 
+  let g: SVGElement;
   let initialRenderFinished = false;
+  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   $: _colors = data.entries.map((e: any) => e.color);
   let colors: any[] = [];
@@ -54,10 +59,18 @@
       initialRenderFinished = true;
     });
   }
+
+  function mouseOver() {
+    tooltipState.onHover(g, { position, data, drilldown, remove: removeBar });
+  }
+
+  function mouseOut() {
+    tooltipState.onMouseLeave();
+  }
+
+  $: gradientId = data.groupId.replace(/,/g, "-");
 </script>
 
-<g use:tooltip={{ position, data, drilldown, remove: removeBar }}>
-  {#each colors as c}
-    <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
-  {/each}
+<g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
+  <BarPath x={$barSpring.x} height={$barSpring.height} {width} fill={`url(#${gradientId})`} />
 </g>

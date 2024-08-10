@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { writable } from "svelte/store";
   import { arc, pie } from "d3-shape";
 
   import SingleSlice from "./SingleSlice.svelte";
   import { syncWidth } from "$lib/util/animationHelpers";
   import SingleSliceLabel from "./SingleSliceLabel.svelte";
+  import { createTooltipState } from "../tooltip/tooltipState";
+  import Tooltip from "../tooltip/Tooltip.svelte";
 
   export let showingData: any[];
   export let drilldown: any;
@@ -103,6 +105,10 @@
   let hideLabels = false;
   $: hideLabels = hasOverlap(pieSegments);
 
+  $: {
+    console.log(pieSegments);
+  }
+
   function hasOverlap(pieSegments: any[]): boolean {
     const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
     const rightSegments = pieSegments.filter(seg => seg.isRightLabel);
@@ -128,6 +134,12 @@
     return false;
   }
 
+  let chartHasRendered = false;
+
+  onMount(() => {
+    chartHasRendered = true;
+  });
+
   let labelsReady = hasRendered;
   const onLabelsReady = () => {
     setTimeout(() => {
@@ -143,10 +155,15 @@
   }
 
   $: containerSize = $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
+
+  const tooltipManager = createTooltipState();
+  setContext("tooltip-state", tooltipManager);
+  $: ({ currentState } = tooltipManager);
 </script>
 
 <div bind:this={containerDiv} class="flex items-center mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
+    <Tooltip shown={$currentState.shown} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
@@ -154,6 +171,7 @@
         {/each}
         {#each pieSegments as seg (seg.data.groupId)}
           <SingleSlice
+            {chartHasRendered}
             {containerSize}
             {removeSlice}
             {onLabelsReady}
