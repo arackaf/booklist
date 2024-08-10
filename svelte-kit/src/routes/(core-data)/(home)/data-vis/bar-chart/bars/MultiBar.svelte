@@ -66,10 +66,10 @@
   function mouseOut() {
     tooltipState.onMouseLeave();
   }
+
+  $: gradientId = data.groupId.replace(/,/g, "-");
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
-  {#each colors as c}
-    <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
-  {/each}
+  <rect x={$barSpring.x} y={0} height={Math.max($barSpring.height, 0)} {width} fill={`url(#${gradientId})`} />
 </g>
