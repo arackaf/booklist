@@ -28,7 +28,6 @@
             colors: e.entries.map(entry => entry.color)
           };
         });
-      console.log({ showingData });
     }
   }
 
