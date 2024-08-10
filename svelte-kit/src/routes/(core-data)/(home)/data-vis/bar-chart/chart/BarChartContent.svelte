@@ -9,10 +9,27 @@
   import { onMount, setContext } from "svelte";
   import Tooltip from "../../tooltip/Tooltip.svelte";
   import { createTooltipState } from "../../tooltip/tooltipState";
+  import LinearGradient from "./LinearGradient.svelte";
 
   export let showingData: any[];
   export let drilldown: any;
   export let removeBar: (id: any) => void;
+
+  let colorGradients = [] as any[];
+  let colorGradientsSetUp = false;
+
+  $: {
+    if (!colorGradientsSetUp) {
+      colorGradients = showingData
+        .filter(e => e.entries.length > 1)
+        .map(e => {
+          return {
+            id: e.groupId.replace(/,/g, "-"),
+            colors: e.entries.map(entry => entry.color)
+          };
+        });
+    }
+  }
 
   let barChartHasRendered = false;
   onMount(() => {
@@ -65,6 +82,11 @@
     <Tooltip shown={$currentState.shown} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
 
     <svg width="100%" class="{sizeClass} block mt-7 overflow-visible {maxHeightStyle}" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
+      <defs>
+        {#each colorGradients as gradient}
+          <LinearGradient id={gradient.id} colors={gradient.colors} />
+        {/each}
+      </defs>
       <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
         {#each showingData as d, i (d.groupId)}
           <Bar

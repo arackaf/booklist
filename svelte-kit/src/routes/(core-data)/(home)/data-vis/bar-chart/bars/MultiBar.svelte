@@ -3,6 +3,7 @@
   import { type Position } from "../../tooltip/tooltipUtils";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../../tooltip/tooltipState";
+  import BarPath from "./BarPath.svelte";
 
   export let drilldown: any;
   export let data: any;
@@ -66,10 +67,10 @@
   function mouseOut() {
     tooltipState.onMouseLeave();
   }
+
+  $: gradientId = data.groupId.replace(/,/g, "-");
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
-  {#each colors as c}
-    <rect x={$barSpring.x} y={c.y} height={Math.max(c.height, 0)} {width} fill={c.fill} />
-  {/each}
+  <BarPath x={$barSpring.x} height={$barSpring.height} {width} fill={`url(#${gradientId})`} />
 </g>
