@@ -33,7 +33,7 @@ export function getTooltipDimensions(payload: TooltipPayload) {
   const { position, ...restProps } = payload;
   const temp = new Tooltip({
     target: target,
-    props: { shown: true, measure: true, x: 0, y: 0, ...restProps }
+    props: { shown: true, measure: true, x: 0, y: 0, payload: { position: "top", ...restProps } }
   });
 
   const tooltipWidth = target.clientWidth;
