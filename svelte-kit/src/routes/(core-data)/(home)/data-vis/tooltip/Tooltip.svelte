@@ -1,14 +1,15 @@
 <script lang="ts">
-  import type { Data } from "./tooltipUtils";
   import { getContext } from "svelte";
   import { spring } from "svelte/motion";
-  import type { createTooltipState } from "./tooltipState";
+  import type { createTooltipState, TooltipPayload } from "./tooltipState";
   import { get } from "svelte/store";
 
   export let shown: boolean;
-  export let data: Data;
-  export let drilldown: any;
-  export let remove: (id: string) => void;
+
+  export let payload: TooltipPayload | null;
+
+  $: ({ data, drilldown, remove } = payload ?? ({} as TooltipPayload));
+
   export let x: number;
   export let y: number;
   export let measure = false;

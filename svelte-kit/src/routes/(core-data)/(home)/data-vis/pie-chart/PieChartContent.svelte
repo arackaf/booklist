@@ -105,6 +105,10 @@
   let hideLabels = false;
   $: hideLabels = hasOverlap(pieSegments);
 
+  $: {
+    console.log(pieSegments);
+  }
+
   function hasOverlap(pieSegments: any[]): boolean {
     const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
     const rightSegments = pieSegments.filter(seg => seg.isRightLabel);
@@ -159,7 +163,7 @@
 
 <div bind:this={containerDiv} class="flex items-center mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
-    <Tooltip shown={$currentState.shown} {...$currentState.payload} x={$currentState.x} y={$currentState.y} />
+    <Tooltip shown={$currentState.shown} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}

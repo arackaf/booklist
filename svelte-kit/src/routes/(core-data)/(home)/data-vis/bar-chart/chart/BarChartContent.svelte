@@ -62,7 +62,7 @@
 
 <div>
   <div class="h-[500px] mx-auto mb-36" style="max-width: {MAX_SVG_WIDTH}px">
-    <Tooltip shown={$currentState.shown} {...$currentState.payload} x={$currentState.x} y={$currentState.y} />
+    <Tooltip shown={$currentState.shown} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
 
     <svg width="100%" class="{sizeClass} block mt-7 overflow-visible {maxHeightStyle}" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <g transform={`scale(1, -1) translate(0, ${-1 * height})`}>
