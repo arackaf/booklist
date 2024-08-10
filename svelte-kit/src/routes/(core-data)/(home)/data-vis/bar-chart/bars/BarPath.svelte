@@ -4,7 +4,7 @@
   export let x: number;
   export let fill: string;
 
-  $: borderRadius = width < 5 ? 0 : width < 15 ? 4 : 5;
+  $: borderRadius = width < 5 || height < 5 ? 0 : width < 15 ? 4 : 5;
 </script>
 
 <path
