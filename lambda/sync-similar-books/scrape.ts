@@ -26,12 +26,12 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 }
 
 export async function getBrowser() {
-  return process.env.stage && process.env.stage !== "local"
-    ? await playwright.chromium.launch({
-        headless: true
-      })
+  const headless = process.env.stage && process.env.stage !== "local";
+
+  return playwright.launchChromium
+    ? await playwright.launchChromium({ headless })
     : await playwright.chromium.launch({
-        headless: false
+        headless
       });
 }
 
