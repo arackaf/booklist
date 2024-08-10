@@ -10,7 +10,7 @@ const client = new LambdaClient({
   region: "us-east-1"
 });
 
-const playwright: any = process.env.stage ? require("playwright-aws-lambda") : require("playwright");
+const playwright: any = process.env.stage && process.env.stage !== "local" ? require("playwright-aws-lambda") : require("playwright");
 
 export async function getBookRelatedItems(isbn: string, bookTitle: string) {
   const browser = await getBrowser();
@@ -26,7 +26,7 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 }
 
 export async function getBrowser() {
-  return process.env.stage
+  return process.env.stage && process.env.stage !== "local"
     ? await playwright.chromium.launch({
         headless: true
       })
