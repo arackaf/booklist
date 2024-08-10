@@ -4,6 +4,7 @@
   import { type Position } from "../../tooltip/tooltipUtils";
   import { getContext } from "svelte";
   import type { createTooltipState } from "../../tooltip/tooltipState";
+  import BarPath from "./BarPath.svelte";
 
   export let drilldown: any;
   export let color: any;
@@ -41,16 +42,5 @@
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
-  <path
-    d={`
-    M${$barSpring.x},0
-    v${$barSpring.height - borderRadius}
-    a5,5 0 0 0 ${borderRadius},${borderRadius}
-    h${width - 2 * borderRadius}
-    a5,5 0 0 0 ${5},${-1 * borderRadius}
-    v-${$barSpring.height - borderRadius}
-    z
-    `}
-    fill={color}
-  />
+  <BarPath x={$barSpring.x} height={$barSpring.height} {width} fill={color} />
 </g>
