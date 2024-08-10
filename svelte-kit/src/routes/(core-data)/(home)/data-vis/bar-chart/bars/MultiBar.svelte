@@ -68,8 +68,20 @@
   }
 
   $: gradientId = data.groupId.replace(/,/g, "-");
+  $: borderRadius = width < 5 ? 0 : width < 15 ? 4 : 5;
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
-  <rect x={$barSpring.x} y={0} height={Math.max($barSpring.height, 0)} {width} fill={`url(#${gradientId})`} />
+  <path
+    d={`
+    M${$barSpring.x},0
+    v${$barSpring.height - borderRadius}
+    a5,5 0 0 0 ${borderRadius},${borderRadius}
+    h${width - 2 * borderRadius}
+    a5,5 0 0 0 ${5},${-1 * borderRadius}
+    v-${$barSpring.height - borderRadius}
+    z
+    `}
+    fill={`url(#${gradientId})`}
+  />
 </g>

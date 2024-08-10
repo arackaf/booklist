@@ -36,8 +36,21 @@
       initialRenderFinished = true;
     });
   }
+
+  $: borderRadius = width < 5 ? 0 : width < 15 ? 4 : 5;
 </script>
 
 <g role="contentinfo" on:mouseover={mouseOver} on:mouseout={mouseOut} bind:this={g}>
-  <rect height={Math.max(0, $barSpring.height)} {width} x={$barSpring.x} y={0} fill={color} />
+  <path
+    d={`
+    M${$barSpring.x},0
+    v${$barSpring.height - borderRadius}
+    a5,5 0 0 0 ${borderRadius},${borderRadius}
+    h${width - 2 * borderRadius}
+    a5,5 0 0 0 ${5},${-1 * borderRadius}
+    v-${$barSpring.height - borderRadius}
+    z
+    `}
+    fill={color}
+  />
 </g>
