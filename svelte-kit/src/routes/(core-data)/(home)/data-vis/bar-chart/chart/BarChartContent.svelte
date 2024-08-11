@@ -64,12 +64,13 @@
   let sizeClass = "";
   $: {
     let size = $viewBoxSpring;
+    console.log({ size });
     sizeClass = "leading-none ";
 
-    if (size < 400) sizeClass += "text-base lg:text-lg";
-    else if (size < 700) sizeClass += "text-base lg:text-lg";
-    else if (size < 1000) sizeClass += "text-lg sm:text-base lg:text-lg";
-    else sizeClass += "text-xl sm:text-lg lg:text-xs";
+    if (size < 400) sizeClass += "text-sm";
+    else if (size < 700) sizeClass += "text-base sm:text-sm";
+    else if (size < 1000) sizeClass += "text-lg sm:text-base md:text-sm";
+    else sizeClass += "text-xl sm:text-base lg:text-xs";
   }
 
   const tooltipManager = createTooltipState();
