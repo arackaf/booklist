@@ -23,7 +23,12 @@ export type Data = {
   entries: { name: string; color: string }[];
 };
 
-const OFFSET = 10;
+function getOffset(): number {
+  if (typeof window === "object") {
+    return window.innerWidth < 650 ? 5 : 10;
+  }
+  return 10;
+}
 
 export function getTooltipDimensions(payload: TooltipPayload) {
   const target = document.createElement("div");
@@ -49,30 +54,30 @@ export function positionTooltip(anchorNode: DOMRect, position: Position, tooltip
   const { w: tooltipWidth, h: tooltipHeight } = tooltipDimensions;
   switch (position) {
     case "right-start":
-      return { x: anchorNode.x + anchorNode.width + OFFSET, y: anchorNode.y };
+      return { x: anchorNode.x + anchorNode.width + getOffset(), y: anchorNode.y };
     case "left-start":
       return {
-        x: anchorNode.x - tooltipWidth - OFFSET,
+        x: anchorNode.x - tooltipWidth - getOffset(),
         y: anchorNode.y
       };
     case "top":
       return {
         x: anchorNode.x + anchorNode.width / 2 - tooltipWidth / 2,
-        y: anchorNode.y - tooltipHeight - OFFSET
+        y: anchorNode.y - tooltipHeight - getOffset()
       };
     case "top-right":
       return {
         x: anchorNode.x + anchorNode.width - tooltipWidth,
-        y: anchorNode.y - tooltipHeight - OFFSET
+        y: anchorNode.y - tooltipHeight - getOffset()
       };
     case "top-left":
       return {
         x: anchorNode.x,
-        y: anchorNode.y - tooltipHeight - OFFSET
+        y: anchorNode.y - tooltipHeight - getOffset()
       };
     case "absolute-right":
-      return { x: anchorNode.x + OFFSET, y: anchorNode.y - tooltipDimensions.h / 2 };
+      return { x: anchorNode.x + getOffset(), y: anchorNode.y - tooltipDimensions.h / 2 };
     case "absolute-left":
-      return { x: anchorNode.x - tooltipDimensions.w - OFFSET, y: anchorNode.y - tooltipDimensions.h / 2 };
+      return { x: anchorNode.x - tooltipDimensions.w - getOffset(), y: anchorNode.y - tooltipDimensions.h / 2 };
   }
 }
