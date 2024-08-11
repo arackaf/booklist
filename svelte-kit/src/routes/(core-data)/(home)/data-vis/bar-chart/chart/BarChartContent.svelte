@@ -41,7 +41,7 @@
   const height = MAX_SVG_HEIGHT;
   const maxHeightStyle = "max-h-[390px]";
 
-  $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 110 + 60);
+  $: adjustedWidth = Math.min(MAX_SVG_WIDTH, showingData.length * 70 + 60);
 
   $: dataValues = showingData.map(({ count }) => count) ?? [];
   $: displayValues = showingData.map(({ display }) => display) ?? [];
