@@ -63,17 +63,13 @@ type WithId = {
   id: number;
 };
 
-export const runDelete = <T extends WithId>(currentItems: Writable<T[]>, id: number | number[]) => {
+export const runDelete = <T extends WithId>(currentItems: T[], id: number | number[]) => {
   const ids: number[] = Array.isArray(id) ? id : [id];
-  deleteItems(currentItems, ids);
-};
-
-export const deleteItems = <T extends WithId>(store: Writable<T[]>, ids: number[]) => {
-  const idLookup = new Set(ids);
-
-  store.update(items =>
-    items.filter(item => {
-      return !idLookup.has(item.id);
-    })
-  );
+  for (const currentId of ids) {
+    for (let i = currentItems.length - 1; i >= 0; i--) {
+      if (currentItems[i].id === currentId) {
+        currentItems.splice(i, 1);
+      }
+    }
+  }
 };
