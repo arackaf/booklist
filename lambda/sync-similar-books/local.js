@@ -1,4 +1,4 @@
 require("dotenv").config();
-const { localSync } = require("./build/sync-similar-books/index");
+const { localSync } = require("./index");
 
 localSync();
