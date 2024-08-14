@@ -18,9 +18,9 @@ export type UpdatesTo<T> = {
   arraySync?: Partial<ArraySyncs<T>>;
 };
 
-export const runUpdate = <T>(currentItems: { get value(): T[] }, id: number | number[], updates: UpdatesTo<T>) => {
+export const runUpdate = <T>(currentItems: T[], id: number | number[], updates: UpdatesTo<T>) => {
   const ids: number[] = Array.isArray(id) ? id : [id];
-  updateItems(currentItems.value, ids, updates);
+  updateItems(currentItems, ids, updates);
 };
 
 export const updateItems = <T>(currentItems: T[], ids: number[], updates: UpdatesTo<T>) => {
