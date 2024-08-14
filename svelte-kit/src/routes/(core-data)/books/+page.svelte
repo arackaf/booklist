@@ -27,17 +27,13 @@
   import { uiState } from "./currentUiState.svelte";
 
   let { data } = $props();
-  let { isPublic, hasPublicId, colors, /*subjects,*/ defaultBookView, /*tags,*/ /*books,*/ totalBooks } = data;
-  let books = $derived(data.books);
-  let subjects = $derived(data.subjects);
-  let tags = $derived(data.tags);
+  let { books, subjects, tags, isPublic, hasPublicId, colors, defaultBookView, totalBooks } = $derived(data);
 
   const overrideBookView = (newBookView: string) => {
     uiState.bookViewOverride = newBookView;
   };
 
   let bookViewToUse = $derived(uiState.bookViewOverride || defaultBookView);
-
   let modalsReady = $state(false);
 
   let BookSearchModal = $state<typeof BookSearchModalType | null>(null);
@@ -89,7 +85,7 @@
   let booksSubjectsModalOpen = $state(false);
   let booksTagsModalOpen = $state(false);
 
-  let booksEditing = $derived(books.value.filter(b => $selectedBooksLookup[b.id]));
+  let booksEditing = $derived(books.filter(b => $selectedBooksLookup[b.id]));
   const editBooksSubjects = () => (booksSubjectsModalOpen = true);
   const editBooksTags = () => (booksTagsModalOpen = true);
 
@@ -116,7 +112,7 @@
 
     <div class:overflow-x-auto={bookViewToUse === "tbl"}>
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
-        {#if !books.value.length}
+        {#if !books.length}
           <div>
             <Alert type="warning">No books found</Alert>
 
@@ -130,11 +126,11 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <MobileView books={books.value} {isPublic} />
+              <MobileView {books} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView {tags} {subjects} books={books.value} {isPublic} />
+              <GridView {tags} {subjects} {books} {isPublic} />
             {:else}
-              <CoversView books={books.value} {isPublic} />
+              <CoversView {books} {isPublic} />
             {/if}
           </div>
         {/if}

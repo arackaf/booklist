@@ -17,7 +17,7 @@ class ForceNonReactive {
   }
 }
 
-export function createShallowReactiveArray<T>(values: T[]) {
-  let stateValue = $state(values.map(item => new ForceNonReactive(item)));
+export function createShallowReactiveArray<T>(values: T[]): T[] {
+  let stateValue = $state(values.map(item => new ForceNonReactive(item))) as T[];
   return stateValue;
 }
