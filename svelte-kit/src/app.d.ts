@@ -13,6 +13,5 @@ declare module "@auth/core/types" {
 declare global {
   interface Window {
     ws: ScanWebSocketManage;
-    globalCounter: number;
   }
 }
