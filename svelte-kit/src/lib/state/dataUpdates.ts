@@ -32,56 +32,11 @@ export const updateItems = <T>(currentItems: T[], ids: number[], updates: Update
     }
 
     const update = updateSingleObject(item, updates);
-
     currentItems[idx] = update;
-    // currentItems.splice(idx, 1, update);
   });
 };
 
 export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo<T>) => {
-  const { fieldsSet, arraySync } = updates;
-  item = { ...item };
-
-  if (fieldsSet) {
-    Object.assign(item, fieldsSet);
-  }
-  if (arraySync) {
-    for (const key of Object.keys(arraySync)) {
-      const updates: ArraySync<unknown> = (arraySync as any)[key];
-
-      // @ts-ignore
-      const lookup = new Set(item[key]);
-      updates.push?.forEach(adding => lookup.add(adding));
-      updates.pull?.forEach(removing => lookup.delete(removing));
-
-      // @ts-ignore
-      item[key] = [...lookup];
-    }
-  }
-  return item;
-};
-
-export const runUpdateOld = <T>(currentItems: Writable<T[]>, id: number | number[], updates: UpdatesTo<T>) => {
-  const ids: number[] = Array.isArray(id) ? id : [id];
-  updateItemsOld(currentItems, ids, updates);
-};
-
-export const updateItemsOld = <T>(store: Writable<T[]>, ids: number[], updates: UpdatesTo<T>) => {
-  const currentItems = get(store);
-  const _idLookup = new Set(ids);
-
-  const updatedItems = currentItems.map((item: any) => {
-    if (!_idLookup.has(item.id)) {
-      return item;
-    }
-
-    return updateSingleObject(item, updates);
-  });
-
-  store.set(updatedItems);
-};
-
-export const updateSingleObjectOld = <T extends object>(item: T, updates: UpdatesTo<T>) => {
   const { fieldsSet, arraySync } = updates;
   item = { ...item };
 
