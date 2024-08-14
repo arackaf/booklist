@@ -77,7 +77,7 @@
     <div>
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-1">
-          <BookTitle>{book.title + " - " + (typeof window === "object" ? window.globalCounter++ : "0")}</BookTitle>
+          <BookTitle>{book.title}</BookTitle>
           {#if book.authors}
             <SubTitleText>{book.authors.join(", ")}</SubTitleText>
           {/if}
