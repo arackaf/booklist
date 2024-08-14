@@ -11,19 +11,6 @@ export function createState<T>(value: T) {
   };
 }
 
-export function createReactiveArray<T>(values: T[]) {
-  let stateValue = $state([...values]);
-
-  return {
-    get value() {
-      return stateValue;
-    },
-    set value(newValues: T[]) {
-      stateValue = newValues;
-    }
-  };
-}
-
 class ForceNonReactive {
   constructor(value: any) {
     Object.assign(this, value);
@@ -32,13 +19,5 @@ class ForceNonReactive {
 
 export function createShallowReactiveArray<T>(values: T[]) {
   let stateValue = $state(values.map(item => new ForceNonReactive(item)));
-
-  return {
-    get value() {
-      return stateValue;
-    },
-    set value(newValues: any[]) {
-      stateValue = newValues.map(item => new ForceNonReactive(item));
-    }
-  };
+  return stateValue;
 }
