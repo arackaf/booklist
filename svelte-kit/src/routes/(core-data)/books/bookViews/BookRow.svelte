@@ -118,6 +118,7 @@
           {#if pendingDelete}
             <Button size="sm" disabled={deleting} on:click={() => (pendingDelete = false)}>Cancel</Button>
           {/if}
+          <Button size="sm" class="invisible">.</Button>
         </div>
       </div>
     </div>
