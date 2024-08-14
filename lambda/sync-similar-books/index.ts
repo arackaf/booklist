@@ -82,6 +82,9 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
 
     console.log("Starting related items sync for", id, isbn, title);
 
+    if (!captchaDone && process.env.stage === "local") {
+      await new Promise(res => setTimeout(res, 10000));
+    }
     // this is absolutely awful but I don't have time to make it less so
     const allResults = page ? await doScrape(page, isbn, title, captchaDone) : await getBookRelatedItems(isbn, title);
 
