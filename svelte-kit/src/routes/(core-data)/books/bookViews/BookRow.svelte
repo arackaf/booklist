@@ -69,7 +69,7 @@
     </td>
   {/if}
   <td>
-    <div style="width: 60px; min-height: 75px;">
+    <div style="width: 60px; min-height: 50px;">
       <BookCover size="small" {book} />
     </div>
   </td>
