@@ -1,5 +1,4 @@
 service: process-book-cover
-frameworkVersion: "3"
 
 provider:
   name: aws
@@ -24,3 +23,6 @@ provider:
 functions:
   processCover:
     handler: ./dist/process-book-cover/index.handler
+
+build:
+  esbuild: false

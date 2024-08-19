@@ -1,7 +1,5 @@
 service: get-recommendations
 
-frameworkVersion: "3"
-
 provider:
   name: aws
   runtime: nodejs18.x
@@ -25,6 +23,3 @@ functions:
 
 package:
   individually: true
-
-plugins:
-  - serverless-esbuild

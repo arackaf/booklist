@@ -6,7 +6,7 @@
     "reset-dev": "rm -rf ./node_modules && npm i",
     "compile": "rm -rf ./dist && tsc",
     "install-deps": "npm i && rm -rf node_modules/sharp && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i -f --platform=linux --arch=x64 sharp@^0.31.3",
-    "deploy": "npm run compile && npm run install-deps && sls deploy"
+    "deploy": "npm run compile && npm run install-deps && npx sls deploy"
   },
   "author": "",
   "license": "ISC",
