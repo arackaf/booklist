@@ -1,5 +1,4 @@
 service: book-scan-v2
-frameworkVersion: "3"
 
 provider:
   name: aws
@@ -79,24 +78,5 @@ functions:
     events:
       - schedule: rate(1 minute)
 
-custom:
-  esbuild:
-    bundle: true
-    minify: true
-    exclude:
-      [
-        "aws-sdk",
-        "@aws-sdk/util-utf8-node",
-        "@aws-sdk/client-apigatewaymanagementapi",
-        "@aws-sdk/lib-dynamodb",
-        "@aws-sdk/client-dynamodb",
-        "@aws-sdk/client-secrets-manager",
-        "@aws-sdk/client-s3",
-        "@aws-sdk/client-lambda"
-      ]
-
 package:
   individually: true
-
-plugins:
-  - serverless-esbuild

@@ -43,7 +43,7 @@
   $: {
     noCoverClasses = noCoverCommonClasses + " ";
     if (size === "mobile") {
-      noCoverClasses += "w-[35px] h-[53px] pt-2 text-[10px]";
+      noCoverClasses += "w-[35px] h-[53px] pt-2 text-[10px] leading-normal";
     } else if (size === "small") {
       noCoverClasses += "w-[50px] h-[65px] pt-2 text-sm";
     } else {
