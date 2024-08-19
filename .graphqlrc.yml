@@ -1,2 +1,0 @@
-schema: "node/graphql/entireSchema.gql"
-documents: "{react,svelte}/**/*.{graphql,gql}"
