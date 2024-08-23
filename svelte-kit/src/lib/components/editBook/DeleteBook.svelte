@@ -3,11 +3,14 @@
   import ActionButton from "../Button/ActionButton.svelte";
   import Button from "../Button/Button.svelte";
 
-  export let id: number;
-  export let afterDelete: (id: number) => void = () => {};
+  type Props = {
+    id: number;
+    afterDelete: (id: number) => void;
+  };
+  const { id, afterDelete = () => {} }: Props = $props();
 
-  let pendingDelete = false;
-  let deleting = false;
+  let pendingDelete = $state(false);
+  let deleting = $state(false);
 
   const deleteBook = async () => {
     deleting = true;
