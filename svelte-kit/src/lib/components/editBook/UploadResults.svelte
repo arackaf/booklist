@@ -4,10 +4,13 @@
 
   import UploadResult from "./UploadResult.svelte";
 
-  export let error: boolean;
-  export let uploadResults: BookImages | null;
+  type Props = {
+    error: boolean;
+    uploadResults: BookImages | null;
 
-  export let status: "error" | "invalid-size" | "";
+    status: "error" | "invalid-size" | "";
+  };
+  let { error, uploadResults, status }: Props = $props();
 </script>
 
 {#if error}

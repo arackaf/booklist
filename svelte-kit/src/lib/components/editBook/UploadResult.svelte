@@ -2,9 +2,13 @@
   import type { BookImages } from "$data/types";
   import BookCover from "../BookCover.svelte";
 
-  export let packet: BookImages | null;
-  export let size: "mobile" | "small" | "medium";
-  export let error: boolean;
+  type Props = {
+    packet: BookImages | null;
+    size: "mobile" | "small" | "medium";
+    error: boolean;
+  };
+
+  let { packet, size, error }: Props = $props();
 </script>
 
 {#if !error}
