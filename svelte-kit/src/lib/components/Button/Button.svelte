@@ -25,19 +25,6 @@
     ...rest
   }: Props = $props();
 
-  // export let theme: "primary" | "info" | "success" | "danger" | "default" = "default";
-  // export let size: "default" | "med" | "sm" = "default";
-  // export let disabled: boolean | undefined = undefined;
-  // export let softDisable: boolean = false;
-  // export let icon: boolean = false;
-
-  // let className = "";
-  // export { className as class };
-
-  // const { className: ignore, ...rest } = $$restProps;
-
-  //export let href: string | null | undefined = undefined;
-
   let defaultButton = $derived(theme === "default");
   let isPrimary = $derived(theme === "primary");
   let isInfo = $derived(theme === "info");
