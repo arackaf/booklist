@@ -28,12 +28,13 @@
 
   let { book, subjects, tags, onCancel, syncUpdates, afterDelete = () => {} }: Props = $props();
 
-  let basicInfoValid = $state<() => boolean>(() => true);
   let saving = $state(false);
   let tab = $state<string>("");
+  let saveAttempted = $state(false);
 
   function executeSave({ cancel, formData: data }: any) {
-    if (!basicInfoValid?.()) {
+    saveAttempted = true;
+    if (!data.get("title").trim()) {
       return cancel();
     }
 
@@ -63,7 +64,7 @@
     <TabContents>
       <TabContent tabName="basic">
         {#if book}
-          <EditBookInfo bind:validate={basicInfoValid} {saving} {book} {subjects} {tags} />
+          <EditBookInfo {saveAttempted} {saving} {book} {subjects} {tags} />
         {/if}
       </TabContent>
       <TabContent tabName="covers">

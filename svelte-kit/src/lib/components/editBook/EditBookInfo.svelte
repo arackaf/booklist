@@ -10,25 +10,19 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
-  import { onMount } from "svelte";
 
   type Props = {
     book: any;
     tags: Tag[];
     subjects: Subject[];
+    saveAttempted: boolean;
 
     saving: boolean;
-    validate: () => boolean;
   };
 
-  const runValidate = () => {
-    missingTitle = !titleEl.value;
-    return !missingTitle;
-  };
+  let { book, tags, subjects, saving, saveAttempted }: Props = $props();
 
-  let { book, tags, subjects, saving, validate = $bindable() }: Props = $props();
-  validate = runValidate;
-
+  let missingTitle = $state(false);
   let titleEl = $state<HTMLInputElement>(null as any);
 
   const updateBook = (updates: Partial<Book>) => {
@@ -41,17 +35,9 @@
   const addTag = (tag: any) => updateBook({ tags: book.tags.concat(tag.id) });
   const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((id: string) => id != tag.id) });
 
-  let missingTitle = $state(false);
-
   const addAuthor = () => {
     updateBook({ authors: [...book.authors, ""] });
   };
-
-  function titleKeyDown(evt: any) {
-    if (evt.target.value) {
-      missingTitle = false;
-    }
-  }
 </script>
 
 <fieldset disabled={saving}>
@@ -60,10 +46,10 @@
       <Input
         slot="input"
         name="title"
-        error={missingTitle}
+        error={saveAttempted && missingTitle}
         bind:value={book.title}
         bind:inputEl={titleEl}
-        on:input={titleKeyDown}
+        on:input={evt => (missingTitle = !titleEl.value.trim())}
         placeholder="Title (required)"
       />
     </InputGroup>
