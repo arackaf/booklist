@@ -6,21 +6,24 @@
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import Label from "$lib/components/form-elements/Label/Label.svelte";
 
-  export let onResults: (results: any) => void;
-  export let onError: () => void;
+  type Props = {
+    onResults: (results: any) => void;
+    onError: () => void;
+  };
 
-  let uploadState = { uploadError: "" };
+  let { onResults, onError }: Props = $props();
 
-  let uploading = false;
+  let uploadState = $state({ uploadError: "" });
+  let uploading = $state(false);
+  let dragging = $state(false);
+  let remoteUrl = $state("");
 
-  let dragging = false;
-  $: dropAddedStyles = uploading ? "border-color: var(--neutral-6); cursor: wait;" : dragging ? "border-color: var(--primary-8);" : "";
+  let dropAddedStyles = $derived(uploading ? "border-color: var(--neutral-6); cursor: wait;" : dragging ? "border-color: var(--primary-8);" : "");
+  let uploadError = $derived(uploadState.uploadError);
 
-  $: ({ uploadError } = uploadState);
+  const doRemoteSave = (evt: Event) => {
+    evt.preventDefault();
 
-  let remoteUrl = "";
-
-  const doRemoteSave = () => {
     uploading = true;
 
     ajaxUtil.post(
@@ -71,7 +74,7 @@
   };
 </script>
 
-<form on:submit|preventDefault={doRemoteSave}>
+<form onsubmit={doRemoteSave}>
   <div class="flex flex-row gap-4">
     <div class="flex-1" style="position: relative;">
       {#key uploading ? 1 : 0}
