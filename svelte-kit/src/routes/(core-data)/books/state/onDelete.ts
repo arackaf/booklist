@@ -7,6 +7,7 @@ import { selectionState } from "./selectionState";
 
 export const afterDelete = (id: number) => {
   runDelete(get(page).data.books, id);
-  get(page).data.totalBooks.update((x: number) => x - 1);
+
+  get(page).data.totalBooks.value--;
   selectionState.unSelectBook(id);
 };

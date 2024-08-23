@@ -4,10 +4,9 @@
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { searchState, changeFilter, getSortDisplay } from "../state/searchState";
 
-  $: ({ totalBooks } = $page.data);
-  $: resultsCount = $totalBooks;
+  export let totalBooks: number;
 
-  $: resultsDisplay = resultsCount ? `${resultsCount} Book${resultsCount === 1 ? "" : "s"}` : "";
+  $: resultsDisplay = totalBooks ? `${totalBooks} Book${totalBooks === 1 ? "" : "s"}` : "";
   const removeAllFiltersLabel = {
     textColor: "white",
     backgroundColor: "var(--danger-7)",
@@ -17,7 +16,7 @@
   const filterDisplayStyles = "flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px";
 </script>
 
-{#if resultsCount}
+{#if totalBooks}
   <div style="flex: 0 0 auto; margin-right: 5px; align-self: center;">{resultsDisplay}</div>
 {/if}
 

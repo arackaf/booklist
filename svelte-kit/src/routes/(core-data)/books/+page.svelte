@@ -24,25 +24,24 @@
   import { searchState } from "./state/searchState";
   import { afterDelete } from "./state/onDelete";
   import { afterNavigate } from "$app/navigation";
-  import { bookViewOverride } from "./currentUiState";
+  import { uiState } from "./currentUiState.svelte";
 
-  export let data;
+  let { data } = $props();
+  let { books, subjects, tags, isPublic, hasPublicId, colors, defaultBookView, totalBooks } = $derived(data);
 
-  $: ({ isPublic, hasPublicId, colors, subjects, defaultBookView, tags, books } = data);
   const overrideBookView = (newBookView: string) => {
-    bookViewOverride.set(newBookView);
+    uiState.bookViewOverride = newBookView;
   };
 
-  $: bookViewToUse = $bookViewOverride || defaultBookView;
+  let bookViewToUse = $derived(uiState.bookViewOverride || defaultBookView);
+  let modalsReady = $state(false);
 
-  let modalsReady = false;
-
-  let BookSearchModal: typeof BookSearchModalType;
-  let SubjectEditModal: typeof SubjectEditModalType;
-  let TagEditModal: typeof TagEditModalType;
-  let EditBookModal: typeof EditBookModalType;
-  let BookSubjectSetter: typeof BookSubjectSetterType;
-  let BookTagSetter: typeof BookTagSetterType;
+  let BookSearchModal = $state<typeof BookSearchModalType | null>(null);
+  let SubjectEditModal = $state<typeof SubjectEditModalType | null>(null);
+  let TagEditModal = $state<typeof TagEditModalType | null>(null);
+  let EditBookModal = $state<typeof EditBookModalType | null>(null);
+  let BookSubjectSetter = $state<typeof BookSubjectSetterType | null>(null);
+  let BookTagSetter = $state<typeof BookTagSetterType | null>(null);
 
   onMount(() => {
     Promise.all([
@@ -62,19 +61,20 @@
     selectionState.clear();
   });
 
-  let filterModalOpen = false;
+  let filterModalOpen = $state(false);
   let openFilterModal = () => (filterModalOpen = true);
 
-  let editSubjectsModalOpen = false;
+  let editSubjectsModalOpen = $state(false);
   let editSubjects = () => (editSubjectsModalOpen = true);
 
-  let editTagsModalOpen = false;
+  let editTagsModalOpen = $state(false);
   let editTags = () => (editTagsModalOpen = true);
 
-  let editBookModalOpen = false;
-  let editingBook: any = null;
+  let editBookModalOpen = $state(false);
+  let editingBook = $state<any>(null);
   const editBook = (book: any) => {
-    editingBook = book;
+    let bookSnapshot = $state.snapshot(book);
+    editingBook = bookSnapshot;
     editBookModalOpen = true;
   };
 
@@ -82,10 +82,10 @@
     runUpdate(books, id, updates);
   };
 
-  let booksSubjectsModalOpen = false;
-  let booksTagsModalOpen = false;
+  let booksSubjectsModalOpen = $state(false);
+  let booksTagsModalOpen = $state(false);
 
-  $: booksEditing = $books.filter(b => $selectedBooksLookup[b.id]);
+  let booksEditing = $derived(books.filter(b => $selectedBooksLookup[b.id]));
   const editBooksSubjects = () => (booksSubjectsModalOpen = true);
   const editBooksTags = () => (booksTagsModalOpen = true);
 
@@ -108,11 +108,11 @@
 
 <section class="full pb-0">
   <div style="background-color: white;">
-    <MenuBar {isPublic} {bookViewToUse} />
+    <MenuBar totalBooks={totalBooks.value} {isPublic} {bookViewToUse} />
 
     <div class:overflow-x-auto={bookViewToUse === "tbl"}>
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
-        {#if !$books.length}
+        {#if !books.length}
           <div>
             <Alert type="warning">No books found</Alert>
 
@@ -126,11 +126,11 @@
         {:else}
           <div>
             {#if bookViewToUse == BASIC_LIST_VIEW}
-              <MobileView books={$books} {isPublic} />
+              <MobileView {books} {isPublic} />
             {:else if bookViewToUse === GRID_VIEW}
-              <GridView books={$books} {isPublic} />
+              <GridView {tags} {subjects} {books} {isPublic} />
             {:else}
-              <CoversView books={$books} {isPublic} />
+              <CoversView {books} {isPublic} />
             {/if}
           </div>
         {/if}
