@@ -29,14 +29,18 @@
     book = { ...book, ...updates };
   };
 
-  const addSubject = (subject: Subject) => updateBook({ subjects: book.subjects.concat(subject.id) });
+  const addSubject = (subject: Subject) => {
+    book.subjects.push(subject.id);
+  };
   const removeSubject = (subject: any) => updateBook({ subjects: book.subjects.filter((id: string) => id != subject.id) });
 
-  const addTag = (tag: any) => updateBook({ tags: book.tags.concat(tag.id) });
+  const addTag = (tag: any) => {
+    book.tags.push(tag.id);
+  };
   const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((id: string) => id != tag.id) });
 
   const addAuthor = () => {
-    updateBook({ authors: [...book.authors, ""] });
+    book.authors.push("");
   };
 </script>
 
