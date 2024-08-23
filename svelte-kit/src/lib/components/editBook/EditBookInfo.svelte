@@ -25,19 +25,19 @@
   let missingTitle = $state(false);
   let titleEl = $state<HTMLInputElement>(null as any);
 
-  const updateBook = (updates: Partial<Book>) => {
-    book = { ...book, ...updates };
-  };
-
   const addSubject = (subject: Subject) => {
     book.subjects.push(subject.id);
   };
-  const removeSubject = (subject: any) => updateBook({ subjects: book.subjects.filter((id: string) => id != subject.id) });
+  const removeSubject = (subject: any) => {
+    book.subjects = book.subjects.filter((id: string) => id != subject.id);
+  };
 
   const addTag = (tag: any) => {
     book.tags.push(tag.id);
   };
-  const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((id: string) => id != tag.id) });
+  const removeTag = (tag: any) => {
+    book.tags = book.tags.filter((id: string) => id != tag.id);
+  };
 
   const addAuthor = () => {
     book.authors.push("");
