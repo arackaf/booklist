@@ -10,7 +10,7 @@
     onClick: HTMLAttributes<HTMLButtonElement>["onclick"];
   } & HTMLAttributes<HTMLButtonElement>;
 
-  const { children, onClick, color = "text-neutral-600", cursor = "cursor-pointer", ...rest }: Props = $props();
+  let { children, onClick, color = "text-neutral-600", cursor = "cursor-pointer", ...rest }: Props = $props();
 </script>
 
 <button class="p-0 bg-transparent border-0 {color} {cursor} shadow-none {className}" onclick={onClick} {...rest}>
