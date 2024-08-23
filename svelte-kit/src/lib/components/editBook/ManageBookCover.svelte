@@ -105,7 +105,6 @@
           disabled={uploading}
           class="flex-1 rounded-tr-none rounded-br-none border-r-0"
           placeholder="New Cover URL"
-          tabIndex={-1}
           size="sm"
         />
         <Button class="h-8 p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
