@@ -38,7 +38,7 @@
     class="flex items-center touch-manipulation {bgColorClass} {padding}"
     color={colorClass}
     cursor={cursorClass}
-    on:click={linkClicked}
+    onClick={linkClicked}
     {style}
     aria-label={label}
   >

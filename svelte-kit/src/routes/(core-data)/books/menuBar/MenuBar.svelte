@@ -49,7 +49,7 @@
         style="font-size: 1.4rem; align-self: center"
         class="block lg:hidden leading-none"
         aria-label="Open mobile menu"
-        on:click={() => (mobileMenuOpen = true)}
+        onClick={() => (mobileMenuOpen = true)}
       >
         <i class="far fa-fw fa-bars"></i>
       </RawButton>
