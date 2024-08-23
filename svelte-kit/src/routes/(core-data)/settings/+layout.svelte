@@ -10,7 +10,6 @@
   <svelte:fragment slot="nav">
     <SectionNavItem href="/settings/theme">Theme</SectionNavItem>
     <SectionNavItem disabled={hasPublicId} href="/settings/public-sharing">Public sharing</SectionNavItem>
-    <SectionNavItem disabled={hasPublicId} href="/settings/account-sync">Sync old login</SectionNavItem>
   </svelte:fragment>
   <slot />
 </TabbedPage>
