@@ -1,20 +1,38 @@
 <script lang="ts">
-  import { setContext } from "svelte";
-  import { writable } from "svelte/store";
+  import { onMount, setContext } from "svelte";
+  import { get, writable } from "svelte/store";
 
   import localStorageManager from "$lib/util/localStorage";
 
-  export let defaultTab = "";
-  export let localStorageName = "";
+  type Props = {
+    defaultTab: string;
+    localStorageName?: string;
+    currentTab: string;
+    setTab?: (tab: string) => void;
+  };
 
-  export let currentTab = localStorageManager.get(localStorageName) || defaultTab;
+  const doSetTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
 
-  export const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
-  let tabState = writable({ localStorageName, currentTab, setTab });
+  let {
+    defaultTab = "",
+    localStorageName = "",
+    // default state set in onMount
+    currentTab: _currentTab = $bindable(),
+    setTab: _setTab = $bindable()
+  }: Props = $props();
 
-  $: {
-    currentTab = $tabState.currentTab;
-  }
+  const initialDefaultTab = localStorageManager.get(localStorageName) || defaultTab;
+
+  onMount(() => {
+    _currentTab = initialDefaultTab;
+    _setTab = doSetTab;
+  });
+
+  let tabState = writable({ localStorageName, currentTab: initialDefaultTab, setTab: doSetTab });
+
+  $effect(() => {
+    _currentTab = $tabState.currentTab;
+  });
 
   setContext("tabs-state", tabState);
 </script>

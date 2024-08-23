@@ -10,14 +10,26 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
+  import { onMount } from "svelte";
 
-  export let book: any;
-  export let tags: Tag[];
-  export let subjects: Subject[];
+  type Props = {
+    book: any;
+    tags: Tag[];
+    subjects: Subject[];
 
-  export let saving: boolean;
+    saving: boolean;
+    validate: () => boolean;
+  };
 
-  let titleEl: HTMLInputElement;
+  const runValidate = () => {
+    missingTitle = !titleEl.value;
+    return !missingTitle;
+  };
+
+  let { book, tags, subjects, saving, validate = $bindable() }: Props = $props();
+  validate = runValidate;
+
+  let titleEl = $state<HTMLInputElement>(null as any);
 
   const updateBook = (updates: Partial<Book>) => {
     book = { ...book, ...updates };
@@ -29,7 +41,7 @@
   const addTag = (tag: any) => updateBook({ tags: book.tags.concat(tag.id) });
   const removeTag = (tag: any) => updateBook({ tags: book.tags.filter((id: string) => id != tag.id) });
 
-  let missingTitle = false;
+  let missingTitle = $state(false);
 
   const addAuthor = () => {
     updateBook({ authors: [...book.authors, ""] });
@@ -40,11 +52,6 @@
       missingTitle = false;
     }
   }
-
-  export const validate = () => {
-    missingTitle = !titleEl.value;
-    return !missingTitle;
-  };
 </script>
 
 <fieldset disabled={saving}>
@@ -88,9 +95,9 @@
     </SelectAndDisplayContainer>
 
     <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
-      {#each book.authors || [] as author, index (index)}
+      {#each book.authors || [] as _, index (index)}
         <InputGroup labelText="Author">
-          <Input slot="input" name="authors" bind:value={author} placeholder={`Author ${index + 1}`} />
+          <Input slot="input" name="authors" bind:value={book.authors[index]} placeholder={`Author ${index + 1}`} />
         </InputGroup>
       {/each}
     </div>

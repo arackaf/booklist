@@ -15,20 +15,25 @@
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
   import DeleteBook from "./DeleteBook.svelte";
 
-  export let book: Book;
-  export let subjects: Subject[];
-  export let tags: Tag[];
+  type Props = {
+    book: Book;
+    subjects: Subject[];
+    tags: Tag[];
 
-  export let onCancel: () => void;
-  export let syncUpdates: (id: number, updates: UpdatesTo<Book>) => void;
+    onCancel: () => void;
+    syncUpdates: (id: number, updates: UpdatesTo<Book>) => void;
 
-  export let afterDelete: (id: number) => void = () => {};
+    afterDelete: (id: number) => void;
+  };
 
-  let basicInfoValid: () => boolean;
+  let { book, subjects, tags, onCancel, syncUpdates, afterDelete = () => {} }: Props = $props();
 
-  let saving = false;
+  let basicInfoValid = $state<() => boolean>(() => true);
+  let saving = $state(false);
+  let tab = $state<string>("");
+
   function executeSave({ cancel, formData: data }: any) {
-    if (!basicInfoValid()) {
+    if (!basicInfoValid?.()) {
       return cancel();
     }
 
@@ -43,8 +48,6 @@
       window.dispatchEvent(new CustomEvent("reload-user-summary"));
     };
   }
-
-  let tab;
 </script>
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
