@@ -7,28 +7,25 @@
   type Props = {
     defaultTab: string;
     localStorageName?: string;
-    currentTab: string;
-    setTab?: (tab: string) => void;
+    currentTab?: string;
   };
 
-  const doSetTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
+  const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
 
   let {
     defaultTab = "",
     localStorageName = "",
     // default state set in onMount
-    currentTab: _currentTab = $bindable(),
-    setTab: _setTab = $bindable()
+    currentTab: _currentTab = $bindable()
   }: Props = $props();
 
   const initialDefaultTab = localStorageManager.get(localStorageName) || defaultTab;
 
   onMount(() => {
     _currentTab = initialDefaultTab;
-    _setTab = doSetTab;
   });
 
-  let tabState = writable({ localStorageName, currentTab: initialDefaultTab, setTab: doSetTab });
+  let tabState = writable({ localStorageName, currentTab: initialDefaultTab, setTab });
 
   $effect(() => {
     _currentTab = $tabState.currentTab;
