@@ -1,6 +1,5 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import type { Book, Subject, Tag } from "$data/types";
 
@@ -28,6 +27,11 @@
 
   let { book, subjects, tags, onCancel, syncUpdates, afterDelete = () => {} }: Props = $props();
 
+  let editingBook = $state<Book>();
+  $effect(() => {
+    editingBook = $state.snapshot(book);
+  });
+
   let saving = $state(false);
   let tab = $state<string>("");
   let saveAttempted = $state(false);
@@ -47,6 +51,7 @@
       saving = false;
       syncUpdates(id, updates);
       window.dispatchEvent(new CustomEvent("reload-user-summary"));
+      saveAttempted = false;
     };
   }
 </script>
@@ -63,8 +68,8 @@
     </TabHeaders>
     <TabContents>
       <TabContent tabName="basic">
-        {#if book}
-          <EditBookInfo {saveAttempted} {saving} {book} {subjects} {tags} />
+        {#if editingBook}
+          <EditBookInfo {saveAttempted} {saving} book={editingBook} {subjects} {tags} />
         {/if}
       </TabContent>
       <TabContent tabName="covers">
