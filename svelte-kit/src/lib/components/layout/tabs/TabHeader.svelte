@@ -2,15 +2,18 @@
   import { getContext } from "svelte";
   import localStorageManager from "$lib/util/localStorage";
 
-  export let tabName = "";
+  type Props = {
+    tabName: string;
+    class: string;
+  };
 
-  let className = "";
-  export { className as class };
+  let { tabName, class: className }: Props = $props();
 
   const tabsState: any = getContext("tabs-state");
-  $: ({ currentTab, setTab, localStorageName } = $tabsState);
 
-  $: active = tabName == currentTab;
+  let { currentTab, setTab, localStorageName } = $derived($tabsState);
+
+  let active = $derived(tabName === currentTab);
 
   const onClick = () => {
     if (localStorageName) {
@@ -21,7 +24,7 @@
 </script>
 
 <div class="border-primary-9" class:bg-primary-10={active} class:border-b={active}>
-  <button on:click={onClick} type="button" class="raw-button overlay-holder {className}" style="padding: 4px 8px" class:cursor-default={active}>
+  <button onclick={onClick} type="button" class="raw-button overlay-holder {className}" style="padding: 4px 8px" class:cursor-default={active}>
     <span class:font-bold={active}><slot /></span>
     <span class="invisible font-bold"><slot /></span>
   </button>
