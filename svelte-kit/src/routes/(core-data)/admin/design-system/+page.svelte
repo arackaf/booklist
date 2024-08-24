@@ -8,7 +8,6 @@
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
 
   let running = false;
   function clickButton() {
@@ -60,34 +59,6 @@
   </div>
 
   <div></div>
-  <div>
-    <Label display="inline-block">Hello Worlding</Label>
-  </div>
-
-  <div></div>
-  <div>
-    <Label display="inline-block">Hello Worlding</Label>
-  </div>
-
-  <div></div>
-  <div>
-    <Label theme="success">Success</Label>
-  </div>
-
-  <div></div>
-  <div>
-    <Label display="inline-block" theme="success">Success</Label>
-  </div>
-
-  <div></div>
-  <div>
-    <Label theme="error">Error Message</Label>
-  </div>
-
-  <div></div>
-  <div>
-    <Label display="inline-block" theme="error">Error Message</Label>
-  </div>
 
   <h1>Book cover</h1>
   <div></div>
