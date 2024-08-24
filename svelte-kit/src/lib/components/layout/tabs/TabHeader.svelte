@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import localStorageManager from "$lib/util/localStorage";
 
   type Props = {
     tabName: string;
@@ -11,14 +10,11 @@
 
   const tabsState: any = getContext("tabs-state");
 
-  let { currentTab, setTab, localStorageName } = $derived($tabsState);
+  let { currentTab, setTab } = $derived($tabsState);
 
   let active = $derived(tabName === currentTab);
 
   const onClick = () => {
-    if (localStorageName) {
-      localStorageManager.set(localStorageName, tabName);
-    }
     setTab(tabName);
   };
 </script>

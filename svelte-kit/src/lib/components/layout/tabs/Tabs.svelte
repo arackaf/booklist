@@ -1,12 +1,9 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { get, writable } from "svelte/store";
-
-  import localStorageManager from "$lib/util/localStorage";
+  import { writable } from "svelte/store";
 
   type Props = {
     defaultTab: string;
-    localStorageName?: string;
     currentTab?: string;
   };
 
@@ -14,18 +11,17 @@
 
   let {
     defaultTab = "",
-    localStorageName = "",
     // default state set in onMount
     currentTab: _currentTab = $bindable()
   }: Props = $props();
 
-  const initialDefaultTab = localStorageManager.get(localStorageName) || defaultTab;
+  const initialDefaultTab = defaultTab;
 
   onMount(() => {
     _currentTab = initialDefaultTab;
   });
 
-  let tabState = writable({ localStorageName, currentTab: initialDefaultTab, setTab });
+  let tabState = writable({ currentTab: initialDefaultTab, setTab });
 
   $effect(() => {
     _currentTab = $tabState.currentTab;
