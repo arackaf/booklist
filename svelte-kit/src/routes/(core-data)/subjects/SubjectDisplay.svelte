@@ -87,7 +87,7 @@
   <div class="pb-5">
     <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
-  <div style="height: {height < 0 ? 'auto' : height + 'px'}; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
+  <div style="height: {height < 0 ? 'auto' : height + 'px'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if childSubjects.length}
         <ul class="ml-5" onoutrostart={exitStart} transition:scale|local={scaleTransitionProps}>
