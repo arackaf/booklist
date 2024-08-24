@@ -11,9 +11,14 @@
   import SubjectLabelDisplay from "./SubjectLabelDisplay.svelte";
   import { flip } from "svelte/animate";
   import { exitStart, scaleTransitionProps } from "./animationHelpers";
+  import { get } from "svelte/store";
 
-  export let editSubject: (subject: Subject) => void;
-  export let subject: FullSubject;
+  type Props = {
+    editSubject: (subject: Subject) => void;
+    subject: FullSubject;
+  };
+
+  let { editSubject, subject }: Props = $props();
 
   const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
 
@@ -29,10 +34,20 @@
     heightStore = syncHeight(contentEl);
   });
 
-  $: setSpring($heightStore, expanded);
+  $effect(() => {
+    setSpring($heightStore, expanded);
+  });
 
-  let initialRender = false;
-  let hide = false;
+  let initialRender = $state(false);
+  let hide = $state(false);
+  let expanded = $state(true);
+
+  let childSubjects = $derived(subject.children);
+  let height = $derived($subjectSpring.height);
+  let opacity = $derived($subjectSpring.opacity);
+  let x = $derived($subjectSpring.x);
+  let y = $derived($subjectSpring.y);
+
   function setSpring(height: number, expanded: boolean) {
     if (blockingUpstream) {
       $disabledAnimationInChain = true;
@@ -40,6 +55,10 @@
 
     const newHeight = expanded ? height : 0;
     const existingHeight = $subjectSpring.height;
+
+    if ($subjectSpring.height === newHeight) {
+      return;
+    }
     let animation = subjectSpring
       .set(
         { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
@@ -58,14 +77,10 @@
     }
   }
 
-  let expanded = true;
-  let setExpanded = (val: boolean) => {
+  const setExpanded = (val: boolean) => {
     blockingUpstream = true;
     expanded = val;
   };
-
-  $: childSubjects = subject.children;
-  $: ({ height, opacity, x, y } = $subjectSpring);
 </script>
 
 <div>
@@ -75,9 +90,9 @@
   <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if childSubjects.length}
-        <ul class="ml-5" on:outrostart={exitStart} transition:scale|local={scaleTransitionProps}>
+        <ul class="ml-5" onoutrostart={exitStart} transition:scale|local={scaleTransitionProps}>
           {#each childSubjects as s (s.id)}
-            <li on:outrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
+            <li onoutrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
               <svelte:self subject={s} {editSubject} />
             </li>
           {/each}
