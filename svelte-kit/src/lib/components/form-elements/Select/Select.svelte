@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLSelectAttributes } from "svelte/elements";
 
-  type Props = { error: boolean } & HTMLSelectAttributes;
+  type Props = { error?: boolean } & HTMLSelectAttributes;
 
   let { class: className, error, value, ...rest }: Props = $props();
 </script>
