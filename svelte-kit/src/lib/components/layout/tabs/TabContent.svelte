@@ -1,15 +1,17 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import type { HTMLAttributes } from "svelte/elements";
 
-  export let tabName = "";
-  let className = "";
-  export { className as class };
+  type Props = {
+    tabName: string;
+  } & HTMLAttributes<HTMLDivElement>;
+  let { tabName, class: className, ...rest }: Props = $props();
 
   const tabsState: any = getContext("tabs-state");
-  $: ({ currentTab } = $tabsState);
-  $: isActive = currentTab === tabName;
+  let currentTab = $derived($tabsState.currentTab);
+  let isActive = $derived(currentTab === tabName);
 </script>
 
-<div {...$$restProps} class="mt-2 ml-0 md:ml-1 {className}" class:hidden={!isActive}>
+<div {...rest} class="mt-2 ml-0 md:ml-1 {className}" class:hidden={!isActive}>
   <slot {isActive} />
 </div>
