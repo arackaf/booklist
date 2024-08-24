@@ -28,7 +28,7 @@
 
   const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
-  const subjectSpring = spring({ height: 0, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
+  const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
   onMount(() => {
     heightStore = syncHeight(contentEl);
@@ -87,7 +87,7 @@
   <div class="pb-5">
     <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
-  <div style="height: {height}px; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
+  <div style="height: {height < 0 ? 'auto' : height + 'px'}; overflow: {hide && !expanded ? 'hidden' : 'unset'};">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if childSubjects.length}
         <ul class="ml-5" onoutrostart={exitStart} transition:scale|local={scaleTransitionProps}>
