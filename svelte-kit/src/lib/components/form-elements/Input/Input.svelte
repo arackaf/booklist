@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { HTMLAttributes, HTMLInputAttributes } from "svelte/elements";
+  import type { HTMLInputAttributes } from "svelte/elements";
 
   type Props = {
     error?: boolean;
