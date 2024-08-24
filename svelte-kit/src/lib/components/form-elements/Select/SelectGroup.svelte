@@ -1,5 +1,8 @@
 <script lang="ts">
-  export let labelText: string;
+  type Props = {
+    labelText: string;
+  };
+  let { labelText }: Props = $props();
 </script>
 
 <div>

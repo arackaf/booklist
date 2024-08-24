@@ -1,12 +1,9 @@
 <script lang="ts">
-  export let error = false;
+  import type { HTMLSelectAttributes } from "svelte/elements";
 
-  let className = "";
-  export { className as class };
+  type Props = { error: boolean } & HTMLSelectAttributes;
 
-  const { className: ignore, ...rest } = $$restProps;
-
-  export let value: string | number = "";
+  let { class: className, error, value, ...rest }: Props = $props();
 </script>
 
 <select
