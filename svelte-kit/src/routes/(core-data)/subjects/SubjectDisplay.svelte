@@ -38,7 +38,7 @@
     setSpring($heightStore, expanded);
   });
 
-  let initialRender = $state(false);
+  let initialRenderComplete = $state(false);
   let hide = $state(false);
   let expanded = $state(true);
 
@@ -62,10 +62,10 @@
     let animation = subjectSpring
       .set(
         { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-        { hard: !initialRender || ($disabledAnimationInChain && !blockingUpstream) }
+        { hard: !initialRenderComplete || ($disabledAnimationInChain && !blockingUpstream) }
       )
       .then(() => {
-        initialRender = true;
+        initialRenderComplete = true;
         hide = !expanded;
       });
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
