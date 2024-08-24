@@ -73,7 +73,7 @@
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" standardFooter={false}>
   <form method="post" action="?/setBooksSubjects" use:enhance={save}>
-    <Tabs defaultTab="subjects">
+    <Tabs currentTab="subjects">
       <TabHeaders>
         <TabHeader tabName="subjects">Choose subjects</TabHeader>
         <TabHeader tabName="books">For books</TabHeader>

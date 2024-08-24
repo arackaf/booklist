@@ -72,7 +72,7 @@
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" standardFooter={false}>
   <form method="post" action="?/setBooksTags" use:enhance={save}>
-    <Tabs defaultTab="tags">
+    <Tabs currentTab="tags">
       <TabHeaders>
         <TabHeader tabName="tags">Choose tags</TabHeader>
         <TabHeader tabName="books">For books</TabHeader>

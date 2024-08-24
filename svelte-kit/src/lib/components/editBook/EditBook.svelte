@@ -33,7 +33,7 @@
   });
 
   let saving = $state(false);
-  let tab = $state<string>("");
+  let tab = $state<string>("basic");
   let saveAttempted = $state(false);
 
   function executeSave({ cancel, formData: data }: any) {
@@ -58,7 +58,7 @@
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <input type="hidden" name="id" value={book?.id ?? null} />
-  <Tabs bind:currentTab={tab} defaultTab="basic">
+  <Tabs bind:currentTab={tab}>
     <TabHeaders>
       <TabHeader tabName="basic">Book info</TabHeader>
       <TabHeader tabName="covers">Covers</TabHeader>
