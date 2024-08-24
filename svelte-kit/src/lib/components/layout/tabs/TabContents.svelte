@@ -1,12 +1,10 @@
 <script lang="ts">
   import type { HTMLAttributes } from "svelte/elements";
 
-  type Props = {
-    tabName: string;
-  } & HTMLAttributes<HTMLDivElement>;
-  let { class: className, ...rest }: Props = $props();
+  type Props = HTMLAttributes<HTMLDivElement>;
+  let { ...rest }: Props = $props();
 </script>
 
-<div class={className} {...rest}>
+<div {...rest}>
   <slot />
 </div>

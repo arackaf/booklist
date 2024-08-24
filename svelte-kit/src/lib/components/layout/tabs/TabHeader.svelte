@@ -3,10 +3,10 @@
 
   type Props = {
     tabName: string;
-    class: string;
+    class?: string;
   };
 
-  let { tabName, class: className }: Props = $props();
+  let { tabName, class: className = "" }: Props = $props();
 
   const tabsState: any = getContext("tabs-state");
 
