@@ -69,7 +69,7 @@
         },
         { hard }
       );
-      tooltipState.tooltipVisible();
+      setTimeout(() => tooltipState.tooltipVisible());
     }
   }
 </script>
