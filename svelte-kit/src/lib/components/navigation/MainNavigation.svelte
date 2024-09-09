@@ -72,8 +72,8 @@
     {#if loggedIn}
       <div class="items-center mx-2 my-auto">
         <button
-          on:mouseenter={fetchUserSummaryIfNeeded}
-          on:click={() => (profilePanelOpen = !profilePanelOpen)}
+          onmouseenter={fetchUserSummaryIfNeeded}
+          onclick={() => (profilePanelOpen = !profilePanelOpen)}
           class="raw-button flex profile-menu-trigger"
         >
           <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
