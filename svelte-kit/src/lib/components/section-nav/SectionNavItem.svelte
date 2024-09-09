@@ -1,14 +1,16 @@
 <script lang="ts">
   import { page } from "$app/stores";
 
-  export let href: string;
-  export let disabled: boolean = false;
+  type Props = {
+    href: string;
+    disabled?: boolean;
+  };
 
-  $: targetPathname = href.replace(/\?.*/, "");
+  let { href, disabled = false }: Props = $props();
 
-  $: active = targetPathname === $page.url.pathname;
-
-  $: addedClasses = active ? "bg-[var(--primary-10)]" : "";
+  let targetPathname = $derived(href.replace(/\?.*/, ""));
+  let active = $derived(targetPathname === $page.url.pathname);
+  let addedClasses = $derived(active ? "bg-[var(--primary-10)]" : "");
 </script>
 
 <div class="section-nav-item flex p-0" class:active class:opacity-60={disabled} class:cursor-default={active || disabled}>
