@@ -2,15 +2,19 @@
   import { onMount } from "svelte";
   import RawButton from "../Button/RawButton.svelte";
 
-  export let onClose: () => void;
-  export let title = "";
-  export let open: boolean;
+  type Props = {
+    onClose: () => void;
+    title: string;
+    open: boolean;
+  };
+  let { onClose, title, open }: Props = $props();
+
   const menuHolder = typeof document === "object" ? document.getElementById("main-mobile-menu") : null;
 
-  $: {
-    let isOpen = open;
-    menuHolder?.classList[isOpen ? "add" : "remove"]("open");
-  }
+  // TODO: move all this control state into a shared rune
+  $effect(() => {
+    menuHolder?.classList[open ? "add" : "remove"]("open");
+  });
 
   let rootEl: HTMLElement;
 
