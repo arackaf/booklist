@@ -8,13 +8,15 @@
   import { invalidateAll } from "$app/navigation";
   import Button from "../Button/Button.svelte";
 
-  export let open = false;
-  export let onClose = () => {};
+  type Props = {
+    open: boolean;
+    onClose: () => void;
+    loggedInUser: Login;
+    userSummary: UserSummary | undefined;
+  };
 
-  export let loggedInUser: Login;
-  export let userSummary: UserSummary | undefined;
-
-  $: ({ tags, subjects } = $page.data);
+  let { open, onClose, loggedInUser, userSummary }: Props = $props();
+  let { tags, subjects } = $derived($page.data);
 
   const windowClickHandler = (evt: MouseEvent) => {
     if (!open) {
@@ -32,13 +34,13 @@
 
   let el: HTMLElement;
 
-  $: {
+  $effect(() => {
     if (!open && el) {
       setTimeout(() => {
         el.scrollTop = 0;
       }, 50);
     }
-  }
+  });
 
   onMount(() => {
     window.addEventListener("click", windowClickHandler);
