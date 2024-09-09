@@ -1,13 +1,17 @@
 <script lang="ts">
   import RawButton from "../Button/RawButton.svelte";
 
-  export let href: string;
-  export let style = "";
-  export let disabled = false;
-  export let onClick: (() => void) | null = null;
-  export let label: string = "";
-  export let active = false;
-  export let padding = "px-3 sm:px-4";
+  type Props = {
+    href: string;
+    style?: string;
+    disabled?: boolean;
+    onClick?: (() => void) | null;
+    label?: string;
+    active?: boolean;
+    padding?: string;
+  };
+
+  let { href, style = "", disabled = false, onClick = null, label = "", active = false, padding = "px-3 sm:px-4" }: Props = $props();
 
   const linkClicked = (evt: any) => {
     if (!onClick || disabled) {
@@ -18,15 +22,15 @@
     onClick();
   };
 
-  $: bgColorClass = active ? "bg-[var(--primary-6)]" : "";
-  $: colorClass = disabled ? "text-[var(--primary-7)]" : "text-[var(--primary-10)]";
-  $: cursorClass = disabled || active ? "cursor-default" : undefined;
+  let bgColorClass = $derived(active ? "bg-[var(--primary-6)]" : "");
+  let colorClass = $derived(disabled ? "text-[var(--primary-7)]" : "text-[var(--primary-10)]");
+  let cursorClass = $derived(disabled || active ? "cursor-default" : undefined);
 </script>
 
 {#if href}
   <a
     class="flex items-center {colorClass} {bgColorClass} {cursorClass} {padding} touch-manipulation"
-    on:click={linkClicked}
+    onclick={linkClicked}
     href={disabled ? null : href}
     {style}
     aria-label={label}
