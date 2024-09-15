@@ -17,7 +17,7 @@
   const newTag = () => (editingTag = createNewTag());
   const editTag = (tag: Tag) => (editingTag = tag);
 
-  let deleteShowing: boolean;
+  let deleteShowing: boolean = false;
 </script>
 
 <div class="flex flex-col gap-3">

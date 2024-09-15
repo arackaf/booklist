@@ -15,20 +15,24 @@
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
   import Label from "$lib/components/form-elements/Label/Label.svelte";
 
-  export let tag: Tag;
-  export let colors: Color[];
+  type Props = {
+    tag: Tag;
+    colors: Color[];
 
-  export let onCancelEdit: () => void;
-  export let deleteShowing = false;
+    onCancelEdit: () => void;
+    deleteShowing?: boolean;
 
-  export let onComplete = () => {};
+    onComplete: () => void;
+  };
+
+  let { tag, colors, onCancelEdit, deleteShowing = $bindable(false), onComplete = () => {} }: Props = $props();
 
   const textColors = ["#ffffff", "#000000"];
 
-  let missingName = false;
-  let inputEl: HTMLInputElement;
+  let missingName = $state(false);
+  let inputEl = $state<HTMLInputElement>();
 
-  let originalName = "";
+  let originalName = $state("");
 
   onMount(() => {
     inputEl?.focus({ preventScroll: true });
@@ -38,15 +42,17 @@
     };
   });
 
-  let editingTag = { ...tag };
+  let editingTag = $state({ ...tag });
 
-  $: editingTagChanged(tag);
+  $effect(() => {
+    editingTagChanged(tag);
+  });
 
-  $: {
+  $effect(() => {
     if (editingTag.name) {
       missingName = false;
     }
-  }
+  });
 
   function editingTagChanged(tag: Tag) {
     editingTag = { ...tag };
@@ -55,7 +61,7 @@
     originalName = tag.name;
   }
 
-  let saving = false;
+  let saving = $state(false);
   function runSave({ formData: data, cancel }: any) {
     const name = data.get("name");
     if (!name) {
@@ -75,7 +81,7 @@
     };
   }
 
-  let deleting = false;
+  let deleting = $state(false);
   function runDelete() {
     deleting = true;
 
