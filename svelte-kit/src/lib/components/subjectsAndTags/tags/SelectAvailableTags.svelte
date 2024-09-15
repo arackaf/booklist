@@ -4,25 +4,30 @@
 
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
-  export let tags: Tag[];
-  export let onSelect: (tag: Tag) => void;
-  export let placeholder = "Tags";
-  export let currentlySelected: number[] = [];
+  type TagSelectedHash = { [id: string]: true };
+  type Props = {
+    tags: Tag[];
+    onSelect: (tag: Tag) => void;
+    placeholder?: string;
+    currentlySelected: number[];
+  };
 
-  let search = "";
+  let { tags, onSelect, placeholder = "Tags", currentlySelected = [] }: Props = $props();
+
+  let search = $state("");
 
   const doSelect = (item: any) => {
     onSelect(item);
     search = "";
   };
 
-  type TagSelectedHash = { [id: string]: true };
+  let itemHash = $derived(currentlySelected.reduce<TagSelectedHash>((hash, id) => ((hash[id] = true), hash), {}));
 
-  $: itemHash = currentlySelected.reduce<TagSelectedHash>((hash, id) => ((hash[id] = true), hash), {});
-
-  $: eligible = filterTags(
-    tags.filter(s => !itemHash[s.id]),
-    search
+  let eligible = $derived(
+    filterTags(
+      tags.filter(s => !itemHash[s.id]),
+      search
+    )
   );
 </script>
 
