@@ -2,21 +2,18 @@
   import Label from "$lib/components/form-elements/Label/Label.svelte";
   import type { Label as LabelType, LabelColors } from "./types";
 
-  export let item: Partial<LabelType> | null = null;
-  export let extraStyles = "";
-  export let doRemove: () => void = () => {};
+  type Props = {
+    item: Partial<LabelType> | null;
+    extraStyles?: string;
+    doRemove?: () => void;
+    class?: string;
+    href?: string;
+    disabled?: boolean;
+  };
 
-  let className = "";
-  export { className as class };
+  let { item = null, extraStyles = "", doRemove = () => {}, class: className = "", href = "", disabled = false }: Props = $props();
 
-  export let href: string = "";
-  export let disabled = false;
-
-  let colorsPacket: LabelColors | null;
-
-  $: {
-    colorsPacket = item?.name && (item?.textColor || item?.backgroundColor) ? (item as LabelColors) : null;
-  }
+  let colorsPacket: LabelColors | null = $derived(item?.name && (item?.textColor || item?.backgroundColor) ? (item as LabelColors) : null);
 </script>
 
 <Label colors={colorsPacket} style={extraStyles} class={"flex gap-1 " + className}>
@@ -26,7 +23,7 @@
     <button
       type="button"
       {disabled}
-      on:click={doRemove}
+      onclick={doRemove}
       class="raw-button font-bold"
       class:cursor-pointer={!disabled}
       style="font-size: inherit; color: inherit;"
