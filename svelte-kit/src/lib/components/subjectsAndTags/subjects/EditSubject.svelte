@@ -29,7 +29,7 @@
   };
   const textColors = ["#ffffff", "#000000"];
 
-  let { subject, allSubjects, colors, onCancelEdit, deleteShowing, onComplete = () => {}, inputEl }: Props = $props();
+  let { subject, allSubjects, colors, onCancelEdit, deleteShowing = $bindable(), onComplete = () => {}, inputEl }: Props = $props();
 
   let missingName = $state(false);
   let originalName = $state("");
