@@ -1,6 +1,5 @@
 <script lang="ts">
-  let className = "";
-  export { className as class };
+  let { class: className }: { class?: string } = $props();
 </script>
 
 <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-2 {className}">
