@@ -13,18 +13,6 @@
   export let smallerHeader = false;
   export let openFocus: HTMLElement | null = null;
 
-  function onChange(open: boolean) {
-    if (!open) {
-      onHide();
-    }
-  }
-
-  $: {
-    if (isOpen) {
-      onChange(true);
-    }
-  }
-
   let el: HTMLDivElement;
 </script>
 
