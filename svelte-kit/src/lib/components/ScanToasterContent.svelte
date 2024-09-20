@@ -2,9 +2,13 @@
   import type { Book } from "$data/types";
   import BookCover from "./BookCover.svelte";
 
-  export let book: Book;
+  type Props = {
+    book: Book;
+  };
 
-  $: authors = (book.authors ?? []).join(", ");
+  let { book }: Props = $props();
+
+  let authors = $derived((book.authors ?? []).join(", "));
 </script>
 
 <section class="flex w-[300px] gap-1">
