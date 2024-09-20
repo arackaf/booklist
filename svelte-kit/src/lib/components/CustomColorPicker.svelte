@@ -1,4 +1,4 @@
-<script context="module">
+<script module>
   let uniqueIdCounter = 0;
 </script>
 
@@ -42,7 +42,7 @@
 </script>
 
 <div>
-  <a id={uniqueId} bind:this={rootElement} style="height: 20px; {labelStyle}"> Custom </a>
+  <a id={uniqueId} bind:this={rootElement} style="height: 20px; {labelStyle}" href="/" on:click={evt => evt.preventDefault()}> Custom </a>
   <input style="display: none;" id={valueElementId} value={currentColor} />
   <input style="display: none" id={styleElementId} />
 </div>
