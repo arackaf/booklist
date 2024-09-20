@@ -3,7 +3,7 @@
   import { signIn } from "@auth/sveltekit/client";
   import Button from "$lib/components/Button/Button.svelte";
 
-  $: ({ loggedIn } = $page.data);
+  let { loggedIn } = $derived($page.data);
 </script>
 
 <section>
