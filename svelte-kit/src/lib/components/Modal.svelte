@@ -13,18 +13,6 @@
   export let smallerHeader = false;
   export let openFocus: HTMLElement | null = null;
 
-  function onChange(open: boolean) {
-    if (!open) {
-      onHide();
-    }
-  }
-
-  $: {
-    if (isOpen) {
-      onChange(true);
-    }
-  }
-
   let el: HTMLDivElement;
 </script>
 
@@ -38,7 +26,7 @@
   }}
   closeOnOutsideClick={true}
 >
-  <AlertDialog.Trigger asChild let:builder />
+  <AlertDialog.Trigger asChild />
 
   <AlertDialog.Content bind:el class="translate-y-[0] top-16 pb-5">
     <AlertDialog.Header>
