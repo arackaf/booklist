@@ -26,15 +26,18 @@
   }
 
   let el: HTMLDivElement;
-
-  $: {
-    if (el) {
-      el.addEventListener("click", onHide);
-    }
-  }
 </script>
 
-<AlertDialog.Root openFocus={() => openFocus} bind:open={isOpen} closeOnOutsideClick={false}>
+<AlertDialog.Root
+  openFocus={() => openFocus}
+  bind:open={isOpen}
+  onOpenChange={open => {
+    if (!open) {
+      onHide();
+    }
+  }}
+  closeOnOutsideClick={true}
+>
   <AlertDialog.Trigger asChild let:builder />
 
   <AlertDialog.Content bind:el class="translate-y-[0] top-16 pb-5">
