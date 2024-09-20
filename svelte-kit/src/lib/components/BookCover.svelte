@@ -4,28 +4,38 @@
   type Sizes = "mobile" | "small" | "medium";
   type BookImagesPassed = Partial<BookImages>;
 
-  export let style = "";
-  export let url: string | null = null;
-  export let size: Sizes;
-  export let book: BookImagesPassed | null = null;
+  type Props = {
+    style?: string;
+    url?: string | null;
+    size: Sizes;
+    book?: BookImagesPassed | null;
+    preview?: string | PreviewPacket | null;
+    noCoverMessage?: string;
+    imgClasses?: string;
+  };
 
-  export let preview: string | PreviewPacket | null = null;
-  export let noCoverMessage: string = "No Cover";
-  export let imgClasses = "";
+  let { style = "", url = null, size, book = null, preview = null, noCoverMessage = "No Cover", imgClasses = "" }: Props = $props();
 
-  let previewToUse: string | PreviewPacket | null;
-  $: {
+  function getPreview() {
     if (preview != null) {
-      previewToUse = preview;
+      return preview;
     } else if (book) {
-      previewToUse = size === "medium" ? book.mediumImagePreview! : size === "small" ? book.smallImagePreview! : book.mobileImagePreview!;
+      if (size === "medium") {
+        return book.mediumImagePreview!;
+      } else if (size === "small") {
+        return book.smallImagePreview!;
+      } else {
+        return book.mobileImagePreview!;
+      }
     }
   }
 
-  $: previewString = previewToUse == null ? "" : typeof previewToUse === "string" ? previewToUse : previewToUse.b64;
-  $: sizingStyle = previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "";
+  const previewToUse = $state<string | PreviewPacket | null>(getPreview());
 
-  $: urlToUse = getUrlToUse(book, size, url, sizingStyle);
+  let previewString = $derived(previewToUse == null ? "" : typeof previewToUse === "string" ? previewToUse : previewToUse.b64);
+  let sizingStyle = $derived(previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "");
+  let urlToUse = $derived(getUrlToUse(book, size, url, sizingStyle));
+
   function getUrlToUse(book: BookImagesPassed | null, size: Sizes, url: string | null, sizingStyle: string) {
     if (!book) {
       return url;
@@ -34,22 +44,30 @@
     if (sizingStyle) {
       return book.mediumImage || book.smallImage || book.mobileImage;
     } else {
-      return size === "medium" ? book.mediumImage : size === "small" ? book.smallImage : book.mobileImage;
+      if (size === "medium") {
+        return book.mediumImage;
+      } else if (size === "small") {
+        return book.smallImage;
+      } else {
+        return book.mobileImage;
+      }
     }
   }
 
-  let noCoverClasses: string = "";
-  let noCoverCommonClasses = "bg-primary-4 text-primary-9 text-center";
-  $: {
-    noCoverClasses = noCoverCommonClasses + " ";
+  const noCoverCommonClasses = "bg-primary-4 text-primary-9 text-center";
+  function getNoCoverClasses() {
+    let result = noCoverCommonClasses + " ";
     if (size === "mobile") {
-      noCoverClasses += "w-[35px] h-[53px] pt-2 text-[10px] leading-normal";
+      result += "w-[35px] h-[53px] pt-2 text-[10px] leading-normal";
     } else if (size === "small") {
-      noCoverClasses += "w-[50px] h-[65px] pt-2 text-sm";
+      result += "w-[50px] h-[65px] pt-2 text-sm";
     } else {
-      noCoverClasses += "w-[106px] h-[131px] pt-5 text-lg";
+      result += "w-[106px] h-[131px] pt-5 text-lg";
     }
+
+    return result;
   }
+  const noCoverClasses = getNoCoverClasses();
 </script>
 
 <div class="overlay-holder overflow-hidden" style={style + sizingStyle}>
