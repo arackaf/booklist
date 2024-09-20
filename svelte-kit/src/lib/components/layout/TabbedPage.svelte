@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script>
   import SectionNav from "../section-nav/SectionNav.svelte";
 </script>
