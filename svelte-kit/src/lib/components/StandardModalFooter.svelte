@@ -1,6 +1,11 @@
 <script lang="ts">
   import Button from "$lib/components/Button/Button.svelte";
-  export let onHide = () => {};
+
+  type Props = {
+    onHide?: () => void;
+  };
+
+  let { onHide = () => {} }: Props = $props();
 </script>
 
 <div class="mt-8">
