@@ -2,7 +2,7 @@
   type Props = {
     display?: string;
     type: "warning" | "info" | "success" | "error";
-    layout: "normal" | "slim" | "slimmer";
+    layout?: "normal" | "slim" | "slimmer";
     class?: string;
   };
 

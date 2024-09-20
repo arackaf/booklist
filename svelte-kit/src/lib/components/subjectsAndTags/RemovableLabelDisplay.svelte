@@ -3,7 +3,7 @@
   import type { Label as LabelType, LabelColors } from "./types";
 
   type Props = {
-    item: Partial<LabelType> | null;
+    item?: Partial<LabelType> | null;
     extraStyles?: string;
     doRemove?: () => void;
     class?: string;
