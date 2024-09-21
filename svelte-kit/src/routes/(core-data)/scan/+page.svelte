@@ -55,7 +55,11 @@
       <div class="flex items-center">
         <h4 class="text-base my-0 flex gap-1">
           Enter your books here
-          <button class="raw-button cursor-pointer" on:click={() => (showScanInstructions = !showScanInstructions)}>
+          <button
+            class="raw-button cursor-pointer"
+            on:click={() => (showScanInstructions = !showScanInstructions)}
+            aria-label="Show scan instructions"
+          >
             <i class="far fa-question-circle"></i>
           </button>
         </h4>
