@@ -1,19 +1,21 @@
 <script lang="ts">
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
-
   import ModalContents from "./ModalContents.svelte";
-
   import StandardModalHeader from "./StandardModalHeader.svelte";
   import StandardModalFooter from "./StandardModalFooter.svelte";
 
-  export let isOpen: boolean;
-  export let onHide: () => void;
-  export let headerCaption = "";
-  export let standardFooter = true;
-  export let smallerHeader = false;
-  export let openFocus: HTMLElement | null = null;
+  type Props = {
+    isOpen: boolean;
+    onHide: () => void;
+    headerCaption?: string;
+    standardFooter?: boolean;
+    smallerHeader?: boolean;
+    openFocus?: HTMLElement | null;
+  };
 
-  let el: HTMLDivElement;
+  let { isOpen, onHide, headerCaption = "", standardFooter = true, smallerHeader = false, openFocus = null }: Props = $props();
+
+  let el = $state<HTMLDivElement>(null as any);
 </script>
 
 <AlertDialog.Root
