@@ -27,6 +27,8 @@
       } else {
         return book.mobileImagePreview!;
       }
+    } else {
+      return null;
     }
   }
 
