@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { spring } from "svelte/motion";
 
-  let hasInitialSize = false;
+  let hasInitialSize = $state(false);
   const DIMENSIONS_SPRING = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
 
   let innerContent: HTMLElement;
@@ -30,8 +30,8 @@
     }
   });
 
-  $: animatedHeight = hasInitialSize ? $sizingSpring.height + "px" : "";
-  $: dimensionStyles = animatedHeight ? "height: " + animatedHeight : "";
+  let animatedHeight = $derived(hasInitialSize ? $sizingSpring.height + "px" : "");
+  let dimensionStyles = $derived(animatedHeight ? "height: " + animatedHeight : "");
 
   onMount(() => {
     ro.observe(innerContent);
