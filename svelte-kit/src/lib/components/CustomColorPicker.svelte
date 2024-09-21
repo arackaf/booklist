@@ -17,7 +17,7 @@
   const uniqueId = `customColorPickerId${++uniqueIdCounter}`;
   let _colorChosen: any;
 
-  let jscolorInstance: any;
+  let jscolorInstance = $state<any>();
   let rootElement: HTMLElement;
   const valueElementId = `${uniqueId}_value`;
   const styleElementId = `${uniqueId}_style`;
@@ -27,6 +27,8 @@
       jscolorInstance.fromString(currentColor);
     }
   });
+
+  let container;
 
   onMount(() => {
     _colorChosen = function (this: any) {
@@ -40,12 +42,15 @@
     jscolorInstance = new (window as any).jscolor(rootElement, {
       valueElement: valueElementId,
       styleElement: styleElementId,
-      onFineChange: _colorChosen
+      onFineChange: _colorChosen,
+      container,
+      value: currentColor
     });
   });
 </script>
 
 <div>
+  <div class="absolute" bind:this={container}></div>
   <button id={uniqueId} bind:this={rootElement} class="raw-button" style="height: 20px; {labelStyle}"> Custom </button>
   <input style="display: none;" id={valueElementId} value={currentColor} />
   <input style="display: none" id={styleElementId} />
