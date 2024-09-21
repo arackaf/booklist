@@ -19,12 +19,12 @@
 
   let { drilldown, data, height, width, x, totalSvgWidth, position, removeBar, noInitialAnimation }: Props = $props();
 
-  let g = $state<SVGElement>();
+  let g = $state<SVGElement>(null as any);
   let initialRenderFinished = $state(false);
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
   const initialValues = noInitialAnimation ? { height, x } : { height: 0, x: totalSvgWidth };
-  let barSpring = spring(initialValues, { stiffness: 0.1, damping: 0.4 });
+  const barSpring = spring(initialValues, { stiffness: 0.1, damping: 0.4 });
 
   $effect(() => {
     barSpring.set({ height, x }, { hard: noInitialAnimation && !initialRenderFinished }).then(() => {
@@ -33,7 +33,7 @@
   });
 
   function mouseOver() {
-    tooltipState.onHover(g!, { position, data, drilldown, remove: removeBar });
+    tooltipState.onHover(g, { position, data, drilldown, remove: removeBar });
   }
 
   function mouseOut() {
