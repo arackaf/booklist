@@ -16,6 +16,7 @@
       onclick={() => onColorChosen(color)}
       type="button"
       style="background-color: {color}"
+      aria-label="Trigger color picker"
     >
     </button>
   {/each}
