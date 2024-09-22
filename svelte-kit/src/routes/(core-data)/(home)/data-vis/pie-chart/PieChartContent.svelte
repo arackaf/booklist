@@ -4,17 +4,21 @@
   import { arc, pie } from "d3-shape";
 
   import SingleSlice from "./SingleSlice.svelte";
-  import { syncWidth } from "$lib/util/animationHelpers";
+  import { syncWidth } from "$lib/util/animationHelpers.svelte";
   import SingleSliceLabel from "./SingleSliceLabel.svelte";
   import { createTooltipState } from "../tooltip/tooltipState";
   import Tooltip from "../tooltip/Tooltip.svelte";
 
-  export let showingData: any[];
-  export let drilldown: any;
-  export let removeSlice: (id: any) => void;
+  type Props = {
+    showingData: any[];
+    drilldown: any;
+    removeSlice: (id: any) => void;
+    hasRendered: boolean;
+  };
 
-  export let hasRendered: boolean;
-  let pieChartHasRendered = false;
+  let { showingData, drilldown, removeSlice, hasRendered }: Props = $props();
+
+  let pieChartHasRendered = $state(false);
 
   onMount(() => {
     pieChartHasRendered = true;
@@ -28,7 +32,7 @@
 
   const pieGenerator = pie().value((d: any) => d.count);
 
-  $: pieData = pieGenerator(showingData) as any[];
+  let pieData = $derived(pieGenerator(showingData) as any[]);
 
   const arcGenerator = arc();
   const INFLEXION_PADDING = 15; // space between donut and label inflexion point
@@ -59,51 +63,56 @@
     };
   };
 
-  $: pieSegments = pieData.map(segment => {
-    const segmentCount = segment.data.entries.length;
+  let pieSegments = $derived.by(() => {
+    return pieData.map(segment => {
+      const segmentCount = segment.data.entries.length;
 
-    const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
+      const masterLabel = segment.data.entries.map((e: any) => e.name).join(", ") + " (" + segment.value + ")";
 
-    const centroid = getCentroid(segment.startAngle, segment.endAngle);
-    const centroidTransition = getTransitionPoint(segment.startAngle, segment.endAngle);
-    const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
-    const inflexionPoint = arcGenerator.centroid(inflexionInfo);
+      const centroid = getCentroid(segment.startAngle, segment.endAngle);
+      const centroidTransition = getTransitionPoint(segment.startAngle, segment.endAngle);
+      const inflexionInfo = getInflextionInfo(segment.startAngle, segment.endAngle);
+      const inflexionPoint = arcGenerator.centroid(inflexionInfo);
 
-    const arcCenterPoint = getCentroid(segment.startAngle, segment.endAngle, radius);
+      const arcCenterPoint = getCentroid(segment.startAngle, segment.endAngle, radius);
 
-    const isRightLabel = inflexionPoint[0] > 0;
-    const labelPosX = inflexionPoint[0] + 25 * (isRightLabel ? 1 : -1);
-    const textAnchor = isRightLabel ? "start" : "end";
+      const isRightLabel = inflexionPoint[0] > 0;
+      const labelPosX = inflexionPoint[0] + 25 * (isRightLabel ? 1 : -1);
+      const textAnchor = isRightLabel ? "start" : "end";
 
-    return {
-      startAngle: segment.startAngle,
-      endAngle: segment.endAngle,
-      data: segment.data,
-      centroid,
-      centroidTransition,
-      inflexionPoint,
-      arcCenterPoint,
-      labelPosX,
-      isRightLabel,
-      textAnchor,
-      masterLabel,
-      count: segmentCount,
-      chunks: segment.data.entries.map((entry: any, idx: number) => {
-        const arcSectionRadius = radius * ((segmentCount - idx) / segmentCount);
+      return {
+        startAngle: segment.startAngle,
+        endAngle: segment.endAngle,
+        data: segment.data,
+        centroid,
+        centroidTransition,
+        inflexionPoint,
+        arcCenterPoint,
+        labelPosX,
+        isRightLabel,
+        textAnchor,
+        masterLabel,
+        count: segmentCount,
+        chunks: segment.data.entries.map((entry: any, idx: number) => {
+          const arcSectionRadius = radius * ((segmentCount - idx) / segmentCount);
 
-        return {
-          color: entry.color,
-          innerRadius: 0,
-          outerRadius: arcSectionRadius,
-          startAngle: segment.startAngle,
-          endAngle: segment.endAngle
-        };
-      })
-    };
-  }) as any[];
+          return {
+            color: entry.color,
+            innerRadius: 0,
+            outerRadius: arcSectionRadius,
+            startAngle: segment.startAngle,
+            endAngle: segment.endAngle
+          };
+        })
+      };
+    });
+  });
 
-  let hideLabels = false;
-  $: hideLabels = hasOverlap(pieSegments);
+  let hideLabels = $state(false);
+
+  $effect(() => {
+    hideLabels = hasOverlap(pieSegments);
+  });
 
   function hasOverlap(pieSegments: any[]): boolean {
     const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
@@ -130,31 +139,30 @@
     return false;
   }
 
-  let chartHasRendered = false;
+  let chartHasRendered = $state(false);
 
   onMount(() => {
     chartHasRendered = true;
   });
 
-  let labelsReady = hasRendered;
+  let labelsReady = $state(hasRendered);
   const onLabelsReady = () => {
     setTimeout(() => {
       labelsReady = true;
     }, 200);
   };
 
-  let containerDiv;
+  let containerDiv = $state<HTMLElement>(null as any);
   let containerWidthStore = writable(-1);
+  syncWidth(containerWidthStore, () => containerDiv);
 
-  $: {
-    containerWidthStore = syncWidth(containerDiv);
-  }
-
-  $: containerSize = $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
+  let containerSize = $derived(
+    $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const)
+  );
 
   const tooltipManager = createTooltipState();
   setContext("tooltip-state", tooltipManager);
-  $: ({ currentState } = tooltipManager);
+  let currentState = $derived(tooltipManager.currentState);
 </script>
 
 <div bind:this={containerDiv} class="flex items-center mx-16">

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { HTMLAttributes } from "svelte/elements";
-  import { slideAnimate } from "./animationHelpers";
+  import { slideAnimate } from "./animationHelpers.svelte";
 
   type Props = {
     open: boolean;
