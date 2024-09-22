@@ -9,18 +9,24 @@
     endAngle: number;
     color: string;
   };
-  export let segmentChunk: ChunkType;
-  export let color: string | null = null;
 
-  export let sliceSpring: Spring<any>;
+  type Props = {
+    segmentChunk: ChunkType;
+    color?: string | null;
+    sliceSpring: Spring<any>;
+  };
+
+  let { segmentChunk, color = null, sliceSpring }: Props = $props();
 
   const arcGenerator = arc();
 
-  $: arcPath = arcGenerator({
-    innerRadius: segmentChunk.innerRadius,
-    outerRadius: segmentChunk.outerRadius,
-    startAngle: $sliceSpring.startAngle,
-    endAngle: $sliceSpring.endAngle
+  let arcPath = $derived.by(() => {
+    return arcGenerator({
+      innerRadius: segmentChunk.innerRadius,
+      outerRadius: segmentChunk.outerRadius,
+      startAngle: $sliceSpring.startAngle,
+      endAngle: $sliceSpring.endAngle
+    });
   });
 </script>
 
