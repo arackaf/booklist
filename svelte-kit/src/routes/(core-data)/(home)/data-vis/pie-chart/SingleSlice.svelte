@@ -4,28 +4,33 @@
   import { getContext } from "svelte";
   import type { createTooltipState } from "../tooltip/tooltipState";
 
-  export let segment: any;
-  export let noInitialAnimation: boolean;
-  export let onLabelsReady: () => void;
-  export let removeSlice: (id: any) => void;
-  export let drilldown: any;
-  export let containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
-  export let disableAnimation: boolean;
-  export let chartHasRendered: boolean;
+  type Props = {
+    segment: any;
+    noInitialAnimation: boolean;
+    onLabelsReady: () => void;
+    removeSlice: (id: any) => void;
+    drilldown: any;
+    containerSize: "UNKNOWN" | "SMALL" | "NORMAL";
+    disableAnimation: boolean;
+    chartHasRendered: boolean;
+  };
 
-  let mainArc: SVGElement;
+  let { segment, noInitialAnimation, onLabelsReady, removeSlice, drilldown, containerSize, disableAnimation, chartHasRendered }: Props = $props();
+
+  let mainArc = $state<SVGElement>(null as any);
 
   const PI = 3.141592653;
-  $: startAngle = segment.startAngle * (180 / PI);
-  $: endAngle = segment.endAngle * (180 / PI);
-  $: midPoint = startAngle + (endAngle - startAngle) / 2;
+  let startAngle = $derived(segment.startAngle * (180 / PI));
+  let endAngle = $derived(segment.endAngle * (180 / PI));
+  let midPoint = $derived(startAngle + (endAngle - startAngle) / 2);
 
-  $: ({ arcCenterPoint } = segment);
+  let { arcCenterPoint } = $derived(segment);
 
-  let slideSliceOut = false;
-  let translateX = 0;
-  let translateY = 0;
-  $: {
+  let slideSliceOut = $state(false);
+  let translateX = $state(0);
+  let translateY = $state(0);
+
+  $effect(() => {
     const [x1, y1] = arcCenterPoint;
 
     const translateTarget = segment.centroidTransition;
@@ -33,16 +38,16 @@
 
     translateX = slideSliceOut && !disableAnimation ? x2 - x1 : 0;
     translateY = slideSliceOut && !disableAnimation ? y2 - y1 : 0;
-  }
+  });
 
-  $: tooltipAnchorKey = containerSize === "SMALL" ? "small" : containerSize === "NORMAL" ? "large" : "";
+  let tooltipAnchorKey = $derived(containerSize === "SMALL" ? "small" : containerSize === "NORMAL" ? "large" : "");
 
-  $: highMiddlePoint = midPoint > 300 || midPoint < 60;
-  $: useCenterTooltipPosition = containerSize === "SMALL" || highMiddlePoint;
+  let highMiddlePoint = $derived(midPoint > 300 || midPoint < 60);
+  let useCenterTooltipPosition = $derived(containerSize === "SMALL" || highMiddlePoint);
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
-  let initialAnimationDoneCalled = noInitialAnimation;
+  let initialAnimationDoneCalled = $state(noInitialAnimation);
 
   const initialStartAngle = segment.chunks[0].startAngle;
   const initialEndAngle = segment.chunks[0].endAngle;
@@ -60,8 +65,9 @@
     springConfig
   );
 
-  let sizing = false;
-  $: {
+  let sizing = $state(false);
+
+  $effect(() => {
     sizing = true;
     sliceSpring
       .set({
@@ -75,20 +81,21 @@
         }
         initialAnimationDoneCalled = true;
       });
-  }
+  });
 
-  let c: SVGElement;
+  let c = $state<SVGElement>(null as any);
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
-  const currentTooltipState = tooltipState.currentState;
+  let currentTooltipState = $derived(tooltipState.currentState);
 
-  $: {
+  $effect(() => {
     let currentlyActivePayload = $currentTooltipState.payload;
     slideSliceOut = currentlyActivePayload?.data === segment.data && $currentTooltipState.shown;
-  }
+  });
 
-  let hovering = false;
-  $: mouseOver = () => {
+  let hovering = $state(false);
+
+  function mouseOver() {
     hovering = true;
     if (sizing || !(mainArc && containerSize !== "UNKNOWN")) {
       return;
@@ -101,28 +108,31 @@
     const remove = removeSlice;
 
     tooltipState.onHover(c, { position, data, drilldown: doDrilldown, remove });
-  };
+  }
 
   function mouseLeave(e: Event) {
     hovering = false;
     tooltipState.onMouseLeave();
   }
 
-  $: tooltipAnchorX = useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0];
-  $: tooltipAnchorY = useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1];
+  let tooltipAnchorX = $derived(useCenterTooltipPosition || disableAnimation ? segment.centroid[0] : segment.centroidTransition[0]);
+  let tooltipAnchorY = $derived(useCenterTooltipPosition || disableAnimation ? segment.centroid[1] : segment.centroidTransition[1]);
 
   const sliceAnimateSpring = spring({ x: 0, y: 0 }, { stiffness: 0.1, damping: 0.5 });
-  $: sliceAnimateSpring.set({ x: translateX, y: translateY });
+
+  $effect(() => {
+    sliceAnimateSpring.set({ x: translateX, y: translateY });
+  });
 </script>
 
 <g
   role="contentinfo"
-  on:mouseover={mouseOver}
-  on:mousemove={mouseOver}
-  on:mouseleave={mouseLeave}
+  onmouseover={mouseOver}
+  onmousemove={mouseOver}
+  onmouseleave={mouseLeave}
   bind:this={mainArc}
-  on:focus={() => {}}
-  on:blur={() => {}}
+  onfocus={() => {}}
+  onblur={() => {}}
 >
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
