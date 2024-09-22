@@ -115,7 +115,15 @@
   $: sliceAnimateSpring.set({ x: translateX, y: translateY });
 </script>
 
-<g role="contentinfo" on:mouseover={mouseOver} on:mousemove={mouseOver} on:mouseleave={mouseLeave} bind:this={mainArc}>
+<g
+  role="contentinfo"
+  on:mouseover={mouseOver}
+  on:mousemove={mouseOver}
+  on:mouseleave={mouseLeave}
+  bind:this={mainArc}
+  on:focus={() => {}}
+  on:blur={() => {}}
+>
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
     {#each segment.chunks as chunk, i}
