@@ -87,10 +87,11 @@
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
   let currentTooltipState = $derived(tooltipState.currentState);
+  let currentTooltipShownState = $derived(tooltipState.shownState);
 
   $effect(() => {
     let currentlyActivePayload = $currentTooltipState.payload;
-    slideSliceOut = currentlyActivePayload?.data === segment.data && $currentTooltipState.shown;
+    slideSliceOut = currentlyActivePayload?.data === segment.data && $currentTooltipShownState;
   });
 
   let hovering = $state(false);

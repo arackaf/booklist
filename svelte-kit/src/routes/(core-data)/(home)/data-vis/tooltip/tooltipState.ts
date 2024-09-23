@@ -9,8 +9,8 @@ export type TooltipPayload = {
 };
 
 export function createTooltipState() {
+  const shownState = writable(false);
   const state = writable({
-    shown: false,
     x: 0,
     y: 0,
     payload: null as null | TooltipPayload,
@@ -39,11 +39,12 @@ export function createTooltipState() {
       const bound = bindTo.getBoundingClientRect();
       const coord = positionTooltip(bound, payload.position, { w, h });
 
-      state.update(current => ({ ...current, shown: true, ...coord, bound: bindTo, payload }));
+      state.update(current => ({ ...current, ...coord, bound: bindTo, payload }));
+      shownState.set(true);
     },
     tooltipHover() {
       clearTimeouts();
-      state.update(current => ({ ...current, shown: true }));
+      shownState.set(true);
     },
     onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
       const currentState = get(this.currentState);
@@ -66,7 +67,7 @@ export function createTooltipState() {
     },
     hide() {
       clearTimeouts();
-      state.update(current => ({ ...current, shown: false }));
+      shownState.set(false);
     },
     tooltipGone() {
       state.update(val => ({ ...val, onScreen: false, payload: null }));
@@ -74,13 +75,16 @@ export function createTooltipState() {
     tooltipVisible() {
       state.update(val => ({ ...val, onScreen: true }));
     },
-    currentState: readOnlyState
+    currentState: readOnlyState,
+    shownState
   };
 
   if (typeof window === "object") {
     window.addEventListener("scroll", () => {
+      const isShown = get(shownState);
       const currentTooltipState = get(state);
-      if (currentTooltipState.shown) {
+
+      if (isShown) {
         result.show(currentTooltipState.bound, currentTooltipState.payload!);
       }
     });

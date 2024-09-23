@@ -167,11 +167,12 @@
   const tooltipManager = createTooltipState();
   setContext("tooltip-state", tooltipManager);
   let currentState = $derived(tooltipManager.currentState);
+  let currentShownState = $derived(tooltipManager.shownState);
 </script>
 
 <div bind:this={containerDiv} class="flex items-center mx-16">
   <div class="max-w-[500px] flex-1 mx-auto">
-    <Tooltip shown={$currentState.shown} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
+    <Tooltip shown={$currentShownState} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
     <svg viewBox="0 0 500 500" class="overflow-visible inline-block w-full">
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {#each pieSegments as seg (seg.data.groupId)}
