@@ -12,10 +12,8 @@ export function syncHeight(el: any) {
   });
 }
 
-export function syncWidth(store: Writable<number>, getEl: () => any) {
+export function syncWidth(store: Writable<number>, el: any) {
   $effect(() => {
-    const el = getEl();
-
     if (!el) {
       return;
     }

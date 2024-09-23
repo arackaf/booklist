@@ -153,8 +153,12 @@
   };
 
   let containerDiv = $state<HTMLElement>(null as any);
+  //TODO refactor this to a rune
   let containerWidthStore = writable(-1);
-  syncWidth(containerWidthStore, () => containerDiv);
+
+  $effect(() => {
+    syncWidth(containerWidthStore, containerDiv);
+  });
 
   let containerSize = $derived(
     $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const)
