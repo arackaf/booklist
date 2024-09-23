@@ -88,6 +88,7 @@
             class="p-0 bg-transparent border-0 shadow-none"
             class:text-neutral-600={!isBar}
             class:text-primary-5={isBar}
+            aria-label="View bar chart"
           >
             <i class="fad fa-chart-bar"></i>
           </button>
@@ -97,6 +98,7 @@
             class="p-0 bg-transparent border-0 shadow-none"
             class:text-neutral-600={!isPie}
             class:text-primary-5={isPie}
+            aria-label="View pie chart"
           >
             <i class="fad fa-chart-pie"></i>
           </button>
@@ -109,7 +111,7 @@
           {#each graphData.filter(d => excluding[d.groupId]) as d}
             <span style="margin-left: 10px; text-wrap: nowrap">
               {" " + d.display}
-              <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)}>
+              <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)} aria-label="Put back into the graph">
                 <i class="far fa-redo"></i>
               </button>
             </span>
