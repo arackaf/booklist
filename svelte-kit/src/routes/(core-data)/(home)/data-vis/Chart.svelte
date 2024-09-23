@@ -8,16 +8,19 @@
   import PieChartContent from "./pie-chart/PieChartContent.svelte";
   import { onMount } from "svelte";
 
-  export let books: BookSubjectStack[];
-  export let subjectHash: Hash<Subject>;
-  export let subjects: Subject[] = [];
+  type Props = {
+    books: BookSubjectStack[];
+    subjectHash: Hash<Subject>;
+    subjects?: Subject[];
+    drilldown: any;
+    header: any;
+    chartIndex: any;
+    initialChartType: "PIE" | "BAR";
+  };
 
-  export let drilldown: any;
-  export let header: any;
-  export let chartIndex: any;
-  export let initialChartType: "PIE" | "BAR";
+  let { books, subjectHash, subjects = [], drilldown, header, chartIndex, initialChartType }: Props = $props();
 
-  let chartType: "PIE" | "BAR" = initialChartType;
+  let chartType = $state<"PIE" | "BAR">(initialChartType);
   const setChartType = (arg: "PIE" | "BAR") => {
     chartType = arg;
 
@@ -26,8 +29,8 @@
     }
   };
 
-  let hasRendered = false;
-  let chartContainer: HTMLElement;
+  let hasRendered = $state(false);
+  let chartContainer = $state<HTMLElement | null>(null);
   onMount(() => {
     if (chartContainer && chartIndex > 0 && !hasRendered) {
       // smooth behavior seems to be disabled in chrome :(
@@ -36,25 +39,27 @@
     hasRendered = true;
   });
 
-  $: isBar = chartType === "BAR";
-  $: isPie = chartType === "PIE";
+  let isBar = $derived(chartType === "BAR");
+  let isPie = $derived(chartType === "PIE");
   const activeBtnStyle = "transform: scale(1.2)";
 
-  $: subjectIds = subjects.map(s => s.id);
+  let subjectIds = $derived(subjects.map(s => s.id));
 
-  $: graphData = stackGraphData(subjectHash, subjectIds, books, chartIndex > 0);
+  let graphData = $derived(stackGraphData(subjectHash, subjectIds, books, chartIndex > 0));
 
-  $: ({ hasPublicId } = $page.data);
+  let { hasPublicId } = $derived($page.data);
 
-  let excluding: any = {};
-  $: excludedCount = Object.keys(excluding).filter(k => excluding[k]).length;
+  let excluding = $state({});
+  let excludedCount = $derived(Object.keys(excluding).filter(k => excluding[k]).length);
 
-  $: showingData = graphData
-    .filter(d => !excluding[d.groupId])
-    .map((data: any) => {
-      data.childSubjects = data.entries.reduce((subjects: any, { children: theseChildren }: any) => subjects.concat(theseChildren), [] as any);
-      return data;
-    });
+  let showingData = $derived(
+    graphData
+      .filter(d => !excluding[d.groupId])
+      .map((data: any) => {
+        data.childSubjects = data.entries.reduce((subjects: any, { children: theseChildren }: any) => subjects.concat(theseChildren), [] as any);
+        return data;
+      })
+  );
 
   const remove = (id: any) => (excluding = { ...excluding, [id]: true });
   const restore = (id: any) => (excluding = { ...excluding, [id]: false });
@@ -83,7 +88,7 @@
         <h4 style="display: inline; text-wrap: nowrap" class="text-xl font-semibold">{header}</h4>
         <div class="flex items-center gap-3 ml-1">
           <button
-            on:click={() => setChartType("BAR")}
+            onclick={() => setChartType("BAR")}
             style={isBar ? activeBtnStyle : ""}
             class="p-0 bg-transparent border-0 shadow-none"
             class:text-neutral-600={!isBar}
@@ -93,7 +98,7 @@
             <i class="fad fa-chart-bar"></i>
           </button>
           <button
-            on:click={() => setChartType("PIE")}
+            onclick={() => setChartType("PIE")}
             style={isPie ? activeBtnStyle : ""}
             class="p-0 bg-transparent border-0 shadow-none"
             class:text-neutral-600={!isPie}
@@ -111,7 +116,7 @@
           {#each graphData.filter(d => excluding[d.groupId]) as d}
             <span style="margin-left: 10px; text-wrap: nowrap">
               {" " + d.display}
-              <button class="raw-button" style="color: black" on:click={() => restore(d.groupId)} aria-label="Put back into the graph">
+              <button class="raw-button" style="color: black" onclick={() => restore(d.groupId)} aria-label="Put back into the graph">
                 <i class="far fa-redo"></i>
               </button>
             </span>
