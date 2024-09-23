@@ -101,8 +101,11 @@
             dead = true;
             tooltipState.hide();
             remove(currentData.groupId);
-          }}><i class="fad fa-times-circle"></i></button
+          }}
+          aria-label="Remove"
         >
+          <i class="fad fa-times-circle"></i>
+        </button>
       </div>
       <hr class="border-slate-600 my-0" />
     </div>
