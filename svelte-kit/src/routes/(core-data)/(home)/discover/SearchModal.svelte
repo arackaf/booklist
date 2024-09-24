@@ -182,8 +182,8 @@
             <hr class="my-2" />
           {/if}
         </div>
-        <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
       </div>
     </div>
   </form>
+  <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
 </Modal>
