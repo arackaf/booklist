@@ -19,7 +19,7 @@
       <SubTitleText>{book.authors.join(", ")}</SubTitleText>
 
       {#if book.isbn}
-        <a target="_new" class="mr-2 mt-auto" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
+        <a target="_new" class="mr-2 mt-auto" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`} aria-label="View on Amazon">
           <i class="fab fa-amazon"></i>
         </a>
       {/if}
