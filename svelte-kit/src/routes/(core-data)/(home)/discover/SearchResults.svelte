@@ -5,10 +5,14 @@
 
   import SearchResult from "./SearchResult.svelte";
 
-  export let selectedBooksSet: Set<number>;
-  export let books: any[];
-  export let currentQuery: string;
-  export let selectBook: (book: Book) => void;
+  type Props = {
+    selectedBooksSet: Set<number>;
+    books: any[];
+    currentQuery: string;
+    selectBook: (book: Book) => void;
+  };
+
+  let { selectedBooksSet, books, currentQuery, selectBook }: Props = $props();
 
   const resultsIn: any = () => {
     return {
