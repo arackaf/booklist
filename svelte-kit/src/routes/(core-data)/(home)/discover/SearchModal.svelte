@@ -19,6 +19,7 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
+  import { onMount } from "svelte";
 
   type Props = {
     isOpen: boolean;
@@ -83,12 +84,12 @@
       ...["subjects", "tags"].flatMap(k => (data.getAll(k) ?? []).map((val: any) => [k, val.toString()]))
     ]);
 
-    const search = searchParams.toString();
+    // const search = searchParams.toString();
 
-    const result = await fetch(`/api/books?${search}`).then((resp: any) => resp.json());
+    const result = await fetch(`/api/books`).then((resp: any) => resp.json());
 
     pageBind = 1;
-    currentQuery = search;
+    currentQuery = "";
     ({ page, totalPages, books, totalBooks } = result);
     loading = false;
     active = true;
@@ -97,93 +98,40 @@
 
 <Modal openFocus={titleEl} standardFooter={false} {isOpen} {onHide} headerCaption="Search your books">
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
-    <input type="hidden" name="page" value={pageBind} />
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-      <InputGroup labelText="Title">
-        <Input slot="input" bind:inputEl={titleEl} name="search" placeholder="Search title" />
-      </InputGroup>
-
-      <div class="flex">
-        <div class="flex flex-col">
-          <span class="text-sm">Is read?</span>
-          <div class="flex-1 flex flex-row gap-4 items-center">
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" checked value="" name="is-read" id="isReadE" />
-              <label for="isReadE">Either</label>
-            </div>
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" value="true" name="is-read" id="isReadY" />
-              <label for="isReadY">Yes</label>
-            </div>
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" value="false" name="is-read" id="isReadN" />
-              <label for="isReadN">No</label>
-            </div>
+    <ActionButton running={loading}>Search</ActionButton>
+  </form>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
+    <div class="flex">
+      <div class="flex flex-col">
+        <span class="text-sm">Is read?</span>
+        <div class="flex-1 flex flex-row gap-4 items-center">
+          <div class="flex flex-row items-center gap-1">
+            <input type="radio" checked value="" name="is-read" id="isReadE" />
+            <label for="isReadE">Either</label>
+          </div>
+          <div class="flex flex-row items-center gap-1">
+            <input type="radio" value="true" name="is-read" id="isReadY" />
+            <label for="isReadY">Yes</label>
+          </div>
+          <div class="flex flex-row items-center gap-1">
+            <input type="radio" value="false" name="is-read" id="isReadN" />
+            <label for="isReadN">No</label>
           </div>
         </div>
       </div>
+    </div>
 
-      <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
-        <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
-      </SelectAndDisplayContainer>
+    <div class="sm:col-span-2">
+      <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
+    </div>
 
-      <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
-        <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
-      </SelectAndDisplayContainer>
-
-      <div class="sm:col-span-2">
-        <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
+    <div class="sm:col-span-2">
+      <div class="flex flex-row gap-3">
+        <ActionButton running={loading}>Search</ActionButton>
       </div>
-
       <div class="sm:col-span-2">
-        <div class="flex flex-row gap-3">
-          <ActionButton running={loading}>Search</ActionButton>
-
-          <div class="flex relative flex-1 self-stretch">
-            {#if noAvailableBooks}
-              <div in:fade={{ duration: 150 }}>
-                <Alert type="info" layout="slimmer">You've added all of the books from this page</Alert>
-              </div>
-            {/if}
-
-            {#if noResults}
-              <div class="flex items-start justify-start" style="backface-visibility: hidden;" transition:fade={{ duration: 150 }}>
-                <Alert type="warning" layout="slimmer">No results</Alert>
-              </div>
-            {/if}
-          </div>
-        </div>
-      </div>
-
-      <div class="sm:col-span-2">
-        <div>
-          {#if totalBooks}
-            <div class="flex flex-row gap-1 items-center">
-              <div class="flex">
-                <Button type="button" onclick={pageOne} disabled={!canPageDown} icon={true} class="connect-right">
-                  <i class="fal fa-fw fa-angle-double-left"></i>
-                </Button>
-                <Button type="button" onclick={pageDown} disabled={!canPageDown} icon={true} class="connect-left">
-                  <i class="fal fa-fw fa-angle-left"></i>
-                </Button>
-              </div>
-              <span class="text-sm mx-1">{page} of {totalPages}</span>
-              <div class="flex">
-                <Button type="button" onclick={pageUp} disabled={!canPageUp} icon={true} class="connect-right">
-                  <i class="fal fa-fw fa-angle-right"></i>
-                </Button>
-                <Button type="button" onclick={pageLast} disabled={!canPageUp} icon={true} class="connect-left">
-                  <i class="fal fa-fw fa-angle-double-right"></i>
-                </Button>
-              </div>
-            </div>
-            <hr class="my-2" />
-          {/if}
-        </div>
         <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
       </div>
     </div>
-  </form>
+  </div>
 </Modal>
