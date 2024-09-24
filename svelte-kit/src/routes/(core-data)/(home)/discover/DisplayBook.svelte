@@ -7,18 +7,22 @@
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import Button from "$lib/components/Button/Button.svelte";
 
-  export let book: Book;
-  export let unselectBook: (book: Book) => void;
+  type Props = {
+    book: Book;
+    unselectBook: (book: Book) => void;
+  };
+
+  let { book, unselectBook }: Props = $props();
 
   const slideIn: any = () => {
     return {
       duration: 200,
       css: (t: number) => {
-        console.log(t, circIn(-25 * (1 - t)));
         return `opacity: ${quadOut(t)}; transform: translateX(${-25 * quintIn(1 - t)}%)`;
       }
     };
   };
+
   const slideOut: any = (node: HTMLElement) => {
     let height = node.offsetHeight;
     return {
@@ -29,7 +33,7 @@
 </script>
 
 <div style="overflow: hidden">
-  <div in:slideIn|local out:slideOut|local>
+  <div in:slideIn out:slideOut>
     <div class="flex flex-row">
       <div class="min-w-[60px]">
         <BookCover size="small" {book} />
