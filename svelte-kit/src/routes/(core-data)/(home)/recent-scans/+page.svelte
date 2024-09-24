@@ -2,12 +2,20 @@
   import Alert from "$lib/components/Alert.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
+  import type { Writable } from "svelte/store";
 
-  export let data;
+  type Props = {
+    data: {
+      scans: Writable<any[]>;
+      nextPageKey: Writable<string | null>;
+    };
+  };
 
-  $: ({ scans, nextPageKey } = data);
+  let { data }: Props = $props();
 
-  let loading: boolean;
+  let { scans, nextPageKey } = $derived(data);
+
+  let loading = $state(false);
 
   function loadNextScans() {
     loading = true;
@@ -22,9 +30,7 @@
       });
   }
 
-  let noResultsMessage: string;
-
-  $: noResultsMessage = $scans.length ? "No more recent scans" : "No recent scans";
+  let noResultsMessage = $derived($scans.length ? "No more recent scans" : "No recent scans");
 </script>
 
 <div class="recent-scans-module">
