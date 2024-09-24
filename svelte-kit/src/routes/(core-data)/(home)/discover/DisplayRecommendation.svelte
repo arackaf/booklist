@@ -4,7 +4,11 @@
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
 
-  export let book: Book;
+  type Props = {
+    book: Book;
+  };
+
+  let { book }: Props = $props();
 </script>
 
 <div class="flex flex-row">
