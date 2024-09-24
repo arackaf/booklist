@@ -20,27 +20,30 @@
 
   import SearchResults from "./SearchResults.svelte";
 
-  export let isOpen: boolean;
-  export let onHide: () => void;
-  export let selectedBooksSet: Set<number>;
-  export let selectBook: (book: Book) => void;
+  type Props = {
+    isOpen: boolean;
+    onHide: () => void;
+    selectedBooksSet: Set<number>;
+    selectBook: (book: Book) => void;
+    allSubjects: Subject[];
+    allTags: Tag[];
+  };
 
-  export let allSubjects: Subject[];
-  export let allTags: Tag[];
+  let { isOpen, onHide, selectedBooksSet, selectBook, allSubjects, allTags }: Props = $props();
 
-  let page = 1;
-  let pageBind = 1;
+  let page = $state(1);
+  let pageBind = $state(1);
 
-  let totalPages = 0;
-  let active = false;
+  let totalPages = $state(0);
+  let active = $state(false);
 
-  let books: Book[] = [];
-  let subjects: number[] = [];
-  let tags: number[] = [];
+  let books = $state<Book[]>([]);
+  let subjects = $state<number[]>([]);
+  let tags = $state<number[]>([]);
   let titleEl: HTMLInputElement;
 
-  let loading = false;
-  $: noResults = active && !books?.length;
+  let loading = $state(false);
+  let noResults = $derived(active && !books?.length);
 
   let searchFormEl: HTMLFormElement;
 
@@ -54,18 +57,18 @@
     searchFormEl.requestSubmit();
   };
 
-  $: canPageUp = !loading && page < totalPages;
-  $: canPageDown = !loading && page > 1;
+  let canPageUp = $derived(!loading && page < totalPages);
+  let canPageDown = $derived(!loading && page > 1);
 
-  $: noAvailableBooks = books.length && !books.find(b => !selectedBooksSet.has(b.id));
+  let noAvailableBooks = $derived(books.length && !books.find(b => !selectedBooksSet.has(b.id)));
 
   const selectSubject = (subject: Subject) => (subjects = subjects.concat(subject.id));
   const selectTag = (tag: Tag) => (tags = tags.concat(tag.id));
   const removeSubject = (subject: Subject) => (subjects = subjects.filter(id => id != subject.id));
   const removeTag = (tag: Tag) => (tags = tags.filter(id => id != tag.id));
 
-  let currentQuery = "";
-  let totalBooks = 0;
+  let currentQuery = $state("");
+  let totalBooks = $state(0);
 
   async function executeSearch({ cancel, formData: data }: any) {
     cancel();
