@@ -9,7 +9,7 @@
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
 
-  let running = false;
+  let running = $state(false);
   function clickButton() {
     running = true;
     setTimeout(() => {
