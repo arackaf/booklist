@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-
   import type { BookSubjectStack, Subject } from "$data/types";
 
   import { toHash } from "$lib/state/helpers";

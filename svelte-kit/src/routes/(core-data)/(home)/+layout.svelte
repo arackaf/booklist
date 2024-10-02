@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
   import { SectionNavItem } from "$lib/components/section-nav";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
