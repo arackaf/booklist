@@ -184,6 +184,6 @@
         </div>
       </div>
     </div>
+    <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
   </form>
-  <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
 </Modal>
