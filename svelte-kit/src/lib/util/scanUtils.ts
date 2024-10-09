@@ -1,5 +1,6 @@
 import { ajaxUtil } from "./ajaxUtil";
-import { PUBLIC_SCAN_WS } from "$env/static/public";
+import { env } from "$env/dynamic/public";
+const { PUBLIC_SCAN_WS } = env;
 
 let ws: WebSocket;
 let open = false;

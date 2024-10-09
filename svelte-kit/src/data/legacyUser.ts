@@ -1,5 +1,6 @@
 import md5 from "blueimp-md5";
-import { SALT } from "$env/static/private";
+import { env } from "$env/dynamic/private";
+const { SALT } = env;
 
 import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
