@@ -1,5 +1,7 @@
 import { json } from "@sveltejs/kit";
-import { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, PROCESS_COVER_LAMBDA } from "$env/static/private";
+import { env } from "$env/dynamic/private";
+const { AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, PROCESS_COVER_LAMBDA } = env;
+
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 } from "uuid";
 
