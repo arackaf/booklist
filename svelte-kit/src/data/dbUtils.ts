@@ -10,6 +10,9 @@ import type { SQL } from "drizzle-orm";
 import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 
+console.log("\n\n--------------------------------------------\n\n");
+console.log("Connection string", MYSQL_RDS_CONNECTION_STRING);
+console.log("\n\n--------------------------------------------\n\n");
 const rdsConnection = await mysql.createConnection({
   uri: MYSQL_RDS_CONNECTION_STRING
 });
