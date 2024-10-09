@@ -1,6 +1,8 @@
 import { json } from "@sveltejs/kit";
 
-import { GET_RECOMMENDATIONS_LAMBDA } from "$env/static/private";
+import { env } from "$env/dynamic/private";
+const { GET_RECOMMENDATIONS_LAMBDA } = env;
+
 import { invokeLambda } from "$lib/lambda-utils.js";
 
 export async function POST({ locals, request }) {
