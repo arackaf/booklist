@@ -1,6 +1,7 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
-import { MYSQL_CONNECTION_STRING } from "$env/static/private";
+import { env } from "$env/dynamic/private";
+const { MYSQL_CONNECTION_STRING, MYSQL_RDS_CONNECTION_STRING } = env;
 
 import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
@@ -9,7 +10,6 @@ import type { SQL } from "drizzle-orm";
 import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
 import mysql, { type Connection as MySqlConnection } from "mysql2/promise";
 
-import { MYSQL_RDS_CONNECTION_STRING } from "$env/static/private";
 import { building } from "$app/environment";
 
 let rdsConnection: MySqlConnection = null as any;
