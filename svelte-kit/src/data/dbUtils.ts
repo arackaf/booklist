@@ -12,8 +12,6 @@ import mysql from "mysql2/promise";
 
 console.log("\n\n--------------------------------------------\n\n");
 console.log("Connection string", MYSQL_RDS_CONNECTION_STRING);
-console.log("Connection string process.env", process.env);
-console.log("Connection string process.env.MYSQL_RDS_CONNECTION_STRING", process.env.MYSQL_RDS_CONNECTION_STRING);
 console.log("\n\n--------------------------------------------\n\n");
 const rdsConnection = await mysql.createConnection({
   uri: MYSQL_RDS_CONNECTION_STRING
