@@ -5,8 +5,7 @@ import { allTags } from "$data/tags";
 import { getUser } from "$data/user";
 import { getPublicId } from "$lib/util/getPublicId";
 
-import { env } from "$env/dynamic/private";
-const { ADMIN_USER } = env;
+import { ADMIN_USER } from "$env/static/private";
 
 export async function load({ locals, request, fetch }: any) {
   const publicUserId = getPublicId(request);

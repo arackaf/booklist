@@ -1,6 +1,5 @@
 import { redirect } from "@sveltejs/kit";
-import { env } from "$env/dynamic/private";
-const { ADMIN_USER } = env;
+import { ADMIN_USER } from "$env/static/private";
 
 import { differenceInMinutes, differenceInHours, differenceInCalendarDays, differenceInCalendarMonths, differenceInCalendarYears } from "date-fns";
 

@@ -1,8 +1,6 @@
 import { json } from "@sveltejs/kit";
 
-import { env } from "$env/dynamic/private";
-const { PROCESS_COVER_LAMBDA } = env;
-
+import { PROCESS_COVER_LAMBDA } from "$env/static/private";
 import { invokeLambda } from "$lib/lambda-utils.js";
 
 export async function POST({ locals, request }) {
