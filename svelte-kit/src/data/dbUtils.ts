@@ -7,20 +7,27 @@ import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import type { SQL } from "drizzle-orm";
 
 import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
+import mysql, { type Connection as MySqlConnection } from "mysql2/promise";
 
 import { MYSQL_RDS_CONNECTION_STRING } from "$env/static/private";
+import { building } from "$app/environment";
 
-const rdsConnection = await mysql.createConnection({
-  uri: MYSQL_RDS_CONNECTION_STRING
-});
+let rdsConnection: MySqlConnection = null as any;
+export let mySqlConnectionFactory = null as any;
+export let db: ReturnType<typeof drizzleMySql> = null as any;
 
-export const mySqlConnectionFactory = new Client({
-  url: MYSQL_CONNECTION_STRING
-});
+if (!building) {
+  rdsConnection = await mysql.createConnection({
+    uri: MYSQL_RDS_CONNECTION_STRING
+  });
+  db = drizzleMySql(rdsConnection, { schema, mode: "default" });
+
+  mySqlConnectionFactory = new Client({
+    url: MYSQL_CONNECTION_STRING
+  });
+}
 
 //export const db = drizzle(mySqlConnectionFactory, { schema });
-export const db = drizzleMySql(rdsConnection, { schema, mode: "default" });
 
 type ExtractTypeFromMySqlColumn<T extends MySqlColumn> =
   T extends MySqlColumn<infer U> ? (U extends { notNull: true } ? U["data"] : U["data"] | null) : never;
@@ -32,7 +39,7 @@ export type InferSelection<T> = {
 
 export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
 
-export const executeSQLRaw = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
+const executeSQLRaw = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
   const start = +new Date();
   const conn = mySqlConnectionFactory.connection();
 
