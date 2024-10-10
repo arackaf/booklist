@@ -4,13 +4,17 @@ const { FIREBASE_CONFIG } = env;
 
 import { getUserSync } from "$data/legacyUser";
 
-const firebaseConfig = JSON.parse(FIREBASE_CONFIG);
-firebaseConfig.private_key = firebaseConfig.private_key.replace(/\\n/g, "\n");
+import { building } from "$app/environment";
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(firebaseConfig)
-  });
+if (!building) {
+  const firebaseConfig = JSON.parse(FIREBASE_CONFIG);
+  firebaseConfig.private_key = firebaseConfig.private_key.replace(/\\n/g, "\n");
+
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert(firebaseConfig)
+    });
+  }
 }
 
 async function getGoogleIdFromToken(token: string) {
