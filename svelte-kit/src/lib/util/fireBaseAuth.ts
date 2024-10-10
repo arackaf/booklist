@@ -1,7 +1,5 @@
 import admin from "firebase-admin";
-import { env } from "$env/dynamic/private";
-const { FIREBASE_CONFIG } = env;
-
+import { FIREBASE_CONFIG } from "$env/static/private";
 import { getUserSync } from "$data/legacyUser";
 
 const firebaseConfig = JSON.parse(FIREBASE_CONFIG);

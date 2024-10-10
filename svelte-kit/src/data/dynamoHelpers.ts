@@ -1,5 +1,4 @@
-import { env } from "$env/dynamic/private";
-const { BOOKLIST_DYNAMO, DYNAMO_AUTH_TABLE, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } = env;
+import { BOOKLIST_DYNAMO, DYNAMO_AUTH_TABLE, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } from "$env/static/private";
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 
