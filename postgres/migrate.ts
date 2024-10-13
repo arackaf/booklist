@@ -5,6 +5,14 @@ import { Client } from "@planetscale/database";
 
 const { Client: PgClient } = pg;
 
+/*
+ WHERE EXISTS (
+  SELECT 1
+  FROM json_array_elements_text(authors) AS author
+  WHERE author LIKE '%Bob%'
+)
+*/
+
 function migrateTable() {}
 
 async function migrate() {
