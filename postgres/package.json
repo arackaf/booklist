@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "@planetscale/database": "^1.19.0",
+    "dotenv": "^16.4.5",
+    "mysql2": "^3.11.3",
+    "pg": "^8.13.0"
   }
 }
