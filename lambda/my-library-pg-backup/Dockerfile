@@ -15,9 +15,11 @@ FROM postgres:16.4
 
 WORKDIR /app
 COPY --from=BUILDER /app/run-pg_dump .
-COPY --from=BUILDER /app/dump-output.sql .
+COPY --from=BUILDER /app/run-backup.sh .
 
-CMD ["./run-pg_dump"]
+RUN chmod +x ./run-backup.sh
+
+CMD ["./run-backup.sh"]
 
 # FROM oven/bun:latest
 
@@ -30,7 +32,6 @@ CMD ["./run-pg_dump"]
 
 
 # COPY . .
-#CMD ["pg_dump", ${PG_URI}, "-f", "dump-output.sql"]
 
 
 
