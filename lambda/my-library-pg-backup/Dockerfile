@@ -16,7 +16,3 @@ COPY --from=BUILDER /app/run-backup.sh .
 RUN chmod +x ./run-backup.sh
 
 CMD ["./run-backup.sh"]
-
-
-
-
