@@ -13,64 +13,72 @@ const { Client: PgClient } = pg;
 )
 */
 
-async function migrate() {
-  const pgClient = new PgClient({
-    connectionString: process.env.POSTGRES_CONNECTION_STRING,
-    database: "my-library"
-  });
-  await pgClient.connect();
+type TableMigrationConfig = {
+  json?: string[];
+  boolean?: string[];
+  key?: string;
+};
 
-  const mySqlConnectionFactory = new Client({
-    url: process.env.MYSQL_CONNECTION_STRING
-  });
+const pgClient = new PgClient({
+  connectionString: process.env.POSTGRES_CONNECTION_STRING,
+  database: "my-library"
+});
+
+const mySqlConnectionFactory = new Client({
+  url: process.env.MYSQL_CONNECTION_STRING
+});
+
+const getValue = (obj: any, col: string, config: TableMigrationConfig) => {
+  if ((config.json ?? []).includes(col)) {
+    return JSON.stringify(obj[col]) ?? '""';
+  }
+  if ((config.boolean ?? []).includes(col)) {
+    return obj[col] === 1 ? true : false;
+  }
+  return obj[col];
+};
+
+async function flush(table: string, columns: string[], objects: any[], config: TableMigrationConfig) {
+  let placeholderVal = 1;
+  const query = `INSERT INTO ${table} (${columns.join(", ")}) VALUES ${objects
+    .map(o => `(${columns.map(c => `$${placeholderVal++}`).join(", ")})`)
+    .join(", ")}`;
+  const variables = objects.flatMap(o => columns.map(c => getValue(o, c, config)));
+
+  await pgClient.query(query, variables);
+  console.log(`Inserted ${objects.length} rows into ${table}: ${objects.map(o => o[config.key ?? "id"]).join(", ")}`);
+  await new Promise(resolve => setTimeout(resolve, 1000));
+}
+
+async function migrateTable(table: string, columns: string[], config: TableMigrationConfig = {}) {
   const mySqlConn = mySqlConnectionFactory.connection();
 
-  async function migrateTable(table: string, columns: string[], config = {} as any) {
-    await pgClient.query(`TRUNCATE TABLE ${table}`);
+  await pgClient.query(`TRUNCATE TABLE ${table}`);
 
-    const { json = [], boolean = [], key = "id" } = config;
-    const result = await mySqlConn.execute(`SELECT * FROM ${table} ORDER BY ${key} ASC`);
+  const { key = "id" } = config;
+  const result = await mySqlConn.execute(`SELECT * FROM ${table} ORDER BY ${key} ASC`);
 
-    const getValue = (obj: any, col: string) => {
-      if (json.includes(col)) {
-        return JSON.stringify(obj[col]) ?? '""';
-      }
-      if (boolean.includes(col)) {
-        return obj[col] === 1 ? true : false;
-      }
-      return obj[col];
-    };
-
-    async function flush(objects: any[], keyField: string) {
-      let placeholderVal = 1;
-      const query = `INSERT INTO ${table} (${columns.join(", ")}) VALUES ${objects
-        .map(o => `(${columns.map(c => `$${placeholderVal++}`).join(", ")})`)
-        .join(", ")}`;
-      const variables = objects.flatMap(o => columns.map(c => getValue(o, c)));
-
-      await pgClient.query(query, variables);
-      console.log(`Inserted ${objects.length} rows into ${table}: ${objects.map(o => o[keyField]).join(", ")}`);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+  let i = 1;
+  let buffer: any[] = [];
+  for (const row of result.rows) {
+    if (i > 50) {
+      return;
     }
 
-    let i = 1;
-    let buffer: any[] = [];
-    for (const row of result.rows) {
-      if (i > 50) {
-        return;
-      }
-
-      buffer.push(row);
-      if (i % 10 === 0) {
-        await flush(buffer, key);
-        buffer = [];
-      }
-      i++;
+    buffer.push(row);
+    if (i % 10 === 0) {
+      await flush(table, columns, buffer, config);
+      buffer = [];
     }
-    if (buffer.length) {
-      await flush(buffer, key);
-    }
+    i++;
   }
+  if (buffer.length) {
+    await flush(table, columns, buffer, config);
+  }
+}
+
+async function migrate() {
+  await pgClient.connect();
 
   try {
     await migrateTable(
