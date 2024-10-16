@@ -61,10 +61,6 @@ async function migrateTable(table: string, columns: string[], config: TableMigra
   let i = 1;
   let buffer: any[] = [];
   for (const row of result.rows) {
-    if (i > 50) {
-      return;
-    }
-
     buffer.push(row);
     if (i % 10 === 0) {
       await flush(table, columns, buffer, config);
