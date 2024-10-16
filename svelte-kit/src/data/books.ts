@@ -90,7 +90,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
     }
     if (isRead != null) {
-      conditions.push(eq(booksTable.isRead, isRead ? 1 : 0));
+      conditions.push(eq(booksTable.isRead, isRead ? true : false));
     }
     if (tags.length) {
       conditions.push(
