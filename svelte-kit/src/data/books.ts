@@ -1,5 +1,5 @@
 import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
-import type { MySqlTransaction } from "drizzle-orm/mysql-core";
+import type { PgTransaction } from "drizzle-orm/pg-core";
 
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
@@ -90,7 +90,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
     }
     if (isRead != null) {
-      conditions.push(eq(booksTable.isRead, isRead ? true : false));
+      conditions.push(eq(booksTable.isRead, isRead));
     }
     if (tags.length) {
       conditions.push(
@@ -254,7 +254,7 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
         isbn: book.isbn,
         publisher: book.publisher,
         publicationDate: book.publicationDate,
-        isRead: book.isRead ? 1 : 0,
+        isRead: !!book.isRead,
         mobileImage: book.mobileImage,
         mobileImagePreview: book.mobileImagePreview ?? null,
         smallImage: book.smallImage,
@@ -291,7 +291,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
       }
     : {};
 
-  const isReadUpdate = book.isRead != null ? { isRead: book.isRead ? 1 : 0 } : {};
+  const isReadUpdate = book.isRead != null ? { isRead: book.isRead } : {};
 
   await executeDrizzle(
     "update book",
@@ -316,7 +316,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
   );
 };
 
-const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
+const syncBookTags = async (tx: PgTransaction<any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksTags).where(eq(booksTags.book, bookId));
   }
@@ -325,13 +325,7 @@ const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, userId: st
   }
 };
 
-const syncBookSubjects = async (
-  tx: MySqlTransaction<any, any, any, any>,
-  userId: string,
-  bookId: number,
-  subjects: number[],
-  clearExisting = false
-) => {
+const syncBookSubjects = async (tx: PgTransaction<any, any>, userId: string, bookId: number, subjects: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksSubjects).where(eq(booksSubjects.book, bookId));
   }
@@ -454,7 +448,7 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
     "update books read",
     db
       .update(booksTable)
-      .set({ isRead: read ? 1 : 0 })
+      .set({ isRead: read })
       .where(and(eq(booksTable.userId, userId), inArray(booksTable.id, ids)))
   );
 };
@@ -464,7 +458,7 @@ export const deleteBook = async (userId: string, id: number) => {
     "delete book",
     db.transaction(async tx => {
       const result = await tx.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id)));
-      if (result.rowsAffected !== 1) {
+      if (result.rowCount !== 1) {
         throw new Error("No access");
       }
 

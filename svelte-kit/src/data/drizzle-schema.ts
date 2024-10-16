@@ -15,7 +15,7 @@ export const books = pgTable("books", {
   similarBooks: json("similarBooks").$type<string[] | null>(),
   similarBooksLastSync: timestamp("similarBooksLastSync"),
   similarBooksLastSyncSuccess: boolean("similarBooksLastSyncSuccess"),
-  similarBooksLastSyncFailureReason: longtext("similarBooksLastSyncFailureReason"),
+  similarBooksLastSyncFailureReason: text("similarBooksLastSyncFailureReason"),
   mobileImage: varchar("mobileImage", { length: 250 }),
   mobileImagePreview: json("mobileImagePreview").$type<string | PreviewPacket | null>(),
   smallImage: varchar("smallImage", { length: 250 }),
