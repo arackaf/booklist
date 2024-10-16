@@ -13,8 +13,6 @@ const { Client: PgClient } = pg;
 )
 */
 
-function migrateTable() {}
-
 async function migrate() {
   const pgClient = new PgClient({
     connectionString: process.env.POSTGRES_CONNECTION_STRING,
@@ -27,11 +25,11 @@ async function migrate() {
   });
   const mySqlConn = mySqlConnectionFactory.connection();
 
-  await pgClient.query(`TRUNCATE TABLE books`);
+  async function migrateTable(table: string, columns: string[], config = {} as any) {
+    await pgClient.query(`TRUNCATE TABLE ${table}`);
 
-  async function migrateTable(table: string, columns: string[], config = ({} = {} as any)) {
-    const { json = [], boolean = [] } = config;
-    const result = await mySqlConn.execute(`SELECT * FROM ${table} ORDER BY id ASC LIMIT 1`);
+    const { json = [], boolean = [], key = "id" } = config;
+    const result = await mySqlConn.execute(`SELECT * FROM ${table} ORDER BY ${key} ASC`);
 
     const getValue = (obj: any, col: string) => {
       if (json.includes(col)) {
@@ -43,34 +41,34 @@ async function migrate() {
       return obj[col];
     };
 
-    async function flush(objects: any[]) {
+    async function flush(objects: any[], keyField: string) {
       let placeholderVal = 1;
       const query = `INSERT INTO ${table} (${columns.join(", ")}) VALUES ${objects
         .map(o => `(${columns.map(c => `$${placeholderVal++}`).join(", ")})`)
         .join(", ")}`;
       const variables = objects.flatMap(o => columns.map(c => getValue(o, c)));
 
-      console.log({
-        query,
-        variables
-      });
-
       await pgClient.query(query, variables);
+      console.log(`Inserted ${objects.length} rows into ${table}: ${objects.map(o => o[keyField]).join(", ")}`);
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     let i = 1;
     let buffer: any[] = [];
     for (const row of result.rows) {
+      if (i > 50) {
+        return;
+      }
+
       buffer.push(row);
       if (i % 10 === 0) {
-        await flush(buffer);
+        await flush(buffer, key);
         buffer = [];
       }
       i++;
     }
     if (buffer.length) {
-      await flush(buffer);
+      await flush(buffer, key);
     }
   }
 
@@ -105,6 +103,23 @@ async function migrate() {
         boolean: ["isRead", "similarBooksLastSyncSuccess"]
       }
     );
+
+    await migrateTable("books_subjects", ["id", "userId", "book", "subject"], {});
+    await migrateTable("books_tags", ["id", "userId", "book", "tag"], {});
+    await migrateTable(
+      "similar_books",
+      ["id", "title", "authors", "authorsLastManualSync", "isbn", "mobileImage", "mobileImagePreview", "smallImage", "smallImagePreview"],
+      {
+        json: ["authors", "mobileImagePreview", "smallImagePreview"]
+      }
+    );
+
+    await migrateTable("subjects", ["id", "userId", "name", "path", "textColor", "backgroundColor"], {});
+    await migrateTable("tags", ["id", "userId", "name", "textColor", "backgroundColor"], {});
+
+    await migrateTable("user_info_cache", ["userId", "name", "provider", "email", "avatar", "aliasUserId", "lastSync"], {
+      key: "userId"
+    });
   } finally {
     pgClient.end();
   }
