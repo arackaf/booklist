@@ -1,26 +1,31 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { env } from "$env/dynamic/private";
-const { MYSQL_CONNECTION_STRING, MYSQL_RDS_CONNECTION_STRING } = env;
+const { MYSQL_CONNECTION_STRING, MYSQL_RDS_CONNECTION_STRING, FLY_DB } = env;
 
 import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import type { SQL } from "drizzle-orm";
 
 import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import mysql, { type Connection as MySqlConnection } from "mysql2/promise";
+
+import { Pool } from "pg";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+export let db: ReturnType<typeof drizzlePg> = null as any;
 
 import { building } from "$app/environment";
 
-let rdsConnection: MySqlConnection = null as any;
 export let mySqlConnectionFactory = null as any;
-export let db: ReturnType<typeof drizzleMySql> = null as any;
+export let dbMySql: ReturnType<typeof drizzleMySql> = null as any;
 
 if (!building) {
-  rdsConnection = await mysql.createConnection({
-    uri: MYSQL_RDS_CONNECTION_STRING
-  });
-  db = drizzleMySql(rdsConnection, { schema, mode: "default" });
+  db = drizzlePg({ schema, client: pool });
 
   mySqlConnectionFactory = new Client({
     url: MYSQL_CONNECTION_STRING
