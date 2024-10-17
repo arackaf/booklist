@@ -11,10 +11,11 @@ import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import mysql, { type Connection as MySqlConnection } from "mysql2/promise";
 
-import { Pool } from "pg";
+import pg from "pg";
+const { Pool } = pg;
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: env.FLY_DB
 });
 
 export let db: ReturnType<typeof drizzlePg> = null as any;
