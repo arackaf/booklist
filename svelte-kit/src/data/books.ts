@@ -235,7 +235,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
 
 export const aggregateBooksSubjects = async (userId: string) => {
   const aggQuery = db
-    .select({ book: booksSubjects.book, subjects: sql<string>`JSON_ARRAYAGG(${booksSubjects.subject})`.as("agg.subjects") })
+    .select({ book: booksSubjects.book, subjects: sql<string>`jsonb_agg(${booksSubjects.subject})`.as("agg.subjects") })
     .from(booksSubjects)
     .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
     .groupBy(booksSubjects.book)
