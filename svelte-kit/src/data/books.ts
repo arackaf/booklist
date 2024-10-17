@@ -4,12 +4,18 @@ import type { PgTransaction } from "drizzle-orm/pg-core";
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
 import { getInsertLists, runTransaction, type TransactionItem, db, type InferSelection, executeDrizzle } from "./dbUtils";
-import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "./drizzle-schema";
+import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable, books } from "./drizzle-schema";
 
 const defaultBookFields = {
   id: booksTable.id,
-  tags: sql<number[]>`COALESCE((SELECT json_agg(tag) from books_tags WHERE book = books.id), '[]'::json)`.as("tags"),
-  subjects: sql<number[]>`COALESCE((SELECT json_agg(subject) from books_subjects WHERE book = books.id), '[]'::json)`.as("subjects"),
+  tags: sql<number[]>`COALESCE((${db
+    .select({ tags: sql<number[]>`json_agg(tag)` })
+    .from(booksTags)
+    .where(eq(books.id, booksTags.book))}), '[]'::json)`.as("tags"),
+  subjects: sql<number[]>`COALESCE((${db
+    .select({ subjects: sql<number[]>`json_agg(subject)` })
+    .from(booksSubjects)
+    .where(eq(booksSubjects.book, booksTable.id))}), '[]'::json)`.as("subjects"),
   title: booksTable.title,
   pages: booksTable.pages,
   userId: booksTable.userId,
