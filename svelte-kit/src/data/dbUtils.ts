@@ -7,32 +7,32 @@ import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import type { SQL } from "drizzle-orm";
 
-import { drizzle as drizzlePgLite } from "drizzle-orm/pglite";
-import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
-import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
-
+import pg from "pg";
 import mysql, { type Connection as MySqlConnection } from "mysql2/promise";
 
-import pg from "pg";
-const { Pool } = pg;
-
-const pool = new Pool({
-  connectionString: env.FLY_DB
-});
-
-export let db: ReturnType<typeof drizzlePg> = null as any;
+import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { drizzle as drizzlePgLite } from "drizzle-orm/pglite";
 
 import { building } from "$app/environment";
 import { PGlite } from "@electric-sql/pglite";
 
 export let mySqlConnectionFactory = null as any;
 export let dbMySql: ReturnType<typeof drizzleMySql> = null as any;
+export let db: ReturnType<typeof drizzlePg> = null as any;
 
 if (building) {
   const client = new PGlite();
+
   // @ts-ignore
-  db = drizzlePgLite({ client });
+  db = drizzlePgLite({ schema, client });
 } else {
+  const { Pool } = pg;
+
+  const pool = new Pool({
+    connectionString: env.FLY_DB
+  });
+
   db = drizzlePg({ schema, client: pool });
 
   mySqlConnectionFactory = new Client({
