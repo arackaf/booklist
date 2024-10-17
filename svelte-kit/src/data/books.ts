@@ -91,7 +91,14 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       conditions.push(like(booksTable.publisher, `%${publisher}%`));
     }
     if (author) {
-      conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
+      conditions.push(
+        exists(
+          db
+            .select({ _: sql`1` })
+            .from(sql`json_array_elements_text(${booksTable.authors}) as author`)
+            .where(sql`LOWER(author) LIKE ${`%${author.toLowerCase()}%`}`)
+        )
+      );
     }
     if (isRead != null) {
       conditions.push(eq(booksTable.isRead, isRead));
