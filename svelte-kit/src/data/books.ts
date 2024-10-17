@@ -8,10 +8,8 @@ import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTabl
 
 const defaultBookFields = {
   id: booksTable.id,
-  tags: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as("tags"),
-  subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
-    "subjects"
-  ),
+  tags: sql<number[]>`COALESCE((SELECT json_agg(tag) from books_tags WHERE book = books.id), '[]'::json)`.as("tags"),
+  subjects: sql<number[]>`COALESCE((SELECT json_agg(subject) from books_subjects WHERE book = books.id), '[]'::json)`.as("subjects"),
   title: booksTable.title,
   pages: booksTable.pages,
   userId: booksTable.userId,
