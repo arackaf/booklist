@@ -49,6 +49,7 @@
     "@aws-sdk/client-s3": "^3.256.0",
     "@aws-sdk/lib-dynamodb": "^3.199.0",
     "@aws-sdk/util-utf8": "^3.254.0",
+    "@electric-sql/pglite": "^0.2.12",
     "@next-auth/dynamodb-adapter": "^3.0.2",
     "@planetscale/database": "^1.16.0",
     "@popperjs/core": "^2.11.6",
