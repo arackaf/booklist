@@ -327,7 +327,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
   );
 };
 
-const syncBookTags = async (tx: PgTransaction<any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
+const syncBookTags = async (tx: PgTransaction<any, any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksTags).where(eq(booksTags.book, bookId));
   }
@@ -336,7 +336,7 @@ const syncBookTags = async (tx: PgTransaction<any, any>, userId: string, bookId:
   }
 };
 
-const syncBookSubjects = async (tx: PgTransaction<any, any>, userId: string, bookId: number, subjects: number[], clearExisting = false) => {
+const syncBookSubjects = async (tx: PgTransaction<any, any, any>, userId: string, bookId: number, subjects: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksSubjects).where(eq(booksSubjects.book, bookId));
   }
