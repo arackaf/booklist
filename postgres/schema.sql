@@ -62,6 +62,9 @@ create index idx_bookssubjects_subject
 create index idx_bookssubjects_userId_subject
     on books_subjects (userId, subject);
 
+create unique index idx_bookssubjects_book_subject
+    on books_subjects (book, subject);
+
 create table if not exists books_tags
 (
     id     serial primary key,
@@ -78,6 +81,9 @@ create index idx_tag
 
 create index idx_userId_tag
     on books_tags (userId, tag);
+
+create unique index idx_bookstags_book_tag
+    on books_tags (book, tag);
 
 create table if not exists similar_books
 (
