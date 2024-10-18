@@ -346,61 +346,41 @@ const syncBookSubjects = async (tx: PgTransaction<any, any, any>, userId: string
 };
 
 type BulkUpdate = {
-  ids: string[];
-  add: string[];
-  remove: string[];
+  ids: number[];
+  add: number[];
+  remove: number[];
 };
 
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
-  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
-  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId] as const));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId] as const));
 
   if (!addPairs.length && !removePairs.length) {
     return;
   }
 
-  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
+  await executeDrizzle(
+    "update books' subjects",
+    db.transaction(async tx => {
+      if (addPairs.length) {
+        const X = tx
+          .insert(booksSubjects)
+          .values(addPairs.map(([book, subject]) => ({ userId, book, subject })))
+          .onConflictDoNothing();
 
-  if (addPairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs),
-      tx =>
-        tx.execute(
-          `
-          INSERT INTO books_subjects (userId, book, subject)
-          SELECT DISTINCT ?, tmp.book, tmp.subject
-          FROM tmp
-          JOIN books b
-          ON tmp.book = b.id
-          LEFT OUTER JOIN books_subjects existing
-          ON existing.book = tmp.book AND existing.subject = tmp.subject
-          WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
-          `,
-          [userId, userId]
-        ),
-      tx => tx.execute(`DELETE FROM tmp`)
-    );
-  }
-  if (removePairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs),
-      tx =>
-        tx.execute(
-          `
-          DELETE FROM books_subjects
-          WHERE EXISTS (
-            SELECT 1
-            FROM tmp
-            WHERE books_subjects.book = tmp.book AND books_subjects.subject = tmp.subject
-          );
-          `
-        )
-    );
-  }
+        console.log(X.toSQL());
+        await X;
+      }
 
-  await runTransaction("update books' subjects", ...ops);
+      if (removePairs.length) {
+        await tx
+          .delete(booksSubjects)
+          .where(and(eq(booksSubjects.userId, userId), inArray(booksSubjects.book, ids), inArray(booksSubjects.subject, remove)));
+      }
+    })
+  );
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
