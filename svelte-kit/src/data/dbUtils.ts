@@ -6,26 +6,21 @@ const { MYSQL_CONNECTION_STRING, MYSQL_RDS_CONNECTION_STRING, FLY_DB } = env;
 import * as schema from "./drizzle-schema";
 import type { MySqlColumn } from "drizzle-orm/mysql-core";
 import type { SQL } from "drizzle-orm";
+import type { PgDatabase } from "drizzle-orm/pg-core";
 
 import pg from "pg";
-import mysql, { type Connection as MySqlConnection } from "mysql2/promise";
 
 import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
-import { drizzle as drizzlePgLite } from "drizzle-orm/pglite";
 
 import { building } from "$app/environment";
-import { PGlite } from "@electric-sql/pglite";
 
 export let mySqlConnectionFactory = null as any;
 export let dbMySql: ReturnType<typeof drizzleMySql> = null as any;
-export let db: ReturnType<typeof drizzlePg> = null as any;
+export let db: PgDatabase<any, any>;
 
 if (building) {
-  const client = new PGlite();
-
-  // @ts-ignore
-  db = drizzlePgLite({ schema, client });
+  db = drizzlePg.mock({ schema });
 } else {
   const { Pool } = pg;
 
