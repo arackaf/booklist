@@ -1,5 +1,5 @@
 import { SQL, and, asc, desc, eq, notExists, or, sql } from "drizzle-orm";
-import { union } from "drizzle-orm/mysql-core";
+import { union } from "drizzle-orm/pg-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
 import { db } from "./dbUtils";
 
