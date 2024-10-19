@@ -386,52 +386,28 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
-  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
-  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId] as const));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId] as const));
 
   if (!addPairs.length && !removePairs.length) {
     return;
   }
 
-  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, tag INT NOT NULL);`)];
-  if (addPairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(addPairs)};`, addPairs),
-      tx =>
-        tx.execute(
-          `
-          INSERT INTO books_tags (userId, book, tag)
-          SELECT DISTINCT ?, tmp.book, tmp.tag
-          FROM tmp
-          JOIN books b
-          ON tmp.book = b.id
-          LEFT OUTER JOIN books_tags existing
-          ON existing.book = tmp.book AND existing.tag = tmp.tag
-          WHERE b.userId = ? AND existing.book IS NULL AND existing.tag IS NULL
-          `,
-          [userId, userId]
-        ),
-      tx => tx.execute(`DELETE FROM tmp`)
-    );
-  }
-  if (removePairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(removePairs)};`, removePairs),
-      tx =>
-        tx.execute(
-          `
-          DELETE FROM books_tags
-          WHERE EXISTS (
-            SELECT 1
-            FROM tmp
-            WHERE books_tags.book = tmp.book AND books_tags.tag = tmp.tag
-          );
-          `
-        )
-    );
-  }
+  executeDrizzle(
+    "update books' tags",
+    db.transaction(async tx => {
+      if (addPairs.length) {
+        await tx
+          .insert(booksTags)
+          .values(addPairs.map(([book, tag]) => ({ userId, book, tag })))
+          .onConflictDoNothing();
+      }
 
-  await runTransaction("update books' tags", ...ops);
+      if (removePairs.length) {
+        await tx.delete(booksTags).where(and(eq(booksTags.userId, userId), inArray(booksTags.book, ids), inArray(booksTags.tag, remove)));
+      }
+    })
+  );
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
