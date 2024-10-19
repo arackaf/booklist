@@ -8,13 +8,11 @@ import type { PgDatabase } from "drizzle-orm/pg-core";
 
 import pg from "pg";
 
-import { drizzle as drizzleMySql } from "drizzle-orm/mysql2";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 
 import { building } from "$app/environment";
 
 export let mySqlConnectionFactory = null as any;
-export let dbMySql: ReturnType<typeof drizzleMySql> = null as any;
 export let db: PgDatabase<any, any>;
 
 if (building) {
