@@ -171,13 +171,16 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
         console.log("Saving book to Postgres", book);
 
         try {
-          await fetch(`${MY_LIBRARY_URL}/api/save-book`, {
+          const result = await fetch(`${MY_LIBRARY_URL}/api/save-book`, {
             method: "POST",
             body: JSON.stringify({ book, secret: pgInsertSecret }),
             headers: {
               "Content-Type": "application/json"
             }
           });
+          if (!result.ok) {
+            throw new Error(`Error saving book to pg ${result.status}`);
+          }
 
           console.log("Book saved to Postgres", book);
 
