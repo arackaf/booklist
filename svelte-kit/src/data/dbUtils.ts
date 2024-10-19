@@ -43,8 +43,6 @@ export type InferSelection<T> = {
   [K in keyof T]: ExtractSqlType<T[K]>;
 };
 
-export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
-
 const executeSQLRaw = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
   const start = +new Date();
   const conn = mySqlConnectionFactory.connection();

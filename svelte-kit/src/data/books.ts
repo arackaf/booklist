@@ -3,7 +3,7 @@ import type { PgTransaction } from "drizzle-orm/pg-core";
 
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { type TransactionItem, db, type InferSelection, executeDrizzle } from "./dbUtils";
+import { db, type InferSelection, executeDrizzle } from "./dbUtils";
 import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable, books } from "./drizzle-schema";
 
 const defaultBookFields = {
