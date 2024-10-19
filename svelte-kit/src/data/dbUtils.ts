@@ -1,11 +1,10 @@
 import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { env } from "$env/dynamic/private";
-const { MYSQL_CONNECTION_STRING, MYSQL_RDS_CONNECTION_STRING, FLY_DB } = env;
+const { MYSQL_CONNECTION_STRING } = env;
 
 import * as schema from "./drizzle-schema";
-import type { MySqlColumn } from "drizzle-orm/mysql-core";
-import type { SQL } from "drizzle-orm";
+
 import type { PgDatabase } from "drizzle-orm/pg-core";
 
 import pg from "pg";
@@ -34,14 +33,6 @@ if (building) {
     url: MYSQL_CONNECTION_STRING
   });
 }
-
-type ExtractTypeFromMySqlColumn<T extends MySqlColumn> =
-  T extends MySqlColumn<infer U> ? (U extends { notNull: true } ? U["data"] : U["data"] | null) : never;
-
-type ExtractSqlType<T> = T extends MySqlColumn ? ExtractTypeFromMySqlColumn<T> : T extends SQL.Aliased<infer V> ? V : never;
-export type InferSelection<T> = {
-  [K in keyof T]: ExtractSqlType<T[K]>;
-};
 
 const executeSQLRaw = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
   const start = +new Date();
