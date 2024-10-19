@@ -35,8 +35,6 @@ if (building) {
   });
 }
 
-//export const db = drizzle(mySqlConnectionFactory, { schema });
-
 type ExtractTypeFromMySqlColumn<T extends MySqlColumn> =
   T extends MySqlColumn<infer U> ? (U extends { notNull: true } ? U["data"] : U["data"] | null) : never;
 
@@ -62,30 +60,6 @@ const executeSQLRaw = async (description: string, sql: string, args: any[] = [])
 export const executeQuery = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T[]> => {
   const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
   return resultRaw.rows as T[];
-};
-
-export const runTransaction = async (description: string, ...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
-  const start = +new Date();
-  const conn = mySqlConnectionFactory.connection();
-
-  const result = await conn.transaction(async tx => {
-    const transactionItems: ExecutedQuery[] = [];
-    for (const op of ops) {
-      const result = await op(tx, transactionItems.length ? (transactionItems.at(-1) as ExecutedQuery) : null);
-
-      if (Array.isArray(result)) {
-        transactionItems.push(...result);
-      } else {
-        transactionItems.push(result);
-      }
-    }
-
-    return transactionItems;
-  });
-  const end = +new Date();
-  console.log("Transaction:", description, end - start);
-
-  return result;
 };
 
 export type SubjectEditFields = {
