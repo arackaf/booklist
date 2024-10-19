@@ -12,6 +12,9 @@ div.toast-notification {
 div.toast-notification.success {
   background: var(--success-7);
 }
+div.toast-notification.error {
+  background: var(--danger-7);
+}
 div.toast-notification a,
 div.toast-notification span,
 div.toast-notification h4 {

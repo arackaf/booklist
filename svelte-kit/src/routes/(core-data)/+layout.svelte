@@ -7,7 +7,8 @@
 
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
   import type { Book } from "$data/types";
-  import ScanToasterContent from "$lib/components/ScanToasterContent.svelte";
+  import ScanToasterSuccessContent from "$lib/components/ScanToasterSuccessContent.svelte";
+  import ScanToasterErrorContent from "$lib/components/ScanToasterErrorContent.svelte";
 
   export let data;
 
@@ -31,7 +32,7 @@
   function showBookToast(book: Book) {
     const node = document.createElement("div");
 
-    new ScanToasterContent({
+    new ScanToasterSuccessContent({
       target: node,
       props: { book }
     });
@@ -46,13 +47,35 @@
     }).showToast();
   }
 
+  function showBookFailureToast(book: Book) {
+    const node = document.createElement("div");
+
+    new ScanToasterErrorContent({
+      target: node,
+      props: { packet: book }
+    });
+
+    Toastify({
+      node,
+      escapeMarkup: false,
+      duration: 5 * 1000,
+      gravity: "bottom",
+      close: true,
+      className: "toast-notification error"
+    }).showToast();
+  }
+
   function startToastListen() {
     window.addEventListener("ws-info", ({ detail }: any) => {
       if (detail.type === "scanResults") {
         fetch("/api/clear-books-cache", { method: "POST" });
         if ($page.url.pathname !== "/scan") {
-          for (const { item: book } of detail.packet.results.filter((result: any) => result.success)) {
-            showBookToast(book);
+          for (const { success, item: bookMaybe } of detail.packet.results) {
+            if (success) {
+              showBookToast(bookMaybe);
+            } else {
+              showBookFailureToast(bookMaybe);
+            }
           }
         }
       }
