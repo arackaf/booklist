@@ -1,5 +1,4 @@
-import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { Client, type Connection } from "@planetscale/database";
 import { env } from "$env/dynamic/private";
 const { MYSQL_CONNECTION_STRING } = env;
 
