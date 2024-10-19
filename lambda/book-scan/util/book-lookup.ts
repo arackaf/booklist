@@ -1,12 +1,14 @@
 import { v4 as uuid } from "uuid";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
-import { getConnection } from "../../util/getDbConnection";
 
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
+import { getSecrets } from "../../util/getSecrets";
+
+const MY_LIBRARY_URL = "https://svelte-kit.fly.dev";
 
 type BookLookupPacket = {
   pk: string;
@@ -68,9 +70,12 @@ export const runBookLookupIfAvailable = async () => {
 };
 
 export const doLookup = async (scanPacket: BookLookupPacket) => {
+  const secrets = await getSecrets();
+
+  const pgInsertSecret = secrets["pg-save-book-key"];
   const scanItems: ScanItem[] = scanPacket.scanItems;
 
-  await lookupBooks(scanPacket.scanItems);
+  await lookupBooks(scanPacket.scanItems, pgInsertSecret);
 
   const userUpdateMap = scanItems.reduce((hash, { userId }) => {
     if (!hash.hasOwnProperty(userId)) {
@@ -106,7 +111,7 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
 
 const wait = ms => new Promise(res => setTimeout(res, ms));
 
-export const lookupBooks = async (scanItems: ScanItem[]) => {
+export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string) => {
   try {
     const startTime = +new Date();
     const userIds = [...new Set(scanItems.map(entry => entry.userId))];
@@ -139,57 +144,50 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     console.log("Book lookup results", JSON.stringify(scanItems));
 
-    const connection = await getConnection();
-
     for (const newBookMaybe of scanItems) {
       const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
 
       if (!newBookMaybe.pk) {
-        const book = newBookMaybe as any;
-        await connection.execute(
-          `      
-          INSERT INTO books (
-            title,
-            pages,
-            authors,
-            isbn,
-            publisher,
-            publicationDate,
-            isRead,
-            mobileImage,
-            mobileImagePreview,
-            smallImage,
-            smallImagePreview,
-            mediumImage,
-            mediumImagePreview,
-            editorialReviews,
-            userId,
-            dateAdded
-          )
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-          [
-            book.title,
-            book.pages ?? null,
-            JSON.stringify(book.authors ?? []),
-            book.isbn,
-            book.publisher,
-            book.publicationDate,
-            book.isRead ?? false,
-            book.mobileImage,
-            JSON.stringify(book.mobileImagePreview ?? null),
-            book.smallImage,
-            JSON.stringify(book.smallImagePreview ?? null),
-            book.mediumImage,
-            JSON.stringify(book.mediumImagePreview ?? null),
-            JSON.stringify(book.editorialReviews ?? []),
-            book.userId,
-            new Date()
-          ]
-        );
+        const bookToInsert = newBookMaybe as any;
+        const book = {
+          title: bookToInsert.title,
+          pages: bookToInsert.pages ?? null,
+          authors: JSON.stringify(bookToInsert.authors ?? []),
+          isbn: bookToInsert.isbn,
+          publisher: bookToInsert.publisher,
+          publicationDate: bookToInsert.publicationDate,
+          isRead: false,
+          mobileImage: bookToInsert.mobileImage,
+          mobileImagePreview: JSON.stringify(bookToInsert.mobileImagePreview ?? null),
+          smallImage: bookToInsert.smallImage,
+          smallImagePreview: JSON.stringify(bookToInsert.smallImagePreview ?? null),
+          mediumImage: bookToInsert.mediumImage,
+          mediumImagePreview: JSON.stringify(bookToInsert.mediumImagePreview ?? null),
+          editorialReviews: JSON.stringify(bookToInsert.editorialReviews ?? []),
+          userId: bookToInsert.userId,
+          dateAdded: new Date()
+        };
 
-        const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
-        userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
-        await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, smallImagePreview, expires }));
+        console.log("Saving book to Postgres", book);
+
+        try {
+          await fetch(`${MY_LIBRARY_URL}/api/save-book`, {
+            method: "POST",
+            body: JSON.stringify({ book, secret: pgInsertSecret }),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          });
+
+          console.log("Book saved to Postgres", book);
+
+          const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
+          userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
+          await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, smallImagePreview, expires }));
+        } catch (err) {
+          userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Error saving ${newBookMaybe.isbn}` } });
+          await db.put(getPutPacket({ pk, sk, success: false, title: "Error saving to pg", isbn: newBookMaybe.isbn, expires }));
+        }
       } else {
         userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
         await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
