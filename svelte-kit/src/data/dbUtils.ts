@@ -71,8 +71,6 @@ export type SubjectEditFields = {
   backgroundColor: string;
 };
 
-export const getInsertLists = (lists: any[]) => Array.from({ length: lists.length }, () => "(?)").join(", ");
-
 export const executeDrizzle = async <T>(description: string, command: Promise<T>): Promise<T> => {
   const start = +new Date();
 
