@@ -24,8 +24,6 @@ export async function POST({ locals, request }) {
 
   const userIdToUse = userId || publicUserId;
 
-  //...execute("SELECT id, similarBooks FROM books WHERE id IN (?)", [bookIds]);
-
   const books = await executeDrizzle(
     "load books for get-recommendations action",
     db
