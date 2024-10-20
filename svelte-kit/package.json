@@ -67,6 +67,7 @@
     "firebase-admin": "^11.5.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.orderby": "^4.6.0",
     "lucide-svelte": "^0.309.0",
     "pg": "^8.13.0",
     "svelte": "^4.2.12",
