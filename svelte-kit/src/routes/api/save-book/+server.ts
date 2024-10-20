@@ -9,6 +9,11 @@ export async function POST({ request }) {
 
   const { secret, book } = reqBody;
   book.dateAdded = new Date(book.dateAdded);
+  try {
+    book.authors = book.authors == null ? [] : JSON.parse(book.authors);
+  } catch (er) {
+    book.authors = [];
+  }
 
   if (secret !== env.SAVE_BOOK_SECRET) {
     console.log("Invalid secret");
