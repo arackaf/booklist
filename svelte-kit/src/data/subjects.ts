@@ -91,7 +91,7 @@ const updateSingleSubject = async (
         await tx
           .update(subjects)
           .set({ path: sql.raw(`REGEXP_REPLACE(path, '(.*,${id},)(.*)', '${newDescendantPathPiece}\\2')`) })
-          .where(like(subjects.path, sql.raw(`'%,${id},%'`)));
+          .where(like(subjects.path, `%,${id},%`));
       })
     );
   } else {
@@ -112,10 +112,10 @@ export const deleteSubject = async (userId: string, id: number) => {
       await tx.delete(booksSubjects).where(
         exists(
           db
-            .select({ id: subjects.id })
+            .select({ _: sql`'1'` })
             .from(subjects)
             .where(
-              and(eq(subjects.id, booksSubjects.subject), eq(subjects.userId, userId), or(eq(subjects.id, id), like(subjects.path, sql`'%,${id},%'`)))
+              and(eq(subjects.id, booksSubjects.subject), eq(subjects.userId, userId), or(eq(subjects.id, id), like(subjects.path, `%,${id},%`)))
             )
         )
       );
@@ -125,7 +125,7 @@ export const deleteSubject = async (userId: string, id: number) => {
           // check userId
           eq(subjects.userId, userId),
           // subject match, or children
-          or(eq(subjects.id, id), like(subjects.path, sql`'%,${id},%'`))
+          or(eq(subjects.id, id), like(subjects.path, `%,${id},%`))
         )
       );
     })
