@@ -1,4 +1,4 @@
-import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
+import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, ilike, exists, inArray, desc, asc } from "drizzle-orm";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
@@ -83,10 +83,10 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     conditions.push(eq(booksTable.userId, userId));
 
     if (search) {
-      conditions.push(like(booksTable.title, `%${search}%`));
+      conditions.push(ilike(booksTable.title, `%${search}%`));
     }
     if (publisher) {
-      conditions.push(like(booksTable.publisher, `%${publisher}%`));
+      conditions.push(ilike(booksTable.publisher, `%${publisher}%`));
     }
     if (author) {
       conditions.push(
@@ -94,7 +94,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
           db
             .select({ _: sql`1` })
             .from(sql`json_array_elements_text(${booksTable.authors}) as author`)
-            .where(sql`LOWER(author) LIKE ${`%${author.toLowerCase()}%`}`)
+            .where(sql`LOWER(author) ILIKE ${`%${author}%`}`)
         )
       );
     }
