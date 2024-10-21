@@ -90,7 +90,7 @@ const updateSingleSubject = async (
 
         await tx
           .update(subjects)
-          .set({ path: sql.raw(`REGEXP_REPLACE(path, '(.*,${id},)(.*)', '${newDescendantPathPiece}$2')`) })
+          .set({ path: sql.raw(`REGEXP_REPLACE(path, '(.*,${id},)(.*)', '${newDescendantPathPiece}\\2')`) })
           .where(like(subjects.path, sql.raw(`'%,${id},%'`)));
       })
     );
