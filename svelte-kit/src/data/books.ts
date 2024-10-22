@@ -215,7 +215,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
         db
           .select({ _: sql`1` })
           .from(booksTable)
-          .where(and(eq(booksTable.id, Number(id)), sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`))
+          .where(and(eq(booksTable.id, Number(id)), sql`${booksTable.similarBooks}::jsonb ? ${similarBooksTable.isbn}`))
       )
     );
 

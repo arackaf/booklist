@@ -47,7 +47,7 @@ export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: Query
         smallImage,
         smallImagePreview,
         similarBooks,
-        similarBooksLastSync: sql<string>`DATE_FORMAT(${booksTable.similarBooksLastSync}, '%Y-%m-%dT%TZ')`,
+        similarBooksLastSync: sql<string>`TO_CHAR(${booksTable.similarBooksLastSync} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
         similarBooksLastSyncDisplay: sql<string>`''`
       })
       .from(booksTable)
@@ -78,14 +78,16 @@ export const clearSync = async (id: number) => {
 };
 
 export const getSimilarBooksForBook = async (id: number) => {
+  console.log("A");
   const result = await executeDrizzle(
     "similar books for book",
     db
       .select(getTableColumns(similarBooks))
       .from(booksTable)
-      .leftJoin(similarBooks, sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooks.isbn})`)
+      .leftJoin(similarBooks, sql`${booksTable.similarBooks}::jsonb ? ${similarBooks.isbn}`)
       .where(and(eq(booksTable.id, id), isNotNull(similarBooks.id)))
   );
+  console.log("B");
   updateBookImages(result);
 
   return result;
