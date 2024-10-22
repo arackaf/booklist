@@ -256,26 +256,28 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
   await executeDrizzle(
     "insert book",
     db.transaction(async tx => {
-      await tx.insert(booksTable).values({
-        title: book.title!,
-        pages: book.pages ?? null,
-        authors: book.authors ?? [],
-        isbn: book.isbn,
-        publisher: book.publisher,
-        publicationDate: book.publicationDate,
-        isRead: !!book.isRead,
-        mobileImage: book.mobileImage,
-        mobileImagePreview: book.mobileImagePreview ?? null,
-        smallImage: book.smallImage,
-        smallImagePreview: book.smallImagePreview ?? null,
-        mediumImage: book.mediumImage,
-        mediumImagePreview: book.mediumImagePreview ?? null,
-        userId,
-        dateAdded: new Date()
-      });
+      const [inserted] = await tx
+        .insert(booksTable)
+        .values({
+          title: book.title!,
+          pages: book.pages ?? null,
+          authors: book.authors ?? [],
+          isbn: book.isbn,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate,
+          isRead: !!book.isRead,
+          mobileImage: book.mobileImage,
+          mobileImagePreview: book.mobileImagePreview ?? null,
+          smallImage: book.smallImage,
+          smallImagePreview: book.smallImagePreview ?? null,
+          mediumImage: book.mediumImage,
+          mediumImagePreview: book.mediumImagePreview ?? null,
+          userId,
+          dateAdded: new Date()
+        })
+        .returning({ id: booksTable.id });
 
-      const idRes = await tx.select({ id: sql`LAST_INSERT_ID()`.mapWith(val => Number(val)) }).from(booksTable);
-      const { id } = idRes[0];
+      const { id } = inserted;
 
       if (book.subjects) {
         await syncBookSubjects(tx, userId, id, book.subjects);
