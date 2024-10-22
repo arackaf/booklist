@@ -78,7 +78,6 @@ export const clearSync = async (id: number) => {
 };
 
 export const getSimilarBooksForBook = async (id: number) => {
-  console.log("A");
   const result = await executeDrizzle(
     "similar books for book",
     db
@@ -87,7 +86,6 @@ export const getSimilarBooksForBook = async (id: number) => {
       .leftJoin(similarBooks, sql`${booksTable.similarBooks}::jsonb ? ${similarBooks.isbn}`)
       .where(and(eq(booksTable.id, id), isNotNull(similarBooks.id)))
   );
-  console.log("B");
   updateBookImages(result);
 
   return result;
