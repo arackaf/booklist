@@ -3,13 +3,23 @@ import path from "path";
 
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const junk = +new Date();
+const numToDisplay = (num: number) => num.toString().padStart(2, "0");
+
+const today = new Date();
+const date = `${today.getFullYear()}-${numToDisplay(today.getMonth() + 1)}-${numToDisplay(today.getDate())}`;
+const time = `${today.getHours()}-${numToDisplay(today.getMinutes())}-${numToDisplay(today.getSeconds())}`;
+const filename = `${date}__${time}`;
 
 const REGION = "us-east-1";
-const params = {
+const dumpParams = {
   Bucket: "my-library-backups",
-  Key: `backup-${junk}.dump`,
-  Body: fs.readFileSync(path.resolve(__dirname, "my-db.dump"))
+  Key: `${filename}.dump`,
+  Body: fs.readFileSync(path.resolve(__dirname, "backup.dump"))
+};
+const sqlParams = {
+  Bucket: "my-library-backups",
+  Key: `${filename}.sql`,
+  Body: fs.readFileSync(path.resolve(__dirname, "backup.sql"))
 };
 
 const s3 = new S3Client({
@@ -20,9 +30,17 @@ const s3 = new S3Client({
   }
 });
 
-s3.send(new PutObjectCommand(params))
+s3.send(new PutObjectCommand(sqlParams))
   .then(() => {
-    console.log("Uploaded!");
+    console.log("SQL Backup Uploaded!");
+  })
+  .catch(err => {
+    console.log("Error: ", err);
+  });
+
+s3.send(new PutObjectCommand(dumpParams))
+  .then(() => {
+    console.log("Dump Backup Uploaded!");
   })
   .catch(err => {
     console.log("Error: ", err);
@@ -41,3 +59,8 @@ s3.send(new PutObjectCommand(params))
 
 // PGPASSWORD=XUO8JiquQ8d12qq pg_restore -h localhost -U postgres -C -d postgres my-db.dump
 // PGPASSWORD=JJxxXDx9Ho9mXzK pg_restore -h localhost -U postgres -C -d postgres my-db.dump
+
+// LATEST
+// PGPASSWORD=oTLJc9WPKcT1hAE pg_restore -h localhost -U postgres -C -d postgres backup-dump.dump
+
+// PGPASSWORD=WT5CT7rtu4iQfW9 psql -h localhost -U postgres -d postgres -f backup.sql
