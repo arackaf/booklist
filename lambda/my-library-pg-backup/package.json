@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.670.0"
+  },
+  "scripts": {
+    "run-once": "fly machine run . --rm"
   }
 }

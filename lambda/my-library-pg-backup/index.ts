@@ -8,8 +8,8 @@ const junk = +new Date();
 const REGION = "us-east-1";
 const params = {
   Bucket: "my-library-backups",
-  Key: `backup-${junk}.sql`,
-  Body: fs.readFileSync(path.resolve(__dirname, "dump-output.sql"))
+  Key: `backup-${junk}.dump`,
+  Body: fs.readFileSync(path.resolve(__dirname, "my-db.dump"))
 };
 
 const s3 = new S3Client({
@@ -36,3 +36,8 @@ s3.send(new PutObjectCommand(params))
 
 // PGPASSWORD=docker createdb -T template0 my-library -h localhost -U docker
 // PGPASSWORD=docker pg_restore -h localhost -U docker -C -d my-library my-db.dump
+
+// postgres://postgres:XUO8JiquQ8d12qq@db-restore-test.flycast:5432
+
+// PGPASSWORD=XUO8JiquQ8d12qq pg_restore -h localhost -U postgres -C -d postgres my-db.dump
+// PGPASSWORD=JJxxXDx9Ho9mXzK pg_restore -h localhost -U postgres -C -d postgres my-db.dump
