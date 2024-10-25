@@ -19,6 +19,11 @@ if (building) {
     connectionString: env.FLY_DB
   });
 
+  pool.on("error", (err, client) => {
+    console.error("Unexpected error on idle client", err);
+    process.exit(-1);
+  });
+
   db = drizzlePg({ schema, client: pool });
 }
 
