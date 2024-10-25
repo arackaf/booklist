@@ -3,6 +3,10 @@ require("dotenv").config();
 import pg from "pg";
 import { Client } from "@planetscale/database";
 
+function camelToSnake(str) {
+  return str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase();
+}
+
 const { Client: PgClient } = pg;
 
 /*
@@ -40,7 +44,7 @@ const getValue = (obj: any, col: string, config: TableMigrationConfig) => {
 
 async function flush(table: string, columns: string[], objects: any[], config: TableMigrationConfig) {
   let placeholderVal = 1;
-  const query = `INSERT INTO ${table} (${columns.join(", ")}) VALUES ${objects
+  const query = `INSERT INTO ${table} (${columns.map(camelToSnake).join(", ")}) VALUES ${objects
     .map(o => `(${columns.map(c => `$${placeholderVal++}`).join(", ")})`)
     .join(", ")}`;
   const variables = objects.flatMap(o => columns.map(c => getValue(o, c, config)));
