@@ -9,14 +9,6 @@ function camelToSnake(str) {
 
 const { Client: PgClient } = pg;
 
-/*
- WHERE EXISTS (
-  SELECT 1
-  FROM json_array_elements_text(authors) AS author
-  WHERE author LIKE '%Bob%'
-)
-*/
-
 type TableMigrationConfig = {
   json?: string[];
   boolean?: string[];
