@@ -23,7 +23,7 @@ const defaultBookFields = {
   isbn: booksTable.isbn,
   publisher: booksTable.publisher,
   publicationDate: booksTable.publicationDate,
-  isRead: sql<boolean>`isRead`.mapWith(val => val == 1),
+  isRead: booksTable.isRead,
   dateAdded: booksTable.dateAdded,
   mobileImage: booksTable.mobileImage,
   mobileImagePreview: booksTable.mobileImagePreview,

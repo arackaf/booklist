@@ -11,7 +11,7 @@ create table if not exists books
     similar_books                           json                                    null,
     similar_books_last_sync                 timestamp default '1990-01-01 00:00:00' not null,
     similar_books_last_sync_success         boolean                                 null,
-    similar__books_last_sync_failure_reason text                                    null,
+    similar_books_last_sync_failure_reason text                                    null,
     sync_eligible                           boolean generated always as ((case
                                                                         when ((char_length(isbn) = 10) or (char_length(isbn) = 13))
                                                                             then true
