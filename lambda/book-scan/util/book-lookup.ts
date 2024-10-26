@@ -8,7 +8,7 @@ import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { getSecrets } from "../../util/getSecrets";
 
-const MY_LIBRARY_URL = "https://svelte-kit.fly.dev";
+const MY_LIBRARY_URL = "https://mylibrary.io";
 
 type BookLookupPacket = {
   pk: string;
