@@ -6,9 +6,9 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 const numToDisplay = (num: number) => num.toString().padStart(2, "0");
 
 const today = new Date();
-const date = `${today.getFullYear()}-${numToDisplay(today.getMonth() + 1)}-${numToDisplay(today.getDate())}`;
+const date = `${today.getFullYear()}/${numToDisplay(today.getMonth() + 1)}/${numToDisplay(today.getDate())}`;
 const time = `${today.getHours()}-${numToDisplay(today.getMinutes())}-${numToDisplay(today.getSeconds())}`;
-const filename = `${date}__${time}`;
+const filename = `${date}/${time}`;
 
 const REGION = "us-east-1";
 const dumpParams = {
