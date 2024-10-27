@@ -2,7 +2,9 @@ import { sequence } from "@sveltejs/kit/hooks";
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
 import GithubProvider from "@auth/core/providers/github";
-import {
+
+import { env } from "$env/dynamic/private";
+const {
   GITHUB_AUTH_CLIENT_ID,
   GITHUB_AUTH_CLIENT_SECRET,
   GOOGLE_AUTH_CLIENT_ID,
@@ -11,7 +13,7 @@ import {
   AMAZON_SECRET_KEY,
   DYNAMO_AUTH_TABLE,
   AUTH_SECRET
-} from "$env/static/private";
+} = env;
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";

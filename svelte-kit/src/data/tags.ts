@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { booksTags, tags } from "./drizzle-schema";
-import { db, executeDrizzle, executeQuery } from "./dbUtils";
+import { db, executeDrizzle } from "./dbUtils";
 import type { Tag, TagEditFields } from "./types";
 
 export const allTags = async (userId: string = ""): Promise<Tag[]> => {
@@ -9,7 +9,7 @@ export const allTags = async (userId: string = ""): Promise<Tag[]> => {
   }
 
   try {
-    return await executeQuery("read tags", `SELECT * FROM tags USE INDEX (idx_user_name) WHERE userId = ? ORDER BY name;`, [userId]);
+    return executeDrizzle("read tags", db.select().from(tags).where(eq(tags.userId, userId)).orderBy(tags.name));
   } catch (err) {
     console.log("Error reading tags", err);
     return [];

@@ -1,5 +1,5 @@
 import orderBy from "lodash.orderby";
-import { getConnection } from "../util/getDbConnection";
+import { getConnection } from "../../util/getDbConnection";
 
 export const getRecommendations = async (evt: any) => {
   try {

@@ -30,7 +30,7 @@
     "node-html-parser": "^6.1.5",
     "plaiceholder": "^2.5.0",
     "playwright": "^1.31.2",
-    "serverless": "^4.1.22",
+    "serverless": "^4.4.5",
     "sharp": "^0.31.3",
     "ulid": "^2.3.0",
     "uuid": "7.0.3",

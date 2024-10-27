@@ -16,10 +16,17 @@
   let { currentlySelected, onRemove, tags, vertical = false, href = null }: Props = $props();
 
   let tagHash = $derived(toHash(tags));
+
+  let selectedLabels = $derived(
+    currentlySelected
+      .filter(id => tagHash[id])
+      .map(id => tagHash[id])
+      .sort((a, b) => a.name.localeCompare(b.name))
+  );
 </script>
 
 <div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
-  {#each currentlySelected.filter(id => tagHash[id]).map(id => tagHash[id]) as t}
+  {#each selectedLabels as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove(t)} />
     {:else}

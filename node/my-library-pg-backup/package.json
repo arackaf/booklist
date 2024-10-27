@@ -1,0 +1,22 @@
+{
+  "name": "my-library-pg-backup",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.679.0"
+  },
+  "scripts": {
+    "run-once": "fly machine run . --rm"
+  },
+  "description": "To install dependencies:",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
+}

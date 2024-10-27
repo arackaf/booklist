@@ -1,17 +1,21 @@
-import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, exists, inArray, desc, asc } from "drizzle-orm";
-import type { MySqlTransaction } from "drizzle-orm/mysql-core";
+import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, ilike, exists, inArray, desc, asc } from "drizzle-orm";
+import type { PgTransaction } from "drizzle-orm/pg-core";
 
 import type { Book, BookDetails, BookImages, BookSearch } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$lib/state/dataConstants";
-import { getInsertLists, runTransaction, type TransactionItem, db, type InferSelection, executeDrizzle } from "./dbUtils";
-import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable } from "./drizzle-schema";
+import { db, executeDrizzle } from "./dbUtils";
+import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable, books } from "./drizzle-schema";
 
 const defaultBookFields = {
   id: booksTable.id,
-  tags: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(tag) from books_tags WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as("tags"),
-  subjects: sql<number[]>`COALESCE((SELECT JSON_ARRAYAGG(subject) from books_subjects WHERE book = \`books\`.id), JSON_EXTRACT('[]', '$'))`.as(
-    "subjects"
-  ),
+  tags: sql<number[]>`COALESCE((${db
+    .select({ tags: sql<number[]>`json_agg(tag)` })
+    .from(booksTags)
+    .where(eq(books.id, booksTags.book))}), '[]'::json)`.as("tags"),
+  subjects: sql<number[]>`COALESCE((${db
+    .select({ subjects: sql<number[]>`json_agg(subject)` })
+    .from(booksSubjects)
+    .where(eq(booksSubjects.book, booksTable.id))}), '[]'::json)`.as("subjects"),
   title: booksTable.title,
   pages: booksTable.pages,
   userId: booksTable.userId,
@@ -19,7 +23,7 @@ const defaultBookFields = {
   isbn: booksTable.isbn,
   publisher: booksTable.publisher,
   publicationDate: booksTable.publicationDate,
-  isRead: sql<boolean>`isRead`.mapWith(val => val == 1),
+  isRead: booksTable.isRead,
   dateAdded: booksTable.dateAdded,
   mobileImage: booksTable.mobileImage,
   mobileImagePreview: booksTable.mobileImagePreview,
@@ -28,8 +32,6 @@ const defaultBookFields = {
   mediumImage: booksTable.mediumImage,
   mediumImagePreview: booksTable.mediumImagePreview
 };
-
-type FullBook = InferSelection<typeof defaultBookFields>;
 
 const compactBookFields = {
   id: booksTable.id,
@@ -81,16 +83,23 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
     conditions.push(eq(booksTable.userId, userId));
 
     if (search) {
-      conditions.push(like(booksTable.title, `%${search}%`));
+      conditions.push(ilike(booksTable.title, `%${search}%`));
     }
     if (publisher) {
-      conditions.push(like(booksTable.publisher, `%${publisher}%`));
+      conditions.push(ilike(booksTable.publisher, `%${publisher}%`));
     }
     if (author) {
-      conditions.push(sql`LOWER(${booksTable.authors}->>"$") LIKE ${`%${author.toLowerCase()}%`}`);
+      conditions.push(
+        exists(
+          db
+            .select({ _: sql`1` })
+            .from(sql`json_array_elements_text(${booksTable.authors}) as author`)
+            .where(sql`LOWER(author) ILIKE ${`%${author}%`}`)
+        )
+      );
     }
     if (isRead != null) {
-      conditions.push(eq(booksTable.isRead, isRead ? 1 : 0));
+      conditions.push(eq(booksTable.isRead, isRead));
     }
     if (tags.length) {
       conditions.push(
@@ -206,7 +215,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
         db
           .select({ _: sql`1` })
           .from(booksTable)
-          .where(and(eq(booksTable.id, Number(id)), sql`JSON_SEARCH(${booksTable.similarBooks}, 'one', ${similarBooksTable.isbn})`))
+          .where(and(eq(booksTable.id, Number(id)), sql`${booksTable.similarBooks}::jsonb ? ${similarBooksTable.isbn}`))
       )
     );
 
@@ -224,7 +233,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
 
 export const aggregateBooksSubjects = async (userId: string) => {
   const aggQuery = db
-    .select({ book: booksSubjects.book, subjects: sql<string>`JSON_ARRAYAGG(${booksSubjects.subject})`.as("agg.subjects") })
+    .select({ book: booksSubjects.book, subjects: sql<string>`jsonb_agg(${booksSubjects.subject})`.as("agg.subjects") })
     .from(booksSubjects)
     .innerJoin(subjectsTable, eq(booksSubjects.subject, subjectsTable.id))
     .groupBy(booksSubjects.book)
@@ -247,26 +256,28 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
   await executeDrizzle(
     "insert book",
     db.transaction(async tx => {
-      await tx.insert(booksTable).values({
-        title: book.title!,
-        pages: book.pages ?? null,
-        authors: book.authors ?? [],
-        isbn: book.isbn,
-        publisher: book.publisher,
-        publicationDate: book.publicationDate,
-        isRead: book.isRead ? 1 : 0,
-        mobileImage: book.mobileImage,
-        mobileImagePreview: book.mobileImagePreview ?? null,
-        smallImage: book.smallImage,
-        smallImagePreview: book.smallImagePreview ?? null,
-        mediumImage: book.mediumImage,
-        mediumImagePreview: book.mediumImagePreview ?? null,
-        userId,
-        dateAdded: new Date()
-      });
+      const [inserted] = await tx
+        .insert(booksTable)
+        .values({
+          title: book.title!,
+          pages: book.pages ?? null,
+          authors: book.authors ?? [],
+          isbn: book.isbn,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate,
+          isRead: !!book.isRead,
+          mobileImage: book.mobileImage,
+          mobileImagePreview: book.mobileImagePreview ?? null,
+          smallImage: book.smallImage,
+          smallImagePreview: book.smallImagePreview ?? null,
+          mediumImage: book.mediumImage,
+          mediumImagePreview: book.mediumImagePreview ?? null,
+          userId,
+          dateAdded: new Date()
+        })
+        .returning({ id: booksTable.id });
 
-      const idRes = await tx.select({ id: sql`LAST_INSERT_ID()`.mapWith(val => Number(val)) }).from(booksTable);
-      const { id } = idRes[0];
+      const { id } = inserted;
 
       if (book.subjects) {
         await syncBookSubjects(tx, userId, id, book.subjects);
@@ -291,7 +302,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
       }
     : {};
 
-  const isReadUpdate = book.isRead != null ? { isRead: book.isRead ? 1 : 0 } : {};
+  const isReadUpdate = book.isRead != null ? { isRead: book.isRead } : {};
 
   await executeDrizzle(
     "update book",
@@ -316,7 +327,7 @@ export const updateBook = async (userId: string, book: Partial<Book>) => {
   );
 };
 
-const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
+const syncBookTags = async (tx: PgTransaction<any, any, any>, userId: string, bookId: number, tags: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksTags).where(eq(booksTags.book, bookId));
   }
@@ -325,13 +336,7 @@ const syncBookTags = async (tx: MySqlTransaction<any, any, any, any>, userId: st
   }
 };
 
-const syncBookSubjects = async (
-  tx: MySqlTransaction<any, any, any, any>,
-  userId: string,
-  bookId: number,
-  subjects: number[],
-  clearExisting = false
-) => {
+const syncBookSubjects = async (tx: PgTransaction<any, any, any>, userId: string, bookId: number, subjects: number[], clearExisting = false) => {
   if (clearExisting) {
     await tx.delete(booksSubjects).where(eq(booksSubjects.book, bookId));
   }
@@ -341,112 +346,68 @@ const syncBookSubjects = async (
 };
 
 type BulkUpdate = {
-  ids: string[];
-  add: string[];
-  remove: string[];
+  ids: number[];
+  add: number[];
+  remove: number[];
 };
 
 export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
-  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
-  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId] as const));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId] as const));
 
   if (!addPairs.length && !removePairs.length) {
     return;
   }
 
-  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, subject INT NOT NULL);`)];
+  await executeDrizzle(
+    "update books' subjects",
+    db.transaction(async tx => {
+      if (addPairs.length) {
+        const X = tx
+          .insert(booksSubjects)
+          .values(addPairs.map(([book, subject]) => ({ userId, book, subject })))
+          .onConflictDoNothing();
 
-  if (addPairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(addPairs)};`, addPairs),
-      tx =>
-        tx.execute(
-          `
-          INSERT INTO books_subjects (userId, book, subject)
-          SELECT DISTINCT ?, tmp.book, tmp.subject
-          FROM tmp
-          JOIN books b
-          ON tmp.book = b.id
-          LEFT OUTER JOIN books_subjects existing
-          ON existing.book = tmp.book AND existing.subject = tmp.subject
-          WHERE b.userId = ? AND existing.book IS NULL AND existing.subject IS NULL
-          `,
-          [userId, userId]
-        ),
-      tx => tx.execute(`DELETE FROM tmp`)
-    );
-  }
-  if (removePairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, subject) VALUES ${getInsertLists(removePairs)};`, removePairs),
-      tx =>
-        tx.execute(
-          `
-          DELETE FROM books_subjects
-          WHERE EXISTS (
-            SELECT 1
-            FROM tmp
-            WHERE books_subjects.book = tmp.book AND books_subjects.subject = tmp.subject
-          );
-          `
-        )
-    );
-  }
+        console.log(X.toSQL());
+        await X;
+      }
 
-  await runTransaction("update books' subjects", ...ops);
+      if (removePairs.length) {
+        await tx
+          .delete(booksSubjects)
+          .where(and(eq(booksSubjects.userId, userId), inArray(booksSubjects.book, ids), inArray(booksSubjects.subject, remove)));
+      }
+    })
+  );
 };
 
 export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
-  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId]));
-  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId]));
+  const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId] as const));
+  const removePairs = ids.flatMap(bookId => remove.map(addId => [bookId, addId] as const));
 
   if (!addPairs.length && !removePairs.length) {
     return;
   }
 
-  const ops: TransactionItem[] = [tx => tx.execute(`CREATE TEMPORARY TABLE tmp (book INT NOT NULL, tag INT NOT NULL);`)];
-  if (addPairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(addPairs)};`, addPairs),
-      tx =>
-        tx.execute(
-          `
-          INSERT INTO books_tags (userId, book, tag)
-          SELECT DISTINCT ?, tmp.book, tmp.tag
-          FROM tmp
-          JOIN books b
-          ON tmp.book = b.id
-          LEFT OUTER JOIN books_tags existing
-          ON existing.book = tmp.book AND existing.tag = tmp.tag
-          WHERE b.userId = ? AND existing.book IS NULL AND existing.tag IS NULL
-          `,
-          [userId, userId]
-        ),
-      tx => tx.execute(`DELETE FROM tmp`)
-    );
-  }
-  if (removePairs.length) {
-    ops.push(
-      tx => tx.execute(`INSERT INTO tmp (book, tag) VALUES ${getInsertLists(removePairs)};`, removePairs),
-      tx =>
-        tx.execute(
-          `
-          DELETE FROM books_tags
-          WHERE EXISTS (
-            SELECT 1
-            FROM tmp
-            WHERE books_tags.book = tmp.book AND books_tags.tag = tmp.tag
-          );
-          `
-        )
-    );
-  }
+  executeDrizzle(
+    "update books' tags",
+    db.transaction(async tx => {
+      if (addPairs.length) {
+        await tx
+          .insert(booksTags)
+          .values(addPairs.map(([book, tag]) => ({ userId, book, tag })))
+          .onConflictDoNothing();
+      }
 
-  await runTransaction("update books' tags", ...ops);
+      if (removePairs.length) {
+        await tx.delete(booksTags).where(and(eq(booksTags.userId, userId), inArray(booksTags.book, ids), inArray(booksTags.tag, remove)));
+      }
+    })
+  );
 };
 
 export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
@@ -454,7 +415,7 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
     "update books read",
     db
       .update(booksTable)
-      .set({ isRead: read ? 1 : 0 })
+      .set({ isRead: read })
       .where(and(eq(booksTable.userId, userId), inArray(booksTable.id, ids)))
   );
 };
@@ -464,7 +425,7 @@ export const deleteBook = async (userId: string, id: number) => {
     "delete book",
     db.transaction(async tx => {
       const result = await tx.delete(booksTable).where(and(eq(booksTable.userId, userId), eq(booksTable.id, id)));
-      if (result.rowsAffected !== 1) {
+      if (result.rowCount !== 1) {
         throw new Error("No access");
       }
 

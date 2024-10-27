@@ -1,70 +1,31 @@
-import { Client, type Transaction, type ExecutedQuery, type Connection } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
-import { MYSQL_CONNECTION_STRING } from "$env/static/private";
+import pg from "pg";
 
+import { env } from "$env/dynamic/private";
+
+import type { PgDatabase } from "drizzle-orm/pg-core";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle-schema";
-import type { MySqlColumn } from "drizzle-orm/mysql-core";
-import type { SQL } from "drizzle-orm";
 
-export const mySqlConnectionFactory = new Client({
-  url: MYSQL_CONNECTION_STRING
-});
+import { building } from "$app/environment";
 
-export const db = drizzle(mySqlConnectionFactory, { schema });
+export let db: PgDatabase<any, any>;
 
-type ExtractTypeFromMySqlColumn<T extends MySqlColumn> = T extends MySqlColumn<infer U>
-  ? U extends { notNull: true }
-    ? U["data"]
-    : U["data"] | null
-  : never;
+if (building) {
+  db = drizzlePg.mock({ schema });
+} else {
+  const { Pool } = pg;
 
-type ExtractSqlType<T> = T extends MySqlColumn ? ExtractTypeFromMySqlColumn<T> : T extends SQL.Aliased<infer V> ? V : never;
-export type InferSelection<T> = {
-  [K in keyof T]: ExtractSqlType<T[K]>;
-};
-
-export type TransactionItem = (tx: Transaction, previous: null | ExecutedQuery) => Promise<ExecutedQuery | ExecutedQuery[]>;
-
-export const executeSQLRaw = async (description: string, sql: string, args: any[] = []): ReturnType<Connection["execute"]> => {
-  const start = +new Date();
-  const conn = mySqlConnectionFactory.connection();
-
-  const result = await conn.execute(sql, args);
-
-  const end = +new Date();
-  console.log(description, "latency:", end - start, "query time:", result.time.toFixed(1));
-
-  return result;
-};
-
-export const executeQuery = async <T = unknown>(description: string, sql: string, args: any[] = []): Promise<T[]> => {
-  const resultRaw = await executeSQLRaw("Query: " + description, sql, args);
-  return resultRaw.rows as T[];
-};
-
-export const runTransaction = async (description: string, ...ops: TransactionItem[]): ReturnType<Connection["transaction"]> => {
-  const start = +new Date();
-  const conn = mySqlConnectionFactory.connection();
-
-  const result = await conn.transaction(async tx => {
-    const transactionItems: ExecutedQuery[] = [];
-    for (const op of ops) {
-      const result = await op(tx, transactionItems.length ? (transactionItems.at(-1) as ExecutedQuery) : null);
-
-      if (Array.isArray(result)) {
-        transactionItems.push(...result);
-      } else {
-        transactionItems.push(result);
-      }
-    }
-
-    return transactionItems;
+  const pool = new Pool({
+    connectionString: env.FLY_DB
   });
-  const end = +new Date();
-  console.log("Transaction:", description, end - start);
 
-  return result;
-};
+  pool.on("error", (err, client) => {
+    console.error("Unexpected error on idle client", err);
+    process.exit(-1);
+  });
+
+  db = drizzlePg({ schema, client: pool });
+}
 
 export type SubjectEditFields = {
   name: string;
@@ -74,8 +35,6 @@ export type SubjectEditFields = {
   textColor: string;
   backgroundColor: string;
 };
-
-export const getInsertLists = (lists: any[]) => Array.from({ length: lists.length }, () => "(?)").join(", ");
 
 export const executeDrizzle = async <T>(description: string, command: Promise<T>): Promise<T> => {
   const start = +new Date();
