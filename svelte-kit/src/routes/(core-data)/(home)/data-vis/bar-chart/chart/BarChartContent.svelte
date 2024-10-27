@@ -64,7 +64,6 @@
   let sizeClass = "";
   $: {
     let size = $viewBoxSpring;
-    console.log({ size });
     sizeClass = "leading-none ";
 
     if (size < 400) sizeClass += "text-sm";

@@ -15,7 +15,10 @@
 
   $: subjectHash = toHash(subjects);
 
-  $: selectedLabels = currentlySelected.filter(id => subjectHash[id]).map(id => subjectHash[id]);
+  $: selectedLabels = currentlySelected
+    .filter(id => subjectHash[id])
+    .map(id => subjectHash[id])
+    .sort((a, b) => a.name.localeCompare(b.name));
 </script>
 
 <div class="flex gap-1" class:opacity-50={disabled} class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>

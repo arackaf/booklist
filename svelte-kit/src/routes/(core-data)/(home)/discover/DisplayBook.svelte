@@ -14,7 +14,6 @@
     return {
       duration: 200,
       css: (t: number) => {
-        console.log(t, circIn(-25 * (1 - t)));
         return `opacity: ${quadOut(t)}; transform: translateX(${-25 * quintIn(1 - t)}%)`;
       }
     };

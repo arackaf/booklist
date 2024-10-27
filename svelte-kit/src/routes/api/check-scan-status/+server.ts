@@ -1,6 +1,8 @@
 import { json } from "@sveltejs/kit";
 
-import { CHECK_SCAN_STATUS_LAMBDA } from "$env/static/private";
+import { env } from "$env/dynamic/private";
+const { CHECK_SCAN_STATUS_LAMBDA } = env;
+
 import { invokeLambda } from "$lib/lambda-utils.js";
 
 export async function POST({ locals }) {

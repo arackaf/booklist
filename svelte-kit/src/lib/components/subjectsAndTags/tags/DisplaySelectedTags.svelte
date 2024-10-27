@@ -13,10 +13,15 @@
   export let href: ((s: Tag) => string | null) | null = null;
 
   $: tagHash = toHash(tags);
+
+  $: selectedLabels = currentlySelected
+    .filter(id => tagHash[id])
+    .map(id => tagHash[id])
+    .sort((a, b) => a.name.localeCompare(b.name));
 </script>
 
 <div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
-  {#each currentlySelected.filter(id => tagHash[id]).map(id => tagHash[id]) as t}
+  {#each selectedLabels as t}
     {#if onRemove}
       <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
     {:else}

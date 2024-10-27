@@ -71,9 +71,7 @@
 
     const newUrl = new URL($page.url);
     newUrl.search = searchParams.toString();
-    goto(newUrl).then(val => {
-      console.log({ val });
-    });
+    goto(newUrl);
     closeMobileMenu?.();
   };
   const resetSearch = () => {

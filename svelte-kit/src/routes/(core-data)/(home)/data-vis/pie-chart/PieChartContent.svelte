@@ -105,10 +105,6 @@
   let hideLabels = false;
   $: hideLabels = hasOverlap(pieSegments);
 
-  $: {
-    console.log(pieSegments);
-  }
-
   function hasOverlap(pieSegments: any[]): boolean {
     const leftSegments = pieSegments.filter(seg => !seg.isRightLabel);
     const rightSegments = pieSegments.filter(seg => seg.isRightLabel);
