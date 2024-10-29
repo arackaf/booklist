@@ -51,12 +51,14 @@
             <Command.Item
               disabled={option.disabled}
               value={option.id + ""}
-              onSelect={() => {
+              onclick={evt => {
                 const item = options().find(opt => opt.id == option.id);
                 if (item) {
                   onItemSelected(item);
                 }
-                open = false;
+                if (!evt.metaKey) {
+                  open = false;
+                }
               }}
             >
               <GenericLabelDisplayItem item={option} />
