@@ -23,7 +23,7 @@
     "@types/pg": "^8.11.10",
     "@types/uuid": "^9.0.0",
     "autoprefixer": "^10.4.14",
-    "bits-ui": "^1.0.0-next.31",
+    "bits-ui": "^1.0.0-next.32",
     "jest-dom": "^4.0.0",
     "jsdom": "^21.1.1",
     "lucide-svelte": "^0.454.0",
