@@ -2,12 +2,19 @@
   import { AlertDialog as AlertDialogPrimitive, type WithoutChild } from "bits-ui";
   import AlertDialogOverlay from "./alert-dialog-overlay.svelte";
   import { cn } from "$lib/utils.js";
+  import { fade, fly } from "svelte/transition";
 
-  let { ref = $bindable(null), class: className, ...restProps }: AlertDialogPrimitive.ContentProps = $props();
+  let { ref = $bindable(null), class: className, children, ...restProps }: AlertDialogPrimitive.ContentProps = $props();
 </script>
 
 <AlertDialogPrimitive.Portal>
-  <AlertDialogOverlay />
+  <AlertDialogOverlay forceMount>
+    {#snippet child({ props, open })}
+      {#if open}
+        <div {...props} transition:fade={{ duration: 150 }}></div>
+      {/if}
+    {/snippet}
+  </AlertDialogOverlay>
   <AlertDialogPrimitive.Content
     bind:ref
     class={cn(
@@ -15,5 +22,12 @@
       className
     )}
     {...restProps}
-  />
+    forceMount
+  >
+    {#snippet child({ props, open })}
+      {#if open}
+        <div {...props} transition:fly={{ y: -10 }}>{@render children!()}</div>
+      {/if}
+    {/snippet}
+  </AlertDialogPrimitive.Content>
 </AlertDialogPrimitive.Portal>
