@@ -24,24 +24,21 @@
   onOpenChange={open => {
     console.log({ open });
     if (!open) {
-      onHide();
+      onHide(); //
     }
   }}
 >
-  <AlertDialog.AlertDialogPortal>
-    <AlertDialog.AlertDialogOverlay />
-    <AlertDialog.Content interactOutsideBehavior="close" onOpenAutoFocus={() => openFocus?.focus()} class="translate-y-[0] top-16 pb-5">
-      <AlertDialog.Header>
-        <AlertDialog.Title>
-          <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
-        </AlertDialog.Title>
-      </AlertDialog.Header>
-      <AlertDialog.Description>
-        <ModalContents>{@render children()}</ModalContents>
-        {#if standardFooter}
-          <StandardModalFooter {onHide} />
-        {/if}
-      </AlertDialog.Description>
-    </AlertDialog.Content>
-  </AlertDialog.AlertDialogPortal>
+  <AlertDialog.Content interactOutsideBehavior="close" onOpenAutoFocus={() => openFocus?.focus()} class="translate-y-[0] top-16 pb-5">
+    <AlertDialog.Header>
+      <AlertDialog.Title>
+        <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
+      </AlertDialog.Title>
+    </AlertDialog.Header>
+    <AlertDialog.Description>
+      <ModalContents>{@render children()}</ModalContents>
+      {#if standardFooter}
+        <StandardModalFooter {onHide} />
+      {/if}
+    </AlertDialog.Description>
+  </AlertDialog.Content>
 </AlertDialog.Root>

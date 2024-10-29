@@ -3,7 +3,7 @@
   import AlertDialogOverlay from "./alert-dialog-overlay.svelte";
   import { cn } from "$lib/utils.js";
 
-  let { ref = $bindable(null), class: className, ...restProps }: WithoutChild<AlertDialogPrimitive.ContentProps> = $props();
+  let { ref = $bindable(null), class: className, ...restProps }: AlertDialogPrimitive.ContentProps = $props();
 </script>
 
 <AlertDialogPrimitive.Portal>
