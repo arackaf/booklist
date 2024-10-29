@@ -29,7 +29,7 @@
       size="sm"
       variant="outline"
       role="combobox"
-      aria-expanded={true}
+      aria-expanded={open}
       class="w-[150px] justify-between {size === 'sm' ? 'h-8' : ''} border rounded border-neutral-400 {triggerClasses}"
     >
       {#if renderPlaceholder}
