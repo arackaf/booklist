@@ -24,7 +24,7 @@
   onOpenChange={open => {
     console.log({ open });
     if (!open) {
-      onHide(); //
+      onHide();
     }
   }}
 >
