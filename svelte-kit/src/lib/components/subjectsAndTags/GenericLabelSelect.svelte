@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ChevronsUpDown } from "lucide-svelte";
   import * as Command from "$lib/components/ui/command";
-  import { Popover } from "bits-ui";
+  import * as Popover from "$lib/components/ui/popover";
   import { Button } from "$lib/components/ui/button";
   import { tick, type Snippet } from "svelte";
 
