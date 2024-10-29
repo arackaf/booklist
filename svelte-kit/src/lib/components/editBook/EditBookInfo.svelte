@@ -53,7 +53,7 @@
         error={saveAttempted && missingTitle}
         bind:value={book.title}
         bind:inputEl={titleEl}
-        on:input={evt => (missingTitle = !titleEl.value.trim())}
+        oninput={evt => (missingTitle = !titleEl.value.trim())}
         placeholder="Title (required)"
       />
     </InputGroup>
