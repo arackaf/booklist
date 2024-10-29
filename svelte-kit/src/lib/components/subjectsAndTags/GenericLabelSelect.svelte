@@ -42,11 +42,13 @@
   </Popover.Trigger>
 
   <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
-    <div class="max-h-72 overflow-auto">
+    <div>
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search" />
-        <Command.Empty>Nothing to select</Command.Empty>
-        <Command.Group>
+        <Command.Empty class="h-[31px] py-1 flex items-center">
+          <span class="mx-auto">Nothing to select</span>
+        </Command.Empty>
+        <Command.Group class="max-h-72 overflow-auto">
           {#each options() as option (option.id)}
             <Command.Item
               disabled={option.disabled}
