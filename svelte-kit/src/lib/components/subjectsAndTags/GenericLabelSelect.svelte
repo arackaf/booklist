@@ -33,7 +33,7 @@
   }
 </script>
 
-<Popover.Portal>
+<Popover.Root>
   <Popover.Trigger>
     <Button
       size="sm"
@@ -51,30 +51,29 @@
     </Button>
   </Popover.Trigger>
 
-  <Popover.Portal>
-    <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
-      <div class="max-h-72 overflow-auto">
-        <Command.Root
-          shouldFilter={false}
-          onValueChange={currentValue => {
-            const item = options().find(opt => opt.id == currentValue);
-            if (item) {
-              onItemSelected(item);
-            }
-            //closeAndFocusTrigger(ids.trigger);
-          }}
-        >
-          <Command.Input bind:value={search} placeholder="Search" />
-          <Command.Empty>Nothing to select</Command.Empty>
-          <Command.Group>
-            {#each options() as option (option.id)}
-              <Command.Item disabled={option.disabled} value={option.id + ""}>
-                <GenericLabelDisplayItem item={option} />
-              </Command.Item>
-            {/each}
-          </Command.Group>
-        </Command.Root>
-      </div>
-    </Popover.Content>
-  </Popover.Portal>
-</Popover.Portal>
+  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
+    <div class="max-h-72 overflow-auto">
+      <Command.Root
+        shouldFilter={false}
+        onValueChange={currentValue => {
+          // console.log({ currentValue });
+          const item = options().find(opt => opt.id == currentValue);
+          if (item) {
+            //onItemSelected(item);
+          }
+          //closeAndFocusTrigger(ids.trigger);
+        }}
+      >
+        <Command.Input bind:value={search} placeholder="Search" />
+        <Command.Empty>Nothing to select</Command.Empty>
+        <Command.Group>
+          {#each options() as option (option.id)}
+            <Command.Item disabled={option.disabled} value={option.id + ""}>
+              <GenericLabelDisplayItem item={option} />
+            </Command.Item>
+          {/each}
+        </Command.Group>
+      </Command.Root>
+    </div>
+  </Popover.Content>
+</Popover.Root>
