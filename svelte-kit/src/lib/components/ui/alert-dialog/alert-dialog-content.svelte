@@ -11,7 +11,7 @@
   <AlertDialogOverlay forceMount>
     {#snippet child({ props, open })}
       {#if open}
-        <div {...props} transition:fade={{ duration: 150 }}></div>
+        <div {...props} transition:fade={{ duration: 200 }}></div>
       {/if}
     {/snippet}
   </AlertDialogOverlay>
@@ -27,7 +27,7 @@
   >
     {#snippet child({ props, open })}
       {#if open}
-        <div {...props} transition:scale={{ start: 0.95, duration: 150, opacity: 0 }}>{@render children!()}</div>
+        <div {...props} transition:scale={{ start: 0.95, duration: 200, opacity: 0 }}>{@render children!()}</div>
       {/if}
     {/snippet}
   </AlertDialogPrimitive.Content>
