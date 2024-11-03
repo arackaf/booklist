@@ -1,7 +1,7 @@
 import { SQL, and, asc, desc, eq, notExists, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/pg-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
-import { db } from "./dbUtils";
+import { db, executeDrizzle } from "./dbUtils";
 
 export type SubjectOrTagSummaryEntry = {
   books: number;
@@ -104,15 +104,18 @@ export const userSummary = async (userId: string): Promise<UserSummary | null> =
           )
         );
 
-    const data = await union(
-      db
-        .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
-        .from(books)
-        .where(eq(books.userId, userId)),
-      subjectsQuery(),
-      unusedSubjectsQuery(),
-      tagsQuery(),
-      unusedTagsQuery()
+    const data = await executeDrizzle(
+      "User summary",
+      union(
+        db
+          .select({ label: sql<string>`'All books'`, count: sql<number>`COUNT(*)`, id: sql<number>`0` })
+          .from(books)
+          .where(eq(books.userId, userId)),
+        subjectsQuery(),
+        unusedSubjectsQuery(),
+        tagsQuery(),
+        unusedTagsQuery()
+      )
     );
 
     type DataItem = (typeof data)[0];
