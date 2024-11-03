@@ -1,6 +1,11 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import { spring } from "svelte/motion";
+
+  type Props = {
+    children: Snippet;
+  };
+  let { children }: Props = $props();
 
   let hasInitialSize = $state(false);
   const DIMENSIONS_SPRING = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
@@ -44,6 +49,6 @@
 
 <div style={dimensionStyles} class="overflow-hidden text-base text-neutral-900">
   <div bind:this={innerContent}>
-    <slot />
+    {@render children()}
   </div>
 </div>
