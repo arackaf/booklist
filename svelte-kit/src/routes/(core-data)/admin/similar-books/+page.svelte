@@ -9,16 +9,16 @@
   import BookDisplay from "./BookDisplay.svelte";
   import SimilarBooks from "./SimilarBooks.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: currentlyChecked = !!$page.url.searchParams.get("my-books");
-  $: pageNumber = parseInt($page.url.searchParams.get("page") || "1", 10);
-  $: nextPageDown = pageNumber == 2 ? "" : pageNumber - 1;
-  $: nextPageUp = pageNumber + 1;
+  let currentlyChecked = $derived(!!$page.url.searchParams.get("my-books"));
+  let pageNumber = $derived(parseInt($page.url.searchParams.get("page") || "1", 10));
+  let nextPageDown = $derived(pageNumber == 2 ? "" : pageNumber - 1);
+  let nextPageUp = $derived(pageNumber + 1);
 
-  $: ({ books, subjects } = data);
+  let { books, subjects } = $derived(data);
 
-  let localSubjects = [] as any[];
+  let localSubjects = $state<any[]>([]);
 
   const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject.id));
   const removeSubject = (subject: any) => (localSubjects = localSubjects.filter(id => id != subject.id));

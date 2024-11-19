@@ -9,16 +9,21 @@
 
   import BookDisplay from "./BookDisplay.svelte";
 
-  export let book: BookWithSimilarItems;
+  type Props = {
+    book: BookWithSimilarItems;
+  };
 
-  $: hasSimilarBooks = Array.isArray(book.similarBooks) && book.similarBooks.length;
-  $: similarBooksCount = hasSimilarBooks ? book.similarBooks!.length : 0;
+  let { book }: Props = $props();
 
-  let loading = false;
-  let expanded = false;
-  let similarBooks: SimilarBook[] = [];
+  let hasSimilarBooks = $derived(Array.isArray(book.similarBooks) && book.similarBooks.length);
+  let similarBooksCount = $derived(hasSimilarBooks ? book.similarBooks!.length : 0);
 
-  $: isbn10 = isbn13To10(book.isbn);
+  let loading = $state(false);
+  let expanded = $state(false);
+  let similarBooks = $state<SimilarBook[]>([]);
+  let isRunning = $state(false);
+
+  let isbn10 = $derived(isbn13To10(book.isbn));
 
   async function expand() {
     if (expanded) {
@@ -36,7 +41,6 @@
     }
   }
 
-  let isRunning = false;
   function attemptUpdate() {
     isRunning = true;
     return async ({ update }: any) => {
@@ -52,7 +56,7 @@
     <span>
       {similarBooksCount} similar book{similarBooksCount === 1 ? "" : "s"}
     </span>
-    <button disabled={loading} class="raw-button ml-auto" class:cursor-pointer={loading} class:rotate-180={expanded} on:click={expand}>
+    <button disabled={loading} class="raw-button ml-auto" class:cursor-pointer={loading} class:rotate-180={expanded} onclick={expand}>
       {#if loading}
         <i class="far fa-spinner fa-spin"></i>
       {:else}
