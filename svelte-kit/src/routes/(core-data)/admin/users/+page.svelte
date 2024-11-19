@@ -2,17 +2,19 @@
   import type { StoredUserInfo } from "$data/types";
   import UserUsageEntry from "./UserUsageEntry.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: ({ userUsageInfo, missingUserInfo } = data);
-  let lookup: Record<string, StoredUserInfo | null> = {};
+  let { userUsageInfo, missingUserInfo } = $derived(data);
+  let lookup = $state<Record<string, StoredUserInfo | null>>({});
 
-  $: Promise.resolve(missingUserInfo).then(val => {
-    if (typeof window === "object") {
-      val.forEach(user => {
-        lookup[user.userId] = user ?? null;
-      });
-    }
+  $effect(() => {
+    Promise.resolve(missingUserInfo).then(val => {
+      if (typeof window === "object") {
+        val.forEach(user => {
+          lookup[user.userId] = user ?? null;
+        });
+      }
+    });
   });
 </script>
 
