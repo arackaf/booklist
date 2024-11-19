@@ -4,7 +4,6 @@
   import ModalContents from "./ModalContents.svelte";
   import StandardModalHeader from "./StandardModalHeader.svelte";
   import StandardModalFooter from "./StandardModalFooter.svelte";
-  import AlertDialogOverlay from "./ui/alert-dialog/alert-dialog-overlay.svelte";
 
   type Props = {
     isOpen: boolean;
