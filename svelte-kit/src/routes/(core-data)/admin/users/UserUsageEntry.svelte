@@ -12,7 +12,7 @@
 
   let provider = $derived(userUsageEntry.provider || missingUserInfo?.provider || "");
   let books = $derived(userUsageEntry.books);
-  let lastEnteredDate = $derived(() => {
+  let lastEnteredDate = $derived.by(() => {
     if (userUsageEntry.latest) {
       const date: Date = userUsageEntry.latest;
       return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
