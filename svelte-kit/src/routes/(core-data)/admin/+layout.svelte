@@ -1,3 +1,5 @@
+<svelte:options runes={true} />
+
 <script lang="ts">
   import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
   import { SectionNavItem } from "$lib/components/section-nav";
