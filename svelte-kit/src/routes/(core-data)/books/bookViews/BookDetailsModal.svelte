@@ -15,40 +15,46 @@
 
   import { afterDelete as updateStateAfterDelete } from "../state/onDelete";
 
-  export let viewingBook: Book | null;
-  export let subjects: Subject[];
-  export let tags: Tag[];
-  export let isOpen = false;
-  export let onHide: () => void;
-  export let isPublic: boolean;
+  type Props = {
+    viewingBook: Book | null;
+    subjects: Subject[];
+    tags: Tag[];
+    isOpen?: boolean;
+    onHide: () => void;
+    isPublic: boolean;
+  };
 
-  $: book = viewingBook || ({} as Book);
-  $: isbn10 = book.isbn?.length === 10 ? book.isbn : isbn13To10(book.isbn);
+  let { viewingBook, subjects, tags, isOpen = false, onHide, isPublic }: Props = $props();
+
+  let book = $state<Book>(viewingBook || ({} as Book));
+  let isbn10 = $derived(book.isbn?.length === 10 ? book.isbn : isbn13To10(book.isbn));
 
   const booksModuleContext: any = getContext("books-module-context");
   const { onBooksUpdated } = booksModuleContext;
 
-  let editing = false;
+  let editing = $state(false);
+  let expanded = $state(false);
+  let detailsLoading = $state(false);
+  let bookDetails = $state<BookDetails | null>(null);
+
+  let detailsBtnClass = $derived(expanded ? "fa-angle-double-up" : "fa-angle-double-down");
+  let { editorialReviews, similarBooks } = $derived(bookDetails || ({} as any));
+
+  $effect(() => {
+    book = viewingBook || ({} as Book);
+  });
+  $effect(() => {
+    if (book) {
+      bookDetails = null;
+      expanded = false;
+    }
+  });
 
   const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     book = updateSingleObject(book, updates);
     onBooksUpdated(id, updates);
     editing = false;
   };
-
-  let expanded = false;
-  $: detailsBtnClass = expanded ? "fa-angle-double-up" : "fa-angle-double-down";
-
-  let bookDetails: BookDetails | null;
-  $: ({ editorialReviews, similarBooks } = bookDetails || ({} as any));
-  let detailsLoading = false;
-
-  $: {
-    if (book) {
-      bookDetails = null;
-      expanded = false;
-    }
-  }
 
   function toggleDetails() {
     if (expanded) {
@@ -69,7 +75,7 @@
     }
   }
 
-  $: afterDelete = () => {
+  const afterDelete = () => {
     updateStateAfterDelete(book.id);
     onHide();
   };
