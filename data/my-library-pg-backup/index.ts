@@ -45,22 +45,3 @@ s3.send(new PutObjectCommand(dumpParams))
   .catch(err => {
     console.log("Error: ", err);
   });
-
-// pg_dump postgresql://user:pws@my-db.fly.dev:5432/my-library -Fc > my-db.dump
-
-// PGPASSWORD=docker pg_restore -h localhost -U docker -d my-db-2 my-db.dump
-
-// ---------------
-
-// PGPASSWORD=docker createdb -T template0 my-library -h localhost -U docker
-// PGPASSWORD=docker pg_restore -h localhost -U docker -C -d my-library my-db.dump
-
-// postgres://postgres:XUO8JiquQ8d12qq@db-restore-test.flycast:5432
-
-// PGPASSWORD=XUO8JiquQ8d12qq pg_restore -h localhost -U postgres -C -d postgres my-db.dump
-// PGPASSWORD=JJxxXDx9Ho9mXzK pg_restore -h localhost -U postgres -C -d postgres my-db.dump
-
-// LATEST
-// PGPASSWORD=oTLJc9WPKcT1hAE pg_restore -h localhost -U postgres -C -d postgres backup-dump.dump
-
-// PGPASSWORD=WT5CT7rtu4iQfW9 psql -h localhost -U postgres -d postgres -f backup.sql
