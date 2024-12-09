@@ -21,26 +21,30 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
 
-  export let isPublic: boolean;
-  export let book: Book;
+  type Props = {
+    isPublic: boolean;
+    book: Book;
+    subjects: Subject[];
+    tags: Tag[];
+    previewBook: (book: Book) => void;
+  };
 
-  export let subjects: Subject[];
-  export let tags: Tag[];
-
-  export let previewBook: (book: Book) => void;
+  let { isPublic, book, subjects, tags, previewBook }: Props = $props();
 
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
 
-  $: ({ id, isbn } = book);
+  let { id, isbn } = $derived(book);
+  let isbn10 = $derived(isbn?.length === 10 ? isbn : isbn13To10(isbn));
 
-  $: isbn10 = isbn?.length === 10 ? isbn : isbn13To10(isbn);
+  let readSaving = $state(false);
+  let multiReadSaving = $derived($booksReadSaving[id] == "1");
 
-  let readSaving: boolean;
-  $: multiReadSaving = $booksReadSaving[id] == "1";
+  let pendingDelete = $state(false);
+  let deleting = $state(false);
 
-  let pendingDelete = false;
-  let deleting = false;
+  let hoverOverride = $derived(`display: ${pendingDelete ? "inline" : ""}`);
+  let addedDate = $derived(new Date(book.dateAdded));
 
   const deleteBook = () => {
     deleting = true;
@@ -52,9 +56,6 @@
     };
   };
 
-  $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
-
-  $: addedDate = new Date(book.dateAdded);
   function getDisplayDate(date: Date) {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   }
