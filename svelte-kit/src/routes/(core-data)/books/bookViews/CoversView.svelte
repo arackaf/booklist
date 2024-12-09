@@ -4,14 +4,17 @@
   import BookDetailsModal from "./BookDetailsModal.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
 
-  export let books: Book[];
+  type Props = {
+    books: Book[];
+    isPublic: boolean;
+  };
 
-  $: ({ subjects, tags } = $page.data);
+  let { books, isPublic }: Props = $props();
 
-  export let isPublic: boolean;
+  let { subjects, tags } = $derived($page.data);
 
-  let previewing: boolean = false;
-  let bookPreviewing: Book | null = null;
+  let previewing = $state(false);
+  let bookPreviewing = $state<Book | null>(null);
 
   const previewBook = (book: Book) => {
     previewing = true;
