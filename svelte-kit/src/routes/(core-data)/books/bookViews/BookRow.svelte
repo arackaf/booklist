@@ -64,7 +64,7 @@
 <tr class="hover:bg-primary-10">
   {#if !isPublic}
     <td>
-      <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(id)}>
+      <button style="font-size: 12pt" class="raw-button" onclick={() => selectionState.toggle(id)} aria-label="Select book">
         <i class={"fal fa-fw " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
       </button>
     </td>
@@ -85,7 +85,12 @@
         </div>
 
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
-          <button on:click={() => previewBook(book)} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
+          <button
+            onclick={() => previewBook(book)}
+            style={hoverOverride}
+            class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+            aria-label="View book details"
+          >
             <i class="fa-fw fal fa-eye"></i>
           </button>
           {#if isbn10}
@@ -94,18 +99,25 @@
               target="_new"
               class="invisible text-neutral-500 group-hover:visible text-sm"
               href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
+              aria-label="View book on Amazon"
             >
               <i class={`fab fa-amazon fa-fw`}></i>
             </a>
           {/if}
           {#if !isPublic}
-            <button style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm" on:click={() => editBook(book)}>
+            <button
+              style={hoverOverride}
+              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+              onclick={() => editBook(book)}
+              aria-label="Edit book"
+            >
               <i class="fal fa-pencil-alt fa-fw"></i>
             </button>
             <button
               style={hoverOverride}
               class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
-              on:click={() => (pendingDelete = true)}
+              onclick={() => (pendingDelete = true)}
+              aria-label="Delete book"
             >
               <i class={`fal fa-trash-alt fa-fw`}></i>
             </button>

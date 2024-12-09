@@ -28,7 +28,7 @@
   <div class="flex flex-col items-center mt-4">
     <div style="border: 0" class="flex gap-2 md:gap-3 lg:gap-4 justify-center flex-wrap m-[-15px] w-full max-w-7xl">
       {#each books as book}
-        <button class="raw-button flex" on:click={() => previewBook(book)}>
+        <button class="raw-button flex" onclick={() => previewBook(book)}>
           <figure
             class="w-[120px] flex flex-col self-stretch cursor-pointer border border-neutral-300 rounded p-[5px] transition-[transform_box-shadow] hover:-translate-y-1 hover:shadow-lg hover:shadow-neutral-300"
           >
