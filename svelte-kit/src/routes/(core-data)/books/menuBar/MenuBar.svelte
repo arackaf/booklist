@@ -62,7 +62,7 @@
       <PagingButtons />
       <div class="hidden sm:block">
         <div class="flex">
-          <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
+          <form action="/books" onformdata={onFormData} data-sveltekit-keepfocus>
             {#if $publicUser}
               <input type="hidden" name="user" value={$publicUser} />
             {/if}
