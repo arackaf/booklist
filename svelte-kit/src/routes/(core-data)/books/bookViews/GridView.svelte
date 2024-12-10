@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
   import { changeFilter, searchState } from "../state/searchState";
@@ -13,6 +12,8 @@
     tags: Tag[];
   };
   let { isPublic, books, subjects, tags }: Props = $props();
+  let previewing = $state(false);
+  let bookPreviewing = $state<Book | null>(null);
 
   let allBooksSelected = $derived(books.length === $selectedBooks.length);
 
@@ -23,9 +24,6 @@
       selectionState.selectAll(books);
     }
   }
-
-  let previewing = $state(false);
-  let bookPreviewing = $state<Book | null>(null);
 
   const previewBook = (book: Book) => {
     previewing = true;
@@ -40,7 +38,7 @@
     <tr>
       {#if !isPublic}
         <th class="p-0" style="text-align: center; width: 25px;">
-          <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll}>
+          <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll} aria-label="Select all">
             <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
           </button>
         </th>
