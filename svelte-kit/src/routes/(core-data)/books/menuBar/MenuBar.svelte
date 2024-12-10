@@ -68,7 +68,7 @@
               autocomplete="off"
               bind:inputEl={quickSearchEl}
               value={$searchState.search}
-              on:blur={resetSearch}
+              onblur={resetSearch}
               name="search"
               class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
               placeholder="Title search"

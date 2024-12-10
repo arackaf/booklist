@@ -4,9 +4,14 @@
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { searchState, changeFilter, getSortDisplay } from "../state/searchState";
 
-  export let totalBooks: number;
+  type Props = {
+    totalBooks: number;
+  };
 
-  $: resultsDisplay = totalBooks ? `${totalBooks} Book${totalBooks === 1 ? "" : "s"}` : "";
+  let { totalBooks }: Props = $props();
+
+  let resultsDisplay = $derived(totalBooks ? `${totalBooks} Book${totalBooks === 1 ? "" : "s"}` : "");
+
   const removeAllFiltersLabel = {
     textColor: "white",
     backgroundColor: "var(--danger-7)",
