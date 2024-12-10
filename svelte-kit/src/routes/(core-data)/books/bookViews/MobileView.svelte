@@ -5,12 +5,16 @@
   import MobileViewItem from "./MobileViewItem.svelte";
   import BookDetailsModal from "./BookDetailsModal.svelte";
 
-  export let isPublic: boolean;
-  export let books: Book[];
-  $: ({ subjects, tags } = $page.data);
+  type Props = {
+    isPublic: boolean;
+    books: Book[];
+  };
 
-  let previewing: boolean = false;
-  let bookPreviewing: Book | null = null;
+  let { isPublic, books }: Props = $props();
+  let { subjects, tags } = $derived($page.data);
+
+  let previewing = $state(false);
+  let bookPreviewing = $state<Book | null>(null);
 
   const previewBook = (book: Book) => {
     previewing = true;
