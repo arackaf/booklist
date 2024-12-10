@@ -1,17 +1,20 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import type { Book } from "$data/types";
 
   import BookCover from "$lib/components/BookCover.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
 
-  export let book: Book;
-  export let previewBook: (book: Book) => void;
+  type Props = {
+    book: Book;
+    previewBook: (book: Book) => void;
+  };
+
+  let { book, previewBook }: Props = $props();
 </script>
 
 <div
-  on:click={() => previewBook(book)}
-  on:keydown={() => {}}
+  onclick={() => previewBook(book)}
+  onkeydown={() => {}}
   role="button"
   tabindex={-1}
   class="py-1 border-b border-b-neutral-400 first:border-t-primary-8 first:border-t-[2px] hover:bg-primary-10"
