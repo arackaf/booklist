@@ -1,7 +1,8 @@
 <script lang="ts">
   import { searchState } from "../state/searchState";
 
-  const simpleFields = ["publisher", "author"] as (keyof typeof $searchState)[];
+  type SimpleFields = (keyof typeof $searchState)[];
+  let simpleFields = $state<SimpleFields>(["publisher", "author"]);
 </script>
 
 {#each simpleFields as field}

@@ -1,42 +1,36 @@
 <script lang="ts">
+  import { getContext } from "svelte";
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
-
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
+
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-
-  import { getContext } from "svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
 
   import { endSaving, startSaving } from "../state/booksReadSavingState";
-
   import { selectedBooksLookup } from "../state/selectionState";
   import { searchState } from "../state/searchState";
 
-  export let isPublic: boolean;
-  export let closeMobileMenu: () => void = () => {};
-
-  let bulkReadSaving: boolean;
-  let bulkUnReadSaving: boolean;
-
-  let reloading = false;
-  const reload = () => {
-    reloading = true;
-
-    return async () => {
-      invalidate("reload:books").then(() => {
-        reloading = false;
-      });
-    };
+  type Props = {
+    isPublic: boolean;
+    closeMobileMenu: () => void;
   };
+
+  let { isPublic, closeMobileMenu }: Props = $props();
+
+  let bulkReadSaving = $state(false);
+  let bulkUnReadSaving = $state(false);
+  let reloading = $state(false);
+  let quickSearchEl = $state<any>({});
+
+  let selectedBooksIds = $derived(Object.keys($selectedBooksLookup).map(s => +s));
+  let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
   const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
 
-  $: selectedBooksIds = Object.keys($selectedBooksLookup).map(s => +s);
-  $: selectedBooksCount = selectedBooksIds.length;
   const getSelectedBooksIds = () => selectedBooksIds;
 
   const editSubjectsForSelectedBooks = () => editBooksSubjects();
@@ -49,15 +43,14 @@
     fn();
   };
 
-  $: {
-    if (bulkReadSaving || bulkUnReadSaving) {
-      startSaving(getSelectedBooksIds());
-    } else {
-      endSaving(getSelectedBooksIds());
-    }
-  }
-
-  let quickSearchEl: any = {};
+  const reload = () => {
+    reloading = true;
+    return async () => {
+      invalidate("reload:books").then(() => {
+        reloading = false;
+      });
+    };
+  };
 
   const runSearch = () => {
     const searchParams = new URLSearchParams($page.url.searchParams);
@@ -74,9 +67,18 @@
     goto(newUrl);
     closeMobileMenu?.();
   };
+
   const resetSearch = () => {
     quickSearchEl.value = $searchState.search;
   };
+
+  $effect(() => {
+    if (bulkReadSaving || bulkUnReadSaving) {
+      startSaving(getSelectedBooksIds());
+    } else {
+      endSaving(getSelectedBooksIds());
+    }
+  });
 </script>
 
 {#if !selectedBooksCount}

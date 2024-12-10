@@ -1,17 +1,15 @@
 <script lang="ts">
   import { page } from "$app/stores";
 
-  $: ({ publicUser } = $page.data);
-  $: ({ publicName, publicBooksHeader } = publicUser || {});
+  let { publicUser } = $derived($page.data);
+  let { publicName, publicBooksHeader } = $derived(publicUser || {});
 
-  let booksHeader: string;
-  $: {
+  let booksHeader = $derived.by(() => {
     if (!publicName && !publicBooksHeader) {
-      booksHeader = "";
-    } else {
-      booksHeader = publicBooksHeader || `${publicName}'s Books`;
+      return "";
     }
-  }
+    return publicBooksHeader || `${publicName}'s Books`;
+  });
 </script>
 
 <h4 class="text-lg font-bold mr-1">{booksHeader}</h4>
