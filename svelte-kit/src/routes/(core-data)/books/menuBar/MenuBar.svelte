@@ -1,7 +1,6 @@
 <script lang="ts">
   import { sanitize } from "$lib/util/formDataHelpers";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
-
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
   import BookViewsDesktop from "./BookViewsDesktop.svelte";
@@ -14,17 +13,21 @@
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import RawButton from "$lib/components/Button/RawButton.svelte";
 
-  export let isPublic: boolean;
-  export let bookViewToUse: string;
-  export let totalBooks: number;
+  type Props = {
+    isPublic: boolean;
+    bookViewToUse: string;
+    totalBooks: number;
+  };
 
-  let quickSearchEl: any = {};
+  let { isPublic, bookViewToUse, totalBooks }: Props = $props();
+
+  let quickSearchEl = $state<any>({});
+  let mobileMenuOpen = $state(false);
 
   const resetSearch = () => {
     quickSearchEl.value = $searchState.search;
   };
 
-  let mobileMenuOpen = false;
   const closeMobileMenu = () => {
     mobileMenuOpen = false;
   };

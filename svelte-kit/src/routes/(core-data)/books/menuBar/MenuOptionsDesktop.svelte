@@ -5,18 +5,31 @@
   import BookReadSetter from "../BookReadSetter.svelte";
 
   import { endSaving, startSaving } from "../state/booksReadSavingState";
-
   import { selectedBooksLookup } from "../state/selectionState";
   import Button from "$lib/components/Button/Button.svelte";
-  export let isPublic: boolean;
 
-  let bulkReadSaving: boolean;
-  let bulkUnReadSaving: boolean;
+  type Props = {
+    isPublic: boolean;
+  };
 
-  let reloading = false;
+  let { isPublic }: Props = $props();
+
+  let bulkReadSaving = $state(false);
+  let bulkUnReadSaving = $state(false);
+  let reloading = $state(false);
+
+  let selectedBooksIds = $derived(Object.keys($selectedBooksLookup).map(s => +s));
+  let selectedBooksCount = $derived(selectedBooksIds.length);
+
+  const booksModuleContext: any = getContext("books-module-context");
+  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
+
+  const getSelectedBooksIds = () => selectedBooksIds;
+  const editSubjectsForSelectedBooks = () => editBooksSubjects();
+  const editTagsForSelectedBooks = () => editBooksTags();
+
   const reload = () => {
     reloading = true;
-
     return async () => {
       invalidate("reload:books").then(() => {
         reloading = false;
@@ -24,23 +37,13 @@
     };
   };
 
-  const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
-
-  $: selectedBooksIds = Object.keys($selectedBooksLookup).map(s => +s);
-  $: selectedBooksCount = selectedBooksIds.length;
-  const getSelectedBooksIds = () => selectedBooksIds;
-
-  const editSubjectsForSelectedBooks = () => editBooksSubjects();
-  const editTagsForSelectedBooks = () => editBooksTags();
-
-  $: {
+  $effect(() => {
     if (bulkReadSaving || bulkUnReadSaving) {
       startSaving(getSelectedBooksIds());
     } else {
       endSaving(getSelectedBooksIds());
     }
-  }
+  });
 </script>
 
 {#if !selectedBooksCount}
