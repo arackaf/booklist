@@ -1,44 +1,44 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import type { Book, Tag } from "$data/types";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  type Props = {
+    modifyingBooks: any[];
+    isOpen: boolean;
+    onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
+    onHide: () => void;
+  };
 
-  $: tags = $page.data.tags;
-  export let modifyingBooks: any[];
-  export let isOpen: boolean;
-  export let onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
-  export let onHide: () => void;
+  let { modifyingBooks, isOpen, onSave, onHide }: Props = $props();
+  let { tags } = $derived($page.data);
 
-  let addingTags: number[] = [];
-  let removingTags: number[] = [];
+  let addingTags = $state<number[]>([]);
+  let removingTags = $state<number[]>([]);
+  let saving = $state(false);
 
   const resetTags = () => {
     addingTags = [];
     removingTags = [];
   };
 
-  $: {
+  $effect(() => {
     if (isOpen) {
       resetTags();
     }
-  }
+  });
 
-  let saving = false;
   const save = () => {
     saving = true;
     const updates = {

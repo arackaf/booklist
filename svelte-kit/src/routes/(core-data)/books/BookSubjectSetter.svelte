@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import type { Book, Subject } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
