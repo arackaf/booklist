@@ -14,7 +14,7 @@ export async function updateSearchParam(key, value) {
   const newUrl = new URL(get(page).url);
   newUrl.search = q.toString();
 
-  goto(newUrl, { replaceState: true });
+  goto(newUrl, {});
 }
 
 export const publicUserIdPersist = derived(page, $page => {
