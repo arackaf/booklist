@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { sanitize } from "$lib/util/formDataHelpers";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
 
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
@@ -9,10 +8,10 @@
   import MenuOptionsMobile from "./MenuOptionsMobile.svelte";
   import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
   import { publicUser, searchState } from "../state/searchState";
-  import QuickFormFiller from "./QuickFormFiller.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import RawButton from "$lib/components/Button/RawButton.svelte";
+  import { updateSearchParam } from "$lib/state/urlHelpers";
 
   export let isPublic: boolean;
   export let bookViewToUse: string;
@@ -28,9 +27,8 @@
     mobileMenuOpen = false;
   };
 
-  function onFormData(evt: any) {
-    const searchParams: URLSearchParams = evt.formData;
-    sanitize(searchParams);
+  function runQuickSearch(evt: any) {
+    evt.key === "Enter" && updateSearchParam("search", evt.currentTarget.value);
   }
 </script>
 
@@ -58,25 +56,17 @@
       <PagingButtons />
       <div class="hidden sm:block">
         <div class="flex">
-          <form action="/books" on:formdata={onFormData} data-sveltekit-keepfocus>
-            {#if $publicUser}
-              <input type="hidden" name="user" value={$publicUser} />
-            {/if}
-            <Input
-              size="sm"
-              autocomplete="off"
-              bind:inputEl={quickSearchEl}
-              value={$searchState.search}
-              on:blur={resetSearch}
-              name="search"
-              class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
-              placeholder="Title search"
-            />
-            <QuickFormFiller />
-            {#each $searchState.subjects as subject}
-              <input type="hidden" name="subjects" value={subject} />
-            {/each}
-          </form>
+          <Input
+            size="sm"
+            autocomplete="off"
+            bind:inputEl={quickSearchEl}
+            on:keydown={runQuickSearch}
+            value={$searchState.search}
+            onblur={resetSearch}
+            name="search"
+            class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+            placeholder="Title search"
+          />
           <MenuOptionsDesktop {isPublic} />
         </div>
       </div>
