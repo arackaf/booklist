@@ -4,41 +4,42 @@
   import { invalidate } from "$app/navigation";
 
   import type { Book, Subject } from "$data/types";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  type Props = {
+    modifyingBooks: any[];
+    isOpen: boolean;
+    onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
+    onHide: () => void;
+  };
 
-  $: subjects = $page.data.subjects;
-  export let modifyingBooks: any[];
-  export let isOpen: boolean;
-  export let onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
-  export let onHide: () => void;
+  let { modifyingBooks, isOpen, onSave, onHide }: Props = $props();
+  let { subjects } = $derived($page.data);
 
-  let addingSubjects: number[] = [];
-  let removingSubjects: number[] = [];
+  let addingSubjects = $state<number[]>([]);
+  let removingSubjects = $state<number[]>([]);
+  let saving = $state(false);
 
   const resetSubjects = () => {
     addingSubjects = [];
     removingSubjects = [];
   };
 
-  $: {
+  $effect(() => {
     if (isOpen) {
       resetSubjects();
     }
-  }
+  });
 
-  let saving = false;
   const save = () => {
     saving = true;
     const updates = {
@@ -59,6 +60,7 @@
       onHide();
     };
   };
+
   const addingSubjectSet = (adding: boolean, { id }: Subject) =>
     (addingSubjects = adding ? addingSubjects.concat(id) : addingSubjects.filter(x => x != id));
   const subjectSelectedToAdd = addingSubjectSet.bind(null, true);

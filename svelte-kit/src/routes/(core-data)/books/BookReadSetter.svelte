@@ -2,11 +2,14 @@
   import { getContext } from "svelte";
   import { enhance } from "$app/forms";
 
-  export let ids: number[];
-  export let value: boolean;
-  export let onSave: () => void = () => {};
+  type Props = {
+    ids: number[];
+    value: boolean;
+    saving?: boolean;
+  };
 
-  export let saving: boolean | undefined = false;
+  let { ids, value, saving = $bindable() }: Props = $props();
+
   const { onBooksUpdated } = getContext("books-module-context") as any;
 
   const booksUpdated = () => {
@@ -15,7 +18,6 @@
 
     return async ({ result }: any) => {
       onBooksUpdated(idsToUse, result.data.updates);
-      onSave?.();
       saving = void 0;
     };
   };
