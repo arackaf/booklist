@@ -1,5 +1,10 @@
 <script lang="ts">
-  export let subject: any;
+  import Self from "./DisplaySubject.svelte";
+  type Props = {
+    subject: any;
+  };
+
+  let { subject }: Props = $props();
 </script>
 
 {subject.name}
@@ -7,7 +12,7 @@
   <ul>
     {#each subject.children as child}
       <li>
-        <svelte:self subject={child} />
+        <Self subject={child} />
       </li>
     {/each}
   </ul>
