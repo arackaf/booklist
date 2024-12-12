@@ -86,8 +86,8 @@
     autocomplete="off"
     bind:inputEl={quickSearchEl}
     value={$searchState.search}
-    on:blur={resetSearch}
-    on:keydown={(evt: any) => {
+    onblur={resetSearch}
+    onkeydown={(evt: any) => {
       if (evt.code === "Enter") {
         runSearch();
       }
