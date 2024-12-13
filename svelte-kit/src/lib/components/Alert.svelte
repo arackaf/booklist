@@ -1,12 +1,15 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
+
   type Props = {
     display?: string;
     type: "warning" | "info" | "success" | "error";
     layout?: "normal" | "slim" | "slimmer";
     class?: string;
+    children: Snippet;
   };
 
-  let { display = "flex", type = "info", layout = "normal", class: className = "" }: Props = $props();
+  let { display = "flex", type = "info", layout = "normal", class: className = "", children }: Props = $props();
   let colors = $state("");
   let padding = $derived(layout === "normal" ? "p-3" : layout === "slim" ? "p-2" : "py-1 px-2");
 
@@ -24,5 +27,5 @@
 </script>
 
 <div class="{display} {colors} items-center {padding} rounded {className}">
-  <slot />
+  {@render children()}
 </div>
