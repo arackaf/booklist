@@ -1,5 +1,4 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
   import type { HTMLAttributes } from "svelte/elements";
 
   let className = "";
@@ -14,5 +13,5 @@
 </script>
 
 <button class="p-0 bg-transparent border-0 {color} {cursor} shadow-none {className}" onclick={onClick} {...rest}>
-  <slot />
+  {@render children!()}
 </button>
