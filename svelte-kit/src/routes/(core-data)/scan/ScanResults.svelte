@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import { quadIn } from "svelte/easing";
-
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
@@ -15,20 +14,33 @@
       case "bookQueued":
         return { ...state, pending: payload };
       case "scanResults":
-        const newItems = payload.results.map((result: any) => ({ success: result.success, ...result.item }));
-        return { ...state, booksSaved: newItems.concat(state.booksSaved).slice(0, 25) };
+        const newItems = payload.results.map((result: any) => ({
+          success: result.success,
+          ...result.item
+        }));
+        return {
+          ...state,
+          booksSaved: newItems.concat(state.booksSaved).slice(0, 25)
+        };
     }
     return state;
   }
 
-  type StateType = { pending: any; booksSaved: any[] };
-  let [state, dispatch] = useReducer<StateType>(scanReducer, { pending: 0, booksSaved: [] });
-  $: ({ pending, booksSaved } = $state);
+  type StateType = {
+    pending: any;
+    booksSaved: any[];
+  };
 
-  let showIncomingQueue = false;
+  let [currentState, dispatch] = useReducer<StateType>(scanReducer, {
+    pending: 0,
+    booksSaved: []
+  });
+
+  let { pending, booksSaved } = $derived($currentState);
+  let showIncomingQueue = $state(false);
+  let toggleClass = $derived(showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down");
+
   const toggleIncomingQueue = () => (showIncomingQueue = !showIncomingQueue);
-
-  $: toggleClass = showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down";
 
   onMount(() => {
     function sendIt({ detail }: any) {

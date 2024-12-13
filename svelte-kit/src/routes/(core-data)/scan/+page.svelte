@@ -51,7 +51,7 @@
           Enter your books here
           <button
             class="raw-button cursor-pointer"
-            on:click={() => (showScanInstructions = !showScanInstructions)}
+            onclick={() => (showScanInstructions = !showScanInstructions)}
             aria-label="Show scan instructions"
           >
             <i class="far fa-question-circle"></i>
@@ -77,7 +77,7 @@
         <div>
           <BookEntryItem
             {idx}
-            on:focus={() => (focused = idx)}
+            onFocus={() => (focused = idx)}
             focused={idx == focused}
             selected={idx == selected}
             entryFinished={() => entryFinished(idx)}
