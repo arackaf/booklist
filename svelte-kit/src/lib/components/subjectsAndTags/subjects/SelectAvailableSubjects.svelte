@@ -14,6 +14,7 @@
     triggerClasses?: string;
     noHiddenFields?: boolean;
     renderPlaceholder?: Snippet;
+    disabled?: boolean;
   };
 
   let {
@@ -24,7 +25,8 @@
     size = "default",
     triggerClasses = "",
     noHiddenFields = false,
-    renderPlaceholder
+    renderPlaceholder,
+    disabled
   }: Props = $props();
 
   let search = $state("");
@@ -49,7 +51,7 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
+<GenericLabelSelect {disabled} {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
   {#snippet renderPlaceholder()}
     {#if $$slots.placeholder}
       <slot name="placeholder"></slot>

@@ -3,10 +3,9 @@
   import * as Command from "$lib/components/ui/command";
   import * as Popover from "$lib/components/ui/popover";
   import { Button } from "$lib/components/ui/button";
-  import { tick, type Snippet } from "svelte";
+  import { type Snippet } from "svelte";
 
   import GenericLabelDisplayItem from "./GenericLabelDisplayItem.svelte";
-  import { Portal } from "../ui/alert-dialog";
 
   type Props = {
     options: () => any[];
@@ -16,29 +15,46 @@
     size?: "sm" | "default";
     triggerClasses?: string;
     renderPlaceholder?: Snippet;
+    disabled?: boolean;
   };
 
-  let { options, placeholder, search = $bindable(""), onItemSelected, size = "default", triggerClasses = "", renderPlaceholder }: Props = $props();
+  let {
+    options,
+    placeholder,
+    search = $bindable(""),
+    onItemSelected,
+    size = "default",
+    triggerClasses = "",
+    renderPlaceholder,
+    disabled
+  }: Props = $props();
 
   let open = $state(false);
 </script>
 
 <Popover.Root {open} onOpenChange={newVal => (open = newVal)}>
-  <Popover.Trigger>
-    <Button
-      size="sm"
-      variant="outline"
-      role="combobox"
-      aria-expanded={open}
-      class="w-[150px] justify-between {size === 'sm' ? 'h-8' : ''} border rounded border-neutral-400 {triggerClasses}"
-    >
-      {#if renderPlaceholder}
-        {@render renderPlaceholder()}
-      {:else}
-        {placeholder ?? "Select"}
-      {/if}
-      <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-    </Button>
+  <Popover.Trigger {disabled}>
+    {#snippet child({ props })}
+      <Button
+        size="sm"
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        class="w-[150px] justify-between border rounded border-neutral-400 
+          {size === 'sm' ? 'h-8' : ''}
+          {triggerClasses} 
+          {disabled ? ' cursor-not-allowed ' : ''}"
+        {disabled}
+        {...props}
+      >
+        {#if renderPlaceholder}
+          {@render renderPlaceholder()}
+        {:else}
+          {placeholder ?? "Select"}
+        {/if}
+        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+    {/snippet}
   </Popover.Trigger>
 
   <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">

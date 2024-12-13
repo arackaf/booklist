@@ -130,6 +130,7 @@
 
       <SelectAndDisplayContainer class="sm:col-span-2">
         <SelectAvailableSubjects
+          disabled={noSubjects}
           placeholder="Subjects"
           slot="select"
           subjects={allSubjects}
