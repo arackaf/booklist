@@ -12,6 +12,8 @@
   import { flip } from "svelte/animate";
   import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
+  import Self from "./SubjectDisplay.svelte";
+
   type Props = {
     editSubject: (subject: Subject) => void;
     subject: FullSubject;
@@ -92,7 +94,7 @@
         <ul class="ml-5" onoutrostart={exitStart} transition:scale|local={scaleTransitionProps}>
           {#each childSubjects as s (s.id)}
             <li onoutrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
-              <svelte:self subject={s} {editSubject} />
+              <Self subject={s} {editSubject} />
             </li>
           {/each}
         </ul>
