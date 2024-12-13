@@ -2,8 +2,8 @@
   import Alert from "$lib/components/Alert.svelte";
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
 
-  export let data;
-  $: ({ user, isPublic, publicLink } = data);
+  let { data } = $props();
+  let { user, isPublic, publicLink } = $derived(data);
 </script>
 
 <div>

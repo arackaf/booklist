@@ -7,15 +7,18 @@
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 
-  export let user: DynamoUser;
-  export let isPublic: boolean;
-  export let publicLink: string;
+  type Props = {
+    user: DynamoUser;
+    isPublic: boolean;
+    publicLink: string;
+  };
 
-  let { publicName, publicBooksHeader } = user;
+  let { user, isPublic, publicLink }: Props = $props();
+  let { publicName, publicBooksHeader } = $derived(user);
 
-  let showForm = isPublic;
-  let error = false;
-  let saving = false;
+  let showForm = $state(isPublic);
+  let error = $state(false);
+  let saving = $state(false);
 
   const update = ({ cancel, formData: data }: { cancel: any; formData: FormData }) => {
     const isPublic = !!data.get("isPublic");
