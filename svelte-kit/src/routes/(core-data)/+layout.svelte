@@ -9,7 +9,7 @@
   import type { Book } from "$data/types";
   import ScanToasterSuccessContent from "$lib/components/ScanToasterSuccessContent.svelte";
 
-  let { data } = $props();
+  let { data, children } = $props();
   let { loggedIn, userId } = $derived(data);
 
   function startWebSocket() {
@@ -89,4 +89,4 @@
   });
 </script>
 
-<slot />
+{@render children()}

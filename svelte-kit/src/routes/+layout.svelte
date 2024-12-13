@@ -8,7 +8,7 @@
   import Loading from "$lib/components/Loading.svelte";
   import { NUM_THEMES } from "$lib/util/constants";
 
-  let { data } = $props();
+  let { data, children } = $props();
   let { uxState } = $derived(data);
   let { theme, wbg: whiteBg } = $derived(uxState);
 
@@ -48,7 +48,7 @@
         <Loading />
       {/if}
 
-      <slot />
+      {@render children()}
     </main>
 
     <Footer />

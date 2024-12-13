@@ -3,13 +3,7 @@
   import { SectionNavItem } from "$lib/components/section-nav";
   import { publicUserIdPersist } from "$lib/state/urlHelpers";
 
-  type Props = {
-    data: {
-      hasPublicId: boolean;
-    };
-  };
-
-  let { data }: Props = $props();
+  let { data, children } = $props();
   let { hasPublicId } = $derived(data);
 </script>
 
@@ -21,5 +15,6 @@
     <SectionNavItem href={$publicUserIdPersist.urlTo("/discover")}>Discover</SectionNavItem>
     <SectionNavItem disabled={hasPublicId} href="/recent-scans">Recent Scans</SectionNavItem>
   </svelte:fragment>
-  <slot />
+
+  {@render children()}
 </TabbedPage>

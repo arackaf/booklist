@@ -3,6 +3,8 @@
 <script lang="ts">
   import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
   import { SectionNavItem } from "$lib/components/section-nav";
+
+  let { children } = $props();
 </script>
 
 <TabbedPage>
@@ -11,5 +13,5 @@
     <SectionNavItem href="/admin/users">Users</SectionNavItem>
     <SectionNavItem href="/admin/design-system">Design system</SectionNavItem>
   </svelte:fragment>
-  <slot />
+  {@render children()}
 </TabbedPage>
