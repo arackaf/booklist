@@ -1,16 +1,21 @@
 <script lang="ts">
   import type { Book } from "$data/types";
-
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
+  import { page } from "$app/stores";
 
-  export let data;
+  let { data } = $derived($page);
 
-  $: ({ subjects: allSubjects, tags } = data);
+  let { subjects: allSubjects, tags } = $derived(data);
+
+  let editingBook = $state<Book | null>(null);
+  let enteringBook = $state(false);
+  let showScanInstructions = $state(false);
+  let focused = $state(0);
+  let selected = $state<any>(null);
 
   const defaultEmptyBook = () =>
     ({
@@ -24,19 +29,10 @@
       subjects: []
     }) as unknown as Book;
 
-  let editingBook: Book | null = null;
-
-  let enteringBook = false;
-
   const manuallyEnterBook = () => {
     editingBook = defaultEmptyBook();
     enteringBook = true;
   };
-
-  let showScanInstructions = false;
-
-  let focused = 0;
-  let selected: any = null;
 
   const entryFinished = (index: number) => {
     if (index < 9) {
