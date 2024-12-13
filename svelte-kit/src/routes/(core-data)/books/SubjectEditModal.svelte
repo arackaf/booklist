@@ -1,14 +1,16 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte";
-
   import type { Color, Subject } from "$data/types";
   import SubjectEditModalContents from "./SubjectEditModalContents.svelte";
 
-  export let isOpen = false;
-  export let onHide = () => {};
+  type Props = {
+    isOpen: boolean;
+    onHide: () => void;
+    colors: Color[];
+    subjects: Subject[];
+  };
 
-  export let colors: Color[];
-  export let subjects: Subject[];
+  let { isOpen = false, onHide = () => {}, colors, subjects }: Props = $props();
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Subjects">
