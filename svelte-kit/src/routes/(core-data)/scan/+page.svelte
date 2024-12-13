@@ -5,10 +5,8 @@
   import Button from "$lib/components/Button/Button.svelte";
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
-  import { page } from "$app/stores";
 
-  let { data } = $derived($page);
-
+  let { data } = $props();
   let { subjects: allSubjects, tags } = $derived(data);
 
   let editingBook = $state<Book | null>(null);
