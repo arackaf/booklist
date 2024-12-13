@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
   import { SectionNavItem } from "$lib/components/section-nav";
 
-  $: ({ hasPublicId } = $page.data);
+  let { data } = $props();
+  let { hasPublicId } = $derived(data);
 </script>
 
 <TabbedPage>
