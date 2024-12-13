@@ -1,37 +1,37 @@
 <script lang="ts">
+  import { untrack } from "svelte";
+  import { get } from "svelte/store";
   import type { Subject, Tag, UnwrapReadable } from "$data/types";
 
   import Button from "$lib/components/Button/Button.svelte";
-
   import Modal from "$lib/components/Modal.svelte";
-
-  import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
   import { sanitize } from "$lib/util/formDataHelpers";
-
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  import { get } from "svelte/store";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
   import Select from "$lib/components/form-elements/Select/Select.svelte";
 
-  export let isOpen = false;
-  export let onHide = () => {};
+  import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
 
-  export let tags: Tag[];
-  export let allSubjects: Subject[];
+  type Props = {
+    isOpen: boolean;
+    onHide: () => void;
+    tags: Tag[];
+    allSubjects: Subject[];
+  };
 
-  let titleEl: HTMLInputElement;
-  let localSearchValues: UnwrapReadable<typeof searchState> = {} as any;
+  let { isOpen, onHide = () => {}, tags, allSubjects }: Props = $props();
 
-  let localSubjects = [] as any[];
-  let localTags = [] as any[];
-  let noSubjects: boolean;
+  let titleEl = $state<HTMLInputElement | null>(null);
+  let localSearchValues = $state<UnwrapReadable<typeof searchState>>({} as any);
+  let localSubjects = $state<any[]>([]);
+  let localTags = $state<any[]>([]);
+  let noSubjects = $state(false);
 
   const onOpen = () => {
     syncSearchState();
@@ -40,11 +40,13 @@
     });
   };
 
-  $: {
+  $effect(() => {
     if (isOpen) {
-      onOpen();
+      untrack(() => {
+        onOpen();
+      });
     }
-  }
+  });
 
   function syncSearchState() {
     localSearchValues = { ...get(searchState) };
@@ -79,7 +81,7 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
-  <form action="/books" on:formdata={onFormData} on:submit={onHide}>
+  <form action="/books" onformdata={onFormData} onsubmit={onHide}>
     {#if $publicUser}
       <input type="hidden" name="user" value={$publicUser} />
     {/if}
