@@ -9,9 +9,8 @@
   import type { Book } from "$data/types";
   import ScanToasterSuccessContent from "$lib/components/ScanToasterSuccessContent.svelte";
 
-  export let data;
-
-  $: ({ loggedIn, userId } = data);
+  let { data } = $props();
+  let { loggedIn, userId } = $derived(data);
 
   function startWebSocket() {
     if (window.ws) {
@@ -23,7 +22,6 @@
 
     window.ws.addHandler((data: any) => {
       let packet = JSON.parse(data);
-
       dispatchScanDataUpdate(packet);
     });
   }
