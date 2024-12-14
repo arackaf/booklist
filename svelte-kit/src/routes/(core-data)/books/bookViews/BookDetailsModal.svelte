@@ -131,10 +131,10 @@
               <div style="margin-top: auto">
                 <div class="flex gap-5 items-center">
                   {#if book.isbn}
-                    <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
+                    <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`} aria-label="View on Amazon">
                       <i class="fab fa-amazon"></i>
                     </a>
-                    <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
+                    <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`} aria-label="View on Goodreads">
                       <i class="fab fa-goodreads-g"></i>
                     </a>
                   {/if}
@@ -200,7 +200,12 @@
                                 <span style="font-style: italic">{book.authors.join(", ")}</span>
                                 <br />
                               {/if}
-                              <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
+                              <a
+                                target="_new"
+                                style="color: black"
+                                href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
+                                aria-label="View on Amazon"
+                              >
                                 <i class="fab fa-amazon"></i>
                               </a>
                             </td>
