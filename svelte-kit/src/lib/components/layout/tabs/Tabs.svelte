@@ -1,14 +1,15 @@
 <script lang="ts">
-  import { setContext } from "svelte";
+  import { setContext, type Snippet } from "svelte";
   import { writable } from "svelte/store";
 
   type Props = {
     currentTab?: string;
+    children: Snippet;
   };
 
   const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
 
-  let { currentTab = $bindable() }: Props = $props();
+  let { currentTab = $bindable(), children }: Props = $props();
 
   let tabState = writable({ currentTab, setTab });
 
@@ -19,4 +20,4 @@
   setContext("tabs-state", tabState);
 </script>
 
-<slot />
+{@render children()}
