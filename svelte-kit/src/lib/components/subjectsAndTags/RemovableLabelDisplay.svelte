@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import Label from "$lib/components/form-elements/Label/Label.svelte";
   import type { Label as LabelType, LabelColors } from "./types";
 
@@ -9,9 +10,10 @@
     class?: string;
     href?: string;
     disabled?: boolean;
+    children?: Snippet;
   };
 
-  let { item = null, extraStyles = "", doRemove = () => {}, class: className = "", href = "", disabled = false }: Props = $props();
+  let { item = null, extraStyles = "", doRemove = () => {}, class: className = "", href = "", disabled = false, children }: Props = $props();
 
   let colorsPacket: LabelColors | null = $derived(item?.name && (item?.textColor || item?.backgroundColor) ? (item as LabelColors) : null);
 </script>
@@ -32,8 +34,8 @@
     </button>
   {/if}
   <span style="border-left: 1px solid {item?.textColor || 'white'}"></span>
-  {#if $$slots.default}
-    <slot />
+  {#if children}
+    {@render children()}
   {:else}
     {item?.name}
   {/if}
