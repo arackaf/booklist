@@ -7,9 +7,9 @@
 </script>
 
 <TabbedPage>
-  <svelte:fragment slot="nav">
+  {#snippet nav()}
     <SectionNavItem href="/settings/theme">Theme</SectionNavItem>
     <SectionNavItem disabled={hasPublicId} href="/settings/public-sharing">Public sharing</SectionNavItem>
-  </svelte:fragment>
+  {/snippet}
   {@render children()}
 </TabbedPage>

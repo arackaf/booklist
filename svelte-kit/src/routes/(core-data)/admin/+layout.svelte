@@ -8,9 +8,9 @@
 </script>
 
 <TabbedPage>
-  <svelte:fragment slot="nav">
+  {#snippet nav()}
     <SectionNavItem href="/admin/similar-books">Similar Items</SectionNavItem>
     <SectionNavItem href="/admin/users">Users</SectionNavItem>
-  </svelte:fragment>
+  {/snippet}
   {@render children()}
 </TabbedPage>
