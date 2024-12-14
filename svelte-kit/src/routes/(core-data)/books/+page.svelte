@@ -136,10 +136,9 @@
         {/if}
 
         {#if modalsReady}
-          <svelte:component this={BookSearchModal} isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
+          <BookSearchModal isOpen={filterModalOpen} onHide={() => (filterModalOpen = false)} {tags} allSubjects={subjects} />
 
-          <svelte:component
-            this={EditBookModal}
+          <EditBookModal
             isOpen={editBookModalOpen}
             book={editingBook}
             onSave={onBooksUpdated}
@@ -151,30 +150,22 @@
             {afterDelete}
           />
 
-          <svelte:component
-            this={BookSubjectSetter}
+          <BookSubjectSetter
             isOpen={booksSubjectsModalOpen}
             onSave={onBooksUpdated}
             onHide={() => (booksSubjectsModalOpen = false)}
             modifyingBooks={booksEditing}
           />
-          <svelte:component
-            this={BookTagSetter}
+          <BookTagSetter
             isOpen={booksTagsModalOpen}
             onSave={onBooksUpdated}
             onHide={() => (booksTagsModalOpen = false)}
             modifyingBooks={booksEditing}
           />
 
-          <svelte:component
-            this={SubjectEditModal}
-            {colors}
-            {subjects}
-            isOpen={editSubjectsModalOpen}
-            onHide={() => (editSubjectsModalOpen = false)}
-          />
+          <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
 
-          <svelte:component this={TagEditModal} {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+          <TagEditModal {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
         {/if}
       </div>
     </div>
