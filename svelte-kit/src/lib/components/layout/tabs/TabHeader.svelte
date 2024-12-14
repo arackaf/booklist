@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, type Snippet } from "svelte";
 
   type Props = {
     tabName: string;
     class?: string;
+    children: Snippet;
   };
 
-  let { tabName, class: className = "" }: Props = $props();
+  let { tabName, class: className = "", children }: Props = $props();
 
   const tabsState: any = getContext("tabs-state");
 
@@ -21,7 +22,11 @@
 
 <div class="border-primary-9" class:bg-primary-10={active} class:border-b={active}>
   <button onclick={onClick} type="button" class="raw-button overlay-holder {className}" style="padding: 4px 8px" class:cursor-default={active}>
-    <span class:font-bold={active}><slot /></span>
-    <span class="invisible font-bold"><slot /></span>
+    <span class:font-bold={active}>
+      {@render children()}
+    </span>
+    <span class="invisible font-bold">
+      {@render children()}
+    </span>
   </button>
 </div>
