@@ -124,26 +124,27 @@
       </SelectGroup>
 
       <SelectAndDisplayContainer class="sm:col-span-2 pt-2">
-        <SelectAvailableTags placeholder="Tags" slot="select" {tags} currentlySelected={localTags} onSelect={selectTag} />
-        <DisplaySelectedTags slot="display" {tags} currentlySelected={localTags} onRemove={removeTag} />
+        {#snippet select()}
+          <SelectAvailableTags placeholder="Tags" {tags} currentlySelected={localTags} onSelect={selectTag} />
+        {/snippet}
+        {#snippet display()}
+          <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
+        {/snippet}
       </SelectAndDisplayContainer>
 
       <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableSubjects
-          disabled={noSubjects}
-          placeholder="Subjects"
-          slot="select"
-          subjects={allSubjects}
-          currentlySelected={localSubjects}
-          onSelect={selectSubject}
-        />
-        <DisplaySelectedSubjects
-          disabled={noSubjects}
-          slot="display"
-          subjects={allSubjects}
-          currentlySelected={localSubjects}
-          onRemove={removeSubject}
-        />
+        {#snippet select()}
+          <SelectAvailableSubjects
+            disabled={noSubjects}
+            placeholder="Subjects"
+            subjects={allSubjects}
+            currentlySelected={localSubjects}
+            onSelect={selectSubject}
+          />
+        {/snippet}
+        {#snippet display()}
+          <DisplaySelectedSubjects disabled={noSubjects} subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+        {/snippet}
       </SelectAndDisplayContainer>
 
       <div class="sm:col-span-2">

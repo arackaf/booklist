@@ -35,8 +35,12 @@
         </label>
         <div class="relative suppress-dropdown">
           <SelectAndDisplayContainer>
-            <SelectAvailableSubjects slot="select" {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
-            <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+            {#snippet select()}
+              <SelectAvailableSubjects {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+            {/snippet}
+            {#snippet display()}
+              <DisplaySelectedSubjects {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+            {/snippet}
           </SelectAndDisplayContainer>
         </div>
       </div>

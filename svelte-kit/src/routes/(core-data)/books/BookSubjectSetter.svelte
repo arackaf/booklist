@@ -92,25 +92,21 @@
           {/each}
           <div class="flex flex-col gap-4 pt-3">
             <SelectAndDisplayContainer>
-              <SelectAvailableSubjects
-                slot="select"
-                {subjects}
-                placeholder="Adding"
-                currentlySelected={addingSubjects}
-                onSelect={subjectSelectedToAdd}
-              />
-              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+              {#snippet select()}
+                <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <SelectAndDisplayContainer>
-              <SelectAvailableSubjects
-                slot="select"
-                {subjects}
-                placeholder="Removing"
-                currentlySelected={removingSubjects}
-                onSelect={subjectSelectedToRemove}
-              />
-              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+              {#snippet select()}
+                <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <div>

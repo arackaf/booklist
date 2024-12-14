@@ -124,13 +124,21 @@
       </div>
 
       <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
-        <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+        {#snippet select()}
+          <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
+        {/snippet}
+        {#snippet display()}
+          <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+        {/snippet}
       </SelectAndDisplayContainer>
 
       <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
-        <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+        {#snippet select()}
+          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
+        {/snippet}
+        {#snippet display()}
+          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+        {/snippet}
       </SelectAndDisplayContainer>
 
       <div class="sm:col-span-2">

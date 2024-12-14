@@ -74,13 +74,21 @@
     </InputGroup>
 
     <SelectAndDisplayContainer class="sm:col-span-2">
-      <SelectAvailableTags slot="select" {tags} currentlySelected={book.tags} onSelect={addTag} />
-      <DisplaySelectedTags slot="display" {tags} currentlySelected={book.tags} onRemove={removeTag} />
+      {#snippet select()}
+        <SelectAvailableTags {tags} currentlySelected={book.tags} onSelect={addTag} />
+      {/snippet}
+      {#snippet display()}
+        <DisplaySelectedTags {tags} currentlySelected={book.tags} onRemove={removeTag} />
+      {/snippet}
     </SelectAndDisplayContainer>
 
     <SelectAndDisplayContainer class="sm:col-span-2">
-      <SelectAvailableSubjects slot="select" {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
-      <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
+      {#snippet select()}
+        <SelectAvailableSubjects {subjects} currentlySelected={book.subjects} onSelect={addSubject} />
+      {/snippet}
+      {#snippet display()}
+        <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects} onRemove={removeSubject} />
+      {/snippet}
     </SelectAndDisplayContainer>
 
     <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">

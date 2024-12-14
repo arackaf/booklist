@@ -90,13 +90,21 @@
           {/each}
           <div class="flex flex-col gap-4 pt-3">
             <SelectAndDisplayContainer>
-              <SelectAvailableTags slot="select" {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
-              <DisplaySelectedTags slot="display" {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
+              {#snippet select()}
+                <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <SelectAndDisplayContainer>
-              <SelectAvailableTags slot="select" {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
-              <DisplaySelectedTags slot="display" {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+              {#snippet select()}
+                <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <div>
