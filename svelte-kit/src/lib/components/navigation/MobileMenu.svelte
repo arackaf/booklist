@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import RawButton from "../Button/RawButton.svelte";
 
   type Props = {
     onClose: () => void;
     title: string;
     open: boolean;
+    children: Snippet;
   };
-  let { onClose, title, open }: Props = $props();
+  let { onClose, title, open, children }: Props = $props();
 
   const menuHolder = typeof document === "object" ? document.getElementById("main-mobile-menu") : null;
 
@@ -37,7 +38,7 @@
         </RawButton>
         <h3 class="leading-none ml-2 text-lg">{title}</h3>
       </div>
-      <slot />
+      {@render children()}
     </div>
   </div>
 </div>

@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { HTMLSelectAttributes } from "svelte/elements";
 
-  type Props = { error?: boolean } & HTMLSelectAttributes;
+  type Props = { error?: boolean; children: Snippet } & HTMLSelectAttributes;
 
-  let { class: className, error, value, ...rest }: Props = $props();
+  let { class: className, error, value, children, ...rest }: Props = $props();
 </script>
 
 <select
@@ -16,5 +17,5 @@
   bind:value
   {...rest}
 >
-  <slot />
+  {@render children()}
 </select>

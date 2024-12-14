@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import type { Snippet } from "svelte";
   import ModuleLink from "./ModuleLink.svelte";
 
   type Props = {
@@ -10,6 +11,7 @@
     onClick?: (() => void) | null;
     label?: string;
     active?: boolean | null;
+    children: Snippet;
   };
 
   let {
@@ -21,7 +23,8 @@
 
     onClick = null,
     label = "",
-    active = null
+    active = null,
+    children
   }: Props = $props();
 
   let currentPathname = $derived($page.url.pathname);
@@ -31,6 +34,6 @@
 
 <li class="flex {className || ''}">
   <ModuleLink active={isActive} {disabled} {onClick} {style} href={disabled ? "" : href} {label}>
-    <slot />
+    {@render children()}
   </ModuleLink>
 </li>

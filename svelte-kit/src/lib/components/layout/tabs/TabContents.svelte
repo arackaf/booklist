@@ -2,9 +2,9 @@
   import type { HTMLAttributes } from "svelte/elements";
 
   type Props = HTMLAttributes<HTMLDivElement>;
-  let { ...rest }: Props = $props();
+  let { children, ...rest }: Props = $props();
 </script>
 
 <div {...rest}>
-  <slot />
+  {@render children!()}
 </div>
