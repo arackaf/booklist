@@ -13,8 +13,8 @@
     size?: "sm" | "default";
     triggerClasses?: string;
     noHiddenFields?: boolean;
-    renderPlaceholder?: Snippet;
     disabled?: boolean;
+    renderPlaceholder?: Snippet;
   };
 
   let {
@@ -25,8 +25,8 @@
     size = "default",
     triggerClasses = "",
     noHiddenFields = false,
-    renderPlaceholder,
-    disabled
+    disabled,
+    renderPlaceholder: placeholderSnippetPassed
   }: Props = $props();
 
   let search = $state("");
@@ -53,8 +53,8 @@
 {/if}
 <GenericLabelSelect {disabled} {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
   {#snippet renderPlaceholder()}
-    {#if $$slots.placeholder}
-      <slot name="placeholder"></slot>
+    {#if placeholderSnippetPassed}
+      {@render placeholderSnippetPassed()}
     {:else}
       {placeholder ?? "Search"}
     {/if}

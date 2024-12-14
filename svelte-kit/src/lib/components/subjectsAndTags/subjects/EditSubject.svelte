@@ -143,13 +143,15 @@
             }}
             triggerClasses="w-full"
           >
-            <span slot="placeholder">
-              {#if selectedParent}
-                <LabelDisplay item={selectedParent} />
-              {:else}
-                <span>Select</span>
-              {/if}
-            </span>
+            {#snippet renderPlaceholder()}
+              <span>
+                {#if selectedParent}
+                  <LabelDisplay item={selectedParent} />
+                {:else}
+                  <span>Select</span>
+                {/if}
+              </span>
+            {/snippet}
           </SelectAvailableSubjects>
         </div>
       </div>
