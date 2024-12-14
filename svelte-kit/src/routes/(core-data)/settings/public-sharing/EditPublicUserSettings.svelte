@@ -66,11 +66,11 @@
       <div class="flex flex-col gap-4">
         {#if showForm}
           <InputGroup labelText="Publicly display your name as">
-            <Input slot="input" name="publicName" value={publicName} {error} onchange={nameChange} disabled={saving} placeholder="Name" />
+            <Input name="publicName" value={publicName} {error} onchange={nameChange} disabled={saving} placeholder="Name" />
           </InputGroup>
 
           <InputGroup labelText="Publicly display your collection as">
-            <Input slot="input" name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
+            <Input name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
           </InputGroup>
         {/if}
         <div>

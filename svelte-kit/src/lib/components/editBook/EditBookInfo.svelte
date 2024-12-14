@@ -48,7 +48,6 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
     <InputGroup labelText="Title">
       <Input
-        slot="input"
         name="title"
         error={saveAttempted && missingTitle}
         bind:value={book.title}
@@ -59,19 +58,19 @@
     </InputGroup>
 
     <InputGroup labelText="ISBN">
-      <Input slot="input" name="isbn" bind:value={book.isbn} placeholder="ISBN" />
+      <Input name="isbn" bind:value={book.isbn} placeholder="ISBN" />
     </InputGroup>
 
     <InputGroup labelText="Pages">
-      <Input slot="input" name="pages" bind:value={book.pages} type="number" placeholder="Number of pages" />
+      <Input name="pages" bind:value={book.pages} type="number" placeholder="Number of pages" />
     </InputGroup>
 
     <InputGroup labelText="Publisher">
-      <Input slot="input" name="publisher" bind:value={book.publisher} placeholder="Publisher" />
+      <Input name="publisher" bind:value={book.publisher} placeholder="Publisher" />
     </InputGroup>
 
     <InputGroup labelText="Published">
-      <Input slot="input" name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
+      <Input name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
     </InputGroup>
 
     <SelectAndDisplayContainer class="sm:col-span-2">
@@ -87,7 +86,7 @@
     <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
       {#each book.authors || [] as _, index (index)}
         <InputGroup labelText="Author">
-          <Input slot="input" name="authors" bind:value={book.authors[index]} placeholder={`Author ${index + 1}`} />
+          <Input name="authors" bind:value={book.authors[index]} placeholder={`Author ${index + 1}`} />
         </InputGroup>
       {/each}
     </div>

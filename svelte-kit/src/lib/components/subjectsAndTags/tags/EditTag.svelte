@@ -104,7 +104,7 @@
       <div class="md:col-span-2">
         <div class="flex flex-col gap-1">
           <InputGroup labelText="Name">
-            <Input slot="input" error={missingName} bind:inputEl bind:value={editingTag.name} name="name" placeholder="Tag name" />
+            <Input error={missingName} bind:inputEl bind:value={editingTag.name} name="name" placeholder="Tag name" />
           </InputGroup>
 
           {#if missingName}

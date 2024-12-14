@@ -100,7 +100,7 @@
     <input type="hidden" name="page" value={pageBind} />
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
       <InputGroup labelText="Title">
-        <Input slot="input" bind:inputEl={titleEl} name="search" placeholder="Search title" />
+        <Input bind:inputEl={titleEl} name="search" placeholder="Search title" />
       </InputGroup>
 
       <div class="flex">

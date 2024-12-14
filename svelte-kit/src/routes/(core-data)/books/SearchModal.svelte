@@ -87,15 +87,15 @@
     {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
       <InputGroup labelText="Title">
-        <Input bind:inputEl={titleEl} slot="input" name="search" placeholder="Title" value={localSearchValues.search} />
+        <Input bind:inputEl={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
       </InputGroup>
 
       <InputGroup labelText="Publisher">
-        <Input slot="input" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+        <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
       </InputGroup>
 
       <InputGroup labelText="Author">
-        <Input slot="input" name="author" value={localSearchValues.author} placeholder="Author" />
+        <Input name="author" value={localSearchValues.author} placeholder="Author" />
       </InputGroup>
 
       <div class="flex flex-col">
