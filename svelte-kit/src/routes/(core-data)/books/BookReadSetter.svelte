@@ -1,14 +1,15 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, type Snippet } from "svelte";
   import { enhance } from "$app/forms";
 
   type Props = {
     ids: number[];
     value: boolean;
     saving?: boolean;
+    children: Snippet;
   };
 
-  let { ids, value, saving = $bindable() }: Props = $props();
+  let { ids, value, saving = $bindable(), children }: Props = $props();
 
   const { onBooksUpdated } = getContext("books-module-context") as any;
 
@@ -28,5 +29,5 @@
     <input type="hidden" name="ids" value={id} />
   {/each}
   <input type="hidden" name="read" value={value ? "true" : "false"} />
-  <slot />
+  {@render children()}
 </form>

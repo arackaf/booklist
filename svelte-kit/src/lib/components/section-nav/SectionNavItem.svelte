@@ -1,12 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import type { Snippet } from "svelte";
 
   type Props = {
     href: string;
     disabled?: boolean;
+    children: Snippet;
   };
 
-  let { href, disabled = false }: Props = $props();
+  let { href, disabled = false, children }: Props = $props();
 
   let targetPathname = $derived(href.replace(/\?.*/, ""));
   let active = $derived(targetPathname === $page.url.pathname);
@@ -21,6 +23,6 @@
     class:font-bold={active}
     href={active || disabled ? null : href}
   >
-    <slot />
+    {@render children()}
   </svelte:element>
 </div>
