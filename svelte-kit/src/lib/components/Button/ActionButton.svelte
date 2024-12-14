@@ -11,18 +11,16 @@
     children: Snippet;
   } & HTMLButtonAttributes;
 
-  let { size = "default", theme = "default", disabled = false, running, class: className = "", ...rest }: Props = $props();
+  let { size = "default", theme = "default", disabled = false, running, class: className = "", children: passedChildren, ...rest }: Props = $props();
 </script>
 
 <Button class={"grid grid-cols-1 grid-rows-1 " + className} {size} {theme} disabled={disabled || running} {...rest}>
   {#snippet children()}
     <div class="col-start-1 col-end-2 row-start-1 row-end-2" class:invisible={running}>
-      <slot />
+      {@render passedChildren()}
     </div>
     <div class="col-start-1 col-end-2 row-start-1 row-end-2" class:invisible={!running}>
-      <slot name="running">
-        <slot />
-      </slot>
+      {@render passedChildren()}
     </div>
   {/snippet}
 </Button>
