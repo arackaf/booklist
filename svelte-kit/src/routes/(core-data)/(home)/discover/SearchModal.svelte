@@ -40,7 +40,7 @@
   let books = $state<Book[]>([]);
   let subjects = $state<number[]>([]);
   let tags = $state<number[]>([]);
-  let titleEl: HTMLInputElement;
+  let titleEl = $state<HTMLInputElement | null>();
 
   let loading = $state(false);
   let noResults = $derived(active && !books?.length);
