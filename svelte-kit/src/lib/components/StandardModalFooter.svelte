@@ -4,7 +4,7 @@
 
   type Props = {
     onHide?: () => void;
-    children: Snippet;
+    children?: Snippet;
   };
 
   let { onHide = () => {}, children }: Props = $props();
