@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import RawButton from "../Button/RawButton.svelte";
 
   type Props = {
@@ -9,9 +10,10 @@
     label?: string;
     active?: boolean;
     padding?: string;
+    children: Snippet;
   };
 
-  let { href, style = "", disabled = false, onClick = null, label = "", active = false, padding = "px-3 sm:px-4" }: Props = $props();
+  let { href, style = "", disabled = false, onClick = null, label = "", active = false, padding = "px-3 sm:px-4", children }: Props = $props();
 
   const linkClicked = (evt: any) => {
     if (!onClick || disabled) {
@@ -35,7 +37,7 @@
     {style}
     aria-label={label}
   >
-    <slot />
+    {@render children()}
   </a>
 {:else}
   <RawButton
@@ -46,6 +48,6 @@
     {style}
     aria-label={label}
   >
-    <slot />
+    {@render children()}
   </RawButton>
 {/if}
