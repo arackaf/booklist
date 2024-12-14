@@ -116,7 +116,7 @@
         </div>
       </div>
       <SelectGroup labelText="Sort">
-        <Select slot="select" name="sort" value={localSearchValues.sortPacket || "id-desc"}>
+        <Select name="sort" value={localSearchValues.sortPacket || "id-desc"}>
           {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
             <option value={sortVal}>{display}</option>
           {/each}
