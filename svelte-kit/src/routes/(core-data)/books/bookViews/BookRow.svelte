@@ -21,26 +21,30 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
 
-  export let isPublic: boolean;
-  export let book: Book;
+  type Props = {
+    isPublic: boolean;
+    book: Book;
+    subjects: Subject[];
+    tags: Tag[];
+    previewBook: (book: Book) => void;
+  };
 
-  export let subjects: Subject[];
-  export let tags: Tag[];
-
-  export let previewBook: (book: Book) => void;
+  let { isPublic, book, subjects, tags, previewBook }: Props = $props();
 
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
 
-  $: ({ id, isbn } = book);
+  let { id, isbn } = $derived(book);
+  let isbn10 = $derived(isbn?.length === 10 ? isbn : isbn13To10(isbn));
 
-  $: isbn10 = isbn?.length === 10 ? isbn : isbn13To10(isbn);
+  let readSaving = $state(false);
+  let multiReadSaving = $derived($booksReadSaving[id] == "1");
 
-  let readSaving: boolean;
-  $: multiReadSaving = $booksReadSaving[id] == "1";
+  let pendingDelete = $state(false);
+  let deleting = $state(false);
 
-  let pendingDelete = false;
-  let deleting = false;
+  let hoverOverride = $derived(`display: ${pendingDelete ? "inline" : ""}`);
+  let addedDate = $derived(new Date(book.dateAdded));
 
   const deleteBook = () => {
     deleting = true;
@@ -52,9 +56,6 @@
     };
   };
 
-  $: hoverOverride = `display: ${pendingDelete ? "inline" : ""}`;
-
-  $: addedDate = new Date(book.dateAdded);
   function getDisplayDate(date: Date) {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   }
@@ -63,7 +64,7 @@
 <tr class="hover:bg-primary-10">
   {#if !isPublic}
     <td>
-      <button style="font-size: 12pt" class="raw-button" on:click={() => selectionState.toggle(id)}>
+      <button style="font-size: 12pt" class="raw-button" onclick={() => selectionState.toggle(id)} aria-label="Select book">
         <i class={"fal fa-fw " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
       </button>
     </td>
@@ -84,7 +85,12 @@
         </div>
 
         <div class="flex flex-row gap-2 items-center mt-auto flex-1">
-          <button on:click={() => previewBook(book)} style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm">
+          <button
+            onclick={() => previewBook(book)}
+            style={hoverOverride}
+            class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+            aria-label="View book details"
+          >
             <i class="fa-fw fal fa-eye"></i>
           </button>
           {#if isbn10}
@@ -93,18 +99,25 @@
               target="_new"
               class="invisible text-neutral-500 group-hover:visible text-sm"
               href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
+              aria-label="View book on Amazon"
             >
               <i class={`fab fa-amazon fa-fw`}></i>
             </a>
           {/if}
           {#if !isPublic}
-            <button style={hoverOverride} class="raw-button invisible text-neutral-500 group-hover:visible text-sm" on:click={() => editBook(book)}>
+            <button
+              style={hoverOverride}
+              class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+              onclick={() => editBook(book)}
+              aria-label="Edit book"
+            >
               <i class="fal fa-pencil-alt fa-fw"></i>
             </button>
             <button
               style={hoverOverride}
               class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
-              on:click={() => (pendingDelete = true)}
+              onclick={() => (pendingDelete = true)}
+              aria-label="Delete book"
             >
               <i class={`fal fa-trash-alt fa-fw`}></i>
             </button>
@@ -116,7 +129,7 @@
             </form>
           {/if}
           {#if pendingDelete}
-            <Button size="sm" disabled={deleting} on:click={() => (pendingDelete = false)}>Cancel</Button>
+            <Button size="sm" disabled={deleting} onclick={() => (pendingDelete = false)}>Cancel</Button>
           {/if}
           <Button size="sm" class="invisible">.</Button>
         </div>

@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 
 export function syncHeight(el: any) {
   return writable(el.offsetHeight, set => {
@@ -12,14 +12,16 @@ export function syncHeight(el: any) {
   });
 }
 
-export function syncWidth(el: any) {
-  return writable(el?.offsetWidth ?? 0, set => {
+export function syncWidth(store: Writable<number>, el: any) {
+  $effect(() => {
     if (!el) {
       return;
     }
 
-    let ro = new ResizeObserver(() => el && set(el.offsetWidth));
+    store.set(el.offsetWidth);
+    let ro = new ResizeObserver(() => el && store.set(el.offsetWidth));
     ro.observe(el);
+
     return () => ro.disconnect();
   });
 }

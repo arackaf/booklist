@@ -1,16 +1,19 @@
 <script lang="ts">
   import type { Book } from "$data/types";
-
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-
   import ScanResults from "./ScanResults.svelte";
   import BookEntryItem from "./BookEntryItem.svelte";
 
-  export let data;
+  let { data } = $props();
+  let { subjects: allSubjects, tags } = $derived(data);
 
-  $: ({ subjects: allSubjects, tags } = data);
+  let editingBook = $state<Book | null>(null);
+  let enteringBook = $state(false);
+  let showScanInstructions = $state(false);
+  let focused = $state(0);
+  let selected = $state<any>(null);
 
   const defaultEmptyBook = () =>
     ({
@@ -24,19 +27,10 @@
       subjects: []
     }) as unknown as Book;
 
-  let editingBook: Book | null = null;
-
-  let enteringBook = false;
-
   const manuallyEnterBook = () => {
     editingBook = defaultEmptyBook();
     enteringBook = true;
   };
-
-  let showScanInstructions = false;
-
-  let focused = 0;
-  let selected: any = null;
 
   const entryFinished = (index: number) => {
     if (index < 9) {
@@ -57,13 +51,13 @@
           Enter your books here
           <button
             class="raw-button cursor-pointer"
-            on:click={() => (showScanInstructions = !showScanInstructions)}
+            onclick={() => (showScanInstructions = !showScanInstructions)}
             aria-label="Show scan instructions"
           >
             <i class="far fa-question-circle"></i>
           </button>
         </h4>
-        <Button size="sm" class="ml-6" on:click={manuallyEnterBook}>Manual entry</Button>
+        <Button size="sm" class="ml-6" onclick={manuallyEnterBook}>Manual entry</Button>
       </div>
       <div class="mt-2">
         <SlideAnimate open={showScanInstructions} class="p-3 bg-info-9 text-info-1 border-info-8 border rounded" style="width: 80%">
@@ -83,7 +77,7 @@
         <div>
           <BookEntryItem
             {idx}
-            on:focus={() => (focused = idx)}
+            onFocus={() => (focused = idx)}
             focused={idx == focused}
             selected={idx == selected}
             entryFinished={() => entryFinished(idx)}

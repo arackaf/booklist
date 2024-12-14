@@ -4,15 +4,20 @@
   import { toHash } from "$lib/state/helpers";
   import LabelDisplay from "../subjectsAndTags/LabelDisplay.svelte";
 
-  export let packet: SubjectOrTagSummaryEntry;
-  export let label: "UNUSED-S" | "MAX-S" | "MIN-S" | "UNUSED-T" | "MAX-T" | "MIN-T";
-  export let items: Label[];
+  type Props = {
+    packet: SubjectOrTagSummaryEntry;
+    label: "UNUSED-S" | "MAX-S" | "MIN-S" | "UNUSED-T" | "MAX-T" | "MIN-T";
+    items: Label[];
+  };
 
-  $: itemLookup = toHash(items);
-  $: itemsToDisplay = packet.ids.map(id => itemLookup[id]).filter(x => x);
+  let { packet, label, items }: Props = $props();
 
-  let labelToDisplay: string;
-  $: {
+  let itemLookup = $derived(toHash(items));
+  let itemsToDisplay = $derived(packet.ids.map(id => itemLookup[id]).filter(x => x));
+
+  let labelToDisplay = $state("");
+
+  $effect(() => {
     let itemDisplay = label.endsWith("S") ? "subject" : "tag";
     if (itemsToDisplay.length > 1) {
       itemDisplay += "s";
@@ -26,7 +31,7 @@
 
       labelToDisplay = `${prefix} popular ${itemDisplay} with ${bookDisplay}`;
     }
-  }
+  });
 </script>
 
 <div class="flex flex-col">

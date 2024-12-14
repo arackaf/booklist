@@ -1,6 +1,5 @@
 <script lang="ts">
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
-
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
   import BookViewsDesktop from "./BookViewsDesktop.svelte";
@@ -13,23 +12,24 @@
   import RawButton from "$lib/components/Button/RawButton.svelte";
   import { updateSearchParam } from "$lib/state/urlHelpers";
 
-  export let isPublic: boolean;
-  export let bookViewToUse: string;
+  type Props = {
+    isPublic: boolean;
+    bookViewToUse: string;
+    totalBooks: number;
+  };
 
-  let quickSearchEl: any = {};
+  let { isPublic, bookViewToUse, totalBooks }: Props = $props();
+
+  let quickSearchEl = $state<any>({});
+  let mobileMenuOpen = $state(false);
 
   const resetSearch = () => {
     quickSearchEl.value = $searchState.search;
   };
 
-  let mobileMenuOpen = false;
   const closeMobileMenu = () => {
     mobileMenuOpen = false;
   };
-
-  function runQuickSearch(evt: any) {
-    evt.key === "Enter" && updateSearchParam("search", evt.currentTarget.value);
-  }
 </script>
 
 <div class="sticky-content z-[3] bg-white mt-[-2px] pt-[2px] pb-[1px]">
@@ -46,7 +46,7 @@
         style="font-size: 1.4rem; align-self: center"
         class="block lg:hidden leading-none"
         aria-label="Open mobile menu"
-        on:click={() => (mobileMenuOpen = true)}
+        onClick={() => (mobileMenuOpen = true)}
       >
         <i class="far fa-fw fa-bars"></i>
       </RawButton>
@@ -60,7 +60,7 @@
             size="sm"
             autocomplete="off"
             bind:inputEl={quickSearchEl}
-            on:keydown={runQuickSearch}
+            onkeydown={evt => evt.key === "Enter" && updateSearchParam("search", evt.currentTarget.value)}
             value={$searchState.search}
             onblur={resetSearch}
             name="search"
@@ -74,7 +74,7 @@
         <BookViewsDesktop {bookViewToUse} />
       </div>
 
-      <ActiveSearchFilters />
+      <ActiveSearchFilters {totalBooks} />
     </div>
   </div>
 </div>

@@ -1,9 +1,9 @@
-import { writable, type Writable } from "svelte/store";
 import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 import { EMPTY_BOOKS_RESULTS_CLIENT } from "$lib/state/dataConstants";
 import { ensureAnyUser } from "$lib/util/authCheck";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 import type { Book } from "$data/types";
+import { createShallowReactiveArray, createState } from "$lib/state/universalReactivityHelpers.svelte";
 
 export async function load({ url, parent, fetch, depends }) {
   depends("reload:books");
@@ -28,8 +28,8 @@ export async function load({ url, parent, fetch, depends }) {
 
   return {
     defaultBookView,
-    totalBooks: writable(totalBooks),
-    books: writable(books) as Writable<Book[]>,
+    totalBooks: createState(totalBooks),
+    books: createShallowReactiveArray(books as Book[]),
     page,
     totalPages
   };

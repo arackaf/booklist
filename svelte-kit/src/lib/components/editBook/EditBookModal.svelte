@@ -1,23 +1,23 @@
 <script lang="ts">
-  import cloneDeep from "lodash.clonedeep";
-
   import type { Book, Subject, Tag } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import EditBook from "./EditBook.svelte";
-
   import Modal from "../Modal.svelte";
 
-  export let book: any;
-  export let isOpen = false;
-  export let onHide: any;
-  export let tags: Tag[];
-  export let subjects: Subject[];
-  export let onSave: (id: number, updates: UpdatesTo<Book>) => void = () => {};
-  export let closeOnSave: boolean = false;
-  export let header: string;
+  type Props = {
+    book: any;
+    isOpen: boolean;
+    onHide: any;
+    tags: Tag[];
+    subjects: Subject[];
+    onSave?: (id: number, updates: UpdatesTo<Book>) => void;
+    closeOnSave?: boolean;
+    header: string;
+    afterDelete?: (id: number) => void;
+  };
 
-  export let afterDelete: (id: number) => void = () => {};
+  let { book, isOpen, onHide, tags, subjects, onSave = () => {}, closeOnSave = false, header, afterDelete = () => {} }: Props = $props();
 
   const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     onSave(id, updates);
@@ -31,7 +31,7 @@
     onHide();
   }
 
-  $: editingBook = book ? cloneDeep(book) : book;
+  let editingBook = $derived(book ? $state.snapshot(book) : book);
 </script>
 
 <Modal headerCaption={header} {isOpen} {onHide} standardFooter={false}>

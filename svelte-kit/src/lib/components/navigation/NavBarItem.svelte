@@ -1,25 +1,39 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import { page } from "$app/stores";
   import ModuleLink from "./ModuleLink.svelte";
 
-  export let style = "";
-  export let href = "";
-  export let disabled = false;
+  type Props = {
+    style?: string;
+    href?: string;
+    disabled?: boolean;
+    class?: string;
+    onClick?: (() => void) | null;
+    label?: string;
+    active?: boolean | null;
+    children: Snippet;
+  };
 
-  let className = "";
-  export { className as class };
+  let {
+    style = "",
+    href = "",
+    disabled = false,
 
-  export let onClick: (() => void) | null = null;
-  export let label: string = "";
-  export let active: boolean | null = null;
+    class: className = "",
 
-  $: currentPathname = $page.url.pathname;
-  $: hrefPathname = href ? href.replace(/\?.*/, "") : "";
-  $: isActive = active != null ? active : currentPathname === hrefPathname;
+    onClick = null,
+    label = "",
+    active = null,
+    children
+  }: Props = $props();
+
+  let currentPathname = $derived($page.url.pathname);
+  let hrefPathname = $derived(href ? href.replace(/\?.*/, "") : "");
+  let isActive = $derived(active != null ? active : currentPathname === hrefPathname);
 </script>
 
 <li class="flex {className || ''}">
   <ModuleLink active={isActive} {disabled} {onClick} {style} href={disabled ? "" : href} {label}>
-    <slot />
+    {@render children()}
   </ModuleLink>
 </li>

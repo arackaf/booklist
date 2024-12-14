@@ -1,19 +1,26 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { slideAnimate } from "./animationHelpers";
+  import { onMount, type Snippet } from "svelte";
+  import type { HTMLAttributes } from "svelte/elements";
+  import { slideAnimate } from "./animationHelpers.svelte";
 
-  export let open: boolean;
-  export let fade: boolean = true;
-  export let stiffDown: boolean = false;
+  type Props = {
+    open: boolean;
+    fade?: boolean;
+    stiffDown?: boolean;
+    children: Snippet;
+  } & HTMLAttributes<HTMLDivElement>;
 
-  let hydrated = false;
+  let { open, fade = true, stiffDown = false, children, ...rest }: Props = $props();
+
+  let hydrated = $state(false);
+
   onMount(() => {
     hydrated = true;
   });
 </script>
 
 <div>
-  <div use:slideAnimate={{ open, fade, stiffDown }} class:hidden={!hydrated} {...$$props}>
-    <slot />
+  <div use:slideAnimate={{ open, fade, stiffDown }} class:hidden={!hydrated} {...rest}>
+    {@render children()}
   </div>
 </div>

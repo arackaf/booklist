@@ -1,13 +1,19 @@
 <script lang="ts">
-  let className = "";
-  export { className as class };
+  import type { Snippet } from "svelte";
+
+  type Props = {
+    class?: string;
+    select: Snippet;
+    display: Snippet;
+  };
+  let { class: className, select, display }: Props = $props();
 </script>
 
 <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,auto)_minmax(0,1fr)] gap-2 {className}">
   <div>
-    <slot name="select" />
+    {@render select()}
   </div>
   <div class="flex items-center">
-    <slot name="display" />
+    {@render display()}
   </div>
 </div>

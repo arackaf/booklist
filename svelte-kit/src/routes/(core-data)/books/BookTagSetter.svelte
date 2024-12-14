@@ -1,44 +1,44 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import type { Book, Tag } from "$data/types";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
-
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  type Props = {
+    modifyingBooks: any[];
+    isOpen: boolean;
+    onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
+    onHide: () => void;
+  };
 
-  $: tags = $page.data.tags;
-  export let modifyingBooks: any[];
-  export let isOpen: boolean;
-  export let onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
-  export let onHide: () => void;
+  let { modifyingBooks, isOpen, onSave, onHide }: Props = $props();
+  let { tags } = $derived($page.data);
 
-  let addingTags: number[] = [];
-  let removingTags: number[] = [];
+  let addingTags = $state<number[]>([]);
+  let removingTags = $state<number[]>([]);
+  let saving = $state(false);
 
   const resetTags = () => {
     addingTags = [];
     removingTags = [];
   };
 
-  $: {
+  $effect(() => {
     if (isOpen) {
       resetTags();
     }
-  }
+  });
 
-  let saving = false;
   const save = () => {
     saving = true;
     const updates = {
@@ -72,7 +72,7 @@
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" standardFooter={false}>
   <form method="post" action="?/setBooksTags" use:enhance={save}>
-    <Tabs defaultTab="tags">
+    <Tabs currentTab="tags">
       <TabHeaders>
         <TabHeader tabName="tags">Choose tags</TabHeader>
         <TabHeader tabName="books">For books</TabHeader>
@@ -90,17 +90,25 @@
           {/each}
           <div class="flex flex-col gap-4 pt-3">
             <SelectAndDisplayContainer>
-              <SelectAvailableTags slot="select" {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
-              <DisplaySelectedTags slot="display" {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
+              {#snippet select()}
+                <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <SelectAndDisplayContainer>
-              <SelectAvailableTags slot="select" {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
-              <DisplaySelectedTags slot="display" {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+              {#snippet select()}
+                <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <div>
-              <Button size="sm" type="button" on:click={resetTags}>Reset tags</Button>
+              <Button size="sm" type="button" onclick={resetTags}>Reset tags</Button>
             </div>
           </div>
         </TabContent>
@@ -117,7 +125,7 @@
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
 
-        <Button type="button" class="ml-auto" on:click={onHide}>Cancel</Button>
+        <Button type="button" class="ml-auto" onclick={onHide}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>

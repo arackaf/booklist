@@ -1,22 +1,23 @@
 <script lang="ts">
-  import { setContext } from "svelte";
+  import { setContext, type Snippet } from "svelte";
   import { writable } from "svelte/store";
 
-  import localStorageManager from "$lib/util/localStorage";
+  type Props = {
+    currentTab?: string;
+    children: Snippet;
+  };
 
-  export let defaultTab = "";
-  export let localStorageName = "";
+  const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
 
-  export let currentTab = localStorageManager.get(localStorageName) || defaultTab;
+  let { currentTab = $bindable(), children }: Props = $props();
 
-  export const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
-  let tabState = writable({ localStorageName, currentTab, setTab });
+  let tabState = writable({ currentTab, setTab });
 
-  $: {
+  $effect(() => {
     currentTab = $tabState.currentTab;
-  }
+  });
 
   setContext("tabs-state", tabState);
 </script>
 
-<slot />
+{@render children()}

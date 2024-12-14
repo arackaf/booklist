@@ -1,6 +1,4 @@
-import md5 from "blueimp-md5";
-import { env } from "$env/dynamic/private";
-const { SALT } = env;
+import { SALT } from "$env/static/private";
 
 import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
@@ -8,34 +6,6 @@ const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
 const getUserReverseAliasKey = (userId: string) => `UserReverseAlias#${userId}`;
 
 const salt = SALT;
-
-export async function lookupUser(email: string, password: string) {
-  email = email.toLowerCase();
-  password = saltAndHashPassword(password);
-  const userKey = `User#${email}`;
-
-  try {
-    let userFound = await db.queryOne(
-      getQueryPacket(` pk = :userKey AND sk = :userKey `, {
-        ExpressionAttributeValues: { ":password": password, ":userKey": userKey, ":true": true },
-        FilterExpression: ` password = :password AND awaitingActivation <> :true `
-      })
-    );
-
-    if (!userFound) {
-      return null;
-    }
-
-    const id = userFound.userId;
-
-    return {
-      id
-    };
-  } catch (loginErr) {
-    console.log("Login error", loginErr);
-    return null;
-  }
-}
 
 const legacyUserCache = new Map<string, string>();
 
@@ -77,8 +47,4 @@ export async function getUserSync(userId: string): Promise<string | null> {
     console.log("Error getting user sync", er);
     return null;
   }
-}
-
-function saltAndHashPassword(password: string) {
-  return md5(`${salt}${password}${salt}`);
 }

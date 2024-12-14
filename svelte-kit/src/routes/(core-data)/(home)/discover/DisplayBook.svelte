@@ -7,8 +7,12 @@
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import Button from "$lib/components/Button/Button.svelte";
 
-  export let book: Book;
-  export let unselectBook: (book: Book) => void;
+  type Props = {
+    book: Book;
+    unselectBook: (book: Book) => void;
+  };
+
+  let { book, unselectBook }: Props = $props();
 
   const slideIn: any = () => {
     return {
@@ -18,6 +22,7 @@
       }
     };
   };
+
   const slideOut: any = (node: HTMLElement) => {
     let height = node.offsetHeight;
     return {
@@ -28,7 +33,7 @@
 </script>
 
 <div style="overflow: hidden">
-  <div in:slideIn|local out:slideOut|local>
+  <div in:slideIn out:slideOut>
     <div class="flex flex-row">
       <div class="min-w-[60px]">
         <BookCover size="small" {book} />
@@ -40,7 +45,7 @@
             {book.authors.join(", ")}
           </SubTitleText>
         {/if}
-        <Button class="mt-auto self-start" theme="danger" size="sm" on:click={() => unselectBook(book)}>Remove</Button>
+        <Button class="mt-auto self-start" theme="danger" size="sm" onclick={() => unselectBook(book)}>Remove</Button>
       </div>
     </div>
     <hr class="my-2" />

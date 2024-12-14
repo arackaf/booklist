@@ -1,28 +1,34 @@
-<script context="module">
+<script module>
   let uniqueIdCounter = 0;
 </script>
 
 <script lang="ts">
-  import "./jscolor";
   import { onMount } from "svelte";
+  import "./jscolor";
 
-  export let onColorChosen: (color: string) => void;
-  export let currentColor: string | null;
-  export let labelStyle: string;
+  type Props = {
+    onColorChosen: (color: string) => void;
+    currentColor: string | null;
+    labelStyle: string;
+  };
 
-  let uniqueId = `customColorPickerId${++uniqueIdCounter}`;
+  let { onColorChosen, currentColor, labelStyle }: Props = $props();
+
+  const uniqueId = `customColorPickerId${++uniqueIdCounter}`;
   let _colorChosen: any;
 
-  let jscolorInstance: any;
+  let jscolorInstance = $state<any>();
   let rootElement: HTMLElement;
-  let valueElementId = `${uniqueId}_value`;
-  let styleElementId = `${uniqueId}_style`;
+  const valueElementId = `${uniqueId}_value`;
+  const styleElementId = `${uniqueId}_style`;
 
-  $: {
+  $effect(() => {
     if (jscolorInstance && currentColor) {
       jscolorInstance.fromString(currentColor);
     }
-  }
+  });
+
+  let container;
 
   onMount(() => {
     _colorChosen = function (this: any) {
@@ -36,13 +42,16 @@
     jscolorInstance = new (window as any).jscolor(rootElement, {
       valueElement: valueElementId,
       styleElement: styleElementId,
-      onFineChange: _colorChosen
+      onFineChange: _colorChosen,
+      container,
+      value: currentColor
     });
   });
 </script>
 
 <div>
-  <a id={uniqueId} bind:this={rootElement} style="height: 20px; {labelStyle}"> Custom </a>
+  <div class="absolute" bind:this={container}></div>
+  <button id={uniqueId} bind:this={rootElement} class="raw-button" style="height: 20px; {labelStyle}"> Custom </button>
   <input style="display: none;" id={valueElementId} value={currentColor} />
   <input style="display: none" id={styleElementId} />
 </div>

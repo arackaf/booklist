@@ -1,8 +1,12 @@
 <script lang="ts">
   import Stop from "./Stop.svelte";
 
-  export let id: string;
-  export let colors: string[];
+  type Props = {
+    id: string;
+    colors: string[];
+  };
+
+  let { id, colors }: Props = $props();
 </script>
 
 <linearGradient {id} x1="0%" y1="0%" x2="0%" y2="100%">

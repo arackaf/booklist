@@ -20,27 +20,30 @@
 
   import SearchResults from "./SearchResults.svelte";
 
-  export let isOpen: boolean;
-  export let onHide: () => void;
-  export let selectedBooksSet: Set<number>;
-  export let selectBook: (book: Book) => void;
+  type Props = {
+    isOpen: boolean;
+    onHide: () => void;
+    selectedBooksSet: Set<number>;
+    selectBook: (book: Book) => void;
+    allSubjects: Subject[];
+    allTags: Tag[];
+  };
 
-  export let allSubjects: Subject[];
-  export let allTags: Tag[];
+  let { isOpen, onHide, selectedBooksSet, selectBook, allSubjects, allTags }: Props = $props();
 
-  let page = 1;
-  let pageBind = 1;
+  let page = $state(1);
+  let pageBind = $state(1);
 
-  let totalPages = 0;
-  let active = false;
+  let totalPages = $state(0);
+  let active = $state(false);
 
-  let books: Book[] = [];
-  let subjects: number[] = [];
-  let tags: number[] = [];
-  let titleEl: HTMLInputElement;
+  let books = $state<Book[]>([]);
+  let subjects = $state<number[]>([]);
+  let tags = $state<number[]>([]);
+  let titleEl = $state<HTMLInputElement | null>();
 
-  let loading = false;
-  $: noResults = active && !books?.length;
+  let loading = $state(false);
+  let noResults = $derived(active && !books?.length);
 
   let searchFormEl: HTMLFormElement;
 
@@ -54,18 +57,18 @@
     searchFormEl.requestSubmit();
   };
 
-  $: canPageUp = !loading && page < totalPages;
-  $: canPageDown = !loading && page > 1;
+  let canPageUp = $derived(!loading && page < totalPages);
+  let canPageDown = $derived(!loading && page > 1);
 
-  $: noAvailableBooks = books.length && !books.find(b => !selectedBooksSet.has(b.id));
+  let noAvailableBooks = $derived(books.length && !books.find(b => !selectedBooksSet.has(b.id)));
 
   const selectSubject = (subject: Subject) => (subjects = subjects.concat(subject.id));
   const selectTag = (tag: Tag) => (tags = tags.concat(tag.id));
   const removeSubject = (subject: Subject) => (subjects = subjects.filter(id => id != subject.id));
   const removeTag = (tag: Tag) => (tags = tags.filter(id => id != tag.id));
 
-  let currentQuery = "";
-  let totalBooks = 0;
+  let currentQuery = $state("");
+  let totalBooks = $state(0);
 
   async function executeSearch({ cancel, formData: data }: any) {
     cancel();
@@ -97,7 +100,7 @@
     <input type="hidden" name="page" value={pageBind} />
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
       <InputGroup labelText="Title">
-        <Input slot="input" bind:inputEl={titleEl} name="search" placeholder="Search title" />
+        <Input bind:inputEl={titleEl} name="search" placeholder="Search title" />
       </InputGroup>
 
       <div class="flex">
@@ -121,13 +124,21 @@
       </div>
 
       <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableTags slot="select" tags={allTags} currentlySelected={tags} onSelect={selectTag} />
-        <DisplaySelectedTags slot="display" tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+        {#snippet select()}
+          <SelectAvailableTags tags={allTags} currentlySelected={tags} onSelect={selectTag} />
+        {/snippet}
+        {#snippet display()}
+          <DisplaySelectedTags tags={allTags} currentlySelected={tags} onRemove={removeTag} />
+        {/snippet}
       </SelectAndDisplayContainer>
 
       <SelectAndDisplayContainer class="sm:col-span-2">
-        <SelectAvailableSubjects slot="select" subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
-        <DisplaySelectedSubjects slot="display" subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+        {#snippet select()}
+          <SelectAvailableSubjects subjects={allSubjects} currentlySelected={subjects} onSelect={selectSubject} />
+        {/snippet}
+        {#snippet display()}
+          <DisplaySelectedSubjects subjects={allSubjects} currentlySelected={subjects} onRemove={removeSubject} />
+        {/snippet}
       </SelectAndDisplayContainer>
 
       <div class="sm:col-span-2">
@@ -159,19 +170,19 @@
           {#if totalBooks}
             <div class="flex flex-row gap-1 items-center">
               <div class="flex">
-                <Button type="button" on:click={pageOne} disabled={!canPageDown} icon={true} class="connect-right">
+                <Button type="button" onclick={pageOne} disabled={!canPageDown} icon={true} class="connect-right">
                   <i class="fal fa-fw fa-angle-double-left"></i>
                 </Button>
-                <Button type="button" on:click={pageDown} disabled={!canPageDown} icon={true} class="connect-left">
+                <Button type="button" onclick={pageDown} disabled={!canPageDown} icon={true} class="connect-left">
                   <i class="fal fa-fw fa-angle-left"></i>
                 </Button>
               </div>
               <span class="text-sm mx-1">{page} of {totalPages}</span>
               <div class="flex">
-                <Button type="button" on:click={pageUp} disabled={!canPageUp} icon={true} class="connect-right">
+                <Button type="button" onclick={pageUp} disabled={!canPageUp} icon={true} class="connect-right">
                   <i class="fal fa-fw fa-angle-right"></i>
                 </Button>
-                <Button type="button" on:click={pageLast} disabled={!canPageUp} icon={true} class="connect-left">
+                <Button type="button" onclick={pageLast} disabled={!canPageUp} icon={true} class="connect-left">
                   <i class="fal fa-fw fa-angle-double-right"></i>
                 </Button>
               </div>
@@ -179,8 +190,8 @@
             <hr class="my-2" />
           {/if}
         </div>
-        <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
       </div>
     </div>
+    <SearchResults {books} {currentQuery} {selectedBooksSet} {selectBook} />
   </form>
 </Modal>

@@ -1,11 +1,14 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  export let segment: any;
+  type Props = {
+    segment: any;
+    labelsReady: boolean;
+  };
 
-  export let labelsReady: boolean;
+  let { segment, labelsReady }: Props = $props();
 
-  $: ({ centroid, inflexionPoint, labelPosX, textAnchor, isRightLabel } = segment);
+  let { centroid, inflexionPoint, labelPosX, textAnchor, isRightLabel } = $derived(segment);
 
   const springConfig = { stiffness: 0.1, damping: 0.7 };
 
@@ -18,7 +21,7 @@
   };
   const labelSpring = spring(initialLabelValues, springConfig);
 
-  $: {
+  $effect(() => {
     labelSpring.set({
       centroidX: centroid[0],
       centroidY: centroid[1],
@@ -26,7 +29,7 @@
       inflexionPointY: inflexionPoint[1],
       labelPosX
     });
-  }
+  });
 </script>
 
 {#if labelsReady}

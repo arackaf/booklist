@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-
   import type { BookSubjectStack, Subject } from "$data/types";
 
   import { toHash } from "$lib/state/helpers";
@@ -8,20 +6,34 @@
   import type { UxState } from "$lib/util/uxState";
   import Chart from "./data-vis/Chart.svelte";
 
-  $: uxState = $page.data.uxState as UxState;
+  type Props = {
+    data: {
+      uxState: UxState;
+      subjects: Subject[];
+      books: BookSubjectStack[];
+    };
+  };
 
-  const subjects: Subject[] = $page.data.subjects;
-  $: subjectHash = toHash(subjects);
-  const stackedSubjects = stackAndGetTopLevelSubjects(subjects);
+  let { data }: Props = $props();
 
-  const books: BookSubjectStack[] = $page.data.books;
+  let uxState = $derived(data.uxState as UxState);
+  let subjects = $derived(data.subjects);
+  let books = $derived(data.books);
+
+  let subjectHash = $derived(toHash(subjects));
+  let stackedSubjects = $derived(stackAndGetTopLevelSubjects(subjects));
 
   type ChartPacketType = {
     subjects: Subject[];
     header: string;
     startingChartType?: "PIE" | "BAR";
   };
-  $: chartPackets = [{ subjects: stackedSubjects, header: "All books", startingChartType: uxState.initialChart || "BAR" }] as ChartPacketType[];
+
+  let chartPackets = $state<ChartPacketType[]>([]);
+
+  $effect(() => {
+    chartPackets = [{ subjects: stackedSubjects, header: "All books", startingChartType: uxState.initialChart || "BAR" }];
+  });
 
   const getDrilldownChart = (index: number, subjects: any, header: any, chartType: "PIE" | "BAR") => {
     chartPackets = [...chartPackets.slice(0, index + 1), { subjects: subjects.concat(), header, startingChartType: chartType }];

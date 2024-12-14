@@ -1,8 +1,10 @@
-<script>
-  let className = "";
-  export { className as class };
+<script lang="ts">
+  import type { HTMLAttributes } from "svelte/elements";
+
+  type Props = HTMLAttributes<HTMLDivElement>;
+  let { children, ...rest }: Props = $props();
 </script>
 
-<div class={className} {...$$restProps}>
-  <slot />
+<div {...rest}>
+  {@render children!()}
 </div>

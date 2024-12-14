@@ -12,17 +12,27 @@
   import ProfilePanel from "./ProfilePanel.svelte";
   import type { UserSummary } from "$data/user-summary";
 
-  $: ({ loggedIn, hasPublicId, isAdminUser, loggedInUser } = $page.data);
+  let { loggedIn, hasPublicId, isAdminUser, loggedInUser } = $derived($page.data);
 
-  $: pathname = $page.url.pathname;
-  $: isSettings = /\/settings/.test(pathname);
+  let pathname = $derived($page.url.pathname);
+  let isSettings = $derived(/\/settings/.test(pathname));
 
   const homeModules = new Set(["/", "/discover", "/recent-scans"]);
-  $: isHome = homeModules.has(pathname);
+  let isHome = $derived(homeModules.has(pathname));
 
-  let pendingCount = 0;
+  let pendingCount = $state(0);
 
-  $: bigCount = pendingCount > 9;
+  let bigCount = $derived(pendingCount > 9);
+
+  let profilePanelOpen = $state(false);
+
+  let userSummaryFetched = $state(false);
+  let userSummaryStale = $state(false);
+  let userSummary = $state<UserSummary | undefined>();
+
+  onMount(() => {
+    window.addEventListener("ws-info", handleWsPendingCountUpdate);
+  });
 
   function handleWsPendingCountUpdate(evt: any) {
     const detail = evt?.detail || {};
@@ -31,16 +41,6 @@
       pendingCount = detail.pendingCount;
     }
   }
-
-  onMount(() => {
-    window.addEventListener("ws-info", handleWsPendingCountUpdate);
-  });
-
-  let profilePanelOpen = false;
-
-  let userSummaryFetched = false;
-  let userSummaryStale = false;
-  let userSummary: UserSummary | undefined;
 
   function fetchUserSummaryIfNeeded() {
     if (userSummaryFetched && !userSummaryStale) {
@@ -72,8 +72,8 @@
     {#if loggedIn}
       <div class="items-center mx-2 my-auto">
         <button
-          on:mouseenter={fetchUserSummaryIfNeeded}
-          on:click={() => (profilePanelOpen = !profilePanelOpen)}
+          onmouseenter={fetchUserSummaryIfNeeded}
+          onclick={() => (profilePanelOpen = !profilePanelOpen)}
           class="raw-button flex profile-menu-trigger"
         >
           <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />

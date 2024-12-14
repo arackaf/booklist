@@ -7,15 +7,18 @@
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 
-  export let user: DynamoUser;
-  export let isPublic: boolean;
-  export let publicLink: string;
+  type Props = {
+    user: DynamoUser;
+    isPublic: boolean;
+    publicLink: string;
+  };
 
-  let { publicName, publicBooksHeader } = user;
+  let { user, isPublic, publicLink }: Props = $props();
+  let { publicName, publicBooksHeader } = $derived(user);
 
-  let showForm = isPublic;
-  let error = false;
-  let saving = false;
+  let showForm = $state(isPublic);
+  let error = $state(false);
+  let saving = $state(false);
 
   const update = ({ cancel, formData: data }: { cancel: any; formData: FormData }) => {
     const isPublic = !!data.get("isPublic");
@@ -63,11 +66,11 @@
       <div class="flex flex-col gap-4">
         {#if showForm}
           <InputGroup labelText="Publicly display your name as">
-            <Input slot="input" name="publicName" value={publicName} {error} on:change={nameChange} disabled={saving} placeholder="Name" />
+            <Input name="publicName" value={publicName} {error} onchange={nameChange} disabled={saving} placeholder="Name" />
           </InputGroup>
 
           <InputGroup labelText="Publicly display your collection as">
-            <Input slot="input" name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
+            <Input name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
           </InputGroup>
         {/if}
         <div>

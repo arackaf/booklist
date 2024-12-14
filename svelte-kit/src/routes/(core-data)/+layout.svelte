@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { mount, onMount } from "svelte";
   import { page } from "$app/stores";
 
   import Toastify from "toastify-js";
@@ -8,11 +8,9 @@
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
   import type { Book } from "$data/types";
   import ScanToasterSuccessContent from "$lib/components/ScanToasterSuccessContent.svelte";
-  import ScanToasterErrorContent from "$lib/components/ScanToasterErrorContent.svelte";
 
-  export let data;
-
-  $: ({ loggedIn, userId } = data);
+  let { data, children } = $props();
+  let { loggedIn, userId } = $derived(data);
 
   function startWebSocket() {
     if (window.ws) {
@@ -24,7 +22,6 @@
 
     window.ws.addHandler((data: any) => {
       let packet = JSON.parse(data);
-
       dispatchScanDataUpdate(packet);
     });
   }
@@ -32,7 +29,7 @@
   function showBookToast(book: Book) {
     const node = document.createElement("div");
 
-    new ScanToasterSuccessContent({
+    mount(ScanToasterSuccessContent, {
       target: node,
       props: { book }
     });
@@ -50,9 +47,9 @@
   function showBookFailureToast(book: Book) {
     const node = document.createElement("div");
 
-    new ScanToasterErrorContent({
+    mount(ScanToasterSuccessContent, {
       target: node,
-      props: { packet: book }
+      props: { book }
     });
 
     Toastify({
@@ -92,4 +89,4 @@
   });
 </script>
 
-<slot />
+{@render children()}

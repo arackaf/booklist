@@ -3,16 +3,16 @@
   import Button from "$lib/components/Button/Button.svelte";
   import { changeFilter } from "../state/searchState";
 
-  $: ({ page, totalPages } = $pageStore.data);
+  let { page, totalPages } = $derived($pageStore.data);
 
-  $: canPageUp = page < totalPages;
-  $: canPageDown = page > 1;
-  $: canPageOne = page > 1;
-  $: canPageLast = page < totalPages;
+  let canPageUp = $derived(page < totalPages);
+  let canPageDown = $derived(page > 1);
+  let canPageOne = $derived(page > 1);
+  let canPageLast = $derived(page < totalPages);
 
-  $: pageDownHref = $changeFilter.pageTo(page - 1, totalPages);
-  $: pageUpHref = $changeFilter.pageTo(page + 1, totalPages);
-  $: pageLastHref = $changeFilter.pageTo(totalPages, totalPages);
+  let pageDownHref = $derived($changeFilter.pageTo(page - 1, totalPages));
+  let pageUpHref = $derived($changeFilter.pageTo(page + 1, totalPages));
+  let pageLastHref = $derived($changeFilter.pageTo(totalPages, totalPages));
 </script>
 
 <div class="flex items-center gap-2">

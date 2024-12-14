@@ -3,7 +3,7 @@
 
   import type { Book } from "$data/types";
 
-  export let book: Book;
+  let { book }: { book: Book } = $props();
 </script>
 
 <div class="flex flex-row">

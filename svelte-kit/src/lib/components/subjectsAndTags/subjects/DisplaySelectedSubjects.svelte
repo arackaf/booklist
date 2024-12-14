@@ -5,20 +5,24 @@
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
 
-  export let currentlySelected: any[];
-  export let onRemove: ((s: Subject) => void) | null = null;
+  type Props = {
+    currentlySelected: any[];
+    onRemove?: ((s: Subject) => void) | null;
+    subjects: Subject[];
+    vertical?: boolean;
+    href?: ((s: Subject) => string | null) | null;
+    disabled?: boolean;
+  };
 
-  export let subjects: Subject[];
-  export let vertical: boolean = false;
-  export let href: ((s: Subject) => string | null) | null = null;
-  export let disabled = false;
+  let { currentlySelected, onRemove = null, subjects, vertical = false, href = null, disabled = false }: Props = $props();
 
-  $: subjectHash = toHash(subjects);
-
-  $: selectedLabels = currentlySelected
-    .filter(id => subjectHash[id])
-    .map(id => subjectHash[id])
-    .sort((a, b) => a.name.localeCompare(b.name));
+  let subjectHash = $derived(toHash(subjects));
+  let selectedLabels = $derived(
+    currentlySelected
+      .filter(id => subjectHash[id])
+      .map(id => subjectHash[id])
+      .sort((a, b) => a.name.localeCompare(b.name))
+  );
 </script>
 
 <div class="flex gap-1" class:opacity-50={disabled} class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>

@@ -3,11 +3,14 @@
   import ActionButton from "../Button/ActionButton.svelte";
   import Button from "../Button/Button.svelte";
 
-  export let id: number;
-  export let afterDelete: (id: number) => void = () => {};
+  type Props = {
+    id: number;
+    afterDelete: (id: number) => void;
+  };
+  const { id, afterDelete = () => {} }: Props = $props();
 
-  let pendingDelete = false;
-  let deleting = false;
+  let pendingDelete = $state(false);
+  let deleting = $state(false);
 
   const deleteBook = async () => {
     deleting = true;
@@ -22,14 +25,14 @@
 
 <div class="mt-2 leading-none">
   {#if !pendingDelete}
-    <Button type="button" size="med" class="flex gap-1" theme="danger" on:click={() => (pendingDelete = true)}>
+    <Button type="button" size="med" class="flex gap-1" theme="danger" onclick={() => (pendingDelete = true)}>
       Delete <i class={`fal fa-trash-alt fa-fw`}></i>
     </Button>
   {:else}
     <div class="flex gap-3">
-      <ActionButton type="button" on:click={deleteBook} running={deleting} theme="danger" size="med">Confirm Delete</ActionButton>
+      <ActionButton type="button" onclick={deleteBook} running={deleting} theme="danger" size="med">Confirm Delete</ActionButton>
 
-      <Button type="button" size="sm" disabled={deleting} on:click={() => (pendingDelete = false)}>Cancel</Button>
+      <Button type="button" size="sm" disabled={deleting} onclick={() => (pendingDelete = false)}>Cancel</Button>
     </div>
   {/if}
 </div>

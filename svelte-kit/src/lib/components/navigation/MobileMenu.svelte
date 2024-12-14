@@ -1,16 +1,21 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import RawButton from "../Button/RawButton.svelte";
 
-  export let onClose: () => void;
-  export let title = "";
-  export let open: boolean;
+  type Props = {
+    onClose: () => void;
+    title: string;
+    open: boolean;
+    children: Snippet;
+  };
+  let { onClose, title, open, children }: Props = $props();
+
   const menuHolder = typeof document === "object" ? document.getElementById("main-mobile-menu") : null;
 
-  $: {
-    let isOpen = open;
-    menuHolder?.classList[isOpen ? "add" : "remove"]("open");
-  }
+  // TODO: move all this control state into a shared rune
+  $effect(() => {
+    menuHolder?.classList[open ? "add" : "remove"]("open");
+  });
 
   let rootEl: HTMLElement;
 
@@ -28,12 +33,12 @@
   <div>
     <div>
       <div class="flex items-center header">
-        <RawButton aria-label="Close mobile menu" class="text-[1.4rem] ml-[2px]" on:click={onClose}>
+        <RawButton aria-label="Close mobile menu" class="text-[1.4rem] ml-[2px]" onClick={onClose}>
           <i class="far fa-times"></i>
         </RawButton>
         <h3 class="leading-none ml-2 text-lg">{title}</h3>
       </div>
-      <slot />
+      {@render children()}
     </div>
   </div>
 </div>

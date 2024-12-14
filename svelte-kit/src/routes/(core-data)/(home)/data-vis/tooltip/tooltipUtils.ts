@@ -2,6 +2,7 @@ import type { TooltipPayload } from "./tooltipState";
 import Tooltip from "./Tooltip.svelte";
 
 import type { Subject } from "$data/types";
+import { mount, unmount } from "svelte";
 
 export type Position = "absolute-left" | "absolute-right" | "top" | "top-left" | "top-right" | "right-start" | "left-start";
 
@@ -36,7 +37,7 @@ export function getTooltipDimensions(payload: TooltipPayload) {
   document.body.appendChild(target);
 
   const { position, ...restProps } = payload;
-  const temp = new Tooltip({
+  const temp = mount(Tooltip, {
     target: target,
     props: { shown: true, measure: true, x: 0, y: 0, payload: { position: "top", ...restProps } }
   });
@@ -44,7 +45,7 @@ export function getTooltipDimensions(payload: TooltipPayload) {
   const tooltipWidth = target.clientWidth;
   const tooltipHeight = target.clientHeight;
 
-  temp.$destroy();
+  unmount(temp);
   target.parentElement?.removeChild(target);
 
   return { w: tooltipWidth, h: tooltipHeight };

@@ -1,28 +1,32 @@
 <script lang="ts">
-  import { getContext } from "svelte";
-  import localStorageManager from "$lib/util/localStorage";
+  import { getContext, type Snippet } from "svelte";
 
-  export let tabName = "";
+  type Props = {
+    tabName: string;
+    class?: string;
+    children: Snippet;
+  };
 
-  let className = "";
-  export { className as class };
+  let { tabName, class: className = "", children }: Props = $props();
 
   const tabsState: any = getContext("tabs-state");
-  $: ({ currentTab, setTab, localStorageName } = $tabsState);
 
-  $: active = tabName == currentTab;
+  let { currentTab, setTab } = $derived($tabsState);
+
+  let active = $derived(tabName === currentTab);
 
   const onClick = () => {
-    if (localStorageName) {
-      localStorageManager.set(localStorageName, tabName);
-    }
     setTab(tabName);
   };
 </script>
 
 <div class="border-primary-9" class:bg-primary-10={active} class:border-b={active}>
-  <button on:click={onClick} type="button" class="raw-button overlay-holder {className}" style="padding: 4px 8px" class:cursor-default={active}>
-    <span class:font-bold={active}><slot /></span>
-    <span class="invisible font-bold"><slot /></span>
+  <button onclick={onClick} type="button" class="raw-button overlay-holder {className}" style="padding: 4px 8px" class:cursor-default={active}>
+    <span class:font-bold={active}>
+      {@render children()}
+    </span>
+    <span class="invisible font-bold">
+      {@render children()}
+    </span>
   </button>
 </div>

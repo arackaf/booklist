@@ -1,17 +1,22 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import type { Book } from "$data/types";
+  import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
   import { changeFilter, searchState } from "../state/searchState";
   import { selectedBooks, selectionState } from "../state/selectionState";
   import BookDetailsModal from "./BookDetailsModal.svelte";
 
-  export let isPublic: boolean;
-  export let books: Book[];
-  $: ({ subjects, tags } = $page.data);
-  $: ({ sortField, sortDirection } = $searchState);
+  type Props = {
+    isPublic: boolean;
+    books: Book[];
+    subjects: Subject[];
+    tags: Tag[];
+  };
+  let { isPublic, books, subjects, tags }: Props = $props();
+  let previewing = $state(false);
+  let bookPreviewing = $state<Book | null>(null);
 
-  $: allBooksSelected = books.length === $selectedBooks.length;
+  let allBooksSelected = $derived(books.length === $selectedBooks.length);
+
   function toggleCheckAll() {
     if (allBooksSelected) {
       selectionState.clear();
@@ -19,9 +24,6 @@
       selectionState.selectAll(books);
     }
   }
-
-  let previewing: boolean = false;
-  let bookPreviewing: Book | null = null;
 
   const previewBook = (book: Book) => {
     previewing = true;
@@ -36,7 +38,7 @@
     <tr>
       {#if !isPublic}
         <th class="p-0" style="text-align: center; width: 25px;">
-          <button class="raw-button" style="font-size: 12pt" on:click={toggleCheckAll}>
+          <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll} aria-label="Select all">
             <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
           </button>
         </th>
@@ -45,7 +47,7 @@
       <th class="p-0" style="min-width: 200px">
         <a class="bold" href={$changeFilter.withSort("title")}>
           Title
-          {#if sortField == "title"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")}></i>{/if}
+          {#if $searchState.sortField == "title"}<i class={"far fa-angle-" + ($searchState.sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
       </th>
       <th class="p-0" style="min-width: 90px;">Subjects</th>
@@ -55,13 +57,13 @@
       <th class="p-0" style="min-width: 85px; ">
         <a class="bold" href={$changeFilter.withSort("pages")}>
           Pages
-          {#if sortField == "pages"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")}></i>{/if}
+          {#if $searchState.sortField == "pages"}<i class={"far fa-angle-" + ($searchState.sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
       </th>
       <th class="p-0">
         <a class="bold" href={$changeFilter.withSort("id")}>
           Added
-          {#if sortField == "id"}<i class={"far fa-angle-" + (sortDirection == "asc" ? "up" : "down")}></i>{/if}
+          {#if $searchState.sortField == "id"}<i class={"far fa-angle-" + ($searchState.sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
       </th>
     </tr>

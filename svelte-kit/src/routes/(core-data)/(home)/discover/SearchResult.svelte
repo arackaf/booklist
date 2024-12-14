@@ -8,11 +8,15 @@
 
   import type { Book } from "$data/types";
 
-  let numberAnimating = 0;
+  type Props = {
+    book: Book;
+    selectBook: (book: Book) => void;
+  };
 
-  export let book: Book;
-  export let selectBook: (book: Book) => void;
-  let adding = false;
+  let { book, selectBook }: Props = $props();
+
+  let numberAnimating = $state(0);
+  let adding = $state(false);
 
   const _selectBook = () => {
     adding = true;
@@ -41,7 +45,7 @@
         <SubTitleText>{book.authors.join(", ")}</SubTitleText>
       {/if}
 
-      <Button theme="primary" size="sm" class="mt-auto self-start gap-2" disabled={adding} on:click={_selectBook}>
+      <Button type="button" theme="primary" size="sm" class="mt-auto self-start gap-2" disabled={adding} onclick={_selectBook}>
         Add to list
         <i class="fal fa-plus"></i>
       </Button>

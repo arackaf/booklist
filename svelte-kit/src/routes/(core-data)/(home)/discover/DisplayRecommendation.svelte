@@ -4,7 +4,11 @@
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
 
-  export let book: Book;
+  type Props = {
+    book: Book;
+  };
+
+  let { book }: Props = $props();
 </script>
 
 <div class="flex flex-row">
@@ -19,7 +23,7 @@
       <SubTitleText>{book.authors.join(", ")}</SubTitleText>
 
       {#if book.isbn}
-        <a target="_new" class="mr-2 mt-auto" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
+        <a target="_new" class="mr-2 mt-auto" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`} aria-label="View on Amazon">
           <i class="fab fa-amazon"></i>
         </a>
       {/if}

@@ -18,24 +18,22 @@ export type UpdatesTo<T> = {
   arraySync?: Partial<ArraySyncs<T>>;
 };
 
-export const runUpdate = <T>(currentItems: Writable<T[]>, id: number | number[], updates: UpdatesTo<T>) => {
+export const runUpdate = <T>(currentItems: T[], id: number | number[], updates: UpdatesTo<T>) => {
   const ids: number[] = Array.isArray(id) ? id : [id];
   updateItems(currentItems, ids, updates);
 };
 
-export const updateItems = <T>(store: Writable<T[]>, ids: number[], updates: UpdatesTo<T>) => {
-  const currentItems = get(store);
+export const updateItems = <T>(currentItems: T[], ids: number[], updates: UpdatesTo<T>) => {
   const _idLookup = new Set(ids);
 
-  const updatedItems = currentItems.map((item: any) => {
+  currentItems.forEach((item: any, idx: number) => {
     if (!_idLookup.has(item.id)) {
       return item;
     }
 
-    return updateSingleObject(item, updates);
+    const update = updateSingleObject(item, updates);
+    currentItems[idx] = update;
   });
-
-  store.set(updatedItems);
 };
 
 export const updateSingleObject = <T extends object>(item: T, updates: UpdatesTo<T>) => {
@@ -65,17 +63,13 @@ type WithId = {
   id: number;
 };
 
-export const runDelete = <T extends WithId>(currentItems: Writable<T[]>, id: number | number[]) => {
+export const runDelete = <T extends WithId>(currentItems: T[], id: number | number[]) => {
   const ids: number[] = Array.isArray(id) ? id : [id];
-  deleteItems(currentItems, ids);
-};
-
-export const deleteItems = <T extends WithId>(store: Writable<T[]>, ids: number[]) => {
-  const idLookup = new Set(ids);
-
-  store.update(items =>
-    items.filter(item => {
-      return !idLookup.has(item.id);
-    })
-  );
+  for (const currentId of ids) {
+    for (let i = currentItems.length - 1; i >= 0; i--) {
+      if (currentItems[i].id === currentId) {
+        currentItems.splice(i, 1);
+      }
+    }
+  }
 };

@@ -1,13 +1,15 @@
 <script lang="ts">
   import type { Color, Subject } from "$data/types";
-
   import Button from "$lib/components/Button/Button.svelte";
-
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
-  export let colors: Color[];
-  export let subjects: Subject[];
+  type Props = {
+    colors: Color[];
+    subjects: Subject[];
+  };
+
+  let { colors, subjects }: Props = $props();
 
   const emptySubject = {
     id: 0,
@@ -17,16 +19,16 @@
     path: ""
   };
 
-  let editingSubject: Subject | null = null;
+  let editingSubject = $state<Subject | null>(null);
+  let deleteShowing = $state(false);
 
   const cancelEdit = () => {
     editingSubject = null;
     deleteShowing = false;
   };
+
   const newSubject = () => (editingSubject = emptySubject);
   const editSubject = (subject: Subject) => (editingSubject = subject);
-
-  let deleteShowing: boolean = false;
 </script>
 
 <div class="flex flex-col gap-3">
@@ -34,7 +36,7 @@
     <div class="flex flex-col-reverse sm:flex-row gap-5">
       <SelectAvailableSubjects size="sm" {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
 
-      <Button size="med" class="flex flex-row gap-1 items-center self-start sm:ml-auto" on:click={newSubject}>
+      <Button size="med" class="flex flex-row gap-1 items-center self-start sm:ml-auto" onclick={newSubject}>
         <span>New subject </span>
         <i class="far fa-fw fa-plus-square"></i>
       </Button>

@@ -1,10 +1,14 @@
 <script lang="ts">
-  export let width: number;
-  export let height: number;
-  export let x: number;
-  export let fill: string;
+  type Props = {
+    width: number;
+    height: number;
+    x: number;
+    fill: string;
+  };
 
-  $: borderRadius = width < 5 || height < 5 ? 0 : width < 15 ? 4 : 5;
+  let { width, height, x, fill }: Props = $props();
+
+  let borderRadius = $derived(width < 5 || height < 5 ? 0 : width < 15 ? 4 : 5);
 </script>
 
 <path

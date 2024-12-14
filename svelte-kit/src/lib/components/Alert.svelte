@@ -1,17 +1,19 @@
 <script lang="ts">
-  export let display = "flex";
+  import type { Snippet } from "svelte";
 
-  export let type: "warning" | "info" | "success" | "error" = "info";
-  export let layout: "normal" | "slim" | "slimmer" = "normal";
+  type Props = {
+    display?: string;
+    type: "warning" | "info" | "success" | "error";
+    layout?: "normal" | "slim" | "slimmer";
+    class?: string;
+    children: Snippet;
+  };
 
-  let className = "";
-  export { className as class };
+  let { display = "flex", type = "info", layout = "normal", class: className = "", children }: Props = $props();
+  let colors = $state("");
+  let padding = $derived(layout === "normal" ? "p-3" : layout === "slim" ? "p-2" : "py-1 px-2");
 
-  let colors = "";
-
-  let padding = layout === "normal" ? "p-3" : layout === "slim" ? "p-2" : "py-1 px-2";
-
-  $: {
+  $effect(() => {
     if (type === "info") {
       colors = "bg-info-9 border border-info-8 text-info-1";
     } else if (type === "success") {
@@ -21,9 +23,9 @@
     } else if (type === "error") {
       colors = "bg-danger-9 border border-danger-8 text-danger-1";
     }
-  }
+  });
 </script>
 
 <div class="{display} {colors} items-center {padding} rounded {className}">
-  <slot />
+  {@render children()}
 </div>

@@ -6,10 +6,11 @@
 
   import CurrentCovers from "./CurrentCovers.svelte";
 
-  export let book: Book;
-  let status: "error" | "invalid-size" | "" = "";
+  let { book }: { book: Book } = $props();
 
-  let error = false;
+  let status = $state<"error" | "invalid-size" | "">("");
+  let error = $state(false);
+
   const emptyImages: BookImages = {
     mobileImage: "",
     mobileImagePreview: null,
@@ -18,7 +19,7 @@
     mediumImage: "",
     mediumImagePreview: null
   };
-  let uploadResults: BookImages | null = null;
+  let uploadResults = $state<BookImages | null>(null);
 
   const onCoverError = () => {
     error = true;
@@ -38,14 +39,14 @@
     }
   };
 
-  $: mobileImage = uploadResults?.mobileImage;
-  $: mobileImagePreview = uploadResults?.mobileImagePreview;
+  let mobileImage = $derived(uploadResults?.mobileImage);
+  let mobileImagePreview = $derived(uploadResults?.mobileImagePreview);
 
-  $: smallImage = uploadResults?.smallImage;
-  $: smallImagePreview = uploadResults?.smallImagePreview;
+  let smallImage = $derived(uploadResults?.smallImage);
+  let smallImagePreview = $derived(uploadResults?.smallImagePreview);
 
-  $: mediumImage = uploadResults?.mediumImage;
-  $: mediumImagePreview = uploadResults?.mediumImagePreview;
+  let mediumImage = $derived(uploadResults?.mediumImage);
+  let mediumImagePreview = $derived(uploadResults?.mediumImagePreview);
 </script>
 
 <div>

@@ -1,22 +1,20 @@
 <script lang="ts">
   import "toastify-js/src/toastify.css";
-
   import "../app.css";
-
   import { beforeNavigate, afterNavigate } from "$app/navigation";
 
   import MainNavigation from "$lib/components/navigation/MainNavigation.svelte";
   import Footer from "$lib/components/Footer.svelte";
   import Loading from "$lib/components/Loading.svelte";
-
   import { NUM_THEMES } from "$lib/util/constants";
 
-  export let data;
+  let { data, children } = $props();
+  let { uxState } = $derived(data);
+  let { theme, wbg: whiteBg } = $derived(uxState);
 
-  $: ({ uxState } = data);
-  $: ({ theme, wbg: whiteBg } = uxState);
+  let navigating = $state(false);
 
-  $: {
+  $effect(() => {
     if (typeof document === "object") {
       document.body.classList.remove("white-bg");
       for (let i = 0; i < NUM_THEMES; i++) {
@@ -28,9 +26,8 @@
       }
       document.body.classList.add(theme);
     }
-  }
+  });
 
-  let navigating = false;
   beforeNavigate(({ type }) => {
     if (type === "leave") {
       return;
@@ -51,7 +48,7 @@
         <Loading />
       {/if}
 
-      <slot />
+      {@render children()}
     </main>
 
     <Footer />

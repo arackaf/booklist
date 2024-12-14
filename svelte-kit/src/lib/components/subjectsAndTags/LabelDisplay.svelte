@@ -2,14 +2,16 @@
   import Label from "$lib/components/form-elements/Label/Label.svelte";
   import type { Label as LabelType } from "./types";
 
-  export let item: LabelType;
-  export let extraStyles = "";
-  export let disabled = false;
-  let className = "";
-  export { className as class };
-  export let href: string | null = null;
+  type Props = {
+    item: LabelType;
+    extraStyles?: string;
+    disabled?: boolean;
+    class?: string;
+    href?: string | null;
+  };
+  let { item, extraStyles = "", disabled = false, class: className = "", href = null }: Props = $props();
 
-  let extraClasses = className || "";
+  let extraClasses = $derived(className || "");
 
   const disabledClasses = "opacity-60 cursor-not-allowed";
 </script>

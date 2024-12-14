@@ -1,21 +1,28 @@
 <script lang="ts">
   import { spring } from "svelte/motion";
 
-  export let d: any;
-  export let scaleX: any;
+  type Props = {
+    d: any;
+    scaleX: any;
+  };
 
-  const getTranslateX = (d: any, scaleX: any) => {
+  let { d, scaleX }: Props = $props();
+
+  function getTranslateX(d: any, scaleX: any) {
     let x = scaleX(d.display);
     let width = scaleX.bandwidth();
     let translateX = x + width / 2;
 
     return translateX;
-  };
+  }
 
   let axisSpring = spring({ translateX: getTranslateX(d, scaleX) }, { stiffness: 0.1, damping: 0.4 });
-  $: axisSpring.set({ translateX: getTranslateX(d, scaleX) });
 
-  $: translate = `translate(${$axisSpring.translateX}, 0)`;
+  $effect(() => {
+    axisSpring.set({ translateX: getTranslateX(d, scaleX) });
+  });
+
+  let translate = $derived(`translate(${$axisSpring.translateX}, 0)`);
 </script>
 
 <g style="opacity: 1" transform={translate}>

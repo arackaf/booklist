@@ -5,25 +5,30 @@
   import RemovableLabelDisplay from "../RemovableLabelDisplay.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
 
-  export let currentlySelected: number[];
-  export let onRemove: ((tag: Tag) => void) | null = null;
+  type Props = {
+    currentlySelected: number[];
+    onRemove?: (tag: Tag) => void;
 
-  export let tags: Tag[];
-  export let vertical: boolean = false;
-  export let href: ((s: Tag) => string | null) | null = null;
+    tags: Tag[];
+    vertical?: boolean;
+    href?: ((s: Tag) => string | null) | null;
+  };
+  let { currentlySelected, onRemove, tags, vertical = false, href = null }: Props = $props();
 
-  $: tagHash = toHash(tags);
+  let tagHash = $derived(toHash(tags));
 
-  $: selectedLabels = currentlySelected
-    .filter(id => tagHash[id])
-    .map(id => tagHash[id])
-    .sort((a, b) => a.name.localeCompare(b.name));
+  let selectedLabels = $derived(
+    currentlySelected
+      .filter(id => tagHash[id])
+      .map(id => tagHash[id])
+      .sort((a, b) => a.name.localeCompare(b.name))
+  );
 </script>
 
 <div class="flex gap-1" class:flex-col={vertical} class:items-start={vertical} class:flex-wrap={!vertical}>
   {#each selectedLabels as t}
     {#if onRemove}
-      <RemovableLabelDisplay item={t} doRemove={() => onRemove?.(t)} />
+      <RemovableLabelDisplay item={t} doRemove={() => onRemove(t)} />
     {:else}
       <LabelDisplay class="flex" item={t} href={href != null ? href(t) : null} />
     {/if}

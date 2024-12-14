@@ -15,40 +15,46 @@
 
   import { afterDelete as updateStateAfterDelete } from "../state/onDelete";
 
-  export let viewingBook: Book | null;
-  export let subjects: Subject[];
-  export let tags: Tag[];
-  export let isOpen = false;
-  export let onHide: () => void;
-  export let isPublic: boolean;
+  type Props = {
+    viewingBook: Book | null;
+    subjects: Subject[];
+    tags: Tag[];
+    isOpen?: boolean;
+    onHide: () => void;
+    isPublic: boolean;
+  };
 
-  $: book = viewingBook || ({} as Book);
-  $: isbn10 = book.isbn?.length === 10 ? book.isbn : isbn13To10(book.isbn);
+  let { viewingBook, subjects, tags, isOpen = false, onHide, isPublic }: Props = $props();
+
+  let book = $state<Book>(viewingBook || ({} as Book));
+  let isbn10 = $derived(book.isbn?.length === 10 ? book.isbn : isbn13To10(book.isbn));
 
   const booksModuleContext: any = getContext("books-module-context");
   const { onBooksUpdated } = booksModuleContext;
 
-  let editing = false;
+  let editing = $state(false);
+  let expanded = $state(false);
+  let detailsLoading = $state(false);
+  let bookDetails = $state<BookDetails | null>(null);
+
+  let detailsBtnClass = $derived(expanded ? "fa-angle-double-up" : "fa-angle-double-down");
+  let { editorialReviews, similarBooks } = $derived(bookDetails || ({} as any));
+
+  $effect(() => {
+    book = viewingBook || ({} as Book);
+  });
+  $effect(() => {
+    if (book) {
+      bookDetails = null;
+      expanded = false;
+    }
+  });
 
   const syncUpdates = (id: number, updates: UpdatesTo<Book>) => {
     book = updateSingleObject(book, updates);
     onBooksUpdated(id, updates);
     editing = false;
   };
-
-  let expanded = false;
-  $: detailsBtnClass = expanded ? "fa-angle-double-up" : "fa-angle-double-down";
-
-  let bookDetails: BookDetails | null;
-  $: ({ editorialReviews, similarBooks } = bookDetails || ({} as any));
-  let detailsLoading = false;
-
-  $: {
-    if (book) {
-      bookDetails = null;
-      expanded = false;
-    }
-  }
 
   function toggleDetails() {
     if (expanded) {
@@ -69,7 +75,7 @@
     }
   }
 
-  $: afterDelete = () => {
+  const afterDelete = () => {
     updateStateAfterDelete(book.id);
     onHide();
   };
@@ -125,14 +131,14 @@
               <div style="margin-top: auto">
                 <div class="flex gap-5 items-center">
                   {#if book.isbn}
-                    <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}>
+                    <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`} aria-label="View on Amazon">
                       <i class="fab fa-amazon"></i>
                     </a>
-                    <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`}>
+                    <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`} aria-label="View on Goodreads">
                       <i class="fab fa-goodreads-g"></i>
                     </a>
                   {/if}
-                  <Button size="sm" class="gap-2" on:click={() => (editing = true)}>
+                  <Button size="sm" class="gap-2" onclick={() => (editing = true)}>
                     <span>Edit book</span>
                     <i class="fal fa-pencil-alt"></i>
                   </Button>
@@ -141,7 +147,7 @@
             {/if}
           </div>
         </div>
-        <Button on:click={toggleDetails} disabled={detailsLoading} size="sm" class="flex gap-1 items-center self-start text-sm">
+        <Button onclick={toggleDetails} disabled={detailsLoading} size="sm" class="flex gap-1 items-center self-start text-sm">
           <span>Details</span><i class="far {detailsBtnClass}"></i>
         </Button>
       </div>
@@ -194,7 +200,12 @@
                                 <span style="font-style: italic">{book.authors.join(", ")}</span>
                                 <br />
                               {/if}
-                              <a target="_new" style="color: black" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}>
+                              <a
+                                target="_new"
+                                style="color: black"
+                                href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
+                                aria-label="View on Amazon"
+                              >
                                 <i class="fab fa-amazon"></i>
                               </a>
                             </td>

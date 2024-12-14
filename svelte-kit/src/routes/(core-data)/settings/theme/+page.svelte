@@ -7,13 +7,12 @@
   import DemoStyles from "./DemoStyles.svelte";
   import ThemeOption from "./ThemeOption.svelte";
 
+  let { data } = $props();
+  let { uxState } = $derived(data);
+  let { theme, wbg: whiteBg } = $derived(uxState);
+
+  let whiteBgForm = $state<HTMLFormElement | null>(null);
   const themeNames = Array.from({ length: NUM_THEMES }, (_, i) => `scheme${i + 1}`);
-
-  export let data;
-  $: ({ uxState } = data);
-  $: ({ theme, wbg: whiteBg } = uxState);
-
-  let whiteBgForm: HTMLFormElement;
 
   function setWhiteBg() {
     return async () => {
@@ -26,7 +25,7 @@
   <div>
     <form bind:this={whiteBgForm} method="POST" action="?/setWhiteBb" use:enhance={setWhiteBg}>
       <label style="font-size: 16px" class="checkbox mb-2">
-        <input type="checkbox" name="whitebg" checked={whiteBg == "1"} on:change={() => whiteBgForm.requestSubmit()} />
+        <input type="checkbox" name="whitebg" checked={whiteBg == "1"} onchange={() => whiteBgForm?.requestSubmit()} />
         White background
       </label>
     </form>

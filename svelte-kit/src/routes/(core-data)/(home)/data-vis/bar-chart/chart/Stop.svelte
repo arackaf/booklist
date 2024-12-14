@@ -1,13 +1,17 @@
 <script lang="ts">
-  export let colors: string[];
-  export let idx: number;
+  type Props = {
+    colors: string[];
+    idx: number;
+  };
 
-  $: interval = 100 / colors.length;
+  let { colors, idx }: Props = $props();
 
-  $: color = colors[idx];
-  $: nextColor = idx === colors.length - 1 ? null : colors[idx + 1];
+  let interval = $derived(100 / colors.length);
 
-  $: offset = idx === colors.length - 1 ? idx * interval : (idx + 1) * interval;
+  let color = $derived(colors[idx]);
+  let nextColor = $derived(idx === colors.length - 1 ? null : colors[idx + 1]);
+
+  let offset = $derived(idx === colors.length - 1 ? idx * interval : (idx + 1) * interval);
 </script>
 
 <stop offset={`${offset.toFixed(1)}%`} style="stop-color: {color}; stop-opacity:1" />

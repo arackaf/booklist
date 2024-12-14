@@ -1,8 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, type Snippet } from "svelte";
   import { spring } from "svelte/motion";
 
-  let hasInitialSize = false;
+  type Props = {
+    children: Snippet;
+  };
+  let { children }: Props = $props();
+
+  let hasInitialSize = $state(false);
   const DIMENSIONS_SPRING = { stiffness: 0.2, damping: 0.6, precision: 0.01 };
 
   let innerContent: HTMLElement;
@@ -30,8 +35,8 @@
     }
   });
 
-  $: animatedHeight = hasInitialSize ? $sizingSpring.height + "px" : "";
-  $: dimensionStyles = animatedHeight ? "height: " + animatedHeight : "";
+  let animatedHeight = $derived(hasInitialSize ? $sizingSpring.height + "px" : "");
+  let dimensionStyles = $derived(animatedHeight ? "height: " + animatedHeight : "");
 
   onMount(() => {
     ro.observe(innerContent);
@@ -44,6 +49,6 @@
 
 <div style={dimensionStyles} class="overflow-hidden text-base text-neutral-900">
   <div bind:this={innerContent}>
-    <slot />
+    {@render children()}
   </div>
 </div>

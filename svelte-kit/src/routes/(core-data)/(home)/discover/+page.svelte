@@ -10,18 +10,25 @@
   import SearchModal from "./SearchModal.svelte";
   import type { Book } from "$data/types";
 
-  export let data;
+  type Props = {
+    data: {
+      subjects: any[];
+      tags: any[];
+    };
+  };
 
-  $: ({ subjects: allSubjects, tags: allTags } = data);
+  let { data }: Props = $props();
 
-  let selectedBooks: Book[] = [];
-  let recommendationsLoading = false;
-  let recommendationsLoaded = false;
-  let recommendations: Book[] = [];
+  let { subjects: allSubjects, tags: allTags } = $derived(data);
 
-  let searchModalOpen = false;
+  let selectedBooks = $state<Book[]>([]);
+  let recommendationsLoading = $state(false);
+  let recommendationsLoaded = $state(false);
+  let recommendations = $state<Book[]>([]);
 
-  const selectBook = (book: Book) => (selectedBooks = selectedBooks.concat(book));
+  let searchModalOpen = $state(false);
+
+  const selectBook = (book: Book) => (selectedBooks = [...selectedBooks, book]);
   const unselectBook = (book: Book) => (selectedBooks = selectedBooks.filter(b => b !== book));
 
   const closeModal = () => {
@@ -29,7 +36,7 @@
   };
   const openModal = () => (searchModalOpen = true);
 
-  $: selectedBooksSet = new Set(selectedBooks.map(b => b.id));
+  let selectedBooksSet = $derived(new Set(selectedBooks.map(b => b.id)));
 
   const getRecommendations = async () => {
     recommendationsLoading = true;
@@ -47,13 +54,13 @@
       <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
 
       <div class="flex flex-row">
-        <Button class="gap-2" on:click={openModal}>
+        <Button class="gap-2" onclick={openModal}>
           <i class="fal fa-search"></i>
           <span>Search your books</span>
         </Button>
 
         {#if selectedBooks.length}
-          <ActionButton theme="primary" class="ml-auto" on:click={getRecommendations} running={recommendationsLoading}>
+          <ActionButton theme="primary" class="ml-auto" onclick={getRecommendations} running={recommendationsLoading}>
             Get Recommendations
           </ActionButton>
         {/if}

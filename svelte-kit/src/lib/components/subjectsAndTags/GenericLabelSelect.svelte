@@ -3,65 +3,80 @@
   import * as Command from "$lib/components/ui/command";
   import * as Popover from "$lib/components/ui/popover";
   import { Button } from "$lib/components/ui/button";
-  import { tick } from "svelte";
+  import { type Snippet } from "svelte";
 
   import GenericLabelDisplayItem from "./GenericLabelDisplayItem.svelte";
 
-  export let options: () => any[];
-  export let placeholder = "";
-  export let search = "";
-  export let onItemSelected: (option: any) => void;
+  type Props = {
+    options: () => any[];
+    placeholder?: string;
+    search?: string;
+    onItemSelected: (option: any) => void;
+    size?: "sm" | "default";
+    triggerClasses?: string;
+    renderPlaceholder?: Snippet;
+    disabled?: boolean;
+  };
 
-  export let size: "sm" | "default" = "default";
-  export let triggerClasses = "";
+  let {
+    options,
+    placeholder,
+    search = $bindable(""),
+    onItemSelected,
+    size = "default",
+    triggerClasses = "",
+    renderPlaceholder,
+    disabled
+  }: Props = $props();
 
-  let open = false;
-
-  // We want to refocus the trigger button when the user selects
-  // an item from the list so users can continue navigating the
-  // rest of the form with the keyboard.
-  function closeAndFocusTrigger(triggerId: string) {
-    open = false;
-    tick().then(() => {
-      document.getElementById(triggerId)?.focus();
-    });
-  }
-
-  const portal = typeof document === "object" ? document.body : null;
+  let open = $state(false);
 </script>
 
-<Popover.Root {portal} bind:open let:ids>
-  <Popover.Trigger asChild let:builder>
-    <Button
-      size="sm"
-      builders={[builder]}
-      variant="outline"
-      role="combobox"
-      aria-expanded={open}
-      class="w-[150px] justify-between {size === 'sm' ? 'h-8' : ''} border rounded border-neutral-400 {triggerClasses}"
-    >
-      <slot name="placeholder">
-        {placeholder ?? "Select"}
-      </slot>
-      <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-    </Button>
+<Popover.Root {open} onOpenChange={newVal => (open = newVal)}>
+  <Popover.Trigger {disabled}>
+    {#snippet child({ props })}
+      <Button
+        size="sm"
+        variant="outline"
+        role="combobox"
+        aria-expanded={open}
+        class="w-[150px] justify-between border rounded border-neutral-400 
+          {size === 'sm' ? 'h-8' : ''}
+          {triggerClasses} 
+          {disabled ? ' cursor-not-allowed ' : ''}"
+        {disabled}
+        {...props}
+      >
+        {#if renderPlaceholder}
+          {@render renderPlaceholder()}
+        {:else}
+          {placeholder ?? "Select"}
+        {/if}
+        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+    {/snippet}
   </Popover.Trigger>
+
   <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
-    <div class="max-h-72 overflow-auto">
+    <div>
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search" />
-        <Command.Empty>Nothing to select</Command.Empty>
-        <Command.Group>
+        <Command.Empty class="h-[31px] py-1 flex items-center">
+          <span class="mx-auto">Nothing to select</span>
+        </Command.Empty>
+        <Command.Group class="max-h-72 overflow-auto">
           {#each options() as option (option.id)}
             <Command.Item
               disabled={option.disabled}
               value={option.id + ""}
-              onSelect={currentValue => {
-                const item = options().find(opt => opt.id == currentValue);
+              onclick={evt => {
+                const item = options().find(opt => opt.id == option.id);
                 if (item) {
                   onItemSelected(item);
                 }
-                closeAndFocusTrigger(ids.trigger);
+                if (!evt.metaKey) {
+                  open = false;
+                }
               }}
             >
               <GenericLabelDisplayItem item={option} />

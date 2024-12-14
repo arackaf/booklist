@@ -3,33 +3,34 @@
   import MultiBar from "./MultiBar.svelte";
   import SingleBar from "./SingleBar.svelte";
 
-  export let index: number;
-  export let x: any;
-  export let data: any;
-  export let height: any;
-  export let width: any;
-  export let totalSvgWidth: any;
-  export let drilldown: any;
-  export let barCount: number;
-  export let removeBar: (id: string) => void;
+  type Props = {
+    index: number;
+    x: any;
+    data: any;
+    height: any;
+    width: any;
+    totalSvgWidth: any;
+    drilldown: any;
+    barCount: number;
+    removeBar: (id: string) => void;
+    noInitialAnimation: boolean;
+  };
 
-  export let noInitialAnimation: boolean;
+  let { index, x, data, height, width, totalSvgWidth, drilldown, barCount, removeBar, noInitialAnimation }: Props = $props();
 
-  let position: Position;
-
-  $: {
+  let position: Position = $derived.by(() => {
     if (height < 150) {
       if (index < 3) {
-        position = "top-left";
+        return "top-left";
       } else if (index >= barCount - 3) {
-        position = "top-right";
+        return "top-right";
       } else {
-        position = "top";
+        return "top";
       }
     } else {
-      position = index < barCount / 2 ? "right-start" : "left-start";
+      return index < barCount / 2 ? "right-start" : "left-start";
     }
-  }
+  });
 </script>
 
 {#if data.entries.length == 1}

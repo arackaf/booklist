@@ -1,18 +1,20 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, untrack } from "svelte";
   import { spring } from "svelte/motion";
   import type { createTooltipState, TooltipPayload } from "./tooltipState";
   import { get } from "svelte/store";
 
-  export let shown: boolean;
+  type Props = {
+    shown: boolean;
+    payload: TooltipPayload | null;
+    x: number;
+    y: number;
+    measure?: boolean;
+  };
 
-  export let payload: TooltipPayload | null;
+  let { shown, payload, x, y, measure = false }: Props = $props();
 
-  $: ({ data, drilldown, remove } = payload ?? ({} as TooltipPayload));
-
-  export let x: number;
-  export let y: number;
-  export let measure = false;
+  let { data, drilldown, remove } = $derived(payload ?? ({} as TooltipPayload));
 
   const positionSpring = spring({ x, y }, { stiffness: 0.1, damping: 0.5 });
   const opacitySpring = spring(0, { stiffness: 0.1, damping: 0.5 });
@@ -20,36 +22,27 @@
 
   const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
 
-  let fadeTimeout: null | NodeJS.Timeout = null;
+  let fadeTimeout: null | NodeJS.Timeout = $state(null);
+  let currentData = $derived(data ?? {});
+  let gone = $state(true);
+  let dead = $state(false);
 
-  $: currentData = data ?? {};
+  $effect(() => {
+    const isDead = untrack(() => dead);
 
-  function getFadeTimeout() {
-    return fadeTimeout;
-  }
-
-  let gone = true;
-  let dead = false;
-
-  function isDead() {
-    return dead;
-  }
-
-  $: {
     if (!measure) {
       let isShown = shown;
       if (isShown) {
         dead = false;
       }
 
-      const currentTimeout = getFadeTimeout();
-      if (currentTimeout) {
-        clearTimeout(currentTimeout);
+      if (fadeTimeout) {
+        clearTimeout(fadeTimeout);
         fadeTimeout = null;
       }
 
       gone = false;
-      opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead() }).then(() => {
+      opacitySpring.set(isShown ? 1 : 0, { hard: !isShown && isDead }).then(() => {
         fadeTimeout = null;
         gone = !isShown;
         if (!isShown) {
@@ -57,33 +50,44 @@
         }
       });
     }
+  });
+
+  let currentlySetX = $state(x);
+  let currentlySetY = $state(y);
+
+  $effect(() => {
+    const currentX = untrack(() => currentlySetX);
+    const currentY = untrack(() => currentlySetY);
+
+    if (!measure && x !== 0 && y !== 0) {
+      if (currentX == x && currentY == y) {
+        return;
+      }
+
+      currentlySetX = x;
+      currentlySetY = y;
+
+      const hard = !get(tooltipState.currentState).onScreen;
+      positionSpring.set({ x, y }, { hard });
+      setTimeout(() => tooltipState.tooltipVisible());
+    }
+  });
+
+  function onMouseEnter() {
+    if (!dead) {
+      tooltipState.tooltipHover();
+    }
   }
 
-  $: {
-    if (!measure && x !== 0 && y !== 0) {
-      const hard = !get(tooltipState.currentState).onScreen;
-      positionSpring.set(
-        {
-          x: x,
-          y: y
-        },
-        { hard }
-      );
-      tooltipState.tooltipVisible();
-    }
+  function onMouseLeave() {
+    tooltipState.onMouseLeave();
   }
 </script>
 
 <div
   role="contentinfo"
-  on:mouseenter={() => {
-    if (!dead) {
-      tooltipState.tooltipHover();
-    }
-  }}
-  on:mouseleave={() => {
-    tooltipState.onMouseLeave();
-  }}
+  onmouseenter={onMouseEnter}
+  onmouseleave={onMouseLeave}
   class="tooltip-root flex flex-col gap-3 bg-white border rounded md:p-2 p-[6px] {measure ? '' : 'fixed'}"
   style="left: {$positionSpring.x}px; top: {$positionSpring.y}px; opacity: {$opacitySpring}; visibility: {gone || dead ? 'hidden' : 'visible'}"
 >
@@ -97,12 +101,15 @@
         </div>
         <button
           class="raw-button flex ml-auto"
-          on:click={() => {
+          onclick={() => {
             dead = true;
             tooltipState.hide();
             remove(currentData.groupId);
-          }}><i class="fad fa-times-circle"></i></button
+          }}
+          aria-label="Remove"
         >
+          <i class="fad fa-times-circle"></i>
+        </button>
       </div>
       <hr class="border-slate-600 my-0" />
     </div>
@@ -112,7 +119,7 @@
     {#if currentData.childSubjects?.length}
       <div class="md:text-base text-xs pl-1">
         <button
-          on:click={() => {
+          onclick={() => {
             runDrilldown();
             gone = true;
           }}

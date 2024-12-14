@@ -1,12 +1,16 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, type Snippet } from "svelte";
   import { enhance } from "$app/forms";
 
-  export let ids: number[];
-  export let value: boolean;
-  export let onSave: () => void = () => {};
+  type Props = {
+    ids: number[];
+    value: boolean;
+    saving?: boolean;
+    children: Snippet;
+  };
 
-  export let saving: boolean | undefined = false;
+  let { ids, value, saving = $bindable(), children }: Props = $props();
+
   const { onBooksUpdated } = getContext("books-module-context") as any;
 
   const booksUpdated = () => {
@@ -15,7 +19,6 @@
 
     return async ({ result }: any) => {
       onBooksUpdated(idsToUse, result.data.updates);
-      onSave?.();
       saving = void 0;
     };
   };
@@ -26,5 +29,5 @@
     <input type="hidden" name="ids" value={id} />
   {/each}
   <input type="hidden" name="read" value={value ? "true" : "false"} />
-  <slot />
+  {@render children()}
 </form>

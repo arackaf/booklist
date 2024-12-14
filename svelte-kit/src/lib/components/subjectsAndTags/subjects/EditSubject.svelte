@@ -16,37 +16,45 @@
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
 
   import LabelDisplay from "../LabelDisplay.svelte";
+  import { untrack } from "svelte";
 
-  export let subject: Subject;
-  export let allSubjects: Subject[];
-  export let colors: Color[];
-
-  export let onCancelEdit: () => void;
-  export let deleteShowing = false;
-
-  export let onComplete = () => {};
-
+  type Props = {
+    subject: Subject;
+    allSubjects: Subject[];
+    colors: Color[];
+    onCancelEdit: () => void;
+    deleteShowing?: boolean;
+    onComplete?: () => void;
+    inputEl?: HTMLInputElement | undefined;
+  };
   const textColors = ["#ffffff", "#000000"];
 
-  let missingName = false;
-  export let inputEl: HTMLInputElement | undefined = undefined;
+  let { subject, allSubjects, colors, onCancelEdit, deleteShowing = $bindable(), onComplete = () => {}, inputEl }: Props = $props();
 
-  let originalName = "";
-  let originalParentId = 0;
+  let missingName = $state(false);
+  let originalName = $state("");
+  let originalParentId = $state(0);
 
-  let editingSubject = { ...subject, parentId: computeParentId(subject.path) };
+  let editingSubject = $state({ ...subject, parentId: computeParentId(subject.path) });
 
-  $: editingSubjectChanged(subject);
+  $effect(() => {
+    let currentSubject = subject;
+    untrack(() => {
+      editingSubjectChanged(currentSubject);
+    });
+  });
 
-  $: subjectHash = getSubjectsHash(allSubjects);
-  $: childSubjects = getChildSubjectsSorted(subject.id, subjectHash);
+  let subjectHash = $derived(getSubjectsHash(allSubjects));
+  let childSubjects = $derived(getChildSubjectsSorted(subject.id, subjectHash));
 
-  $: eligibleParents = [{ id: -1, name: "None", path: null } as Subject, ...(getEligibleParents(subjectHash, editingSubject.id) || [])];
-  $: {
+  let eligibleParents = $derived([{ id: -1, name: "None", path: null } as Subject, ...(getEligibleParents(subjectHash, editingSubject.id) || [])]);
+  let selectedParent = $derived(editingSubject.parentId ? allSubjects.find(p => p.id == editingSubject.parentId) : null);
+
+  $effect(() => {
     if (editingSubject.name) {
       missingName = false;
     }
-  }
+  });
 
   function editingSubjectChanged(subject: any) {
     editingSubject = { ...subject, parentId: computeParentId(subject.path) };
@@ -56,9 +64,7 @@
     originalParentId = editingSubject.parentId;
   }
 
-  $: selectedParent = editingSubject.parentId ? allSubjects.find(p => p.id == editingSubject.parentId) : null;
-
-  let saving = false;
+  let saving = $state(false);
   function runSave({ formData: data, cancel }: any) {
     const name = data.get("name");
     if (!name) {
@@ -78,7 +84,7 @@
     };
   }
 
-  let deleting = false;
+  let deleting = $state(false);
   function runDelete() {
     deleting = true;
 
@@ -137,13 +143,15 @@
             }}
             triggerClasses="w-full"
           >
-            <span slot="placeholder">
-              {#if selectedParent}
-                <LabelDisplay item={selectedParent} />
-              {:else}
-                <span>Select</span>
-              {/if}
-            </span>
+            {#snippet renderPlaceholder()}
+              <span>
+                {#if selectedParent}
+                  <LabelDisplay item={selectedParent} />
+                {:else}
+                  <span>Select</span>
+                {/if}
+              </span>
+            {/snippet}
           </SelectAvailableSubjects>
         </div>
       </div>
@@ -179,9 +187,9 @@
       <div class="md:col-span-2">
         <div class="flex flex-row gap-3">
           <Button size="sm" theme="primary" disabled={saving}>Save</Button>
-          <Button size="sm" type="button" disabled={saving} on:click={onCancelEdit}>Cancel</Button>
+          <Button size="sm" type="button" disabled={saving} onclick={onCancelEdit}>Cancel</Button>
           {#if editingSubject.id}
-            <Button size="sm" theme="danger" class="ml-auto gap-1" type="button" disabled={saving} on:click={() => (deleteShowing = true)}>
+            <Button size="sm" theme="danger" class="ml-auto gap-1" type="button" disabled={saving} onclick={() => (deleteShowing = true)}>
               <span>
                 Delete {originalName}
               </span>
@@ -205,7 +213,7 @@
 
       <div class="flex flex-row gap-3">
         <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
-        <Button size="sm" type="button" disabled={deleting} on:click={() => (deleteShowing = false)}>Cancel</Button>
+        <Button size="sm" type="button" disabled={deleting} onclick={() => (deleteShowing = false)}>Cancel</Button>
       </div>
     </div>
   </form>

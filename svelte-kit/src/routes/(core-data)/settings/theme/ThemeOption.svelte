@@ -3,8 +3,12 @@
   import classNames from "classnames";
   import { invalidate } from "$app/navigation";
 
-  export let name: string;
-  export let theme: string;
+  type Props = {
+    name: string;
+    theme: string;
+  };
+
+  let { name, theme }: Props = $props();
 
   const arrayOfTen = Array.from({ length: 10 }, (_, i) => i + 1);
 
@@ -14,9 +18,8 @@
     };
   }
 
-  $: active = theme === name;
-
-  $: addedClasses = active ? "border-4 border-[var(--primary-5)]" : "cursor-pointer border border-neutral-400";
+  let active = $derived(theme === name);
+  let addedClasses = $derived(active ? "border-4 border-[var(--primary-5)]" : "cursor-pointer border border-neutral-400");
 </script>
 
 <div class="flex">

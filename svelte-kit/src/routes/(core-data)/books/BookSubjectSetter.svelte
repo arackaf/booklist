@@ -1,44 +1,44 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { enhance } from "$app/forms";
-  import { invalidate } from "$app/navigation";
 
   import type { Book, Subject } from "$data/types";
+  import type { UpdatesTo } from "$lib/state/dataUpdates";
 
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-
+  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
-  import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
+  type Props = {
+    modifyingBooks: any[];
+    isOpen: boolean;
+    onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
+    onHide: () => void;
+  };
 
-  $: subjects = $page.data.subjects;
-  export let modifyingBooks: any[];
-  export let isOpen: boolean;
-  export let onSave: (id: number | number[], updates: UpdatesTo<Book>) => void;
-  export let onHide: () => void;
+  let { modifyingBooks, isOpen, onSave, onHide }: Props = $props();
+  let { subjects } = $derived($page.data);
 
-  let addingSubjects: number[] = [];
-  let removingSubjects: number[] = [];
+  let addingSubjects = $state<number[]>([]);
+  let removingSubjects = $state<number[]>([]);
+  let saving = $state(false);
 
   const resetSubjects = () => {
     addingSubjects = [];
     removingSubjects = [];
   };
 
-  $: {
+  $effect(() => {
     if (isOpen) {
       resetSubjects();
     }
-  }
+  });
 
-  let saving = false;
   const save = () => {
     saving = true;
     const updates = {
@@ -59,6 +59,7 @@
       onHide();
     };
   };
+
   const addingSubjectSet = (adding: boolean, { id }: Subject) =>
     (addingSubjects = adding ? addingSubjects.concat(id) : addingSubjects.filter(x => x != id));
   const subjectSelectedToAdd = addingSubjectSet.bind(null, true);
@@ -73,7 +74,7 @@
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" standardFooter={false}>
   <form method="post" action="?/setBooksSubjects" use:enhance={save}>
-    <Tabs defaultTab="subjects">
+    <Tabs currentTab="subjects">
       <TabHeaders>
         <TabHeader tabName="subjects">Choose subjects</TabHeader>
         <TabHeader tabName="books">For books</TabHeader>
@@ -91,29 +92,25 @@
           {/each}
           <div class="flex flex-col gap-4 pt-3">
             <SelectAndDisplayContainer>
-              <SelectAvailableSubjects
-                slot="select"
-                {subjects}
-                placeholder="Adding"
-                currentlySelected={addingSubjects}
-                onSelect={subjectSelectedToAdd}
-              />
-              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+              {#snippet select()}
+                <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <SelectAndDisplayContainer>
-              <SelectAvailableSubjects
-                slot="select"
-                {subjects}
-                placeholder="Removing"
-                currentlySelected={removingSubjects}
-                onSelect={subjectSelectedToRemove}
-              />
-              <DisplaySelectedSubjects slot="display" {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+              {#snippet select()}
+                <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
+              {/snippet}
+              {#snippet display()}
+                <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+              {/snippet}
             </SelectAndDisplayContainer>
 
             <div>
-              <Button size="sm" type="button" on:click={resetSubjects}>Reset subjects</Button>
+              <Button size="sm" type="button" onclick={resetSubjects}>Reset subjects</Button>
             </div>
           </div>
         </TabContent>
@@ -130,7 +127,7 @@
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
 
-        <Button type="button" class="ml-auto" on:click={onHide}>Cancel</Button>
+        <Button type="button" class="ml-auto" onclick={onHide}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>

@@ -1,22 +1,17 @@
 <script lang="ts">
-  export let error = false;
+  import type { HTMLInputAttributes } from "svelte/elements";
 
-  let className = "";
-  export { className as class };
+  type Props = {
+    error?: boolean;
+    inputEl?: any;
+    value?: string;
+    size?: "sm" | "default";
+  } & Omit<HTMLInputAttributes, "size">;
 
-  const { className: ignore, ...rest } = $$restProps;
-
-  export let inputEl: HTMLInputElement = null as any;
-
-  export let value: string = "";
-  export let size: "sm" | "default" = "default";
+  let { error, class: className, inputEl = $bindable(), value = $bindable(""), size = "default", ...rest }: Props = $props();
 </script>
 
 <input
-  on:blur
-  on:change
-  on:input
-  on:keydown
   class:border-neutral-400={!error}
   class:border-danger-5={error}
   class:focus:shadow-md={!error}

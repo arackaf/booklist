@@ -1,6 +1,10 @@
 <script lang="ts">
-  export let provider: string;
-  export let avatar: string | null;
+  type Props = {
+    provider: string;
+    avatar: string | null;
+  };
+
+  let { provider, avatar }: Props = $props();
 </script>
 
 <span class="text-4xl leading-none">

@@ -3,19 +3,22 @@
   import type { UserUsageEntry } from "$data/user-usage-info";
   import UserIcon from "./UserIcon.svelte";
 
-  export let userUsageEntry: UserUsageEntry;
-  export let missingUserInfo: StoredUserInfo | undefined | null;
+  type Props = {
+    userUsageEntry: UserUsageEntry;
+    missingUserInfo?: StoredUserInfo | null;
+  };
 
-  $: provider = userUsageEntry.provider || missingUserInfo?.provider || "";
-  $: books = userUsageEntry.books;
+  let { userUsageEntry, missingUserInfo }: Props = $props();
 
-  let lastEnteredDate: string;
-  $: {
+  let provider = $derived(userUsageEntry.provider || missingUserInfo?.provider || "");
+  let books = $derived(userUsageEntry.books);
+  let lastEnteredDate = $derived.by(() => {
     if (userUsageEntry.latest) {
       const date: Date = userUsageEntry.latest;
-      lastEnteredDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+      return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
     }
-  }
+    return "";
+  });
 </script>
 
 <div class="flex flex-row gap-4">
@@ -23,7 +26,7 @@
   <div class="flex flex-col gap-2">
     <div class="flex flex-col">
       <div class="text-lg leading-none">
-        {userUsageEntry.books} Book{books === 1 ? "" : "s"}
+        {books} Book{books === 1 ? "" : "s"}
       </div>
       <div>
         Last book entered: {lastEnteredDate}
