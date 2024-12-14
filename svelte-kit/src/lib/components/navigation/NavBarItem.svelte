@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import type { Snippet } from "svelte";
+  import { page } from "$app/stores";
   import ModuleLink from "./ModuleLink.svelte";
 
   type Props = {

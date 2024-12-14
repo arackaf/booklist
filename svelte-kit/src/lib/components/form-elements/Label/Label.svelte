@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { LabelColors } from "$lib/components/subjectsAndTags/types";
   import type { Snippet } from "svelte";
+  import type { LabelColors } from "$lib/components/subjectsAndTags/types";
 
   type Props = {
     class?: string;

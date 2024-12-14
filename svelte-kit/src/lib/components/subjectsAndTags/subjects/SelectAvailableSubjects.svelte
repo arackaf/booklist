@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { DisablableSubject, Subject } from "$data/types";
   import { filterSubjects, subjectState } from "$lib/state/subjectsState";
-  import type { Snippet } from "svelte";
 
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
