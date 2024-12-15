@@ -1,20 +1,18 @@
 <script lang="ts">
   import { setContext, type Snippet } from "svelte";
-  import { writable } from "svelte/store";
+  import { createTabState } from "./tabState.svelte";
 
   type Props = {
-    currentTab?: string;
+    currentTab: string;
     children: Snippet;
   };
 
-  const setTab = (tab: string) => tabState.update(state => ({ ...state, currentTab: tab }));
-
   let { currentTab = $bindable(), children }: Props = $props();
 
-  let tabState = writable({ currentTab, setTab });
+  let tabState = createTabState(currentTab);
 
   $effect(() => {
-    currentTab = $tabState.currentTab;
+    currentTab = tabState.currentTab;
   });
 
   setContext("tabs-state", tabState);

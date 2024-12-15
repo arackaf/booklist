@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getContext, type Snippet } from "svelte";
   import type { HTMLAttributes } from "svelte/elements";
+  import type { TabState } from "./tabState.svelte";
 
   type Props = {
     tabName: string;
@@ -8,8 +9,8 @@
   } & HTMLAttributes<HTMLDivElement>;
   let { tabName, class: className, children, ...rest }: Props = $props();
 
-  const tabsState: any = getContext("tabs-state");
-  let currentTab = $derived($tabsState.currentTab);
+  const tabsState: TabState = getContext("tabs-state");
+  let currentTab = $derived(tabsState.currentTab);
   let isActive = $derived(currentTab === tabName);
 </script>
 

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext, type Snippet } from "svelte";
+  import type { TabState } from "./tabState.svelte";
 
   type Props = {
     tabName: string;
@@ -9,9 +10,9 @@
 
   let { tabName, class: className = "", children }: Props = $props();
 
-  const tabsState: any = getContext("tabs-state");
+  const tabsState: TabState = getContext("tabs-state");
 
-  let { currentTab, setTab } = $derived($tabsState);
+  let { currentTab, setTab } = $derived(tabsState);
 
   let active = $derived(tabName === currentTab);
 
