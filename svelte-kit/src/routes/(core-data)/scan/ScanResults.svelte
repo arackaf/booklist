@@ -5,7 +5,7 @@
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
-  import useReducer from "$lib/state/useReducer";
+  import useReducer from "$lib/state/useReducer.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   function scanReducer(state: any, [type, payload]: any) {
@@ -36,7 +36,7 @@
     booksSaved: []
   });
 
-  let { pending, booksSaved } = $derived($currentState);
+  let { pending, booksSaved } = $derived(currentState.current);
   let showIncomingQueue = $state(false);
   let toggleClass = $derived(showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down");
 
