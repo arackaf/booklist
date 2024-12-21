@@ -2,7 +2,7 @@
   import { spring } from "svelte/motion";
   import SlicePath from "./SlicePath.svelte";
   import { getContext } from "svelte";
-  import type { createTooltipState } from "../tooltip/tooltipState";
+  import type { createTooltipState } from "../tooltip/tooltipState.svelte";
 
   type Props = {
     segment: any;
@@ -26,7 +26,15 @@
 
   let { arcCenterPoint } = $derived(segment);
 
-  let slideSliceOut = $state(false);
+  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
+  let currentTooltipState = $derived(tooltipState.currentState);
+  let currentTooltipShownState = $derived(tooltipState.shownState.value);
+
+  let slideSliceOut = $derived.by(() => {
+    let activeData = currentTooltipState.payload?.data;
+    console.log({ activeData, currentTooltipShownState, val: activeData?.groupId === segment.data.groupId && currentTooltipShownState });
+    return activeData?.groupId === segment.data.groupId && currentTooltipShownState;
+  });
   let translateX = $state(0);
   let translateY = $state(0);
 
@@ -84,15 +92,6 @@
   });
 
   let c = $state<SVGElement>(null as any);
-
-  const tooltipState = getContext("tooltip-state") as ReturnType<typeof createTooltipState>;
-  let currentTooltipState = $derived(tooltipState.currentState);
-  let currentTooltipShownState = $derived(tooltipState.shownState);
-
-  $effect(() => {
-    let currentlyActivePayload = $currentTooltipState.payload;
-    slideSliceOut = currentlyActivePayload?.data === segment.data && $currentTooltipShownState;
-  });
 
   let hovering = $state(false);
 

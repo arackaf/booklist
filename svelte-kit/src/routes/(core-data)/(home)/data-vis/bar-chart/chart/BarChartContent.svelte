@@ -8,7 +8,7 @@
   import Bar from "../bars/Bar.svelte";
   import { onMount, setContext } from "svelte";
   import Tooltip from "../../tooltip/Tooltip.svelte";
-  import { createTooltipState } from "../../tooltip/tooltipState";
+  import { createTooltipState } from "../../tooltip/tooltipState.svelte";
   import LinearGradient from "./LinearGradient.svelte";
 
   type Props = {
@@ -79,13 +79,16 @@
 
   const tooltipManager = createTooltipState();
   setContext("tooltip-state", tooltipManager);
-  let currentState = $derived(tooltipManager.currentState);
-  let currentShownState = $derived(tooltipManager.shownState);
 </script>
 
 <div>
   <div class="h-[500px] mx-auto mb-36" style="max-width: {MAX_SVG_WIDTH}px">
-    <Tooltip shown={$currentShownState} payload={$currentState.payload} x={$currentState.x} y={$currentState.y} />
+    <Tooltip
+      shown={tooltipManager.shownState.value}
+      payload={tooltipManager.currentState.payload}
+      x={tooltipManager.currentState.x}
+      y={tooltipManager.currentState.y}
+    />
 
     <svg width="100%" class="{sizeClass} block mt-7 overflow-visible {maxHeightStyle}" viewBox="0 0 {$viewBoxSpring ?? 0} {MAX_SVG_HEIGHT}">
       <defs>

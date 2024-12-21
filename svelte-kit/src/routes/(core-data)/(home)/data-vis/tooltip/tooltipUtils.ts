@@ -1,4 +1,4 @@
-import type { TooltipPayload } from "./tooltipState";
+import type { TooltipPayload } from "./tooltipState.svelte";
 import Tooltip from "./Tooltip.svelte";
 
 import type { Subject } from "$data/types";

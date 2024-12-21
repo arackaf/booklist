@@ -1,8 +1,7 @@
 <script lang="ts">
   import { getContext, untrack } from "svelte";
   import { spring } from "svelte/motion";
-  import type { createTooltipState, TooltipPayload } from "./tooltipState";
-  import { get } from "svelte/store";
+  import type { createTooltipState, TooltipPayload } from "./tooltipState.svelte";
 
   type Props = {
     shown: boolean;
@@ -67,7 +66,7 @@
       currentlySetX = x;
       currentlySetY = y;
 
-      const hard = !get(tooltipState.currentState).onScreen;
+      const hard = tooltipState.currentState.onScreen;
       positionSpring.set({ x, y }, { hard });
       setTimeout(() => tooltipState.tooltipVisible());
     }
