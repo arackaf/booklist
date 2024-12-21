@@ -1,13 +1,11 @@
 import { type Writable } from "svelte/store";
 
 export function syncHeight(el: HTMLElement) {
-  let heightRef = ref(el.offsetHeight ?? 0);
+  let heightRef = ref(el.offsetHeight);
 
   $effect(() => {
     let ro = new ResizeObserver(() => {
-      if (el) {
-        heightRef.value = el.offsetHeight;
-      }
+      heightRef.value = el.offsetHeight;
     });
     ro.observe(el);
 
