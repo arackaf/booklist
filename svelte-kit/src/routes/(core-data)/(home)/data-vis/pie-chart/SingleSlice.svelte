@@ -32,7 +32,6 @@
 
   let slideSliceOut = $derived.by(() => {
     let activeData = currentTooltipState.payload?.data;
-    console.log({ activeData, currentTooltipShownState, val: activeData?.groupId === segment.data.groupId && currentTooltipShownState });
     return activeData?.groupId === segment.data.groupId && currentTooltipShownState;
   });
   let translateX = $state(0);
