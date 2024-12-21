@@ -159,7 +159,6 @@
   });
 
   let containerSize = $derived.by(() => {
-    console.log({ a: containerWidthValue, b: containerWidthValue?.width.value });
     const width = containerWidthValue?.width.value ?? 0;
     return width <= 0 ? ("UNKNOWN" as const) : width < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
   });

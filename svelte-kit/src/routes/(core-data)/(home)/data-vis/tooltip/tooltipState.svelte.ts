@@ -47,7 +47,9 @@ export function createTooltipState() {
     onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
       clearTimeouts();
 
-      if (hoveringPayload.data.groupId !== state.payload?.data.groupId) {
+      if (hoveringPayload.data.groupId === state.payload?.data.groupId) {
+        shownState.value = true;
+      } else {
         showTimeout = setTimeout(() => {
           this.show(node, hoveringPayload);
         }, 75);
