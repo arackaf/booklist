@@ -25,7 +25,7 @@
 
   let blockingUpstream: boolean;
   let contentEl: HTMLElement;
-  let heightStore: any;
+  let heightStore: ReturnType<typeof syncHeight>;
 
   const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
@@ -36,7 +36,7 @@
   });
 
   $effect(() => {
-    setSpring($heightStore, expanded);
+    setSpring(heightStore.height.value, expanded);
   });
 
   let initialRenderComplete = $state(false);

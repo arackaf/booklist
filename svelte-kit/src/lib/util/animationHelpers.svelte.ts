@@ -1,15 +1,22 @@
-import { writable, type Writable } from "svelte/store";
+import { type Writable } from "svelte/store";
 
-export function syncHeight(el: any) {
-  return writable(el.offsetHeight, set => {
-    if (!el) {
-      return;
-    }
+export function syncHeight(el: HTMLElement) {
+  let heightRef = ref(el.offsetHeight ?? 0);
 
-    let ro = new ResizeObserver(() => el && set(el.offsetHeight));
+  $effect(() => {
+    let ro = new ResizeObserver(() => {
+      if (el) {
+        heightRef.value = el.offsetHeight;
+      }
+    });
     ro.observe(el);
+
     return () => ro.disconnect();
   });
+
+  return {
+    height: heightRef as ReadOnlyRef<number>
+  };
 }
 
 export function syncWidth(store: Writable<number>, el: any) {
@@ -27,6 +34,7 @@ export function syncWidth(store: Writable<number>, el: any) {
 }
 
 import { spring } from "svelte/motion";
+import { ref, type ReadOnlyRef } from "$lib/state/reactivityHelpers.svelte";
 
 const OPEN_SPRING = { stiffness: 0.1, damping: 0.4 };
 const CLOSE_SPRING = { stiffness: 0.2, damping: 0.8 };

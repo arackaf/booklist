@@ -2,6 +2,10 @@ export type Ref<T> = {
   get value(): T;
   set value(value: T);
 };
+
+export type ReadOnlyRef<T> = {
+  get value(): T;
+};
 export const ref = <T>(value: T): Ref<T> => {
   let state = $state<T>(value);
   return {
