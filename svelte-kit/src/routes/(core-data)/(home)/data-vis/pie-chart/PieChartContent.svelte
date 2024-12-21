@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { writable } from "svelte/store";
   import { arc, pie } from "d3-shape";
 
   import SingleSlice from "./SingleSlice.svelte";
@@ -153,16 +152,17 @@
   };
 
   let containerDiv = $state<HTMLElement>(null as any);
-  //TODO refactor this to a rune
-  let containerWidthStore = writable(-1);
+  let containerWidthValue = $state<ReturnType<typeof syncWidth>>();
 
-  $effect(() => {
-    syncWidth(containerWidthStore, containerDiv);
+  onMount(() => {
+    containerWidthValue = syncWidth(containerDiv);
   });
 
-  let containerSize = $derived(
-    $containerWidthStore <= 0 ? ("UNKNOWN" as const) : $containerWidthStore < 1000 ? ("SMALL" as const) : ("NORMAL" as const)
-  );
+  let containerSize = $derived.by(() => {
+    console.log({ a: containerWidthValue, b: containerWidthValue?.width.value });
+    const width = containerWidthValue?.width.value ?? 0;
+    return width <= 0 ? ("UNKNOWN" as const) : width < 1000 ? ("SMALL" as const) : ("NORMAL" as const);
+  });
 
   const tooltipManager = createTooltipState();
   setContext("tooltip-state", tooltipManager);
