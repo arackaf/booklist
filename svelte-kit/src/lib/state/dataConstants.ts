@@ -1,5 +1,5 @@
 import type { Book } from "$data/types";
-import { createState } from "./universalReactivityHelpers.svelte";
+import { createState } from "./reactivityHelpers.svelte";
 
 export const DEFAULT_BOOKS_PAGE_SIZE = 50;
 
