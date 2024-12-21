@@ -66,7 +66,7 @@
       currentlySetX = x;
       currentlySetY = y;
 
-      const hard = tooltipState.currentState.onScreen;
+      const hard = !tooltipState.currentState.onScreen;
       positionSpring.set({ x, y }, { hard });
       setTimeout(() => tooltipState.tooltipVisible());
     }
