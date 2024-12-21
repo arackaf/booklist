@@ -2,7 +2,7 @@
   import { spring } from "svelte/motion";
   import type { Position } from "../../tooltip/tooltipUtils";
   import { getContext } from "svelte";
-  import type { createTooltipState } from "../../tooltip/tooltipState";
+  import type { createTooltipState } from "../../tooltip/tooltipState.svelte";
   import BarPath from "./BarPath.svelte";
 
   type Props = {

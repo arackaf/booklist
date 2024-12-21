@@ -1,4 +1,4 @@
-import { derived, get, writable } from "svelte/store";
+import { ref } from "$lib/state/reactivityHelpers.svelte";
 import { getTooltipDimensions, positionTooltip, type Data, type Position } from "./tooltipUtils";
 
 export type TooltipPayload = {
@@ -9,8 +9,8 @@ export type TooltipPayload = {
 };
 
 export function createTooltipState() {
-  const shownState = writable(false);
-  const state = writable({
+  let shownState = ref(false);
+  const state = $state({
     x: 0,
     y: 0,
     payload: null as null | TooltipPayload,
@@ -21,8 +21,6 @@ export function createTooltipState() {
 
   let leaveTimeout: NodeJS.Timer | null = null;
   let showTimeout: NodeJS.Timer | null = null;
-
-  const readOnlyState = derived(state, currentState => currentState);
 
   function clearTimeouts() {
     clearTimeout(leaveTimeout!);
@@ -39,19 +37,18 @@ export function createTooltipState() {
       const bound = bindTo.getBoundingClientRect();
       const coord = positionTooltip(bound, payload.position, { w, h });
 
-      state.update(current => ({ ...current, ...coord, bound: bindTo, payload }));
-      shownState.set(true);
+      Object.assign(state, { ...coord, bound: bindTo, payload });
+      shownState.value = true;
     },
     tooltipHover() {
       clearTimeouts();
-      shownState.set(true);
+      shownState.value = true;
     },
     onHover(node: SVGElement, hoveringPayload: TooltipPayload) {
-      const currentState = get(this.currentState);
       clearTimeouts();
 
-      if (hoveringPayload.data === currentState.payload?.data) {
-        this.show(node, hoveringPayload);
+      if (hoveringPayload.data.groupId === state.payload?.data.groupId) {
+        shownState.value = true;
       } else {
         showTimeout = setTimeout(() => {
           this.show(node, hoveringPayload);
@@ -67,25 +64,22 @@ export function createTooltipState() {
     },
     hide() {
       clearTimeouts();
-      shownState.set(false);
+      shownState.value = false;
     },
     tooltipGone() {
-      state.update(val => ({ ...val, onScreen: false, payload: null }));
+      Object.assign(state, { onScreen: false, payload: null });
     },
     tooltipVisible() {
-      state.update(val => ({ ...val, onScreen: true }));
+      Object.assign(state, { onScreen: true });
     },
-    currentState: readOnlyState,
+    currentState: state,
     shownState
   };
 
   if (typeof window === "object") {
     window.addEventListener("scroll", () => {
-      const isShown = get(shownState);
-      const currentTooltipState = get(state);
-
-      if (isShown) {
-        result.show(currentTooltipState.bound, currentTooltipState.payload!);
+      if (shownState) {
+        result.show(state.bound, state.payload!);
       }
     });
   }
