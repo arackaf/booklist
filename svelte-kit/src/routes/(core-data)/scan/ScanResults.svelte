@@ -36,7 +36,7 @@
     booksSaved: []
   });
 
-  let { pending, booksSaved } = $derived(currentState.current);
+  let { pending, booksSaved } = $derived(currentState.value);
   let showIncomingQueue = $state(false);
   let toggleClass = $derived(showIncomingQueue ? "fa-angle-double-up" : "fa-angle-double-down");
 

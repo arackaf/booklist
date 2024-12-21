@@ -1,18 +1,4 @@
-type Ref<T> = {
-  get current(): T;
-  set current(value: T);
-};
-const ref = <T>(value: T): Ref<T> => {
-  let state = $state<T>(value);
-  return {
-    get current() {
-      return state;
-    },
-    set current(value: T) {
-      state = value;
-    }
-  };
-};
+import { ref, type Ref } from "./reactivityHelpers.svelte";
 
 export default function useReducer<T = any, P = any>(
   reducer: (state: T, payload: [string, P]) => T,
@@ -21,7 +7,7 @@ export default function useReducer<T = any, P = any>(
   let state = ref(initialState);
 
   const dispatch = (action: [string, P]) => {
-    state.current = reducer(state.current, action);
+    state.value = reducer(state.value, action);
   };
 
   return [state, dispatch];

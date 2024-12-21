@@ -1,15 +1,18 @@
-export function createState<T>(value: T) {
-  let stateValue = $state(value);
-
+export type Ref<T> = {
+  get value(): T;
+  set value(value: T);
+};
+export const ref = <T>(value: T): Ref<T> => {
+  let state = $state<T>(value);
   return {
     get value() {
-      return stateValue;
+      return state;
     },
-    set value(newValue: T) {
-      stateValue = newValue;
+    set value(value: T) {
+      state = value;
     }
   };
-}
+};
 
 class ForceNonReactive {
   constructor(value: any) {

@@ -3,7 +3,7 @@ import { EMPTY_BOOKS_RESULTS_CLIENT } from "$lib/state/dataConstants";
 import { ensureAnyUser } from "$lib/util/authCheck";
 import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 import type { Book } from "$data/types";
-import { createShallowReactiveArray, createState } from "$lib/state/reactivityHelpers.svelte";
+import { createShallowReactiveArray, ref } from "$lib/state/reactivityHelpers.svelte";
 
 export async function load({ url, parent, fetch, depends }) {
   depends("reload:books");
@@ -28,7 +28,7 @@ export async function load({ url, parent, fetch, depends }) {
 
   return {
     defaultBookView,
-    totalBooks: createState(totalBooks),
+    totalBooks: ref(totalBooks),
     books: createShallowReactiveArray(books as Book[]),
     page,
     totalPages
