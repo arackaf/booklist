@@ -2,7 +2,6 @@
   import Alert from "$lib/components/Alert.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
-  import type { Writable } from "svelte/store";
   import type { Ref } from "$lib/state/reactivityHelpers.svelte";
 
   type Props = {
