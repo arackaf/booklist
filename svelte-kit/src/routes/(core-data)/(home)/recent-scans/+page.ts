@@ -1,5 +1,5 @@
+import { ref } from "$lib/state/reactivityHelpers.svelte.js";
 import { ensureLoggedIn } from "$lib/util/authCheck";
-import { writable } from "svelte/store";
 
 export async function load({ url, fetch, parent }) {
   await ensureLoggedIn({ parent });
@@ -10,7 +10,7 @@ export async function load({ url, fetch, parent }) {
   const { scans, nextPageKey } = packet;
 
   return {
-    scans: writable(scans),
-    nextPageKey: writable(nextPageKey)
+    scans: ref(scans),
+    nextPageKey: ref(nextPageKey)
   };
 }

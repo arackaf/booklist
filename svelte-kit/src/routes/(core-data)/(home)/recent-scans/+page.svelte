@@ -3,11 +3,12 @@
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
   import type { Writable } from "svelte/store";
+  import type { Ref } from "$lib/state/reactivityHelpers.svelte";
 
   type Props = {
     data: {
-      scans: Writable<any[]>;
-      nextPageKey: Writable<string | null>;
+      scans: Ref<any[]>;
+      nextPageKey: Ref<string | null>;
     };
   };
 
@@ -20,23 +21,23 @@
   function loadNextScans() {
     loading = true;
 
-    fetch(`/api/recent-scans?next-page-key=${$nextPageKey}`)
+    fetch(`/api/recent-scans?next-page-key=${nextPageKey.value}`)
       .then(resp => resp.json())
       .then(resp => {
-        scans.update(current => current.concat(resp.scans));
-        nextPageKey.set(resp.nextPageKey);
+        scans.value = scans.value.concat(resp.scans);
+        nextPageKey.value = resp.nextPageKey;
 
         loading = false;
       });
   }
 
-  let noResultsMessage = $derived($scans.length ? "No more recent scans" : "No recent scans");
+  let noResultsMessage = $derived(scans ? "No more recent scans" : "No recent scans");
 </script>
 
 <div class="recent-scans-module">
   <div class="overlay-holder">
     <div class="grid grid-cols-[75px_1fr] gap-4">
-      {#each $scans as item}
+      {#each scans.value as item}
         {#if item.success}
           <BookCover size="small" book={item} />
 
@@ -51,15 +52,15 @@
         {/if}
       {/each}
 
-      {#if $nextPageKey}
+      {#if nextPageKey.value}
         <div></div>
         <ActionButton class="w-[40ch]" theme="primary" running={loading} onclick={loadNextScans}>Load More</ActionButton>
       {/if}
     </div>
   </div>
-  {#if !$nextPageKey}
+  {#if !nextPageKey.value}
     <div>
-      {#if $scans.length}
+      {#if scans.value.length}
         <hr class="my-3" />
       {/if}
       <Alert type="info">
