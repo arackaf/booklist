@@ -149,6 +149,7 @@ export const changeFilter = derived(page, $page => {
 const urlWithoutFilter = (url: URL, filter: string) => {
   const newUrl = new URL(url);
   newUrl.searchParams.delete(filter);
+  newUrl.searchParams.delete("page");
   return newUrl.toString();
 };
 
@@ -162,6 +163,7 @@ const urlWithFilter = (url: URL, filter: string, value: string) => {
 const urlWithArrayFilter = (url: URL, filter: string, values: string[]) => {
   const newUrl = new URL(url);
 
+  newUrl.searchParams.delete("page");
   newUrl.searchParams.delete(filter);
   for (const s of values) {
     newUrl.searchParams.append(filter, s);
