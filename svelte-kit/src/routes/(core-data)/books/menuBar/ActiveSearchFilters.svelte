@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { searchState, changeFilter, getSortDisplay } from "../state/searchState";
 
