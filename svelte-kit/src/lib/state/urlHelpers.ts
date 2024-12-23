@@ -10,6 +10,9 @@ export async function updateSearchParam(key, value) {
   } else {
     q.delete(key);
   }
+  if (key !== "page") {
+    q.delete("page");
+  }
 
   const newUrl = new URL(get(page).url);
   newUrl.search = q.toString();
