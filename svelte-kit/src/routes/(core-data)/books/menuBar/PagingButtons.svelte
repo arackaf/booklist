@@ -30,7 +30,7 @@
   <div class="results-holder">
     <span>
       {#if totalPages}
-        <span><span class="page-label">Page </span>{page} of {totalPages}</span>
+        <span><span class="page-label">Page</span> {page} of {totalPages}</span>
       {:else}
         <span>No results</span>
       {/if}
