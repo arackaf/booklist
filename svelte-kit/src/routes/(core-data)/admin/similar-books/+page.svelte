@@ -4,7 +4,7 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-  import { updateSearchParam } from "$lib/state/urlHelpers";
+  import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
 
   import BookDisplay from "./BookDisplay.svelte";
   import SimilarBooks from "./SimilarBooks.svelte";

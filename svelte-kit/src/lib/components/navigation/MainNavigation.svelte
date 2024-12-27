@@ -8,7 +8,7 @@
   import BookSvg from "./BookSvg.svelte";
 
   import { onMount } from "svelte";
-  import { publicUserIdPersist } from "$lib/state/urlHelpers";
+  import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
   import ProfilePanel from "./ProfilePanel.svelte";
   import type { UserSummary } from "$data/user-summary";
 

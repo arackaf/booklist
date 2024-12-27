@@ -10,7 +10,7 @@
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import RawButton from "$lib/components/Button/RawButton.svelte";
-  import { updateSearchParam } from "$lib/state/urlHelpers";
+  import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
 
   type Props = {
     isPublic: boolean;

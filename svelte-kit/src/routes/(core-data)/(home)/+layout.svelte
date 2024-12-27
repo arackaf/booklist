@@ -1,7 +1,7 @@
 <script lang="ts">
   import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
   import { SectionNavItem } from "$lib/components/section-nav";
-  import { publicUserIdPersist } from "$lib/state/urlHelpers";
+  import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
 
   let { data, children } = $props();
   let { hasPublicId } = $derived(data);
