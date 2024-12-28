@@ -2,15 +2,11 @@
   import { getContext, onMount } from "svelte";
 
   import { spring } from "svelte/motion";
-  import { scale } from "svelte/transition";
-  import { quadIn } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
   import { syncHeight } from "$lib/util/animationHelpers.svelte";
   import SubjectLabelDisplay from "./SubjectLabelDisplay.svelte";
-  import { flip } from "svelte/animate";
-  import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
   import Self from "./SubjectDisplay.svelte";
 
@@ -93,9 +89,9 @@
   <div style="height: {height < 0 ? 'auto' : height + 'px'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if childSubjects.length}
-        <ul class="ml-5" onoutrostart={exitStart} transition:scale|local={scaleTransitionProps}>
+        <ul class="ml-5">
           {#each childSubjects as s (s.id)}
-            <li onoutrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
+            <li>
               <Self subject={s} {editSubject} />
             </li>
           {/each}

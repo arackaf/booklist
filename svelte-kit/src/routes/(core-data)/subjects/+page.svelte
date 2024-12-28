@@ -2,9 +2,6 @@
   import type { Subject } from "$data/types";
 
   import { setContext } from "svelte";
-  import { flip } from "svelte/animate";
-  import { quadIn } from "svelte/easing";
-  import { scale } from "svelte/transition";
 
   import Button from "$lib/components/Button/Button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
@@ -12,7 +9,6 @@
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
 
   import SubjectDisplay from "./SubjectDisplay.svelte";
-  import { exitStart, scaleTransitionProps } from "./animationHelpers";
 
   let { data } = $props();
   let { subjects, colors } = $derived(data);
@@ -54,7 +50,7 @@
   <div class="border-l-2 border-l-primary-4 pl-3 lg:pl-7">
     <ul>
       {#each rootSubjects as s (s.id)}
-        <li onoutrostart={exitStart} animate:flip={{ duration: 150, easing: quadIn }} transition:scale|local={scaleTransitionProps}>
+        <li>
           <SubjectDisplay subject={s} {editSubject} />
         </li>
       {/each}
