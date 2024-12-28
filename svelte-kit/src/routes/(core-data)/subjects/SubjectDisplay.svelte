@@ -25,19 +25,19 @@
 
   let blockingUpstream: boolean;
   let contentEl: HTMLElement;
-  let heightStore = $state<ReturnType<typeof syncHeight>>();
+  let heightValue = $state<ReturnType<typeof syncHeight>>();
 
   const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
   const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
   onMount(() => {
-    heightStore = syncHeight(contentEl);
+    heightValue = syncHeight(contentEl);
   });
 
   $effect(() => {
-    if (heightStore) {
-      setSpring(heightStore.height.value, expanded);
+    if (heightValue) {
+      setSpring(heightValue.height.value, expanded);
     }
   });
 
