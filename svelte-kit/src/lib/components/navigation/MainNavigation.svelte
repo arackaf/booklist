@@ -81,7 +81,7 @@
       </div>
     {/if}
     <div class={`hidden md:flex text-lg ${isHome ? "active" : ""}`}>
-      <ModuleLink active={isHome} padding="px-3" href={$publicUserIdPersist.urlTo("/")}>
+      <ModuleLink active={isHome} padding="px-3" href={publicUserIdPersist.urlTo("/")}>
         <BookSvg height="18" style="margin-right: 10px; color: white; fill: var(--primary-10);" />
         <span>My Library</span>
       </ModuleLink>
@@ -108,7 +108,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
-        <NavBarItem href={$publicUserIdPersist.urlTo("/books")} label={"View books"}>
+        <NavBarItem href={publicUserIdPersist.urlTo("/books")} label={"View books"}>
           <span class="hidden md:block">Books</span>
           <span class="md:hidden">
             <i class="text-lg fal fa-fw fa-books"></i>
@@ -124,7 +124,7 @@
         </NavBarItem>
       {/if}
       {#if loggedIn || hasPublicId}
-        <NavBarItem active={isSettings} href={$publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
+        <NavBarItem active={isSettings} href={publicUserIdPersist.urlTo("/settings/theme")} label={"Settings"}>
           <span class="hidden md:block">Settings</span>
           <span class="md:hidden">
             <i class="text-lg fal fa-fw fa-cogs"></i>

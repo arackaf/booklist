@@ -9,10 +9,10 @@
 
 <TabbedPage>
   {#snippet nav()}
-    <SectionNavItem href={$publicUserIdPersist.urlTo("/")}>
+    <SectionNavItem href={publicUserIdPersist.urlTo("/")}>
       <span>Explore</span>
     </SectionNavItem>
-    <SectionNavItem href={$publicUserIdPersist.urlTo("/discover")}>Discover</SectionNavItem>
+    <SectionNavItem href={publicUserIdPersist.urlTo("/discover")}>Discover</SectionNavItem>
     <SectionNavItem disabled={hasPublicId} href="/recent-scans">Recent Scans</SectionNavItem>
   {/snippet}
 
