@@ -53,7 +53,7 @@
 
   function setSpring(height: number, expanded: boolean) {
     if (blockingUpstream) {
-      $disabledAnimationInChain = true;
+      disabledAnimationInChain.value = true;
     }
 
     const newHeight = expanded ? height : 0;
@@ -65,7 +65,7 @@
     let animation = subjectSpring
       .set(
         { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-        { hard: !initialRenderComplete || ($disabledAnimationInChain && !blockingUpstream) }
+        { hard: !initialRenderComplete || (disabledAnimationInChain.value && !blockingUpstream) }
       )
       .then(() => {
         initialRenderComplete = true;
@@ -74,7 +74,7 @@
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
     if (blockingUpstream) {
       Promise.resolve(animation).then(() => {
-        $disabledAnimationInChain = false;
+        disabledAnimationInChain.value = false;
         blockingUpstream = false;
       });
     }

@@ -2,7 +2,6 @@
   import type { Subject } from "$data/types";
 
   import { setContext } from "svelte";
-  import { writable } from "svelte/store";
   import { flip } from "svelte/animate";
   import { quadIn } from "svelte/easing";
   import { scale } from "svelte/transition";
@@ -41,7 +40,8 @@
     textColor: "#ffffff"
   });
 
-  setContext("subject-chain-disable-animation", writable(false));
+  let subjectChainAnimationDisabled = $state({ value: false });
+  setContext("subject-chain-disable-animation", subjectChainAnimationDisabled);
 
   let inputEl = $state<HTMLElement | null>(null);
 </script>
