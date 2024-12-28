@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
   import Button from "$lib/components/Button/Button.svelte";
-  import { changeFilter } from "../state/searchState";
+  import { changeFilter } from "../state/searchState.svelte";
 
   let { page, totalPages } = $derived($pageStore.data);
 

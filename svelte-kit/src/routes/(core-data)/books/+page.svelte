@@ -21,7 +21,7 @@
   import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
-  import { searchState } from "./state/searchState";
+  import { searchState } from "./state/searchState.svelte";
   import { afterDelete } from "./state/onDelete";
   import { afterNavigate } from "$app/navigation";
   import { uiState } from "./currentUiState.svelte";
@@ -116,7 +116,7 @@
           <div>
             <Alert type="warning">No books found</Alert>
 
-            {#if !hasPublicId && $searchState.activeFilterCount === 0}
+            {#if !hasPublicId && searchState.value.activeFilterCount === 0}
               <Alert class="mt-4" type="warning">
                 If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
                 <a href="/settings/account-sync">here</a>

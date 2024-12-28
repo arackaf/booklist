@@ -6,7 +6,7 @@
   import BookViewsMobile from "./BookViewsMobile.svelte";
   import MenuOptionsMobile from "./MenuOptionsMobile.svelte";
   import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
-  import { publicUser, searchState } from "../state/searchState";
+  import { searchState } from "../state/searchState.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import RawButton from "$lib/components/Button/RawButton.svelte";
@@ -24,7 +24,7 @@
   let mobileMenuOpen = $state(false);
 
   const resetSearch = () => {
-    quickSearchEl.value = $searchState.search;
+    quickSearchEl.value = searchState.value.search;
   };
 
   const closeMobileMenu = () => {
@@ -61,7 +61,7 @@
             autocomplete="off"
             bind:inputEl={quickSearchEl}
             onkeydown={evt => evt.key === "Enter" && updateSearchParam("search", evt.currentTarget.value)}
-            value={$searchState.search}
+            value={searchState.value.search}
             onblur={resetSearch}
             name="search"
             class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"

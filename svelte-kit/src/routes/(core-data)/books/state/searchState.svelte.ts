@@ -1,5 +1,6 @@
 import { derived } from "svelte/store";
-import { page } from "$app/stores";
+import { page as pageLegacy } from "$app/stores";
+import { page } from "$app/state";
 import { toHash } from "$lib/state/helpers";
 
 type SortValue = keyof typeof sortDisplayLookup;
@@ -16,64 +17,68 @@ export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal]
 
 const DEFAULT_SORT = "id-desc";
 
-export const publicUser = derived(page, $page => {
-  const searchParams = $page.url.searchParams;
-  return searchParams.get("user") || "";
-});
+export const publicUser = new (class {
+  value = $derived.by(() => {
+    const searchParams = page.url.searchParams;
+    return searchParams.get("user") || "";
+  });
+})();
 
-export const searchState = derived(page, $page => {
-  const searchParams = $page.url.searchParams;
+export const searchState = new (class {
+  value = $derived.by(() => {
+    const searchParams = page.url.searchParams;
 
-  const subjects = searchParams.getAll("subjects") ?? [];
-  const tags = searchParams.getAll("tags") ?? [];
-  const childSubjects = searchParams.get("child-subjects");
-  const noSubjects = searchParams.get("no-subjects") === "true";
+    const subjects = searchParams.getAll("subjects") ?? [];
+    const tags = searchParams.getAll("tags") ?? [];
+    const childSubjects = searchParams.get("child-subjects");
+    const noSubjects = searchParams.get("no-subjects") === "true";
 
-  const sort = searchParams.get("sort");
-  const sortString = sort ?? DEFAULT_SORT;
-  const [sortField, sortDirection] = sortString.split("-");
+    const sort = searchParams.get("sort");
+    const sortString = sort ?? DEFAULT_SORT;
+    const [sortField, sortDirection] = sortString.split("-");
 
-  const subjectHash = toHash<{ id: number; name: string }>($page.data.subjects);
-  const subjectsObjects = subjects.map(id => subjectHash[id]).filter(s => s);
+    const subjectHash = toHash<{ id: number; name: string }>(page.data.subjects);
+    const subjectsObjects = subjects.map(id => subjectHash[id]).filter(s => s);
 
-  const tagHash = toHash<{ id: number; name: string }>($page.data.tags);
-  const tagObjects = tags.map(id => tagHash[id]).filter(s => s);
+    const tagHash = toHash<{ id: number; name: string }>(page.data.tags);
+    const tagObjects = tags.map(id => tagHash[id]).filter(s => s);
 
-  const result = {
-    page: parseInt(searchParams.get("page")!) || 1,
-    search: searchParams.get("search") ?? "",
-    author: searchParams.get("author") ?? "",
-    publisher: searchParams.get("publisher") ?? "",
-    isRead: searchParams.get("is-read") ?? "",
-    subjects,
-    subjectsObjects,
-    childSubjects,
-    noSubjects,
-    tags,
-    tagObjects,
-    sort,
-    sortPacket: `${sortField}-${sortDirection}` as SortValue,
-    sortField,
-    sortDirection,
-    activeFilterCount: 0
-  };
+    const result = {
+      page: parseInt(searchParams.get("page")!) || 1,
+      search: searchParams.get("search") ?? "",
+      author: searchParams.get("author") ?? "",
+      publisher: searchParams.get("publisher") ?? "",
+      isRead: searchParams.get("is-read") ?? "",
+      subjects,
+      subjectsObjects,
+      childSubjects,
+      noSubjects,
+      tags,
+      tagObjects,
+      sort,
+      sortPacket: `${sortField}-${sortDirection}` as SortValue,
+      sortField,
+      sortDirection,
+      activeFilterCount: 0
+    };
 
-  type ResultKey = keyof typeof result;
+    type ResultKey = keyof typeof result;
 
-  const simpleFilters: ResultKey[] = ["search", "author", "publisher", "isRead"];
-  const arrayFilters: ResultKey[] = ["subjects", "tags"];
-  const toggleFilters: ResultKey[] = ["noSubjects", "childSubjects"];
+    const simpleFilters: ResultKey[] = ["search", "author", "publisher", "isRead"];
+    const arrayFilters: ResultKey[] = ["subjects", "tags"];
+    const toggleFilters: ResultKey[] = ["noSubjects", "childSubjects"];
 
-  result.activeFilterCount = [
-    ...simpleFilters.filter(key => result[key]),
-    ...arrayFilters.flatMap(key => result[key] as any),
-    ...toggleFilters.filter(key => result[key])
-  ].length;
+    result.activeFilterCount = [
+      ...simpleFilters.filter(key => result[key]),
+      ...arrayFilters.flatMap(key => result[key] as any),
+      ...toggleFilters.filter(key => result[key])
+    ].length;
 
-  return result;
-});
+    return result;
+  });
+})();
 
-export const changeFilter = derived(page, $page => {
+export const changeFilter = derived(pageLegacy, $page => {
   const { url } = $page;
   const userId = url.searchParams.get("userId");
   const page = parseInt(url.searchParams.get("page")!) || 1;

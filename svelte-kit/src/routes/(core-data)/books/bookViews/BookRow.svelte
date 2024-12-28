@@ -15,7 +15,7 @@
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
-  import { changeFilter } from "../state/searchState";
+  import { changeFilter } from "../state/searchState.svelte";
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
   import { booksReadSaving } from "../state/booksReadSavingState";
   import BookReadSetter from "../BookReadSetter.svelte";

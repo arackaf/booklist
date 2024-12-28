@@ -11,7 +11,7 @@
 
   import { endSaving, startSaving } from "../state/booksReadSavingState";
   import { selectedBooksLookup } from "../state/selectionState";
-  import { searchState } from "../state/searchState";
+  import { searchState } from "../state/searchState.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -69,7 +69,7 @@
   };
 
   const resetSearch = () => {
-    quickSearchEl.value = $searchState.search;
+    quickSearchEl.value = searchState.value.search;
   };
 
   $effect(() => {
@@ -85,7 +85,7 @@
   <Input
     autocomplete="off"
     bind:inputEl={quickSearchEl}
-    value={$searchState.search}
+    value={searchState.value.search}
     onblur={resetSearch}
     onkeydown={(evt: any) => {
       if (evt.code === "Enter") {

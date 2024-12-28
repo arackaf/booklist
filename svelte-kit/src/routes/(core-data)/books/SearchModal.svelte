@@ -1,7 +1,6 @@
 <script lang="ts">
   import { untrack } from "svelte";
-  import { get } from "svelte/store";
-  import type { Subject, Tag, UnwrapReadable } from "$data/types";
+  import type { Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/Button/Button.svelte";
   import Modal from "$lib/components/Modal.svelte";
@@ -16,7 +15,7 @@
   import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
   import Select from "$lib/components/form-elements/Select/Select.svelte";
 
-  import { searchState, publicUser, sortDisplayLookup } from "./state/searchState";
+  import { searchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
 
   type Props = {
     isOpen: boolean;
@@ -28,7 +27,7 @@
   let { isOpen, onHide = () => {}, tags, allSubjects }: Props = $props();
 
   let titleEl = $state<HTMLInputElement | null>(null);
-  let localSearchValues = $state<UnwrapReadable<typeof searchState>>({} as any);
+  let localSearchValues = $state<(typeof searchState)["value"]>({} as any);
   let localSubjects = $state<any[]>([]);
   let localTags = $state<any[]>([]);
   let noSubjects = $state(false);
@@ -49,7 +48,7 @@
   });
 
   function syncSearchState() {
-    localSearchValues = { ...get(searchState) };
+    localSearchValues = searchState.value;
     localSubjects = localSearchValues.subjects;
     localTags = localSearchValues.tags;
     noSubjects = localSearchValues.noSubjects;
@@ -82,8 +81,8 @@
 
 <Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
   <form action="/books" onformdata={onFormData} onsubmit={onHide}>
-    {#if $publicUser}
-      <input type="hidden" name="user" value={$publicUser} />
+    {#if publicUser.value}
+      <input type="hidden" name="user" value={publicUser.value} />
     {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
       <InputGroup labelText="Title">

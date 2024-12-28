@@ -1,5 +1,3 @@
-import type { Readable } from "svelte/store";
-
 export type Label = {
   id: number;
   name: string;
@@ -113,8 +111,6 @@ export type Color = {
   backgroundColor: string;
   order: number;
 };
-
-export type UnwrapReadable<T> = T extends Readable<infer U> ? U : never;
 
 export type DynamoUser = {
   pk: string;
