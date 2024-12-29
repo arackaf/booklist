@@ -5,7 +5,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
 
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
-  import { selectedBooksLookup } from "../state/selectionState";
+  import { selectionState } from "../state/selectionState.svelte";
   import Button from "$lib/components/Button/Button.svelte";
 
   type Props = {
@@ -18,7 +18,7 @@
   let bulkUnReadSaving = $state(false);
   let reloading = $state(false);
 
-  let selectedBooksIds = $derived(Object.keys($selectedBooksLookup).map(s => +s));
+  let selectedBooksIds = $derived(Object.keys(selectionState.selectedBooksLookup).map(s => +s));
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");

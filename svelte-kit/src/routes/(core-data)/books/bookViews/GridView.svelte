@@ -2,7 +2,7 @@
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
   import { changeFilter, searchState } from "../state/searchState.svelte";
-  import { selectedBooks, selectionState } from "../state/selectionState";
+  import { selectionState } from "../state/selectionState.svelte";
   import BookDetailsModal from "./BookDetailsModal.svelte";
 
   type Props = {
@@ -15,7 +15,7 @@
   let previewing = $state(false);
   let bookPreviewing = $state<Book | null>(null);
 
-  let allBooksSelected = $derived(books.length === $selectedBooks.length);
+  let allBooksSelected = $derived(books.length === selectionState.selectedBooks.length);
 
   function toggleCheckAll() {
     if (allBooksSelected) {

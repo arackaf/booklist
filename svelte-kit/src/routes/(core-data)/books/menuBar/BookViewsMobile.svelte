@@ -4,7 +4,7 @@
   import Button from "$lib/components/Button/Button.svelte";
 
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
-  import { selectedBooksLookup } from "../state/selectionState";
+  import { selectionState } from "../state/selectionState.svelte";
 
   type Props = {
     closeMobileMenu: () => void;
@@ -13,7 +13,7 @@
 
   let { closeMobileMenu, bookViewToUse }: Props = $props();
 
-  let selectedBooksIds = $derived(Object.keys($selectedBooksLookup).map(s => +s));
+  let selectedBooksIds = $derived(Object.keys(selectionState.selectedBooksLookup).map(s => +s));
   let anyBooksSelected = $derived(!!selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");

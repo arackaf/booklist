@@ -16,7 +16,7 @@
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
   import { changeFilter } from "../state/searchState.svelte";
-  import { selectionState, selectedBooksLookup } from "../state/selectionState";
+  import { selectionState } from "../state/selectionState.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
@@ -65,7 +65,7 @@
   {#if !isPublic}
     <td>
       <button style="font-size: 12pt" class="raw-button" onclick={() => selectionState.toggle(id)} aria-label="Select book">
-        <i class={"fal fa-fw " + (!!$selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
+        <i class={"fal fa-fw " + (!!selectionState.selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
       </button>
     </td>
   {/if}

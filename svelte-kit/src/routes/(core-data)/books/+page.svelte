@@ -11,7 +11,7 @@
 
   import MenuBar from "./menuBar/MenuBar.svelte";
 
-  import { selectedBooksLookup, selectionState } from "./state/selectionState";
+  import { selectionState } from "./state/selectionState.svelte";
 
   import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
@@ -82,10 +82,12 @@
     runUpdate(books, id, updates);
   };
 
+  function f() {}
+
   let booksSubjectsModalOpen = $state(false);
   let booksTagsModalOpen = $state(false);
 
-  let booksEditing = $derived(books.filter(b => $selectedBooksLookup[b.id]));
+  let booksEditing = $derived(books.filter(b => selectionState.selectedBooksLookup[b.id]));
   const editBooksSubjects = () => (booksSubjectsModalOpen = true);
   const editBooksTags = () => (booksTagsModalOpen = true);
 

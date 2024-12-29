@@ -10,7 +10,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
 
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
-  import { selectedBooksLookup } from "../state/selectionState";
+  import { selectionState } from "../state/selectionState.svelte";
   import { searchState } from "../state/searchState.svelte";
 
   type Props = {
@@ -25,7 +25,7 @@
   let reloading = $state(false);
   let quickSearchEl = $state<any>({});
 
-  let selectedBooksIds = $derived(Object.keys($selectedBooksLookup).map(s => +s));
+  let selectedBooksIds = $derived(Object.keys(selectionState.selectedBooksLookup).map(s => +s));
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
