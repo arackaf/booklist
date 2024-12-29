@@ -9,7 +9,7 @@
   import Button from "$lib/components/Button/Button.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
 
-  import { endSaving, startSaving } from "../state/booksReadSavingState";
+  import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectedBooksLookup } from "../state/selectionState";
   import { searchState } from "../state/searchState.svelte";
 

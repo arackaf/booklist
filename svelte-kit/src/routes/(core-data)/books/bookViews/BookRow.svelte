@@ -17,7 +17,7 @@
 
   import { changeFilter } from "../state/searchState.svelte";
   import { selectionState, selectedBooksLookup } from "../state/selectionState";
-  import { booksReadSaving } from "../state/booksReadSavingState";
+  import { booksReadSaving } from "../state/booksReadSavingState.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
 
@@ -38,7 +38,7 @@
   let isbn10 = $derived(isbn?.length === 10 ? isbn : isbn13To10(isbn));
 
   let readSaving = $state(false);
-  let multiReadSaving = $derived($booksReadSaving[id] == "1");
+  let multiReadSaving = $derived(booksReadSaving[id] == "1");
 
   let pendingDelete = $state(false);
   let deleting = $state(false);
