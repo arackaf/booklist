@@ -1,23 +1,25 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
   import Button from "$lib/components/Button/Button.svelte";
-  import { changeFilter } from "../state/searchState.svelte";
+  import { createChangeFilters } from "../state/searchState.svelte";
 
   let { page, totalPages } = $derived($pageStore.data);
+
+  const changeFilter = createChangeFilters();
 
   let canPageUp = $derived(page < totalPages);
   let canPageDown = $derived(page > 1);
   let canPageOne = $derived(page > 1);
   let canPageLast = $derived(page < totalPages);
 
-  let pageDownHref = $derived($changeFilter.pageTo(page - 1, totalPages));
-  let pageUpHref = $derived($changeFilter.pageTo(page + 1, totalPages));
-  let pageLastHref = $derived($changeFilter.pageTo(totalPages, totalPages));
+  let pageDownHref = $derived(changeFilter.pageTo(page - 1, totalPages));
+  let pageUpHref = $derived(changeFilter.pageTo(page + 1, totalPages));
+  let pageLastHref = $derived(changeFilter.pageTo(totalPages, totalPages));
 </script>
 
 <div class="flex items-center gap-2">
   <div class="flex">
-    <Button href={$changeFilter.pageTo(1)} disabled={!canPageOne} class="h-8 connect-right hidden sm:flex" icon={true}>
+    <Button href={changeFilter.pageTo(1)} disabled={!canPageOne} class="h-8 connect-right hidden sm:flex" icon={true}>
       <span class="sr">Go to page 1</span>
       <i class="fal fa-fw fa-angle-double-left"></i>
     </Button>

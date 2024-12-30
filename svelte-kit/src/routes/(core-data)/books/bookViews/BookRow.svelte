@@ -15,7 +15,7 @@
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
-  import { changeFilter } from "../state/searchState.svelte";
+  import { createChangeFilters } from "../state/searchState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
@@ -30,6 +30,8 @@
   };
 
   let { isPublic, book, subjects, tags, previewBook }: Props = $props();
+
+  const changeFilter = createChangeFilters();
 
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;
@@ -138,12 +140,12 @@
   </td>
   <td>
     <div class="mt-1">
-      <DisplaySelectedSubjects vertical={true} currentlySelected={book.subjects} {subjects} href={s => $changeFilter.addSubject(s.id)} />
+      <DisplaySelectedSubjects vertical={true} currentlySelected={book.subjects} {subjects} href={s => changeFilter.addSubject(s.id)} />
     </div>
   </td>
   <td>
     <div class="mt-1">
-      <DisplaySelectedTags vertical={true} currentlySelected={book.tags} {tags} href={t => $changeFilter.addTag(t.id)} />
+      <DisplaySelectedTags vertical={true} currentlySelected={book.tags} {tags} href={t => changeFilter.addTag(t.id)} />
     </div>
   </td>
   <td>

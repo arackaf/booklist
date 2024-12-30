@@ -78,20 +78,20 @@ export const searchState = new (class {
   });
 })();
 
-export const changeFilter = derived(pageLegacy, $page => {
-  const { url } = $page;
-  const userId = url.searchParams.get("userId");
-  const page = parseInt(url.searchParams.get("page")!) || 1;
+export function createChangeFilters() {
+  const url = $derived(page.url);
+  const userId = $derived(url.searchParams.get("userId"));
+  const pageNumber = $derived(parseInt(url.searchParams.get("page")!) || 1);
 
   function pageTo(val: number, totalPages?: number) {
-    if (val === 1 && page === 1) {
+    if (val === 1 && pageNumber === 1) {
       return null;
     }
     if (val === 1) {
       return urlWithoutFilter(url, "page");
     }
 
-    if (val === page || val < 1 || val > totalPages!) {
+    if (val === pageNumber || val < 1 || val > totalPages!) {
       return null;
     }
 
@@ -149,7 +149,7 @@ export const changeFilter = derived(pageLegacy, $page => {
       return urlWithArrayFilter(url, "tags", newTags);
     }
   };
-});
+}
 
 const urlWithoutFilter = (url: URL, filter: string) => {
   const newUrl = new URL(url);

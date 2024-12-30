@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
-  import { changeFilter, searchState } from "../state/searchState.svelte";
+  import { createChangeFilters, searchState } from "../state/searchState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
   import BookDetailsModal from "./BookDetailsModal.svelte";
 
@@ -12,6 +12,8 @@
     tags: Tag[];
   };
   let { isPublic, books, subjects, tags }: Props = $props();
+
+  const changeFilter = createChangeFilters();
   let previewing = $state(false);
   let bookPreviewing = $state<Book | null>(null);
 
@@ -45,7 +47,7 @@
       {/if}
       <th class="p-0" style="width: 60px"></th>
       <th class="p-0" style="min-width: 200px">
-        <a class="bold" href={$changeFilter.withSort("title")}>
+        <a class="bold" href={changeFilter.withSort("title")}>
           Title
           {#if searchState.value.sortField == "title"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}
             ></i>{/if}
@@ -56,14 +58,14 @@
       <th class="p-0" style="min-width: 90px;"></th>
       <th class="p-0"></th>
       <th class="p-0" style="min-width: 85px; ">
-        <a class="bold" href={$changeFilter.withSort("pages")}>
+        <a class="bold" href={changeFilter.withSort("pages")}>
           Pages
           {#if searchState.value.sortField == "pages"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}
             ></i>{/if}
         </a>
       </th>
       <th class="p-0">
-        <a class="bold" href={$changeFilter.withSort("id")}>
+        <a class="bold" href={changeFilter.withSort("id")}>
           Added
           {#if searchState.value.sortField == "id"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
