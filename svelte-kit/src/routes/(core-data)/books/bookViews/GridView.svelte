@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
   import BookRow from "./BookRow.svelte";
-  import { createChangeFilters, searchState } from "../state/searchState.svelte";
+  import { createChangeFilters, SearchState } from "../state/searchState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
   import BookDetailsModal from "./BookDetailsModal.svelte";
 
@@ -12,6 +12,8 @@
     tags: Tag[];
   };
   let { isPublic, books, subjects, tags }: Props = $props();
+
+  const searchState = new SearchState();
 
   const changeFilter = createChangeFilters();
   let previewing = $state(false);

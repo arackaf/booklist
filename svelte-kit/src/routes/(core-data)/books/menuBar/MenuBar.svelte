@@ -6,7 +6,7 @@
   import BookViewsMobile from "./BookViewsMobile.svelte";
   import MenuOptionsMobile from "./MenuOptionsMobile.svelte";
   import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
-  import { searchState } from "../state/searchState.svelte";
+  import { SearchState } from "../state/searchState.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import RawButton from "$lib/components/Button/RawButton.svelte";
@@ -19,6 +19,8 @@
   };
 
   let { isPublic, bookViewToUse, totalBooks }: Props = $props();
+
+  const searchState = new SearchState();
 
   let quickSearchEl = $state<any>({});
   let mobileMenuOpen = $state(false);

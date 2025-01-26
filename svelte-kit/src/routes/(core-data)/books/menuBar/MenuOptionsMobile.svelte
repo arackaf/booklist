@@ -11,7 +11,7 @@
 
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
-  import { searchState } from "../state/searchState.svelte";
+  import { SearchState } from "../state/searchState.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -19,6 +19,8 @@
   };
 
   let { isPublic, closeMobileMenu }: Props = $props();
+
+  const searchState = new SearchState();
 
   let bulkReadSaving = $state(false);
   let bulkUnReadSaving = $state(false);

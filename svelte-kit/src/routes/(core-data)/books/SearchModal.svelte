@@ -15,7 +15,7 @@
   import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
   import Select from "$lib/components/form-elements/Select/Select.svelte";
 
-  import { searchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
+  import { SearchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
 
   type Props = {
     isOpen: boolean;
@@ -25,6 +25,8 @@
   };
 
   let { isOpen, onHide = () => {}, tags, allSubjects }: Props = $props();
+
+  const searchState = new SearchState();
 
   let titleEl = $state<HTMLInputElement | null>(null);
   let localSearchValues = $state<(typeof searchState)["value"]>({} as any);

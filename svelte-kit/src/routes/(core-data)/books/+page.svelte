@@ -21,13 +21,15 @@
   import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
   import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
   import type BookTagSetterType from "./BookTagSetter.svelte";
-  import { searchState } from "./state/searchState.svelte";
+  import { SearchState } from "./state/searchState.svelte";
   import { afterDelete } from "./state/onDelete";
   import { afterNavigate } from "$app/navigation";
   import { uiState } from "./currentUiState.svelte";
 
   let { data } = $props();
   let { books, subjects, tags, isPublic, hasPublicId, colors, defaultBookView, totalBooks } = $derived(data);
+
+  const searchState = new SearchState();
 
   const overrideBookView = (newBookView: string) => {
     uiState.bookViewOverride = newBookView;

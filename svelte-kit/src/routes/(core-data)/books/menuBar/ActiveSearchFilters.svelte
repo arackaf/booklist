@@ -1,12 +1,14 @@
 <script lang="ts">
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
-  import { searchState, createChangeFilters, getSortDisplay } from "../state/searchState.svelte";
+  import { SearchState, createChangeFilters, getSortDisplay } from "../state/searchState.svelte";
 
   type Props = {
     totalBooks: number;
   };
 
   let { totalBooks }: Props = $props();
+
+  const searchState = new SearchState();
   const changeFilter = createChangeFilters();
 
   let resultsDisplay = $derived(totalBooks ? `${totalBooks} Book${totalBooks === 1 ? "" : "s"}` : "");

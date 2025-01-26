@@ -24,7 +24,7 @@ export const publicUser = new (class {
   });
 })();
 
-export const searchState = new (class {
+export class SearchState {
   value = $derived.by(() => {
     const searchParams = page.url.searchParams;
 
@@ -76,7 +76,7 @@ export const searchState = new (class {
 
     return result;
   });
-})();
+}
 
 export function createChangeFilters() {
   const url = $derived(page.url);
