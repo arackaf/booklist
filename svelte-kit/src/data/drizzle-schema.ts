@@ -1,4 +1,4 @@
-import type { EditorialReview, PreviewPacket } from "$data/types";
+import type { EditorialReview, PreviewPacket } from "./types";
 
 import { integer, serial, timestamp, boolean, json, pgTable, varchar, text } from "drizzle-orm/pg-core";
 
