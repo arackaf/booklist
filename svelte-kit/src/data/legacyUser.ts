@@ -1,11 +1,7 @@
-import { SALT } from "$env/static/private";
-
 import { db, getQueryPacket, getPutPacket } from "./dynamoHelpers";
 
 const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
 const getUserReverseAliasKey = (userId: string) => `UserReverseAlias#${userId}`;
-
-const salt = SALT;
 
 const legacyUserCache = new Map<string, string>();
 
