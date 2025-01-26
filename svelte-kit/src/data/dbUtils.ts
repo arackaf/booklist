@@ -1,30 +1,34 @@
 import pg from "pg";
 
-import { env } from "$env/dynamic/private";
-
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle-schema";
 
-import { building } from "$app/environment";
-
 export let db: PgDatabase<any, any>;
 
-if (building) {
-  db = drizzlePg.mock({ schema });
-} else {
-  const { Pool } = pg;
+type InitializeProps = {
+  useMockDb?: boolean;
+  connectionString: string;
+};
+export function initialize(props: InitializeProps) {
+  const { useMockDb, connectionString } = props;
 
-  const pool = new Pool({
-    connectionString: env.FLY_DB
-  });
+  if (useMockDb) {
+    db = drizzlePg.mock({ schema });
+  } else {
+    const { Pool } = pg;
 
-  pool.on("error", (err, client) => {
-    console.error("Unexpected error on idle client", err);
-    process.exit(-1);
-  });
+    const pool = new Pool({
+      connectionString: connectionString
+    });
 
-  db = drizzlePg({ schema, client: pool });
+    pool.on("error", (err, client) => {
+      console.error("Unexpected error on idle client", err);
+      process.exit(-1);
+    });
+
+    db = drizzlePg({ schema, client: pool });
+  }
 }
 
 export type SubjectEditFields = {

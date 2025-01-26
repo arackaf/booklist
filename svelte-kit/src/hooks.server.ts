@@ -4,6 +4,8 @@ import GoogleProvider from "@auth/core/providers/google";
 import GithubProvider from "@auth/core/providers/github";
 
 import { env } from "$env/dynamic/private";
+import { building } from "$app/environment";
+
 const {
   GITHUB_AUTH_CLIENT_ID,
   GITHUB_AUTH_CLIENT_SECRET,
@@ -19,6 +21,12 @@ import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 import { getUserSync } from "$data/legacyUser";
+import { initialize } from "$data/dbUtils";
+
+initialize({
+  useMockDb: building,
+  connectionString: env.FLY_DB
+});
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
