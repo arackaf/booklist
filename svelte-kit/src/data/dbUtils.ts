@@ -4,12 +4,13 @@ import type { PgDatabase } from "drizzle-orm/pg-core";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle-schema";
 
-export let db: PgDatabase<any, any>;
+export let db: PgDatabase<any, any> = drizzlePg.mock({ schema });
 
 type InitializeProps = {
   useMockDb?: boolean;
   connectionString: string;
 };
+
 export function initialize(props: InitializeProps) {
   const { useMockDb, connectionString } = props;
 
