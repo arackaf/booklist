@@ -7,6 +7,7 @@ import { env } from "$env/dynamic/private";
 import { building } from "$app/environment";
 
 const {
+  BOOKLIST_DYNAMO,
   GITHUB_AUTH_CLIENT_ID,
   GITHUB_AUTH_CLIENT_SECRET,
   GOOGLE_AUTH_CLIENT_ID,
@@ -22,10 +23,17 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 import { getUserSync } from "$data/legacyUser";
 import { initialize } from "$data/dbUtils";
+import { initializeDynamo } from "$data/dynamoHelpers";
 
 initialize({
   useMockDb: building,
   connectionString: env.FLY_DB
+});
+initializeDynamo({
+  tableName: BOOKLIST_DYNAMO,
+  authTableName: DYNAMO_AUTH_TABLE,
+  accessKey: AMAZON_ACCESS_KEY,
+  secretKey: AMAZON_SECRET_KEY
 });
 
 const dynamoConfig: DynamoDBClientConfig = {
