@@ -2,7 +2,6 @@ import { env } from "$env/dynamic/private";
 const { BOOKLIST_DYNAMO, DYNAMO_AUTH_TABLE, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY } = env;
 
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
-
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import type { PutCommandInput, GetCommandInput, QueryCommandInput, UpdateCommandInput, TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb";
 
