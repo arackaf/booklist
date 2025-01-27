@@ -40,9 +40,7 @@ const dynamoConfig: DynamoDBClientConfig = {
 
 const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
 
-export { dynamo };
-
-export const db = {
+export const dynamoOperations = {
   async put(packet: PutCommandInput) {
     await dynamo.put(packet);
   },

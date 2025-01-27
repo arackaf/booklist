@@ -1,4 +1,4 @@
-import { db, getQueryPacket } from "./dynamoHelpers";
+import { dynamoOperations, getQueryPacket } from "./dynamoHelpers";
 
 const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
 
@@ -12,7 +12,7 @@ export async function getUserSync(userId: string): Promise<string | null> {
   const key = getUserAliasKey(userId);
 
   try {
-    const syncEntry = await db.queryOne(
+    const syncEntry = await dynamoOperations.queryOne(
       getQueryPacket(` pk = :key `, {
         ExpressionAttributeValues: { ":key": key }
       })
