@@ -11,7 +11,7 @@ type InitializeProps = {
   connectionString: string;
 };
 
-export function initialize(props: InitializeProps) {
+export function initializePostgres(props: InitializeProps) {
   const { useMockDb, connectionString } = props;
 
   if (useMockDb) {
