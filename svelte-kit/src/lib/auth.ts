@@ -21,7 +21,6 @@ export const initializeAuth = () => {
         redirectUri: "http://localhost:5173/auth/callback/google"
       }
     },
-    user: { additionalFields: { abc: createFieldAttribute("string") } },
     // session: { additionalFields: { abc: createFieldAttribute("string") } },
     databaseHooks: {
       // session: {
@@ -32,24 +31,13 @@ export const initializeAuth = () => {
       //     }
       //   }
       // },
-      user: {
+      account: {
         create: {
           before: async obj => {
-            const allAccounts = await db.select().from(account);
-            console.log({ allAccounts });
-            console.log("BEFORE USER CREATE", obj);
-            obj.abc = "DEF";
-            console.log(obj);
-            //obj.BAAAARRRRR = 808;
-          }
-        }
-      },
-      session: {
-        create: {
-          before: async obj => {
-            console.log("BEFORE SESSION CREATE", obj);
-            obj.pop = "goes";
-            //obj.BAAAARRRRR = 808;
+            console.log("BEFORE ACCOUNT CREATE", obj);
+          },
+          after: async obj => {
+            console.log("AFTER ACCOUNT CREATE", obj);
           }
         }
       }
