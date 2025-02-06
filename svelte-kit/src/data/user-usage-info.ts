@@ -1,7 +1,7 @@
 import { eq, max, count, desc } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
 import { books, userInfoCache } from "./drizzle-schema";
-import { db as dynamo, getAuthGSI1QueryPacket, getAuthQueryPacket, getQueryPacket } from "./dynamoHelpers";
+import { dynamoOperations, getAuthGSI1QueryPacket, getAuthQueryPacket, getQueryPacket } from "./dynamoHelpers";
 import type { StoredUserInfo } from "./types";
 
 export type UserUsageEntry = Awaited<ReturnType<typeof getUserUsageInfo>>[0];
@@ -69,7 +69,7 @@ export const getUserInfoFromDynamo = async (userId: string): Promise<StoredUserI
 const lookupAliasId = async (userId: string): Promise<string | null> => {
   const pk = `UserReverseAlias#${userId}`;
 
-  const aliasRecordMaybe = await dynamo.query(
+  const aliasRecordMaybe = await dynamoOperations.query(
     getQueryPacket(` pk = :pk `, {
       ExpressionAttributeValues: { ":pk": pk }
     })
@@ -95,7 +95,10 @@ const getProviderUser = async (userId: string): Promise<StoredUserInfo | null> =
     ExpressionAttributeValues: { ":pk": githubKey, ":sk": userKey }
   });
 
-  const [googleUserMaybe, githubUserMaybe] = await Promise.all([dynamo.query(googleQueryPacket), dynamo.query(githubQueryPacket)]);
+  const [googleUserMaybe, githubUserMaybe] = await Promise.all([
+    dynamoOperations.query(googleQueryPacket),
+    dynamoOperations.query(githubQueryPacket)
+  ]);
 
   if (!googleUserMaybe.length && !githubUserMaybe.length) {
     console.log("Google nor Github found");
@@ -105,7 +108,7 @@ const getProviderUser = async (userId: string): Promise<StoredUserInfo | null> =
   const providerRecord = googleUserMaybe[0] ?? githubUserMaybe[0];
   const { pk, provider } = providerRecord;
 
-  const userRecordMaybe = await dynamo.query(
+  const userRecordMaybe = await dynamoOperations.query(
     getAuthQueryPacket(` pk = :pk AND sk = :sk `, {
       ExpressionAttributeValues: { ":pk": pk, ":sk": pk }
     })

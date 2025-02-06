@@ -1,4 +1,4 @@
-import { db, getGetPacket, getPutPacket, getUpdatePacket } from "./dynamoHelpers";
+import { dynamoOperations, getGetPacket, getPutPacket, getUpdatePacket } from "./dynamoHelpers";
 import type { DynamoUser } from "./types";
 
 const getUserKey = (userId: string) => `UserId#${userId}`;
@@ -8,7 +8,7 @@ export async function getUser(userId: string, consistentRead: boolean = false): 
 
   try {
     let start = +new Date();
-    let userFound: DynamoUser | null = (await db.get(getGetPacket(userKey, userKey, { ConsistentRead: consistentRead }))) as DynamoUser;
+    let userFound: DynamoUser | null = (await dynamoOperations.get(getGetPacket(userKey, userKey, { ConsistentRead: consistentRead }))) as DynamoUser;
     let end = +new Date();
 
     console.log("Public user lookup time:", end - start);
@@ -32,13 +32,13 @@ export async function createUser(userId: string) {
     publicBooksHeader: ""
   };
 
-  db.put(getPutPacket(userObject));
+  dynamoOperations.put(getPutPacket(userObject));
 }
 
 export async function updateUser(userId: string, isPublic: boolean, publicName: string, publicBooksHeader: string) {
   const userKey = getUserKey(userId);
 
-  await db.update(
+  await dynamoOperations.update(
     getUpdatePacket(userKey, userKey, {
       UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
       ExpressionAttributeValues: { ":isPublic": isPublic, ":publicName": publicName, ":publicBooksHeader": publicBooksHeader }

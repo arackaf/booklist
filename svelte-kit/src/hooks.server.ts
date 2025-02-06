@@ -4,7 +4,10 @@ import GoogleProvider from "@auth/core/providers/google";
 import GithubProvider from "@auth/core/providers/github";
 
 import { env } from "$env/dynamic/private";
+import { building } from "$app/environment";
+
 const {
+  BOOKLIST_DYNAMO,
   GITHUB_AUTH_CLIENT_ID,
   GITHUB_AUTH_CLIENT_SECRET,
   GOOGLE_AUTH_CLIENT_ID,
@@ -19,6 +22,19 @@ import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
 import { getUserSync } from "$data/legacyUser";
+import { initializePostgres } from "$data/dbUtils";
+import { initializeDynamo } from "$data/dynamoHelpers";
+
+initializePostgres({
+  useMockDb: building,
+  connectionString: env.FLY_DB
+});
+initializeDynamo({
+  tableName: BOOKLIST_DYNAMO,
+  authTableName: DYNAMO_AUTH_TABLE,
+  accessKey: AMAZON_ACCESS_KEY,
+  secretKey: AMAZON_SECRET_KEY
+});
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {

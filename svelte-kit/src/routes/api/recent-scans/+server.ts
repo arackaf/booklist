@@ -1,5 +1,5 @@
-import { db, getQueryPacket } from "$data/dynamoHelpers";
 import { json } from "@sveltejs/kit";
+import { dynamoOperations, getQueryPacket } from "$data/dynamoHelpers";
 
 const getScanResultPk = (userId: string) => `User#${userId}#ScanResult`;
 
@@ -20,7 +20,7 @@ export async function GET({ url, locals }) {
       }
     : null;
 
-  const results = await db.pagedQuery(
+  const results = await dynamoOperations.pagedQuery(
     getQueryPacket(`pk = :pk`, {
       ExpressionAttributeValues: { ":pk": pk },
       ExclusiveStartKey: pageKey ?? void 0,

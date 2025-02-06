@@ -2,7 +2,7 @@ import { json } from "@sveltejs/kit";
 
 import type { BookSearch } from "$data/types";
 import { searchBooks } from "$data/books";
-import { DEFAULT_BOOKS_PAGE_SIZE } from "$lib/state/dataConstants";
+import { DEFAULT_BOOKS_PAGE_SIZE } from "$data/constants";
 
 export async function GET({ url, setHeaders, locals }) {
   const session = await locals.getSession();
