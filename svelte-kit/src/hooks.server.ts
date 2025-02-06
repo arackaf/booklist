@@ -123,16 +123,4 @@ async function handleFn({ event, resolve }: any) {
   return response;
 }
 
-async function deployedAuthOverride({ event, resolve }: any) {
-  const { url } = event;
-
-  if (url.hostname.indexOf(".vercel.app") !== -1) {
-    event.locals.getSession = () => ({
-      user: {},
-      userId: "test-user1"
-    });
-  }
-
-  return resolve(event);
-}
-export const handle = sequence(handleFn, auth.handle, deployedAuthOverride);
+export const handle = sequence(handleFn, auth.handle);
