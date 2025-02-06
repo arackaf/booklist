@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { signIn } from "@auth/sveltekit/client";
+  //import { signIn } from "@auth/sveltekit/client";
 
   import Button from "$lib/components/ui/button/button.svelte";
+  import { page } from "$app/stores";
+  import { authClient } from "$lib/auth-client";
 
   let { loggedIn } = $derived($page.data);
 </script>
@@ -36,10 +37,21 @@
                 class="self-start"
                 variant="default"
                 onclick={() => {
-                  signIn("", { callbackUrl: "/books" });
+                  authClient.signIn.social({
+                    provider: "google"
+                  }); //("", { callbackUrl: "/books" });
                 }}
               >
                 Login or create an account
+              </Button>
+              <Button
+                class="self-start"
+                theme="primary"
+                onclick={() => {
+                  authClient.signOut();
+                }}
+              >
+                Logout
               </Button>
             {:else}
               <Button class="self-start" variant="default" href="/books">Go to your library</Button>

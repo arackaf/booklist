@@ -5,7 +5,7 @@ import type { Login } from "$lib/types";
 export async function load({ locals, isDataRequest, request, cookies, depends }) {
   depends("app:root");
 
-  const session = await locals.getSession();
+  const session = null; // await locals.getSession();
 
   const userAgent = request.headers.get("User-Agent")!;
   const isMobile = /mobile/i.test(userAgent);

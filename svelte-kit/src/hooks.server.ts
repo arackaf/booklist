@@ -3,6 +3,9 @@ import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
 import GithubProvider from "@auth/core/providers/github";
 
+import { auth, initializeAuth } from "$lib/auth"; // path to your auth file
+import { svelteKitHandler } from "better-auth/svelte-kit";
+
 import { env } from "$env/dynamic/private";
 import { building } from "$app/environment";
 
@@ -34,6 +37,7 @@ initializeDynamo({
   accessKey: AMAZON_ACCESS_KEY,
   secretKey: AMAZON_SECRET_KEY
 });
+initializeAuth();
 
 const dynamoConfig: DynamoDBClientConfig = {
   credentials: {
@@ -52,7 +56,7 @@ const client = DynamoDBDocument.from(new DynamoDB(dynamoConfig), {
   }
 });
 
-const auth = SvelteKitAuth({
+const old_auth = SvelteKitAuth({
   providers: [
     GoogleProvider({
       clientId: GOOGLE_AUTH_CLIENT_ID,
@@ -114,4 +118,8 @@ async function handleFn({ event, resolve }: any) {
   return response;
 }
 
-export const handle = sequence(handleFn, auth.handle);
+async function svelteKitAuth({ event, resolve }) {
+  return svelteKitHandler({ event, resolve, auth });
+}
+
+export const handle = sequence(handleFn, svelteKitAuth);
