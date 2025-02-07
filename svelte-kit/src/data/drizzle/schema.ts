@@ -1,19 +1,18 @@
 import { pgTable, index, serial, varchar, timestamp, json, integer, boolean, text, uniqueIndex, bigint } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import type { EditorialReview, PreviewPacket } from "$data/types";
 
 export const books = pgTable(
   "books",
   {
     id: serial().primaryKey().notNull(),
     userId: varchar("user_id", { length: 50 }).notNull(),
-    dateAdded: timestamp("date_added").notNull(),
+    dateAdded: timestamp("date_added", { mode: "string" }).notNull(),
     title: varchar({ length: 250 }).notNull(),
-    authors: json().$type<string[]>(),
+    authors: json(),
     isbn: varchar({ length: 25 }),
     pages: integer(),
     isRead: boolean("is_read").notNull(),
-    similarBooks: json("similar_books").$type<string[] | null>(),
+    similarBooks: json("similar_books"),
     similarBooksLastSync: timestamp("similar_books_last_sync", { mode: "string" }).default("1990-01-01 00:00:00").notNull(),
     similarBooksLastSyncSuccess: boolean("similar_books_last_sync_success"),
     similarBooksLastSyncFailureReason: text("similar_books_last_sync_failure_reason"),
@@ -23,14 +22,14 @@ CASE
     ELSE false
 END`),
     mobileImage: varchar("mobile_image", { length: 250 }),
-    mobileImagePreview: json("mobile_image_preview").$type<string | PreviewPacket | null>(),
+    mobileImagePreview: json("mobile_image_preview"),
     smallImage: varchar("small_image", { length: 250 }),
-    smallImagePreview: json("small_image_preview").$type<string | PreviewPacket | null>(),
+    smallImagePreview: json("small_image_preview"),
     mediumImage: varchar("medium_image", { length: 250 }),
-    mediumImagePreview: json("medium_image_preview").$type<string | PreviewPacket | null>(),
+    mediumImagePreview: json("medium_image_preview"),
     publicationDate: varchar("publication_date", { length: 30 }),
     publisher: varchar({ length: 100 }),
-    editorialReviews: json("editorial_reviews").$type<EditorialReview[]>()
+    editorialReviews: json("editorial_reviews")
   },
   table => [
     index("idx_dateadded_user").using("btree", table.dateAdded.desc().nullsFirst().op("text_ops"), table.userId.asc().nullsLast().op("text_ops")),
@@ -112,13 +111,13 @@ export const similarBooks = pgTable(
   {
     id: serial().primaryKey().notNull(),
     title: varchar({ length: 250 }).notNull(),
-    authors: json().$type<string[]>(),
+    authors: json(),
     authorsLastManualSync: timestamp("authors_last_manual_sync", { mode: "string" }),
     isbn: varchar({ length: 25 }).notNull(),
     mobileImage: varchar("mobile_image", { length: 250 }),
-    mobileImagePreview: json("mobile_image_preview").$type<string | PreviewPacket | null>(),
+    mobileImagePreview: json("mobile_image_preview"),
     smallImage: varchar("small_image", { length: 250 }),
-    smallImagePreview: json("small_image_preview").$type<string | PreviewPacket | null>()
+    smallImagePreview: json("small_image_preview")
   },
   table => [
     index("idx_similarbooks_authors_last_sync").using("btree", table.authorsLastManualSync.asc().nullsLast().op("timestamp_ops")),
