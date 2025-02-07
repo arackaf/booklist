@@ -70,7 +70,7 @@ export const booksSubjects = pgTable(
   "books_subjects",
   {
     id: serial().primaryKey().notNull(),
-    userId: varchar("user_id", { length: 50 }).default(""),
+    userId: varchar("user_id", { length: 50 }),
     book: integer().notNull(),
     subject: integer().notNull()
   },
@@ -94,7 +94,7 @@ export const booksTags = pgTable(
   "books_tags",
   {
     id: serial().primaryKey().notNull(),
-    userId: varchar("user_id", { length: 50 }).default(""),
+    userId: varchar("user_id", { length: 50 }),
     book: integer().notNull(),
     tag: integer().notNull()
   },
