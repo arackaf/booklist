@@ -114,7 +114,7 @@ export const similarBooks = pgTable(
     title: varchar({ length: 250 }).notNull(),
     authors: json().$type<string[]>(),
     authorsLastManualSync: timestamp("authors_last_manual_sync", { mode: "string" }),
-    isbn: varchar({ length: 25 }),
+    isbn: varchar({ length: 25 }).notNull(),
     mobileImage: varchar("mobile_image", { length: 250 }),
     mobileImagePreview: json("mobile_image_preview").$type<string | PreviewPacket | null>(),
     smallImage: varchar("small_image", { length: 250 }),
