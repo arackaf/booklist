@@ -1,5 +1,5 @@
-import { db } from "$data/dbUtils.js";
-import { books } from "$data/drizzle-schema.js";
+import { db } from "$data/dbUtils";
+import { books } from "$data/drizzle/schema";
 import { json } from "@sveltejs/kit";
 
 import { env } from "$env/dynamic/private";

@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { booksTags, tags } from "./drizzle-schema";
+import { booksTags, tags } from "./drizzle/schema";
 import { db, executeDrizzle } from "./dbUtils";
 import type { Tag, TagEditFields } from "./types";
 

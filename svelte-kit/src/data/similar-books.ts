@@ -1,6 +1,6 @@
 import { and, eq, exists, inArray, getTableColumns, or, sql, type SQLWrapper, like, desc, isNotNull } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
-import { booksSubjects, books as booksTable, similarBooks } from "./drizzle-schema";
+import { booksSubjects, books as booksTable, similarBooks } from "./drizzle/schema";
 import type { BookImages } from "./types";
 
 type QueryProps = {

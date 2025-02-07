@@ -2,9 +2,9 @@ import { json } from "@sveltejs/kit";
 
 import orderBy from "lodash/orderBy";
 
-import { getPublicId } from "$lib/util/getPublicId.js";
-import { db, executeDrizzle } from "$data/dbUtils.js";
-import { books as booksTable, similarBooks } from "$data/drizzle-schema.js";
+import { getPublicId } from "$lib/util/getPublicId";
+import { db, executeDrizzle } from "$data/dbUtils";
+import { books as booksTable, similarBooks } from "$data/drizzle/schema";
 import { and, eq, inArray } from "drizzle-orm";
 
 export async function POST({ locals, request }) {

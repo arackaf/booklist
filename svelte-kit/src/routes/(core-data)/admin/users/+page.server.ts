@@ -1,5 +1,5 @@
 import { db, executeDrizzle } from "$data/dbUtils";
-import { userInfoCache } from "$data/drizzle-schema.js";
+import { userInfoCache } from "$data/drizzle/schema";
 import type { StoredUserInfo } from "$data/types.js";
 import { getUserInfoFromDynamo, getUserUsageInfo, type UserUsageEntry } from "$data/user-usage-info";
 import { redirect } from "@sveltejs/kit";

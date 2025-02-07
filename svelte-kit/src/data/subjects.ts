@@ -1,5 +1,5 @@
 import { and, eq, exists, like, or, sql } from "drizzle-orm";
-import { booksSubjects, subjects } from "./drizzle-schema";
+import { booksSubjects, subjects } from "./drizzle/schema";
 import { type SubjectEditFields, executeDrizzle, db } from "./dbUtils";
 import type { Subject } from "./types";
 

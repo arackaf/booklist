@@ -2,7 +2,7 @@ import pg from "pg";
 
 import type { PgDatabase } from "drizzle-orm/pg-core";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
-import * as schema from "./drizzle-schema";
+import * as schema from "./drizzle/schema";
 
 export let db: PgDatabase<any, any> = drizzlePg.mock({ schema });
 

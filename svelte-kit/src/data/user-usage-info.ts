@@ -1,6 +1,6 @@
 import { eq, max, count, desc } from "drizzle-orm";
 import { db, executeDrizzle } from "./dbUtils";
-import { books, userInfoCache } from "./drizzle-schema";
+import { books, userInfoCache } from "./drizzle/schema";
 import { dynamoOperations, getAuthGSI1QueryPacket, getAuthQueryPacket, getQueryPacket } from "./dynamoHelpers";
 import type { StoredUserInfo } from "./types";
 

@@ -1,5 +1,5 @@
 import { integer, serial, timestamp, boolean, json, pgTable, varchar, text } from "drizzle-orm/pg-core";
-import type { EditorialReview, PreviewPacket } from "./types";
+import type { EditorialReview, PreviewPacket } from "../types";
 
 export const books = pgTable("books", {
   id: serial("id").primaryKey(),
