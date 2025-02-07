@@ -38,7 +38,8 @@
                 variant="default"
                 onclick={() => {
                   authClient.signIn.social({
-                    provider: "google"
+                    provider: "google",
+                    callbackURL: "/books"
                   }); //("", { callbackUrl: "/books" });
                 }}
               >
