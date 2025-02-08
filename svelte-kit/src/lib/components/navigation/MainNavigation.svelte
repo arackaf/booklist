@@ -75,7 +75,7 @@
   ];
 </script>
 
-<header class="z-50 sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+<header class="z-50 sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background">
   {#if loggedInUser}
     <ProfilePanel {userSummary} {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   {/if}
