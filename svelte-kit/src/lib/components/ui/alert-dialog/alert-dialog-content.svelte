@@ -4,10 +4,18 @@
   import { cn } from "$lib/utils.js";
   import { fade, scale } from "svelte/transition";
 
-  let { ref = $bindable(null), class: className, children, ...restProps }: AlertDialogPrimitive.ContentProps = $props();
+  let {
+    ref = $bindable(null),
+    class: className,
+    children,
+    portalProps,
+    ...restProps
+  }: WithoutChild<AlertDialogPrimitive.ContentProps> & {
+    portalProps?: AlertDialogPrimitive.PortalProps;
+  } = $props();
 </script>
 
-<AlertDialogPrimitive.Portal>
+<AlertDialogPrimitive.Portal {...portalProps}>
   <AlertDialogOverlay forceMount>
     {#snippet child({ props, open })}
       {#if open}
