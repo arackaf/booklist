@@ -8,6 +8,7 @@ body {
   --main-spacing: var(--main-spacing-top) var(--main-spacing-right) var(--main-spacing-bottom) var(--main-spacing-left);
   --header-footer-spacing: 10px 5px;
   --content-max-width: 1200px;
+  overscroll-behavior: none;
 }
 
 #app {
