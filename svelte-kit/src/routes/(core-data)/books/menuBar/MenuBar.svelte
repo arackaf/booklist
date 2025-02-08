@@ -34,7 +34,7 @@
   };
 </script>
 
-<div class="sticky top-[calc(3.5rem+10px+1px)] pt-[10px] mt-[-10px] translate-y-[-10px] z-[3] bg-white pb-[1px]">
+<div class="sticky top-[calc(3.5rem+10px+1px)] pt-[10px] mb-[-10px] translate-y-[-10px] z-[3] bg-white pb-[1px]">
   <MobileMenu title="Search options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="flex flex-col gap-2 w-[175px] mt-4 mb-2">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
