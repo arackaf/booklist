@@ -29,7 +29,7 @@ header {
 }
 
 .sticky-content {
-  @apply sticky top-12;
+  @apply sticky top-14;
 }
 
 main {
