@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import MainNavigationLink from "./MainNavigationLink.svelte";
-
+  import { onMount } from "svelte";
   import { BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon, HomeIcon } from "lucide-svelte";
 
-  import { onMount } from "svelte";
-  import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
-  import ProfilePanel from "./ProfilePanel.svelte";
+  import { page } from "$app/state";
   import type { UserSummary } from "$data/user-summary";
+  import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
+
+  import MainNavigationLink from "./MainNavigationLink.svelte";
+  import ProfilePanel from "./ProfilePanel.svelte";
   import type { NavigationItem } from "./types";
 
   let { loggedIn, hasPublicId, isAdminUser, loggedInUser } = $derived(page.data);
