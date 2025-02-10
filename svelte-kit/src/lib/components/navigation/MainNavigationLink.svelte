@@ -28,7 +28,7 @@
   size="default"
   variant={isActive ? "secondary" : "ghost"}
   {disabled}
-  {href}
+  href={disabled ? null : href}
   class={cn(
     "flex items-center gap-2",
     disabled && "opacity-50 cursor-not-allowed",
