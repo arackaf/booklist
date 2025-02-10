@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import SectionNav from "../section-nav/SectionNav.svelte";
-  import type { NavigationItem } from "../navigation/types";
+  import type { NavigationItem } from "./types";
 
   type Props = {
     navItems: NavigationItem[];

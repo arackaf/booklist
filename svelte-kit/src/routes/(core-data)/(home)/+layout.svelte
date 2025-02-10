@@ -1,5 +1,5 @@
 <script lang="ts">
-  import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
+  import TabbedPage from "$lib/components/navigation/TabbedPage.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types.js";
   import { SectionNavItem } from "$lib/components/section-nav";
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
@@ -21,7 +21,7 @@
     },
     {
       href: publicUserIdPersist.urlTo("/recent-scans"),
-      label: "Recent Scans",
+      label: "Recent scans",
       Icon: BookDownIcon
     }
   ]);

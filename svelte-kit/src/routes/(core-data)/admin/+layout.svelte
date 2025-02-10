@@ -1,7 +1,7 @@
 <svelte:options runes={true} />
 
 <script lang="ts">
-  import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
+  import TabbedPage from "$lib/components/navigation/TabbedPage.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types";
   import { SectionNavItem } from "$lib/components/section-nav";
   import { BookCopyIcon, UsersIcon } from "lucide-svelte";
@@ -11,7 +11,7 @@
   let navItems: NavigationItem[] = [
     {
       href: "/admin/similar-books",
-      label: "Similar Books",
+      label: "Similar books",
       Icon: BookCopyIcon
     },
     {
