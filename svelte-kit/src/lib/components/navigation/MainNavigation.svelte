@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import MainNavigationLink from "./MainNavigationLink.svelte";
   import { signIn } from "@auth/sveltekit/client";
 
   import NavBarItem from "./NavBarItem.svelte";
@@ -7,7 +8,7 @@
 
   import BookSvg from "./BookSvg.svelte";
 
-  import { HouseIcon, LibraryBigIcon, BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon } from "lucide-svelte";
+  import { HouseIcon, LibraryBigIcon, BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon, HomeIcon } from "lucide-svelte";
 
   import { onMount } from "svelte";
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
@@ -67,14 +68,14 @@
     });
   });
 
-  const navItems = [
-    { label: "Home", Icon: HouseIcon, href: "/" },
-    { label: "Books", Icon: BookCopyIcon, href: "/books", isActive: true },
-    { label: "Subjects", Icon: TagsIcon, href: "/subjects", isActive: false },
+  const navItems = $derived([
+    { label: "Home", Icon: HomeIcon, href: "/", isActive: isHome },
+    { label: "Books", Icon: BookCopyIcon, href: "/books" },
+    { label: "Subjects", Icon: TagsIcon, href: "/subjects" },
     { label: "Book Entry", Icon: BookPlusIcon, href: "/scan" },
     { label: "Settings", Icon: SettingsIcon, href: "/settings" },
     { label: "Admin", Icon: CogIcon, href: "/settings", disabled: true, hidden: true }
-  ];
+  ]);
 </script>
 
 <header class="z-50 sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background">
@@ -96,25 +97,7 @@
 
     <div class="flex gap-2">
       {#each navItems.filter(item => !item.hidden) as item}
-        <Button
-          size="default"
-          variant={item.isActive ? "secondary" : "ghost"}
-          disabled={item.disabled}
-          href={item.href}
-          class={cn(
-            "flex items-center gap-2",
-            item.disabled && "opacity-50 cursor-not-allowed",
-            item.isActive && "font-medium",
-            "[&_svg]:size-4",
-            "[&_svg]:md:size-4",
-            "[&_svg]:xs:size-5"
-          )}
-        >
-          <item.Icon class="md:h-6 md:w-6" />
-          <span class="md:block hidden">
-            {item.label}
-          </span>
-        </Button>
+        <MainNavigationLink Icon={item.Icon} active={item.isActive} disabled={item.disabled} href={item.href} label={item.label} />
       {/each}
     </div>
   </nav>
