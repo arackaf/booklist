@@ -3,12 +3,7 @@
   import MainNavigationLink from "./MainNavigationLink.svelte";
   import { signIn } from "@auth/sveltekit/client";
 
-  import NavBarItem from "./NavBarItem.svelte";
-  import ModuleLink from "./ModuleLink.svelte";
-
-  import BookSvg from "./BookSvg.svelte";
-
-  import { HouseIcon, LibraryBigIcon, BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon, HomeIcon } from "lucide-svelte";
+  import { BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon, HomeIcon } from "lucide-svelte";
 
   import { onMount } from "svelte";
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
@@ -69,12 +64,12 @@
   });
 
   const navItems = $derived([
-    { label: "Home", Icon: HomeIcon, href: "/", isActive: isHome },
-    { label: "Books", Icon: BookCopyIcon, href: "/books" },
-    { label: "Subjects", Icon: TagsIcon, href: "/subjects" },
-    { label: "Book Entry", Icon: BookPlusIcon, href: "/scan" },
-    { label: "Settings", Icon: SettingsIcon, href: "/settings" },
-    { label: "Admin", Icon: CogIcon, href: "/settings", disabled: true, hidden: true }
+    { label: "Home", Icon: HomeIcon, active: isHome, href: publicUserIdPersist.urlTo("/") },
+    { label: "Books", Icon: BookCopyIcon, href: publicUserIdPersist.urlTo("/books") },
+    { label: "Subjects", Icon: TagsIcon, href: "/subjects", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
+    { label: "Book Entry", Icon: BookPlusIcon, href: "/scan", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
+    { label: "Settings", Icon: SettingsIcon, active: isSettings, href: publicUserIdPersist.urlTo("/settings/theme") },
+    { label: "Admin", Icon: CogIcon, href: "/settings", hidden: !isAdminUser }
   ]);
 </script>
 
@@ -97,7 +92,7 @@
 
     <div class="flex gap-2">
       {#each navItems.filter(item => !item.hidden) as item}
-        <MainNavigationLink Icon={item.Icon} active={item.isActive} disabled={item.disabled} href={item.href} label={item.label} />
+        <MainNavigationLink Icon={item.Icon} active={item.active} disabled={item.disabled} href={item.href} label={item.label} />
       {/each}
     </div>
   </nav>
