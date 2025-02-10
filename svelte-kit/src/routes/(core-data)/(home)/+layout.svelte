@@ -1,5 +1,5 @@
 <script lang="ts">
-  import TabbedPage from "$lib/components/navigation/TabbedPage.svelte";
+  import PageWithNavigation from "$lib/components/navigation/PageWithNavigation.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types.js";
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
   import { BookDownIcon, ChartAreaIcon, TelescopeIcon } from "lucide-svelte";
@@ -21,11 +21,12 @@
     {
       href: publicUserIdPersist.urlTo("/recent-scans"),
       label: "Recent scans",
-      Icon: BookDownIcon
+      Icon: BookDownIcon,
+      disabled: hasPublicId
     }
   ]);
 </script>
 
-<TabbedPage {navItems}>
+<PageWithNavigation {navItems}>
   {@render children()}
-</TabbedPage>
+</PageWithNavigation>

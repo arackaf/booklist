@@ -1,5 +1,5 @@
 <script lang="ts">
-  import TabbedPage from "$lib/components/navigation/TabbedPage.svelte";
+  import PageWithNavigation from "$lib/components/navigation/PageWithNavigation.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types.js";
   import { ExternalLinkIcon, PaletteIcon } from "lucide-svelte";
 
@@ -21,6 +21,6 @@
   ]);
 </script>
 
-<TabbedPage {navItems}>
+<PageWithNavigation {navItems}>
   {@render children()}
-</TabbedPage>
+</PageWithNavigation>
