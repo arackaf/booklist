@@ -69,7 +69,7 @@
       badge: pendingCount || null
     },
     { label: "Settings", Icon: SettingsIcon, active: isSettings, href: publicUserIdPersist.urlTo("/settings/theme") },
-    { label: "Admin", Icon: CogIcon, href: "/settings", hidden: !isAdminUser }
+    { label: "Admin", Icon: CogIcon, href: "/admin/similar-books", hidden: !isAdminUser }
   ]);
 </script>
 
