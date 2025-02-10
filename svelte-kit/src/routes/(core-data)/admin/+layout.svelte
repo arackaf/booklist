@@ -3,7 +3,6 @@
 <script lang="ts">
   import TabbedPage from "$lib/components/navigation/TabbedPage.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types";
-  import { SectionNavItem } from "$lib/components/section-nav";
   import { BookCopyIcon, UsersIcon } from "lucide-svelte";
 
   let { children } = $props();
