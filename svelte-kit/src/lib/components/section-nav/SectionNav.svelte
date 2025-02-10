@@ -1,15 +1,24 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import MainNavigationLink from "../navigation/MainNavigationLink.svelte";
+  import { BookCopyIcon, HomeIcon } from "lucide-svelte";
 
   type Props = {
     children: Snippet;
   };
 
-  let { children }: Props = $props();
+  const navItems = $derived([
+    { label: "Home", Icon: HomeIcon, active: true, href: "/foo", hidden: false, disabled: false },
+    { label: "Books", Icon: BookCopyIcon, href: "/books" }
+  ]);
 </script>
 
-<div class="sticky-content mb-1 z-[3] pb-1 bg-[var(--content-background)]">
-  <nav class="flex border-b border-b-[var(--primary-9)] mt-[calc(-1*var(--main-spacing-top))]">
-    {@render children()}
+<header class="z-50 sticky-content w-full border-b bg-background">
+  <nav class="container flex h-14 items-center">
+    <div class="flex gap-2">
+      {#each navItems.filter(item => !item.hidden) as item}
+        <MainNavigationLink Icon={item.Icon} active={item.active} disabled={item.disabled} href={item.href} label={item.label} badge={item.badge} />
+      {/each}
+    </div>
   </nav>
-</div>
+</header>

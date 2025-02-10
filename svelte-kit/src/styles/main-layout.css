@@ -30,7 +30,7 @@ header {
 }
 
 .sticky-content {
-  @apply sticky top-14;
+  @apply sticky top-[calc(3.5rem+1px+var(--main-spacing-top))];
 }
 
 main {
