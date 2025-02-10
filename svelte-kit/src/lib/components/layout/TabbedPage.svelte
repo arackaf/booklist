@@ -1,20 +1,19 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import SectionNav from "../section-nav/SectionNav.svelte";
+  import type { NavigationItem } from "../navigation/types";
 
   type Props = {
-    nav: Snippet;
+    navItems: NavigationItem[];
     children: Snippet;
   };
 
-  let { nav, children }: Props = $props();
+  let { navItems, children }: Props = $props();
 </script>
 
 <section class="p-0">
   <div style="max-width: var(--content-max-width)">
-    <SectionNav>
-      {@render nav()}
-    </SectionNav>
+    <SectionNav {navItems}></SectionNav>
     <section class="p-[var(--main-spacing)]">
       {@render children()}
     </section>

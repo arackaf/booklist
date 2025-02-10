@@ -1,21 +1,11 @@
 <script lang="ts">
-  import type { Snippet, Component, ComponentInternals } from "svelte";
   import { page } from "$app/state";
-  import ModuleLink from "./ModuleLink.svelte";
   import Button from "../ui/button/button.svelte";
   import { cn } from "$lib/utils";
   import Badge from "../ui/badge/badge.svelte";
+  import type { NavigationItem } from "./types";
 
-  type Props = {
-    href?: string;
-    disabled?: boolean;
-    label?: string;
-    Icon: any;
-    active?: boolean | null;
-    badge?: string | number;
-  };
-
-  let { href = "", disabled = false, badge, label = "", Icon, active = null }: Props = $props();
+  let { href = "", disabled = false, badge, label = "", Icon, active = null }: NavigationItem = $props();
 
   let currentPathname = $derived(page.url.pathname);
   let hrefPathname = $derived(href ? href.replace(/\?.*/, "") : "");

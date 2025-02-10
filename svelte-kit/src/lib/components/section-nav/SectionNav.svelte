@@ -2,15 +2,13 @@
   import type { Snippet } from "svelte";
   import MainNavigationLink from "../navigation/MainNavigationLink.svelte";
   import { BookCopyIcon, HomeIcon } from "lucide-svelte";
+  import type { NavigationItem } from "../navigation/types";
 
   type Props = {
-    children: Snippet;
+    navItems: NavigationItem[];
   };
 
-  const navItems = $derived([
-    { label: "Home", Icon: HomeIcon, active: true, href: "/foo", hidden: false, disabled: false },
-    { label: "Books", Icon: BookCopyIcon, href: "/books" }
-  ]);
+  let { navItems }: Props = $props();
 </script>
 
 <header class="z-50 sticky-content w-full border-b bg-background">

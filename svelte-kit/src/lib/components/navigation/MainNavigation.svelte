@@ -8,6 +8,7 @@
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
   import ProfilePanel from "./ProfilePanel.svelte";
   import type { UserSummary } from "$data/user-summary";
+  import type { NavigationItem } from "./types";
 
   let { loggedIn, hasPublicId, isAdminUser, loggedInUser } = $derived(page.data);
 
@@ -56,7 +57,7 @@
     });
   });
 
-  const navItems = $derived([
+  let navItems: NavigationItem[] = $derived([
     { label: "Home", Icon: HomeIcon, active: isHome, href: publicUserIdPersist.urlTo("/") },
     { label: "Books", Icon: BookCopyIcon, href: publicUserIdPersist.urlTo("/books") },
     { label: "Subjects", Icon: TagsIcon, href: "/subjects", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
