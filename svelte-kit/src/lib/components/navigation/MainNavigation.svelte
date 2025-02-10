@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import MainNavigationLink from "./MainNavigationLink.svelte";
-  import { signIn } from "@auth/sveltekit/client";
 
   import { BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon, HomeIcon } from "lucide-svelte";
 
@@ -9,23 +8,17 @@
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
   import ProfilePanel from "./ProfilePanel.svelte";
   import type { UserSummary } from "$data/user-summary";
-  import Button from "../ui/button/button.svelte";
-  import { cn } from "$lib/utils";
 
-  let { loggedIn, hasPublicId, isAdminUser, loggedInUser } = $derived($page.data);
+  let { loggedIn, hasPublicId, isAdminUser, loggedInUser } = $derived(page.data);
 
-  let pathname = $derived($page.url.pathname);
+  let pathname = $derived(page.url.pathname);
   let isSettings = $derived(/\/settings/.test(pathname));
 
   const homeModules = new Set(["/", "/discover", "/recent-scans"]);
   let isHome = $derived(homeModules.has(pathname));
 
-  let pendingCount = $state(0);
-
-  let bigCount = $derived(pendingCount > 9);
-
+  let pendingCount = 5; //$state(0);
   let profilePanelOpen = $state(false);
-
   let userSummaryFetched = $state(false);
   let userSummaryStale = $state(false);
   let userSummary = $state<UserSummary | undefined>();
@@ -38,7 +31,7 @@
     const detail = evt?.detail || {};
 
     if (typeof detail.pendingCount === "number") {
-      pendingCount = detail.pendingCount;
+      //pendingCount = detail.pendingCount;
     }
   }
 
@@ -67,7 +60,7 @@
     { label: "Home", Icon: HomeIcon, active: isHome, href: publicUserIdPersist.urlTo("/") },
     { label: "Books", Icon: BookCopyIcon, href: publicUserIdPersist.urlTo("/books") },
     { label: "Subjects", Icon: TagsIcon, href: "/subjects", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
-    { label: "Book Entry", Icon: BookPlusIcon, href: "/scan", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
+    { label: "Book Entry", Icon: BookPlusIcon, href: "/scan", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId, badge: pendingCount },
     { label: "Settings", Icon: SettingsIcon, active: isSettings, href: publicUserIdPersist.urlTo("/settings/theme") },
     { label: "Admin", Icon: CogIcon, href: "/settings", hidden: !isAdminUser }
   ]);
@@ -92,7 +85,7 @@
 
     <div class="flex gap-2">
       {#each navItems.filter(item => !item.hidden) as item}
-        <MainNavigationLink Icon={item.Icon} active={item.active} disabled={item.disabled} href={item.href} label={item.label} />
+        <MainNavigationLink Icon={item.Icon} active={item.active} disabled={item.disabled} href={item.href} label={item.label} badge={item.badge} />
       {/each}
     </div>
   </nav>
