@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { Login } from "$lib/types";
+  import { signOut } from "@auth/sveltekit/client";
+
   import { page } from "$app/stores";
   import type { UserSummary } from "$data/user-summary";
-  import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
-  import { signOut } from "@auth/sveltekit/client";
   import { invalidateAll } from "$app/navigation";
+  import type { Login } from "$lib/types";
+
   import Button from "../Button/Button.svelte";
+  import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
 
   type Props = {
     open: boolean;

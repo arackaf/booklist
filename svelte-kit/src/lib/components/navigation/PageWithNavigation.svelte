@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+
   import type { NavigationItem } from "./types";
   import NavItems from "./NavItems.svelte";
 

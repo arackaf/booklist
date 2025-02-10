@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import Button from "../ui/button/button.svelte";
   import { cn } from "$lib/utils";
+
+  import Button from "../ui/button/button.svelte";
   import Badge from "../ui/badge/badge.svelte";
   import type { NavigationItem } from "./types";
 
