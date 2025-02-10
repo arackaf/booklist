@@ -1,7 +1,5 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
   import MainNavigationLink from "../navigation/MainNavigationLink.svelte";
-  import { BookCopyIcon, HomeIcon } from "lucide-svelte";
   import type { NavigationItem } from "../navigation/types";
 
   type Props = {
