@@ -17,7 +17,7 @@
   const homeModules = new Set(["/", "/discover", "/recent-scans"]);
   let isHome = $derived(homeModules.has(pathname));
 
-  let pendingCount = 5; //$state(0);
+  let pendingCount = $state(0);
   let profilePanelOpen = $state(false);
   let userSummaryFetched = $state(false);
   let userSummaryStale = $state(false);
@@ -31,7 +31,7 @@
     const detail = evt?.detail || {};
 
     if (typeof detail.pendingCount === "number") {
-      //pendingCount = detail.pendingCount;
+      pendingCount = detail.pendingCount;
     }
   }
 
@@ -60,13 +60,20 @@
     { label: "Home", Icon: HomeIcon, active: isHome, href: publicUserIdPersist.urlTo("/") },
     { label: "Books", Icon: BookCopyIcon, href: publicUserIdPersist.urlTo("/books") },
     { label: "Subjects", Icon: TagsIcon, href: "/subjects", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
-    { label: "Book Entry", Icon: BookPlusIcon, href: "/scan", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId, badge: pendingCount },
+    {
+      label: "Book Entry",
+      Icon: BookPlusIcon,
+      href: "/scan",
+      hidden: !(hasPublicId || loggedIn),
+      disabled: hasPublicId,
+      badge: pendingCount || null
+    },
     { label: "Settings", Icon: SettingsIcon, active: isSettings, href: publicUserIdPersist.urlTo("/settings/theme") },
     { label: "Admin", Icon: CogIcon, href: "/settings", hidden: !isAdminUser }
   ]);
 </script>
 
-<header class="z-50 sticky top-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background">
+<header class="z-50 sticky top-0 w-full border-b bg-background">
   {#if loggedInUser}
     <ProfilePanel {userSummary} {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
   {/if}
