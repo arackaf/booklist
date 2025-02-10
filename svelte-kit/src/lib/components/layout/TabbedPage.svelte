@@ -10,15 +10,13 @@
   let { nav, children }: Props = $props();
 </script>
 
-<section>
+<section class="p-0">
   <div style="max-width: var(--content-max-width)">
-    <div>
-      <div>
-        <SectionNav>
-          {@render nav()}
-        </SectionNav>
-        {@render children()}
-      </div>
-    </div>
+    <SectionNav>
+      {@render nav()}
+    </SectionNav>
+    <section class="p-[var(--main-spacing)]">
+      {@render children()}
+    </section>
   </div>
 </section>
