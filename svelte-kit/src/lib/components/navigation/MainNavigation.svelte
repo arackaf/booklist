@@ -7,7 +7,7 @@
 
   import BookSvg from "./BookSvg.svelte";
 
-  import { BlindsIcon, BookOpenIcon, ScanLineIcon, SettingsIcon } from "lucide-svelte";
+  import { HouseIcon, LibraryBigIcon, BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon } from "lucide-svelte";
 
   import { onMount } from "svelte";
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
@@ -68,10 +68,12 @@
   });
 
   const navItems = [
-    { label: "Home", Icon: BlindsIcon, href: "/" },
-    { label: "Books", Icon: BookOpenIcon, href: "/books", isActive: true },
-    { label: "Scan", Icon: ScanLineIcon, href: "/scan" },
-    { label: "Settings", Icon: SettingsIcon, href: "/settings", disabled: true }
+    { label: "Home", Icon: HouseIcon, href: "/" },
+    { label: "Books", Icon: BookCopyIcon, href: "/books", isActive: true },
+    { label: "Subjects", Icon: TagsIcon, href: "/subjects", isActive: false },
+    { label: "Book Entry", Icon: BookPlusIcon, href: "/scan" },
+    { label: "Settings", Icon: SettingsIcon, href: "/settings" },
+    { label: "Admin", Icon: CogIcon, href: "/settings", disabled: true, hidden: true }
   ];
 </script>
 
@@ -93,15 +95,25 @@
     {/if}
 
     <div class="flex gap-2">
-      {#each navItems as item}
+      {#each navItems.filter(item => !item.hidden) as item}
         <Button
+          size="default"
           variant={item.isActive ? "secondary" : "ghost"}
           disabled={item.disabled}
           href={item.href}
-          class={cn("flex items-center gap-2", item.disabled && "opacity-50 cursor-not-allowed", item.isActive && "font-medium")}
+          class={cn(
+            "flex items-center gap-2",
+            item.disabled && "opacity-50 cursor-not-allowed",
+            item.isActive && "font-medium",
+            "[&_svg]:size-4",
+            "[&_svg]:md:size-4",
+            "[&_svg]:xs:size-5"
+          )}
         >
-          <item.Icon class="h-4 w-4" />
-          {item.label}
+          <item.Icon class="md:h-6 md:w-6" />
+          <span class="md:block hidden">
+            {item.label}
+          </span>
         </Button>
       {/each}
     </div>
