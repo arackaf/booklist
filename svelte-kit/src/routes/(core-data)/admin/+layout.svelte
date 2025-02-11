@@ -1,16 +1,26 @@
 <svelte:options runes={true} />
 
 <script lang="ts">
-  import TabbedPage from "$lib/components/layout/TabbedPage.svelte";
-  import { SectionNavItem } from "$lib/components/section-nav";
+  import PageWithNavigation from "$lib/components/navigation/PageWithNavigation.svelte";
+  import type { NavigationItem } from "$lib/components/navigation/types";
+  import { BookCopyIcon, UsersIcon } from "lucide-svelte";
 
   let { children } = $props();
+
+  let navItems: NavigationItem[] = [
+    {
+      href: "/admin/similar-books",
+      label: "Similar books",
+      Icon: BookCopyIcon
+    },
+    {
+      href: "/admin/users",
+      label: "Users",
+      Icon: UsersIcon
+    }
+  ];
 </script>
 
-<TabbedPage>
-  {#snippet nav()}
-    <SectionNavItem href="/admin/similar-books">Similar Items</SectionNavItem>
-    <SectionNavItem href="/admin/users">Users</SectionNavItem>
-  {/snippet}
+<PageWithNavigation {navItems}>
   {@render children()}
-</TabbedPage>
+</PageWithNavigation>

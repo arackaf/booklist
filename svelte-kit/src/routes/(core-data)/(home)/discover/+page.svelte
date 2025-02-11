@@ -51,7 +51,7 @@
 <div class="flex flex-row gap-3">
   <div class="basis-1/2 min-w-0">
     <div class="flex flex-col gap-5">
-      <div style="font-weight: bold">Find some books, and get recommendations based on what's similar</div>
+      <div style="font-weight: bold">Search your books, and get recommendations based on what's similar</div>
 
       <div class="flex flex-row">
         <Button class="gap-2" onclick={openModal}>
