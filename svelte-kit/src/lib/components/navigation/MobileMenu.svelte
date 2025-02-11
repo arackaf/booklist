@@ -18,13 +18,31 @@
   });
 
   let rootEl: HTMLElement;
+  let menuContent: HTMLElement;
+
+  const windowClickHandler = (evt: MouseEvent) => {
+    if (!open) {
+      return;
+    }
+    let clickedEl = evt.target as HTMLElement | null;
+    while (clickedEl) {
+      if (clickedEl == menuContent || clickedEl.hasAttribute("data-mobile-menu")) {
+        return;
+      }
+      clickedEl = clickedEl?.parentElement;
+    }
+    onClose?.();
+  };
 
   onMount(() => {
-    const menuContent = rootEl.firstElementChild!;
+    menuContent = rootEl.firstElementChild! as HTMLElement;
     menuHolder!.appendChild(menuContent);
+
+    window.addEventListener("click", windowClickHandler);
 
     return () => {
       rootEl.appendChild(menuContent);
+      window.removeEventListener("click", windowClickHandler);
     };
   });
 </script>

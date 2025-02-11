@@ -49,6 +49,7 @@
         class="block lg:hidden leading-none"
         aria-label="Open mobile menu"
         onClick={() => (mobileMenuOpen = true)}
+        data-mobile-menu
       >
         <i class="far fa-fw fa-bars"></i>
       </RawButton>

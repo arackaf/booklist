@@ -5,6 +5,7 @@
   import { page } from "$app/state";
   import type { UserSummary } from "$data/user-summary";
   import { publicUserIdPersist } from "$lib/state/urlHelpers.svelte";
+  import * as Sheet from "$lib/components/ui/sheet";
 
   import MainNavigationLink from "./MainNavigationLink.svelte";
   import ProfilePanel from "./ProfilePanel.svelte";
@@ -19,7 +20,6 @@
   let isHome = $derived(homeModules.has(pathname));
 
   let pendingCount = $state(0);
-  let profilePanelOpen = $state(false);
   let userSummaryFetched = $state(false);
   let userSummaryStale = $state(false);
   let userSummary = $state<UserSummary | undefined>();
@@ -75,20 +75,16 @@
 </script>
 
 <header class="z-50 sticky top-0 w-full border-b bg-background">
-  {#if loggedInUser}
-    <ProfilePanel {userSummary} {loggedInUser} open={profilePanelOpen} onClose={() => (profilePanelOpen = false)} />
-  {/if}
   <nav class="container flex h-14 items-center">
-    {#if loggedIn}
-      <div class="items-center mx-2 my-auto">
-        <button
-          onmouseenter={fetchUserSummaryIfNeeded}
-          onclick={() => (profilePanelOpen = !profilePanelOpen)}
-          class="raw-button flex profile-menu-trigger"
-        >
+    {#if loggedInUser}
+      <Sheet.Root>
+        <Sheet.Trigger class="items-center mx-2 my-auto" onmouseenter={fetchUserSummaryIfNeeded}>
           <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
-        </button>
-      </div>
+        </Sheet.Trigger>
+        <Sheet.Content side="left">
+          <ProfilePanel {userSummary} {loggedInUser} />
+        </Sheet.Content>
+      </Sheet.Root>
     {/if}
 
     <div class="flex gap-2">
@@ -97,5 +93,5 @@
       {/each}
     </div>
   </nav>
-  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10"></div>
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10 mt-[1px]"></div>
 </header>

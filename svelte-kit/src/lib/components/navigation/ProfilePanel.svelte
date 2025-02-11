@@ -11,46 +11,16 @@
   import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
 
   type Props = {
-    open: boolean;
-    onClose: () => void;
     loggedInUser: Login;
     userSummary: UserSummary | undefined;
   };
 
-  let { open, onClose, loggedInUser, userSummary }: Props = $props();
+  let { loggedInUser, userSummary }: Props = $props();
   let { tags, subjects } = $derived($page.data);
-
-  const windowClickHandler = (evt: MouseEvent) => {
-    if (!open) {
-      return;
-    }
-    let clickedEl = evt.target as HTMLElement | null;
-    while (clickedEl) {
-      if (clickedEl == el || clickedEl.classList.contains("profile-menu-trigger")) {
-        return;
-      }
-      clickedEl = clickedEl?.parentElement;
-    }
-    onClose();
-  };
-
-  let el: HTMLElement;
-
-  $effect(() => {
-    if (!open && el) {
-      setTimeout(() => {
-        el.scrollTop = 0;
-      }, 50);
-    }
-  });
-
-  onMount(() => {
-    window.addEventListener("click", windowClickHandler);
-  });
 </script>
 
-<div bind:this={el} class:open class="sliding-mobile-menu z-30 top-0 left-0 w-72 max-h-[600px] overflow-y-auto overflow-x-hidden">
-  <div class="flex flex-col gap-6 pb-2 px-3 bg-white">
+<div class="">
+  <div class="flex flex-col gap-6 bg-white">
     <div class="flex gap-2 items-center py-1 -mb-3 sticky top-0 bg-white">
       <img alt="User profile" class="w-14 h-14 rounded-full" src={loggedInUser.image} />
       <span class="text-xl">{loggedInUser.name}</span>
