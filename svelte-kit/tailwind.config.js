@@ -1,4 +1,5 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -40,6 +41,16 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card) / <alpha-value>)",
           foreground: "hsl(var(--card-foreground) / <alpha-value>)"
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))"
         },
         "info-1": "var(--info-1)",
         "info-2": "var(--info-2)",
@@ -107,6 +118,25 @@ const config = {
       },
       fontFamily: {
         sans: [...fontFamily.sans]
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--bits-accordion-content-height)" }
+        },
+        "accordion-up": {
+          from: { height: "var(--bits-accordion-content-height)" },
+          to: { height: "0" }
+        },
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" }
+        }
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "caret-blink": "caret-blink 1.25s ease-out infinite"
       }
     },
     screens: {
@@ -117,7 +147,8 @@ const config = {
       xl: "1280px",
       "2xl": "1536px"
     }
-  }
+  },
+  plugins: [tailwindcssAnimate]
 };
 
 export default config;

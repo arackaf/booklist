@@ -18,8 +18,13 @@ label.checkbox > input {
   transition: transform 150ms ease-out;
   @apply bg-white rounded-br absolute border border-neutral-400 border-t-0 border-l-0;
 }
+
 .sliding-mobile-menu.open {
   transform: translateX(0);
+}
+
+.animation-duration-override-200 {
+  animation-duration: 200ms !important;
 }
 
 .sr {

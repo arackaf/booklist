@@ -22,7 +22,7 @@
     "@types/pg": "^8.11.10",
     "@types/uuid": "^9.0.0",
     "autoprefixer": "^10.4.14",
-    "bits-ui": "^1.0.0-next.91",
+    "bits-ui": "^1.0.0-next.94",
     "lucide-svelte": "^0.454.0",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
@@ -64,7 +64,9 @@
     "svelte-file-dropzone": "^2.0.9",
     "tailwind-merge": "^2.2.0",
     "tailwind-variants": "^0.1.20",
+    "tailwindcss-animate": "^1.0.7",
     "toastify-js": "^1.11.1",
     "uuid": "7.0.3"
-  }
+  },
+  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
 }
