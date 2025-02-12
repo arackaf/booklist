@@ -19,8 +19,8 @@
   let { tags, subjects } = $derived($page.data);
 </script>
 
-<div class="">
-  <div class="flex flex-col gap-6 bg-white">
+<div class="h-full overflow-auto">
+  <div class="flex flex-col gap-6 bg-white h-full">
     <div class="flex gap-2 items-center py-1 -mb-3 sticky top-0 bg-white">
       <img alt="User profile" class="w-14 h-14 rounded-full" src={loggedInUser.image} />
       <span class="text-xl">{loggedInUser.name}</span>
@@ -29,7 +29,7 @@
       {#if !userSummary}
         <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner"></i></div>
       {:else}
-        <span>Total Books: {userSummary?.allBooksCount}</span>
+        <span class="text-lg">Total Books: {userSummary?.allBooksCount}</span>
         {#if userSummary.maxUsedSubjects}
           <TagsSubjectsSummaryItem items={subjects} label={"MAX-S"} packet={userSummary.maxUsedSubjects} />
         {/if}
@@ -50,18 +50,20 @@
         {/if}
       {/if}
     </div>
-    <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,1fr)] grid-rows-[auto_auto] leading-none">
-      <span>Provider:</span>
-      <div class="flex gap-1">
-        <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}"></i>
-        <span>{loggedInUser.provider === "google" ? "Google" : "Github"}</span>
-      </div>
+    <div class="flex flex-col gap-6 mt-auto">
+      <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,1fr)] grid-rows-[auto_auto] leading-none">
+        <span>Provider:</span>
+        <div class="flex gap-1">
+          <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}"></i>
+          <span>{loggedInUser.provider === "google" ? "Google" : "Github"}</span>
+        </div>
 
-      <span>Email:</span>
-      <span class="break-words">{loggedInUser.email}</span>
+        <span>Email:</span>
+        <span class="break-words">{loggedInUser.email}</span>
+      </div>
+      <span>
+        <Button size="med" onclick={() => signOut().then(() => invalidateAll())}>Logout</Button>
+      </span>
     </div>
-    <span>
-      <Button size="med" onclick={() => signOut().then(() => invalidateAll())}>Logout</Button>
-    </span>
   </div>
 </div>
