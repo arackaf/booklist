@@ -24,9 +24,8 @@
     "flex items-center gap-2",
     disabled && "opacity-50 cursor-not-allowed",
     isActive && "font-medium",
-    "[&_svg]:size-4",
+    "[&_svg]:size-5",
     "[&_svg]:md:size-4",
-    "[&_svg]:xs:size-5",
     "relative"
   )}
 >
