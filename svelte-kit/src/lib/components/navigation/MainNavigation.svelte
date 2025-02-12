@@ -77,7 +77,13 @@
 <header class="z-50 sticky top-0 w-full border-b bg-background">
   <nav class="container flex h-14 items-center">
     {#if loggedInUser}
-      <Sheet.Root>
+      <Sheet.Root
+        onOpenChange={open => {
+          if (open) {
+            fetchUserSummaryIfNeeded();
+          }
+        }}
+      >
         <Sheet.Trigger class="items-center mx-2 my-auto" onmouseenter={fetchUserSummaryIfNeeded}>
           <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
         </Sheet.Trigger>
