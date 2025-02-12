@@ -20,8 +20,8 @@
 </script>
 
 <div class="h-full overflow-auto">
-  <div class="flex flex-col gap-6 bg-white h-full">
-    <div class="flex gap-2 items-center py-1 -mb-3 sticky top-0 bg-white">
+  <div class="flex flex-col gap-6 h-full">
+    <div class="flex gap-2 items-center py-1 -mb-3 sticky top-0">
       <img alt="User profile" class="w-14 h-14 rounded-full" src={loggedInUser.image} />
       <span class="text-xl">{loggedInUser.name}</span>
     </div>
