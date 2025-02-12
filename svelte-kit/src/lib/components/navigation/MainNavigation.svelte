@@ -10,6 +10,8 @@
   import MainNavigationLink from "./MainNavigationLink.svelte";
   import ProfilePanel from "./ProfilePanel.svelte";
   import type { NavigationItem } from "./types";
+  import Button from "../ui/button/button.svelte";
+  import { profilePaneState } from "./profile-pane-state.svelte";
 
   let { loggedIn, hasPublicId, isAdminUser, loggedInUser } = $derived(page.data);
 
@@ -77,14 +79,16 @@
 <header class="z-50 sticky top-0 w-full border-b bg-background">
   <nav class="container flex h-14 items-center">
     {#if loggedInUser}
-      <Sheet.Root>
+      <Button variant="ghost" class="mx-2 p-0" onclick={() => profilePaneState.open()}>
+        <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
+      </Button>
+      <!-- <Sheet.Root>
         <Sheet.Trigger class="items-center mx-2 my-auto" onmouseenter={fetchUserSummaryIfNeeded}>
-          <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
         </Sheet.Trigger>
-        <Sheet.Content side="left">
-          <ProfilePanel {userSummary} {loggedInUser} />
-        </Sheet.Content>
-      </Sheet.Root>
+        <Sheet.Content side="left"> -->
+      <!-- <ProfilePanel {userSummary} {loggedInUser} /> -->
+      <!-- </Sheet.Content>
+      </Sheet.Root> -->
     {/if}
 
     <div class="flex gap-2">

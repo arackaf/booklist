@@ -8,6 +8,10 @@
   import Loading from "$lib/components/Loading.svelte";
   import { NUM_THEMES } from "$lib/util/constants";
 
+  import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+  import ProfilePanel from "$lib/components/navigation/ProfilePanel.svelte";
+  import { profilePaneState } from "$lib/components/navigation/profile-pane-state.svelte";
+
   let { data, children } = $props();
   let { uxState } = $derived(data);
   let { theme, wbg: whiteBg } = $derived(uxState);
@@ -38,6 +42,7 @@
   afterNavigate(() => {
     navigating = false;
   });
+  // <!-- <ProfilePanel {userSummary} {loggedInUser} /> -->
 </script>
 
 <div class={`app-container h-screen w-screen ${theme}`} class:white-bg={whiteBg === "1"}>
@@ -54,3 +59,7 @@
     <Footer />
   </div>
 </div>
+
+<Sidebar.Provider bind:open={() => profilePaneState.isOpen, newOpen => profilePaneState.setOpen(newOpen)}>
+  <ProfilePanel />
+</Sidebar.Provider>
