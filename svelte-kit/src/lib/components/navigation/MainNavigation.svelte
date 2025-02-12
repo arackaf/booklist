@@ -93,7 +93,7 @@
       </Sheet.Root>
     {/if}
 
-    <div class="flex gap-2">
+    <div class="flex gap-[6px] xs:gap-2">
       {#each navItems.filter(item => !item.hidden) as item}
         <MainNavigationLink Icon={item.Icon} active={item.active} disabled={item.disabled} href={item.href} label={item.label} badge={item.badge} />
       {/each}
