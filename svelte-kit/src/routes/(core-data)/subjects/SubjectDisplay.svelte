@@ -40,6 +40,7 @@
   let initialRenderComplete = $state(false);
   let hide = $state(false);
   let expanded = $state(true);
+  let userClick = $state(false);
 
   let childSubjects = $derived(subject.children);
   let height = $derived($subjectSpring.height);
@@ -48,9 +49,9 @@
   let y = $derived($subjectSpring.y);
 
   function setSpring(height: number, expanded: boolean) {
-    if (blockingUpstream) {
-      disabledAnimationInChain.value = true;
-    }
+    // if (blockingUpstream) {
+    //   disabledAnimationInChain.value = true;
+    // }
 
     const newHeight = expanded ? height : 0;
     const existingHeight = $subjectSpring.height;
@@ -58,25 +59,28 @@
     if ($subjectSpring.height === newHeight) {
       return;
     }
-    let animation = subjectSpring
+    console.log("setSpring", subject.name, "userClick: ", userClick, "hard: ", !initialRenderComplete && !userClick);
+    /*let animation = */ subjectSpring
       .set(
         { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-        { hard: !initialRenderComplete || (disabledAnimationInChain.value && !blockingUpstream) }
+        { hard: !initialRenderComplete || !userClick /*|| disabledAnimationInChain.value &&*/ /*!blockingUpstream*/ }
       )
       .then(() => {
         initialRenderComplete = true;
         hide = !expanded;
+        userClick = false;
       });
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
-    if (blockingUpstream) {
-      Promise.resolve(animation).then(() => {
-        disabledAnimationInChain.value = false;
-        blockingUpstream = false;
-      });
-    }
+    // if (blockingUpstream) {
+    //   Promise.resolve(animation).then(() => {
+    //     disabledAnimationInChain.value = false;
+    //     blockingUpstream = false;
+    //   });
+    // }
   }
 
   const setExpanded = (val: boolean) => {
+    userClick = true;
     blockingUpstream = true;
     expanded = val;
   };
