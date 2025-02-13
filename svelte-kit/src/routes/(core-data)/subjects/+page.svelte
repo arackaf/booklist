@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { Subject } from "$data/types";
 
-  import { setContext } from "svelte";
-
   import Button from "$lib/components/Button/Button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import Modal from "$lib/components/Modal.svelte";
@@ -35,9 +33,6 @@
     backgroundColor: "#847E71",
     textColor: "#ffffff"
   });
-
-  let subjectChainAnimationDisabled = $state({ value: false });
-  setContext("subject-chain-disable-animation", subjectChainAnimationDisabled);
 
   let inputEl = $state<HTMLElement | null>(null);
 </script>

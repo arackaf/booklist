@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { onMount, untrack } from "svelte";
 
   import { spring } from "svelte/motion";
 
@@ -29,15 +29,13 @@
   });
 
   $effect(() => {
-    if (heightValue) {
-      setSpring(heightValue.height.value, expanded);
+    if (heightValue?.height.value) {
+      const isExpanded = untrack(() => expanded);
+      setSpring(heightValue.height.value, isExpanded, false);
     }
   });
 
-  let initialRenderComplete = $state(false);
-  let hide = $state(false);
   let expanded = $state(true);
-  let userClick = $state(false);
 
   let childSubjects = $derived(subject.children);
   let height = $derived($subjectSpring.height);
@@ -45,29 +43,20 @@
   let x = $derived($subjectSpring.x);
   let y = $derived($subjectSpring.y);
 
-  function setSpring(height: number, expanded: boolean) {
-    const newHeight = expanded ? height : 0;
-    const existingHeight = $subjectSpring.height;
+  function setSpring(height: number, isExpanded: boolean, animate: boolean) {
+    const newHeight = isExpanded ? height : 0;
+    const existingHeight = untrack(() => $subjectSpring.height);
 
-    if ($subjectSpring.height === newHeight) {
+    if (existingHeight === newHeight) {
       return;
     }
-    subjectSpring
-      .set(
-        { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-        { hard: !initialRenderComplete || !userClick }
-      )
-      .then(() => {
-        initialRenderComplete = true;
-        hide = !expanded;
-        userClick = false;
-      });
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
+    subjectSpring.set({ height: newHeight, opacity: isExpanded ? 1 : 0, x: isExpanded ? 0 : 20, y: isExpanded ? 0 : -20 }, { hard: !animate });
   }
 
   const setExpanded = (val: boolean) => {
-    userClick = true;
     expanded = val;
+    setSpring(expanded ? heightValue!.height.value : 0, val, true);
   };
 </script>
 
