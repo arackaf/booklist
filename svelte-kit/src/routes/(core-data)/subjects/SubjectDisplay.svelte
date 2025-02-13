@@ -30,12 +30,14 @@
 
   $effect(() => {
     if (heightValue?.height.value) {
+      animating = false;
       const isExpanded = untrack(() => expanded);
-      setSpring(heightValue.height.value, isExpanded, false);
+      setSpring(heightValue.height.value, isExpanded);
     }
   });
 
   let expanded = $state(true);
+  let animating = $state(false);
 
   let childSubjects = $derived(subject.children);
   let height = $derived($subjectSpring.height);
@@ -43,7 +45,8 @@
   let x = $derived($subjectSpring.x);
   let y = $derived($subjectSpring.y);
 
-  function setSpring(height: number, isExpanded: boolean, animate: boolean) {
+  function setSpring(height: number, isExpanded: boolean) {
+    const animate = untrack(() => animating);
     const newHeight = isExpanded ? height : 0;
     const existingHeight = untrack(() => $subjectSpring.height);
 
@@ -56,7 +59,8 @@
 
   const setExpanded = (val: boolean) => {
     expanded = val;
-    setSpring(expanded ? heightValue!.height.value : 0, val, true);
+    animating = true;
+    setSpring(expanded ? heightValue!.height.value : 0, val);
   };
 </script>
 
@@ -64,7 +68,7 @@
   <div class="pb-5">
     <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
-  <div style="height: {height < 0 ? 'auto' : height + 'px'}; overflow: hidden">
+  <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if childSubjects.length}
         <ul class="ml-5">
