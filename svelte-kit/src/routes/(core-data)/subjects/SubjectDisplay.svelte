@@ -15,7 +15,8 @@
     subject: FullSubject;
   };
 
-  let { editSubject, subject }: Props = $props();
+  let { editSubject, subject: subjectRaw }: Props = $props();
+  let subject = $derived(subjectRaw);
 
   let contentEl: HTMLElement;
   let heightValue = $state<ReturnType<typeof syncHeight>>();
@@ -24,26 +25,58 @@
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
   const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
+  let expanded = $state(true);
+  let animating = $state(false);
+
+  let childSubjects = $state(subject.children);
+  let height = $derived($subjectSpring.height);
+  let opacity = $derived($subjectSpring.opacity);
+  let x = $derived($subjectSpring.x);
+  let y = $derived($subjectSpring.y);
+
   onMount(() => {
+    // console.log({ subject });
     heightValue = syncHeight(contentEl);
   });
 
   $effect(() => {
+    if (subject.name === "Subject 2") {
+      console.log("Root subject", { subject });
+    }
+  });
+
+  $effect(() => {
     if (heightValue?.height.value) {
-      animating = false;
       const isExpanded = untrack(() => expanded);
       setSpring(heightValue.height.value, isExpanded);
     }
   });
 
-  let expanded = $state(true);
-  let animating = $state(false);
+  $effect(() => {
+    if (heightValue?.height.value === height) {
+      animating = false;
+    }
+  });
 
-  let childSubjects = $derived(subject.children);
-  let height = $derived($subjectSpring.height);
-  let opacity = $derived($subjectSpring.opacity);
-  let x = $derived($subjectSpring.x);
-  let y = $derived($subjectSpring.y);
+  $effect(() => {
+    const newChildren = subject.children;
+    const existingChildren = childSubjects;
+
+    // console.log("XXXX", existingChildren.length, newChildren.length);
+    // console.log("DEBUG", { existingChildren, newChildren });
+    if (existingChildren.length !== newChildren.length) {
+      animating = true;
+      childSubjects = subject.children;
+    }
+
+    // let newChildren = subject.children;
+    // let existingChildren = childSubjects;
+
+    // if (newChildren.length !== existingChildren.length) {
+    //   animating = true;
+    //   childSubjects = newChildren;
+    // }
+  });
 
   function setSpring(height: number, isExpanded: boolean) {
     const animate = untrack(() => animating);

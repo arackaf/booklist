@@ -12,6 +12,10 @@
   let { subjects, colors } = $derived(data);
   let rootSubjects = $derived(stackAndGetTopLevelSubjects(subjects));
 
+  $effect(() => {
+    console.log({ rootSubjects });
+  });
+
   let editModalOpen = $state(false);
   let editingSubject = $state<Subject>({
     id: 0,
