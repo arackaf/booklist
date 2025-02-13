@@ -17,8 +17,6 @@
 
   let { editSubject, subject }: Props = $props();
 
-  const disabledAnimationInChain: any = getContext("subject-chain-disable-animation");
-
   let blockingUpstream: boolean;
   let contentEl: HTMLElement;
   let heightValue = $state<ReturnType<typeof syncHeight>>();
@@ -49,21 +47,16 @@
   let y = $derived($subjectSpring.y);
 
   function setSpring(height: number, expanded: boolean) {
-    // if (blockingUpstream) {
-    //   disabledAnimationInChain.value = true;
-    // }
-
     const newHeight = expanded ? height : 0;
     const existingHeight = $subjectSpring.height;
 
     if ($subjectSpring.height === newHeight) {
       return;
     }
-    console.log("setSpring", subject.name, "userClick: ", userClick, "hard: ", !initialRenderComplete && !userClick);
-    /*let animation = */ subjectSpring
+    subjectSpring
       .set(
         { height: newHeight, opacity: expanded ? 1 : 0, x: expanded ? 0 : 20, y: expanded ? 0 : -20 },
-        { hard: !initialRenderComplete || !userClick /*|| disabledAnimationInChain.value &&*/ /*!blockingUpstream*/ }
+        { hard: !initialRenderComplete || !userClick }
       )
       .then(() => {
         initialRenderComplete = true;
@@ -71,12 +64,6 @@
         userClick = false;
       });
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
-    // if (blockingUpstream) {
-    //   Promise.resolve(animation).then(() => {
-    //     disabledAnimationInChain.value = false;
-    //     blockingUpstream = false;
-    //   });
-    // }
   }
 
   const setExpanded = (val: boolean) => {
