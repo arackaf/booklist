@@ -17,7 +17,6 @@
 
   let { editSubject, subject }: Props = $props();
 
-  let blockingUpstream: boolean;
   let contentEl: HTMLElement;
   let heightValue = $state<ReturnType<typeof syncHeight>>();
 
@@ -68,7 +67,6 @@
 
   const setExpanded = (val: boolean) => {
     userClick = true;
-    blockingUpstream = true;
     expanded = val;
   };
 </script>
