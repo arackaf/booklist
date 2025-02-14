@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
-
   import { spring } from "svelte/motion";
+  import { cubicOut } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
@@ -27,8 +27,6 @@
   let expanded = $state(true);
   let animating = $state(false);
 
-  let childSubjects = $state(subject.children);
-
   let height = $derived($subjectSpring.height);
   let opacity = $derived($subjectSpring.opacity);
   let x = $derived($subjectSpring.x);
@@ -39,21 +37,16 @@
   });
 
   $effect(() => {
-    if (heightValue?.height.value) {
+    const currentHeight = heightValue?.height.value;
+
+    if (currentHeight) {
+      if (currentHeight === height) {
+        animating = false;
+      }
+
       const isExpanded = untrack(() => expanded);
-      setSpring(heightValue.height.value, isExpanded);
+      setSpring(currentHeight, isExpanded);
     }
-  });
-
-  $effect(() => {
-    if (heightValue?.height.value === height) {
-      animating = false;
-    }
-  });
-
-  $effect(() => {
-    animating = true;
-    childSubjects = subject.children;
   });
 
   function setSpring(height: number, isExpanded: boolean) {
@@ -69,21 +62,31 @@
   }
 
   const setExpanded = (val: boolean) => {
-    expanded = val;
     animating = true;
+    expanded = val;
     setSpring(expanded ? heightValue!.height.value : 0, val);
   };
+
+  function animateLabel(node: HTMLElement) {
+    const height = node.offsetHeight;
+
+    return {
+      duration: 200,
+      easing: cubicOut,
+      css: t => `height: ${t * height}px; opacity: ${t};`
+    };
+  }
 </script>
 
-<div>
+<div transition:animateLabel>
   <div class="pb-5">
-    <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+    <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
   <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
-      {#if childSubjects.length}
-        <ul class="ml-5">
-          {#each childSubjects as s (s.id)}
+      {#if subject.children.length}
+        <ul class="ml-5" transition:animateLabel>
+          {#each subject.children as s (s.id)}
             <li>
               <Self subject={s} {editSubject} />
             </li>
