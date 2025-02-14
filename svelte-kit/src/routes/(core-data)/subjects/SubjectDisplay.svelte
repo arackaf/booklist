@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
-
   import { spring } from "svelte/motion";
+  import { expoOut } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
@@ -73,9 +73,30 @@
     animating = true;
     setSpring(expanded ? heightValue!.height.value : 0, val);
   };
+
+  function slideIn(node: HTMLElement) {
+    const height = node.offsetHeight;
+
+    return {
+      delay: 0,
+      duration: 200,
+      easing: expoOut,
+      css: (t, u) => `height: ${t * height}px`
+    };
+  }
+  function slideOut(node: HTMLElement) {
+    const height = node.offsetHeight;
+
+    return {
+      delay: 0,
+      duration: 200,
+      easing: expoOut,
+      css: (t, u) => `height: ${t * height}px`
+    };
+  }
 </script>
 
-<div>
+<div in:slideIn out:slideOut>
   <div class="pb-5">
     <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
