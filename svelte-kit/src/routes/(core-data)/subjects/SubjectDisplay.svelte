@@ -27,7 +27,6 @@
   let expanded = $state(true);
   let animating = $state(false);
 
-  let childSubjectsTracked = $derived(subject.children);
   let childSubjects = $state(subject.children);
 
   let height = $derived($subjectSpring.height);
@@ -54,7 +53,7 @@
 
   $effect(() => {
     animating = true;
-    childSubjects = childSubjectsTracked;
+    childSubjects = subject.children;
   });
 
   function setSpring(height: number, isExpanded: boolean) {
