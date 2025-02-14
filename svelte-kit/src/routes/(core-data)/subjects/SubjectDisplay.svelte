@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
-  import { spring } from "svelte/motion";
+  import { spring, Spring } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
@@ -22,15 +22,16 @@
 
   const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
-  const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
+  const subjectSpring = new Spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
+  // const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
   let expanded = $state(true);
   let animating = $state(false);
 
-  let height = $derived($subjectSpring.height);
-  let opacity = $derived($subjectSpring.opacity);
-  let x = $derived($subjectSpring.x);
-  let y = $derived($subjectSpring.y);
+  let height = $derived(subjectSpring.current.height);
+  let opacity = $derived(subjectSpring.current.opacity);
+  let x = $derived(subjectSpring.current.x);
+  let y = $derived(subjectSpring.current.y);
 
   onMount(() => {
     heightValue = syncHeight(contentEl);
@@ -52,11 +53,12 @@
   function setSpring(height: number, isExpanded: boolean) {
     const animate = untrack(() => animating);
     const newHeight = isExpanded ? height : 0;
-    const existingHeight = untrack(() => $subjectSpring.height);
+    const existingHeight = untrack(() => subjectSpring.current.height);
 
     if (existingHeight === newHeight) {
       return;
     }
+
     Object.assign(subjectSpring, newHeight > existingHeight ? SPRING_CONFIG_GROWING : SPRING_CONFIG_SHRINKING);
     subjectSpring.set({ height: newHeight, opacity: isExpanded ? 1 : 0, x: isExpanded ? 0 : 20, y: isExpanded ? 0 : -20 }, { hard: !animate });
   }
