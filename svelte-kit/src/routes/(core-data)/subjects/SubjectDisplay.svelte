@@ -85,7 +85,7 @@
   <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
       {#if subject.children.length}
-        <ul class="ml-5">
+        <ul class="ml-5" transition:animateLabel>
           {#each subject.children as s (s.id)}
             <li>
               <Self subject={s} {editSubject} />
