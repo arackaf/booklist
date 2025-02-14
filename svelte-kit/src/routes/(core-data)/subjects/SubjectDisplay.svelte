@@ -1,12 +1,11 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
-  import { spring, Spring } from "svelte/motion";
+  import { Spring } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
   import { syncHeight } from "$lib/util/animationHelpers.svelte";
-  import SubjectLabelDisplay from "./SubjectLabelDisplay.svelte";
 
   import Self from "./SubjectDisplay.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
@@ -25,7 +24,6 @@
   const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
   const subjectSpring = new Spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
-  // const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
   let expanded = $state(true);
   let animating = $state(false);
@@ -93,7 +91,6 @@
         <span class="text-sm font-medium">{subject.name}</span>
       </Button>
     </div>
-    <!-- <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} /> -->
   </div>
   <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
