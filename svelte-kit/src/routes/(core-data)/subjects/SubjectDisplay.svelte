@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
   import { spring } from "svelte/motion";
-  import { expoOut } from "svelte/easing";
+  import { cubicOut } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
@@ -78,20 +78,18 @@
     const height = node.offsetHeight;
 
     return {
-      delay: 0,
       duration: 200,
-      easing: expoOut,
-      css: (t, u) => `height: ${t * height}px`
+      easing: cubicOut,
+      css: (t, u) => `height: ${t * height}px; opacity: ${t};`
     };
   }
   function slideOut(node: HTMLElement) {
     const height = node.offsetHeight;
 
     return {
-      delay: 0,
       duration: 200,
-      easing: expoOut,
-      css: (t, u) => `height: ${t * height}px`
+      easing: cubicOut,
+      css: (t, u) => `height: ${t * height}px; opacity: ${t};`
     };
   }
 </script>
