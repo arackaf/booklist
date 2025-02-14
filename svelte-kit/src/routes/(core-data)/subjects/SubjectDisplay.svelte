@@ -73,7 +73,7 @@
     return {
       duration: 200,
       easing: cubicOut,
-      css: (t, u) => `height: ${t * height}px; opacity: ${t};`
+      css: t => `height: ${t * height}px; opacity: ${t};`
     };
   }
 </script>
