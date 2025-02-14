@@ -37,15 +37,15 @@
   });
 
   $effect(() => {
-    if (heightValue?.height.value) {
-      const isExpanded = untrack(() => expanded);
-      setSpring(heightValue.height.value, isExpanded);
-    }
-  });
+    const currentHeight = heightValue?.height.value;
 
-  $effect(() => {
-    if (heightValue?.height.value === height) {
-      animating = false;
+    if (currentHeight) {
+      if (currentHeight === height) {
+        animating = false;
+      }
+
+      const isExpanded = untrack(() => expanded);
+      setSpring(currentHeight, isExpanded);
     }
   });
 
