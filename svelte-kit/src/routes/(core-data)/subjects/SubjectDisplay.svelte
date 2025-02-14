@@ -83,13 +83,12 @@
 </script>
 
 <div transition:animateLabel>
-  <div class="p-2 hover:bg-muted/50 group flex items-center gap-2">
+  <div class="p-2 hover:bg-muted/50 flex items-center gap-2">
     <Button class={`${!subject.children.length ? "invisible" : ""}`} variant="ghost" size="icon" onclick={() => setExpanded(!expanded)}>
       <ChevronRightIcon class={`h-4 w-4 transition-[transform] ${expanded ? "rotate-90" : ""}`} />
     </Button>
-    <span class="text-sm font-medium">{subject.name}</span>
-    <Button variant="ghost" size="icon" class="invisible group-hover:visible" onclick={() => editSubject(subject)}>
-      <PencilIcon class="h-4 w-4" />
+    <Button variant="ghost" class="hover:bg-transparent" onclick={() => editSubject(subject)}>
+      <span class="text-sm font-medium">{subject.name}</span>
     </Button>
     <!-- <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} /> -->
   </div>
