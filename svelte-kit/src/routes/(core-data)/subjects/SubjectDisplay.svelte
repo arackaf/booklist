@@ -67,16 +67,7 @@
     setSpring(expanded ? heightValue!.height.value : 0, val);
   };
 
-  function slideIn(node: HTMLElement) {
-    const height = node.offsetHeight;
-
-    return {
-      duration: 200,
-      easing: cubicOut,
-      css: (t, u) => `height: ${t * height}px; opacity: ${t};`
-    };
-  }
-  function slideOut(node: HTMLElement) {
+  function animateLabel(node: HTMLElement) {
     const height = node.offsetHeight;
 
     return {
@@ -87,7 +78,7 @@
   }
 </script>
 
-<div in:slideIn out:slideOut>
+<div transition:animateLabel>
   <div class="pb-5">
     <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
