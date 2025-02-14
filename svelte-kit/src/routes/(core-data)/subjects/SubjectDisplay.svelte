@@ -9,6 +9,8 @@
   import SubjectLabelDisplay from "./SubjectLabelDisplay.svelte";
 
   import Self from "./SubjectDisplay.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import { ChevronRightIcon, PencilIcon } from "lucide-svelte";
 
   type Props = {
     editSubject: (subject: Subject) => void;
@@ -81,8 +83,15 @@
 </script>
 
 <div transition:animateLabel>
-  <div class="pb-5">
-    <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+  <div class="p-2 hover:bg-muted/50 group flex items-center gap-2">
+    <Button class={`${!subject.children.length ? "invisible" : ""}`} variant="ghost" size="icon" onclick={() => setExpanded(!expanded)}>
+      <ChevronRightIcon class={`h-4 w-4 transition-[transform] ${expanded ? "rotate-90" : ""}`} />
+    </Button>
+    <span class="text-sm font-medium">{subject.name}</span>
+    <Button variant="ghost" size="icon" class="invisible group-hover:visible" onclick={() => editSubject(subject)}>
+      <PencilIcon class="h-4 w-4" />
+    </Button>
+    <!-- <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} /> -->
   </div>
   <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
