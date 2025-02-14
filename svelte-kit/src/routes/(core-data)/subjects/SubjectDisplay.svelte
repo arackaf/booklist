@@ -53,22 +53,8 @@
   });
 
   $effect(() => {
-    const newChildren = childSubjectsTracked;
-    const existingChildren = childSubjects;
-
-    console.log("DEBUG", { existingChildren, newChildren });
-    if (existingChildren.length !== newChildren.length) {
-      animating = true;
-      childSubjects = newChildren;
-    }
-
-    // let newChildren = subject.children;
-    // let existingChildren = childSubjects;
-
-    // if (newChildren.length !== existingChildren.length) {
-    //   animating = true;
-    //   childSubjects = newChildren;
-    // }
+    animating = true;
+    childSubjects = childSubjectsTracked;
   });
 
   function setSpring(height: number, isExpanded: boolean) {
