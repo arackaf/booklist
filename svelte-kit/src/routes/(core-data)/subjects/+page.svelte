@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Subject } from "$data/types";
+  import type { FullSubject, Subject } from "$data/types";
 
   import Button from "$lib/components/Button/Button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
@@ -10,6 +10,32 @@
 
   let { data } = $props();
   let { subjects, colors } = $derived(data);
+
+  class ReactiveFullSubject {
+    id = $state(0);
+    name = $state("");
+    textColor = $state("");
+    backgroundColor = $state("");
+    path = $state("");
+    children: ReactiveFullSubject[] = $state([]);
+    childLevel = $state(0);
+
+    constructor(subject: Subject) {
+      Object.assign(this, subject);
+    }
+  }
+
+  const stackAndGetTopLevelSubjects2 = (allSubjects: Subject[]): FullSubject[] => {
+    const subjects: FullSubject[] = allSubjects.map(s => new ReactiveFullSubject(s));
+
+    subjects.forEach(parent => {
+      parent.children = subjects.filter(child => new RegExp(`,${parent.id},$`).test(child.path || ""));
+      parent.childLevel = !parent.path ? 0 : (parent.path.match(/\,/g) || []).length - 1;
+    });
+
+    return subjects.filter(s => s.path == null);
+  };
+
   let rootSubjects = $derived(stackAndGetTopLevelSubjects(subjects));
 
   $effect(() => {

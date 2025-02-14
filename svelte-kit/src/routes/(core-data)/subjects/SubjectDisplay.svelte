@@ -15,8 +15,7 @@
     subject: FullSubject;
   };
 
-  let { editSubject, subject: subjectRaw }: Props = $props();
-  let subject = $derived(subjectRaw);
+  let { editSubject, subject }: Props = $props();
 
   let contentEl: HTMLElement;
   let heightValue = $state<ReturnType<typeof syncHeight>>();
@@ -28,21 +27,16 @@
   let expanded = $state(true);
   let animating = $state(false);
 
+  let childSubjectsTracked = $derived(subject.children);
   let childSubjects = $state(subject.children);
+
   let height = $derived($subjectSpring.height);
   let opacity = $derived($subjectSpring.opacity);
   let x = $derived($subjectSpring.x);
   let y = $derived($subjectSpring.y);
 
   onMount(() => {
-    // console.log({ subject });
     heightValue = syncHeight(contentEl);
-  });
-
-  $effect(() => {
-    if (subject.name === "Subject 2") {
-      console.log("Root subject", { subject });
-    }
   });
 
   $effect(() => {
@@ -59,14 +53,13 @@
   });
 
   $effect(() => {
-    const newChildren = subject.children;
+    const newChildren = childSubjectsTracked;
     const existingChildren = childSubjects;
 
-    // console.log("XXXX", existingChildren.length, newChildren.length);
-    // console.log("DEBUG", { existingChildren, newChildren });
+    console.log("DEBUG", { existingChildren, newChildren });
     if (existingChildren.length !== newChildren.length) {
       animating = true;
-      childSubjects = subject.children;
+      childSubjects = newChildren;
     }
 
     // let newChildren = subject.children;
