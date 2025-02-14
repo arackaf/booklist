@@ -27,8 +27,6 @@
   let expanded = $state(true);
   let animating = $state(false);
 
-  let childSubjects = $state(subject.children);
-
   let height = $derived($subjectSpring.height);
   let opacity = $derived($subjectSpring.opacity);
   let x = $derived($subjectSpring.x);
@@ -51,11 +49,6 @@
     }
   });
 
-  $effect(() => {
-    animating = true;
-    childSubjects = subject.children;
-  });
-
   function setSpring(height: number, isExpanded: boolean) {
     const animate = untrack(() => animating);
     const newHeight = isExpanded ? height : 0;
@@ -69,8 +62,8 @@
   }
 
   const setExpanded = (val: boolean) => {
-    expanded = val;
     animating = true;
+    expanded = val;
     setSpring(expanded ? heightValue!.height.value : 0, val);
   };
 
@@ -96,13 +89,13 @@
 
 <div in:slideIn out:slideOut>
   <div class="pb-5">
-    <SubjectLabelDisplay {childSubjects} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+    <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
   </div>
   <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
-      {#if childSubjects.length}
+      {#if subject.children.length}
         <ul class="ml-5">
-          {#each childSubjects as s (s.id)}
+          {#each subject.children as s (s.id)}
             <li>
               <Self subject={s} {editSubject} />
             </li>
