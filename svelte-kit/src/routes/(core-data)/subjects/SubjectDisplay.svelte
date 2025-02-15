@@ -9,7 +9,7 @@
 
   import Self from "./SubjectDisplay.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  import { ChevronRightIcon, PencilIcon } from "lucide-svelte";
+  import { ChevronRightIcon, PencilIcon, TagIcon } from "lucide-svelte";
 
   type Props = {
     editSubject: (subject: Subject) => void;
@@ -85,9 +85,11 @@
     <Button class={!subject.children.length ? "invisible" : ""} variant="ghost" size="icon" onclick={() => setExpanded(!expanded)}>
       <ChevronRightIcon class="h-4 w-4 transition-[transform] {expanded ? 'rotate-90' : ''}" />
     </Button>
-    <div class="flex gap-1">
-      <div class="w-2 self-stretch my-2 rounded-full" style="background-color: {subject.backgroundColor};"></div>
-      <Button variant="ghost" class="hover:bg-transparent" onclick={() => editSubject(subject)}>
+    <div class="flex">
+      <div class="w-7 self-stretch my-2 rounded flex items-center justify-center" style="background-color: {subject.backgroundColor};">
+        <TagIcon class="h-4 w-4" style="color: {subject.textColor}" />
+      </div>
+      <Button variant="ghost" class="hover:bg-transparent p-2" onclick={() => editSubject(subject)}>
         <span class="text-sm font-medium">{subject.name}</span>
       </Button>
     </div>
