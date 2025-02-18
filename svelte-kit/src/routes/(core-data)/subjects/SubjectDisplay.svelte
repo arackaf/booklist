@@ -1,14 +1,15 @@
 <script lang="ts">
   import { onMount, untrack } from "svelte";
-  import { spring, Spring } from "svelte/motion";
+  import { Spring } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
 
   import type { FullSubject, Subject } from "$data/types";
 
   import { syncHeight } from "$lib/util/animationHelpers.svelte";
-  import SubjectLabelDisplay from "./SubjectLabelDisplay.svelte";
 
   import Self from "./SubjectDisplay.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import { ChevronRightIcon, PencilIcon, TagIcon } from "lucide-svelte";
 
   type Props = {
     editSubject: (subject: Subject) => void;
@@ -23,7 +24,6 @@
   const SPRING_CONFIG_GROWING = { stiffness: 0.1, damping: 0.4, precision: 0.01 };
   const SPRING_CONFIG_SHRINKING = { stiffness: 0.3, damping: 0.9, precision: 0.1 };
   const subjectSpring = new Spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
-  // const subjectSpring = spring({ height: -1, opacity: 1, x: 0, y: 0 }, SPRING_CONFIG_GROWING);
 
   let expanded = $state(true);
   let animating = $state(false);
@@ -81,8 +81,18 @@
 </script>
 
 <div transition:animateLabel>
-  <div class="pb-5">
-    <SubjectLabelDisplay childSubjects={subject.children} {expanded} {setExpanded} onEdit={() => editSubject(subject)} item={subject} />
+  <div class="p-2 hover:bg-muted/50 flex items-center gap-2">
+    <Button class={!subject.children.length ? "invisible" : ""} variant="ghost" size="icon" onclick={() => setExpanded(!expanded)}>
+      <ChevronRightIcon class="h-4 w-4 transition-[transform] {expanded ? 'rotate-90' : ''}" />
+    </Button>
+    <div class="flex">
+      <div class="w-7 self-stretch my-2 rounded flex items-center justify-center" style="background-color: {subject.backgroundColor};">
+        <TagIcon class="h-4 w-4" style="color: {subject.textColor}" />
+      </div>
+      <Button variant="ghost" class="hover:bg-transparent p-2" onclick={() => editSubject(subject)}>
+        <span class="text-sm font-medium">{subject.name}</span>
+      </Button>
+    </div>
   </div>
   <div style="height: {animating ? height + 'px' : 'auto'}; overflow: hidden">
     <div bind:this={contentEl} style="opacity: {opacity}; transform: translate3d({x}px, {y}px, 0)">
