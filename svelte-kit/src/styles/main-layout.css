@@ -33,6 +33,16 @@ header {
   @apply sticky top-[calc(3.5rem+1px)] z-[3] bg-white;
 }
 
+.scroll-gradient {
+  background: linear-gradient(rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 70%, rgba(255, 255, 255, 0) 100%);
+  height: 10px;
+  transform: translateY(11px);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+}
+
 main {
   grid-area: main;
   display: grid;
