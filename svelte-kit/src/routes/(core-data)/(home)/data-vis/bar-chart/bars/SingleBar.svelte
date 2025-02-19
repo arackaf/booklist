@@ -43,6 +43,6 @@
   });
 </script>
 
-<g role="contentinfo" onmouseover={mouseOver} onmouseout={mouseOut} bind:this={g} onfocus={() => {}} onblur={() => {}}>
+<g class="outline-none" role="contentinfo" onmouseover={mouseOver} onmouseout={mouseOut} bind:this={g} onfocus={() => {}} onblur={() => {}}>
   <BarPath x={$barSpring.x} height={$barSpring.height} {width} fill={color} />
 </g>

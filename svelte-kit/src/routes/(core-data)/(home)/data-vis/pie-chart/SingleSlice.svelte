@@ -125,6 +125,7 @@
 </script>
 
 <g
+  class="outline-none"
   role="contentinfo"
   onmouseover={mouseOver}
   onmousemove={mouseOver}
