@@ -44,7 +44,7 @@
 </script>
 
 <section>
-  <div class="flex flex-col-reverse md:grid md:grid-cols-2 gap-2">
+  <div class="flex flex-col-reverse md:grid md:grid-cols-2 gap-2 pt-2">
     <div>
       <div class="flex items-center">
         <h4 class="text-base my-0 flex gap-1">
