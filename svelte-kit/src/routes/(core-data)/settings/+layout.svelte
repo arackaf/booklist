@@ -22,7 +22,7 @@
 </script>
 
 <PageWithNavigation {navItems}>
-  <div class="pt-2">
+  <div>
     {@render children()}
   </div>
 </PageWithNavigation>
