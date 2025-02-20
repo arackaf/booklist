@@ -78,8 +78,8 @@ export function createTooltipState() {
 
   if (typeof window === "object") {
     window.addEventListener("scroll", () => {
-      if (shownState) {
-        result.show(state.bound, state.payload!);
+      if (shownState && state.payload) {
+        result.show(state.bound, state.payload);
       }
     });
   }
