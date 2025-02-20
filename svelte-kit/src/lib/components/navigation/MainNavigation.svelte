@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { BookCopyIcon, BookPlusIcon, TagsIcon, CogIcon, SettingsIcon, HomeIcon } from "lucide-svelte";
+  import { HomeIcon, LibraryBigIcon, TagsIcon, BookPlusIcon, SettingsIcon, CogIcon } from "lucide-svelte";
 
   import { page } from "$app/state";
   import type { UserSummary } from "$data/user-summary";
@@ -59,7 +59,7 @@
 
   let navItems: NavigationItem[] = $derived([
     { label: "Home", Icon: HomeIcon, active: isHome, href: publicUserIdPersist.urlTo("/") },
-    { label: "Books", Icon: BookCopyIcon, href: publicUserIdPersist.urlTo("/books") },
+    { label: "Books", Icon: LibraryBigIcon, href: publicUserIdPersist.urlTo("/books") },
     { label: "Subjects", Icon: TagsIcon, href: "/subjects", hidden: !(hasPublicId || loggedIn), disabled: hasPublicId },
     {
       label: "Book Entry",
