@@ -25,7 +25,7 @@
 <BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
 <div>
-  <div style="padding-bottom: 15px">
+  <div class="pt-2 pb-4">
     <div style="border: 0">
       {#each books as book (book.id)}
         <MobileViewItem {book} {previewBook} />
