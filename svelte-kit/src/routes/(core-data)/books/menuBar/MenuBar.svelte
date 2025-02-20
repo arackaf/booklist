@@ -34,7 +34,8 @@
   };
 </script>
 
-<div class="sticky-content p-2">
+<div class="sticky-content">
+  <div class="scroll-gradient-flush"></div>
   <MobileMenu title="Search options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
     <div class="flex flex-col gap-2 w-[175px] mt-4 mb-2">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
@@ -42,7 +43,7 @@
     </div>
   </MobileMenu>
 
-  <div style="font-size: 11pt; position: relative">
+  <div class="pt-2" style="font-size: 11pt; position: relative">
     <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
       <RawButton
         style="font-size: 1.4rem; align-self: center"
