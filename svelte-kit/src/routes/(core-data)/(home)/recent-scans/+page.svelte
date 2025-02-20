@@ -33,7 +33,7 @@
   let noResultsMessage = $derived(scans ? "No more recent scans" : "No recent scans");
 </script>
 
-<div class="recent-scans-module">
+<div>
   <div class="overlay-holder">
     <div class="grid grid-cols-[75px_1fr] gap-4">
       {#each scans.value as item}
