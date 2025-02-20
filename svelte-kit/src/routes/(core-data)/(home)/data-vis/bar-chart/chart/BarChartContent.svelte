@@ -6,7 +6,7 @@
   import VerticalAxis from "../vertical-axis/Axis.svelte";
   import Axis from "../axis/Axis.svelte";
   import Bar from "../bars/Bar.svelte";
-  import { onMount, setContext } from "svelte";
+  import { onDestroy, onMount, setContext } from "svelte";
   import Tooltip from "../../tooltip/Tooltip.svelte";
   import { createTooltipState } from "../../tooltip/tooltipState.svelte";
   import LinearGradient from "./LinearGradient.svelte";
@@ -79,6 +79,10 @@
 
   const tooltipManager = createTooltipState();
   setContext("tooltip-state", tooltipManager);
+
+  onDestroy(() => {
+    tooltipManager.destroy();
+  });
 </script>
 
 <div>

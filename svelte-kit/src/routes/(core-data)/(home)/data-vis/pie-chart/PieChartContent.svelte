@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, setContext } from "svelte";
+  import { onMount, setContext, onDestroy } from "svelte";
   import { arc, pie } from "d3-shape";
 
   import SingleSlice from "./SingleSlice.svelte";
@@ -165,6 +165,10 @@
 
   const tooltipManager = createTooltipState();
   setContext("tooltip-state", tooltipManager);
+
+  onDestroy(() => {
+    tooltipManager.destroy();
+  });
 </script>
 
 <div bind:this={containerDiv} class="flex items-center mx-16">

@@ -30,6 +30,12 @@ export function createTooltipState() {
     showTimeout = null;
   }
 
+  const handler = () => {
+    if (shownState && state.payload) {
+      result.show(state.bound, state.payload);
+    }
+  };
+
   const result = {
     show(bindTo: SVGElement, payload: TooltipPayload) {
       const { w, h } = getTooltipDimensions(payload);
@@ -73,15 +79,14 @@ export function createTooltipState() {
       Object.assign(state, { onScreen: true });
     },
     currentState: state,
-    shownState
+    shownState,
+    destroy() {
+      window.removeEventListener("scroll", handler);
+    }
   };
 
   if (typeof window === "object") {
-    window.addEventListener("scroll", () => {
-      if (shownState && state.payload) {
-        result.show(state.bound, state.payload);
-      }
-    });
+    window.addEventListener("scroll", handler);
   }
 
   return result;
