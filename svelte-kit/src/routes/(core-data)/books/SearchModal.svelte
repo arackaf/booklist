@@ -2,7 +2,12 @@
   import { untrack } from "svelte";
   import type { Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/Button/Button.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
+  import { Label } from "$lib/components/ui/label";
+  import * as Select from "$lib/components/ui/select";
+  import * as RadioGroup from "$lib/components/ui/radio-group";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+
   import Modal from "$lib/components/Modal.svelte";
   import { sanitize } from "$lib/util/formDataHelpers";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -12,11 +17,7 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import { SearchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
-  import Input from "$lib/components/ui/input/input.svelte";
-  import { Label } from "$lib/components/ui/label";
-  import * as Select from "$lib/components/ui/select";
-  import * as RadioGroup from "$lib/components/ui/radio-group";
-  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   type Props = {
     isOpen: boolean;
