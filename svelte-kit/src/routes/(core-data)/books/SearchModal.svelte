@@ -16,6 +16,7 @@
   import { Label } from "$lib/components/ui/label";
   import * as Select from "$lib/components/ui/select";
   import * as RadioGroup from "$lib/components/ui/radio-group";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
 
   type Props = {
     isOpen: boolean;
@@ -34,6 +35,7 @@
   let localSubjects = $state<any[]>([]);
   let localTags = $state<any[]>([]);
   let noSubjects = $state(false);
+  let childSubjects = $state(false);
 
   const onOpen = () => {
     syncSearchState();
@@ -56,6 +58,7 @@
     localSubjects = localSearchValues.subjects;
     localTags = localSearchValues.tags;
     noSubjects = localSearchValues.noSubjects;
+    childSubjects = !!localSearchValues.childSubjects;
   }
 
   const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject.id));
@@ -160,18 +163,14 @@
           {/snippet}
         </SelectAndDisplayContainer>
 
-        <div class="sm:col-span-2">
-          <label class="checkbox">
-            <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
-            Also search child subjects
-          </label>
+        <div class="sm:col-span-2 flex items-center gap-2">
+          <Checkbox id="search-child-subjects" name="child-subjects" value="true" disabled={noSubjects} bind:checked={childSubjects} />
+          <Label for="search-child-subjects" class="checkbox">Also search child subjects</Label>
         </div>
 
-        <div class="sm:col-span-2">
-          <label class="checkbox">
-            <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
-            Search books with no subjects set
-          </label>
+        <div class="sm:col-span-2 flex items-center gap-2">
+          <Checkbox id="search-no-subjects" name="no-subjects" value="true" disabled={childSubjects} bind:checked={noSubjects} />
+          <Label for="search-no-subjects" class="checkbox">Search books with no subjects set</Label>
         </div>
       </div>
 
