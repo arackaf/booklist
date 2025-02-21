@@ -10,12 +10,13 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
-  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
+
   import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
   import Select from "$lib/components/form-elements/Select/Select.svelte";
 
   import { SearchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
+  import { Label } from "$lib/components/ui/label";
 
   type Props = {
     isOpen: boolean;
@@ -82,89 +83,94 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
-  <form action="/books" onformdata={onFormData} onsubmit={onHide}>
-    {#if publicUser.value}
-      <input type="hidden" name="user" value={publicUser.value} />
-    {/if}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-      <InputGroup labelText="Title">
-        <Input bind:inputEl={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
-      </InputGroup>
+  <div>
+    <form action="/books" onformdata={onFormData} onsubmit={onHide}>
+      {#if publicUser.value}
+        <input type="hidden" name="user" value={publicUser.value} />
+      {/if}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
+        <div class="flex flex-col gap-1.5">
+          <Label>Title</Label>
+          <Input bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
+        </div>
 
-      <InputGroup labelText="Publisher">
-        <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
-      </InputGroup>
+        <div class="flex flex-col gap-1.5">
+          <Label>Publisher</Label>
+          <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+        </div>
 
-      <InputGroup labelText="Author">
-        <Input name="author" value={localSearchValues.author} placeholder="Author" />
-      </InputGroup>
+        <div class="flex flex-col gap-1.5">
+          <Label>Author</Label>
+          <Input name="author" value={localSearchValues.author} placeholder="Author" />
+        </div>
 
-      <div class="flex flex-col">
-        <label for="isReadE" class="text-sm">Is Read?</label>
-        <div class="flex-1 flex flex-row gap-4 items-center mt-1 sm:mt-0">
-          <div class="flex flex-row items-center gap-1">
-            <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
-            <label for="isReadE">Either</label>
-          </div>
-          <div class="flex flex-row items-center gap-1">
-            <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
-            <label for="isReadY">Yes</label>
-          </div>
-          <div class="flex flex-row items-center gap-1">
-            <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
-            <label for="isReadN">No</label>
+        <div class="flex flex-col">
+          <label for="isReadE" class="text-sm">Is Read?</label>
+          <div class="flex-1 flex flex-row gap-4 items-center mt-1 sm:mt-0">
+            <div class="flex flex-row items-center gap-1">
+              <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
+              <label for="isReadE">Either</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
+              <label for="isReadY">Yes</label>
+            </div>
+            <div class="flex flex-row items-center gap-1">
+              <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
+              <label for="isReadN">No</label>
+            </div>
           </div>
         </div>
+        <SelectGroup labelText="Sort">
+          <Select name="sort" value={localSearchValues.sortPacket || "id-desc"}>
+            {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
+              <option value={sortVal}>{display}</option>
+            {/each}
+          </Select>
+        </SelectGroup>
+
+        <SelectAndDisplayContainer class="sm:col-span-2 pt-2">
+          {#snippet select()}
+            <SelectAvailableTags placeholder="Tags" {tags} currentlySelected={localTags} onSelect={selectTag} />
+          {/snippet}
+          {#snippet display()}
+            <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
+          {/snippet}
+        </SelectAndDisplayContainer>
+
+        <SelectAndDisplayContainer class="sm:col-span-2">
+          {#snippet select()}
+            <SelectAvailableSubjects
+              disabled={noSubjects}
+              placeholder="Subjects"
+              subjects={allSubjects}
+              currentlySelected={localSubjects}
+              onSelect={selectSubject}
+            />
+          {/snippet}
+          {#snippet display()}
+            <DisplaySelectedSubjects disabled={noSubjects} subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          {/snippet}
+        </SelectAndDisplayContainer>
+
+        <div class="sm:col-span-2">
+          <label class="checkbox">
+            <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
+            Also search child subjects
+          </label>
+        </div>
+
+        <div class="sm:col-span-2">
+          <label class="checkbox">
+            <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
+            Search books with no subjects set
+          </label>
+        </div>
       </div>
-      <SelectGroup labelText="Sort">
-        <Select name="sort" value={localSearchValues.sortPacket || "id-desc"}>
-          {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
-            <option value={sortVal}>{display}</option>
-          {/each}
-        </Select>
-      </SelectGroup>
 
-      <SelectAndDisplayContainer class="sm:col-span-2 pt-2">
-        {#snippet select()}
-          <SelectAvailableTags placeholder="Tags" {tags} currentlySelected={localTags} onSelect={selectTag} />
-        {/snippet}
-        {#snippet display()}
-          <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
-        {/snippet}
-      </SelectAndDisplayContainer>
-
-      <SelectAndDisplayContainer class="sm:col-span-2">
-        {#snippet select()}
-          <SelectAvailableSubjects
-            disabled={noSubjects}
-            placeholder="Subjects"
-            subjects={allSubjects}
-            currentlySelected={localSubjects}
-            onSelect={selectSubject}
-          />
-        {/snippet}
-        {#snippet display()}
-          <DisplaySelectedSubjects disabled={noSubjects} subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-        {/snippet}
-      </SelectAndDisplayContainer>
-
-      <div class="sm:col-span-2">
-        <label class="checkbox">
-          <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
-          Also search child subjects
-        </label>
+      <div class="mt-5">
+        <Button theme="primary">Search</Button>
       </div>
-
-      <div class="sm:col-span-2">
-        <label class="checkbox">
-          <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
-          Search books with no subjects set
-        </label>
-      </div>
-    </div>
-
-    <div class="mt-5">
-      <Button theme="primary">Search</Button>
-    </div>
-  </form>
+    </form>
+  </div>
 </Modal>

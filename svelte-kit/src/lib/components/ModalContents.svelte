@@ -47,7 +47,7 @@
   });
 </script>
 
-<div style={dimensionStyles} class="overflow-hidden text-base text-neutral-900">
+<div style={dimensionStyles} class="overflow-hidden text-base text-neutral-900 p-1">
   <div bind:this={innerContent}>
     {@render children()}
   </div>

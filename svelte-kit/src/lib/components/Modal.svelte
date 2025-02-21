@@ -27,8 +27,12 @@
     }
   }}
 >
-  <AlertDialog.Content interactOutsideBehavior="close" onOpenAutoFocus={() => openFocus?.focus()} class="translate-y-[0] top-16 pb-5 overflow-auto">
-    <AlertDialog.Header>
+  <AlertDialog.Content
+    interactOutsideBehavior="close"
+    onOpenAutoFocus={() => openFocus?.focus()}
+    class="translate-y-[0] top-16 p-5 pt-6 overflow-auto"
+  >
+    <AlertDialog.Header class="px-1">
       <AlertDialog.Title>
         <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
       </AlertDialog.Title>
