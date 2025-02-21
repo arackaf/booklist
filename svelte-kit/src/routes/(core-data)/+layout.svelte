@@ -66,13 +66,12 @@
     window.addEventListener("ws-info", ({ detail }: any) => {
       if (detail.type === "scanResults") {
         fetch("/api/clear-books-cache", { method: "POST" });
-        if ($page.url.pathname !== "/scan") {
-          for (const { success, item: bookMaybe } of detail.packet.results) {
-            if (success) {
-              showBookToast(bookMaybe);
-            } else {
-              showBookFailureToast(bookMaybe);
-            }
+
+        for (const { success, item: bookMaybe } of detail.packet.results) {
+          if (success) {
+            showBookToast(bookMaybe);
+          } else {
+            showBookFailureToast(bookMaybe);
           }
         }
       }

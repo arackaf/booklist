@@ -39,9 +39,9 @@
 </script>
 
 <section class="flush-bottom flex flex-col gap-4">
-  <div class="pt-2 flex items-center sticky-content bg-white">
+  <div class="pt-4 flex items-center sticky-content bg-white">
     <div class="scroll-gradient-flush"></div>
-    <h1 class="text-lg font-bold">Edit Subjects</h1>
+    <h1 class="self-start text-lg font-bold">Edit Subjects</h1>
     <Button class="ml-auto" onclick={() => editSubject(newSubject())}>New Subject</Button>
   </div>
 
