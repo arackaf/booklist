@@ -141,13 +141,7 @@
         <div class="flex flex-col gap-1.5">
           <Label>Sort</Label>
 
-          <Select.Root
-            type="single"
-            value={selectedSortValue}
-            onValueChange={val => {
-              selectedSortValue = val;
-            }}
-          >
+          <Select.Root name="sort" type="single" bind:value={selectedSortValue}>
             <Select.Trigger>{sortDisplayLookup[selectedSortValue]}</Select.Trigger>
             <Select.Content>
               {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
