@@ -86,12 +86,12 @@
 <section class="flush-bottom flex flex-col gap-8">
   <div class="pt-4">
     <div class="flex flex-col gap-4">
-      <h1 class="text-lg font-bold">Edit Books</h1>
+      <h1 class="text-lg font-bold">Add Books</h1>
 
       <div class="flex items-start gap-3">
         <div class="flex flex-col gap-2 h-20">
           <form onsubmit={handleSearch} class="flex gap-2 w-full max-w-sm">
-            <Input bind:ref={inputEl} type="text" placeholder="Enter ISBN..." bind:value={isbn} />
+            <Input bind:ref={inputEl} type="text" placeholder="Enter or Scan ISBN..." bind:value={isbn} />
             <Button type="submit" disabled={!canSearch}>
               <SearchIcon class="h-4 w-4 mr-2" />
               Search
@@ -106,7 +106,7 @@
       </div>
       <a href="/recent-scans" class="inline-flex items-center text-sm text-primary hover:text-primary/80">
         <BookCheckIcon class="h-4 w-4 mr-2" />
-        View recently scanned books here
+        View recently looked up books here
       </a>
     </div>
 
