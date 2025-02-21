@@ -30,7 +30,7 @@
   <AlertDialog.Content
     interactOutsideBehavior="close"
     onOpenAutoFocus={() => openFocus?.focus()}
-    class="translate-y-[0] top-16 p-5 pt-6 overflow-auto"
+    class="translate-y-[0] top-8 sm:top-16 p-5 pt-6 overflow-auto"
   >
     <AlertDialog.Header class="px-1">
       <AlertDialog.Title>
