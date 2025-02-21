@@ -122,21 +122,6 @@
               <Label for="read-no">No</Label>
             </div>
           </RadioGroup.Root>
-
-          <!-- <div class="flex-1 flex flex-row gap-4 items-center mt-1 sm:mt-0">
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
-              <label for="isReadE">Either</label>
-            </div>
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
-              <label for="isReadY">Yes</label>
-            </div>
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
-              <label for="isReadN">No</label>
-            </div>
-          </div> -->
         </div>
         <div class="flex flex-col gap-1.5">
           <Label>Sort</Label>
