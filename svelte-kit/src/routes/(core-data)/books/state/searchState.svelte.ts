@@ -128,7 +128,13 @@ export class ChangeFilters {
     const subjects = this.url.searchParams.getAll("subjects");
     const newSubjects = subjects.filter(s => s !== id + "");
 
-    return urlWithArrayFilter(this.url, "subjects", newSubjects);
+    const result = urlWithArrayFilter(this.url, "subjects", newSubjects);
+
+    if (!newSubjects.length) {
+      return urlWithoutFilter(new URL(result), "child-subjects");
+    }
+
+    return result;
   }
 
   addTag(id: number) {
