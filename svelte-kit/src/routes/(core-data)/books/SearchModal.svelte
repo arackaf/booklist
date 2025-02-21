@@ -2,7 +2,12 @@
   import { untrack } from "svelte";
   import type { Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/Button/Button.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
+  import { Label } from "$lib/components/ui/label";
+  import * as Select from "$lib/components/ui/select";
+  import * as RadioGroup from "$lib/components/ui/radio-group";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+
   import Modal from "$lib/components/Modal.svelte";
   import { sanitize } from "$lib/util/formDataHelpers";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -10,12 +15,9 @@
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
-  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
-  import Select from "$lib/components/form-elements/Select/Select.svelte";
 
   import { SearchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   type Props = {
     isOpen: boolean;
@@ -30,9 +32,11 @@
 
   let titleEl = $state<HTMLInputElement | null>(null);
   let localSearchValues = $state<(typeof searchState)["value"]>({} as any);
+  let selectedSortValue = $state("id-desc");
   let localSubjects = $state<any[]>([]);
   let localTags = $state<any[]>([]);
   let noSubjects = $state(false);
+  let childSubjects = $state(false);
 
   const onOpen = () => {
     syncSearchState();
@@ -51,9 +55,11 @@
 
   function syncSearchState() {
     localSearchValues = searchState.value;
+    selectedSortValue = localSearchValues.sort || "id-desc";
     localSubjects = localSearchValues.subjects;
     localTags = localSearchValues.tags;
     noSubjects = localSearchValues.noSubjects;
+    childSubjects = !!localSearchValues.childSubjects;
   }
 
   const selectSubject = (subject: any) => (localSubjects = localSubjects.concat(subject.id));
@@ -86,89 +92,96 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption={"Full Search"} standardFooter={false}>
-  <form action="/books" onformdata={onFormData} onsubmit={onHide}>
-    {#if publicUser.value}
-      <input type="hidden" name="user" value={publicUser.value} />
-    {/if}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-      <InputGroup labelText="Title">
-        <Input bind:inputEl={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
-      </InputGroup>
+  <div>
+    <form action="/books" onformdata={onFormData} onsubmit={onHide}>
+      {#if publicUser.value}
+        <input type="hidden" name="user" value={publicUser.value} />
+      {/if}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
+        <div class="flex flex-col gap-1.5">
+          <Label for="search-title">Title</Label>
+          <Input id="search-title" bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
+        </div>
 
-      <InputGroup labelText="Publisher">
-        <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
-      </InputGroup>
+        <div class="flex flex-col gap-1.5">
+          <Label for="search-publisher">Publisher</Label>
+          <Input id="search-publisher" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+        </div>
 
-      <InputGroup labelText="Author">
-        <Input name="author" value={localSearchValues.author} placeholder="Author" />
-      </InputGroup>
+        <div class="flex flex-col gap-1.5">
+          <Label for="search-author">Author</Label>
+          <Input id="search-author" name="author" value={localSearchValues.author} placeholder="Author" />
+        </div>
 
-      <div class="flex flex-col">
-        <label for="isReadE" class="text-sm">Is Read?</label>
-        <div class="flex-1 flex flex-row gap-4 items-center mt-1 sm:mt-0">
-          <div class="flex flex-row items-center gap-1">
-            <input type="radio" checked={localSearchValues.isRead === ""} name="is-read" id="isReadE" value="off" />
-            <label for="isReadE">Either</label>
-          </div>
-          <div class="flex flex-row items-center gap-1">
-            <input type="radio" checked={localSearchValues.isRead === "true"} name="is-read" id="isReadY" value="true" />
-            <label for="isReadY">Yes</label>
-          </div>
-          <div class="flex flex-row items-center gap-1">
-            <input type="radio" checked={localSearchValues.isRead === "false"} name="is-read" id="isReadN" value="false" />
-            <label for="isReadN">No</label>
-          </div>
+        <div class="flex flex-col gap-1.5">
+          <span class="text-neutral-600 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Is Read?</span>
+
+          <RadioGroup.Root class="flex gap-4 my-auto" name="is-read" value={localSearchValues.isRead} orientation="horizontal">
+            <div class="inline-flex items-center gap-1.5">
+              <RadioGroup.Item value="" id="read-either" />
+              <Label for="read-either">Either</Label>
+            </div>
+            <div class="inline-flex items-center gap-1.5">
+              <RadioGroup.Item value="true" id="read-yes" />
+              <Label for="read-yes">Yes</Label>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <RadioGroup.Item value="false" id="read-no" />
+              <Label for="read-no">No</Label>
+            </div>
+          </RadioGroup.Root>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="search-sort">Sort</Label>
+
+          <Select.Root name="sort" type="single" bind:value={selectedSortValue}>
+            <Select.Trigger id="search-sort">{sortDisplayLookup[selectedSortValue]}</Select.Trigger>
+            <Select.Content>
+              {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
+                <Select.Item value={sortVal} label={display}>{display}</Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        </div>
+
+        <SelectAndDisplayContainer class="sm:col-span-2 pt-2">
+          {#snippet select()}
+            <SelectAvailableTags placeholder="Tags" {tags} currentlySelected={localTags} onSelect={selectTag} />
+          {/snippet}
+          {#snippet display()}
+            <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
+          {/snippet}
+        </SelectAndDisplayContainer>
+
+        <SelectAndDisplayContainer class="sm:col-span-2">
+          {#snippet select()}
+            <SelectAvailableSubjects
+              disabled={noSubjects}
+              placeholder="Subjects"
+              subjects={allSubjects}
+              currentlySelected={localSubjects}
+              onSelect={selectSubject}
+            />
+          {/snippet}
+          {#snippet display()}
+            <DisplaySelectedSubjects disabled={noSubjects} subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
+          {/snippet}
+        </SelectAndDisplayContainer>
+
+        <div class="sm:col-span-2 flex items-center gap-2">
+          <Checkbox id="search-child-subjects" name="child-subjects" value="true" disabled={noSubjects} bind:checked={childSubjects} />
+          <Label for="search-child-subjects" class="checkbox">Also search child subjects</Label>
+        </div>
+
+        <div class="sm:col-span-2 flex items-center gap-2">
+          <Checkbox id="search-no-subjects" name="no-subjects" value="true" disabled={childSubjects} bind:checked={noSubjects} />
+          <Label for="search-no-subjects" class="checkbox">Search books with no subjects set</Label>
         </div>
       </div>
-      <SelectGroup labelText="Sort">
-        <Select name="sort" value={localSearchValues.sortPacket || "id-desc"}>
-          {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
-            <option value={sortVal}>{display}</option>
-          {/each}
-        </Select>
-      </SelectGroup>
 
-      <SelectAndDisplayContainer class="sm:col-span-2 pt-2">
-        {#snippet select()}
-          <SelectAvailableTags placeholder="Tags" {tags} currentlySelected={localTags} onSelect={selectTag} />
-        {/snippet}
-        {#snippet display()}
-          <DisplaySelectedTags {tags} currentlySelected={localTags} onRemove={removeTag} />
-        {/snippet}
-      </SelectAndDisplayContainer>
-
-      <SelectAndDisplayContainer class="sm:col-span-2">
-        {#snippet select()}
-          <SelectAvailableSubjects
-            disabled={noSubjects}
-            placeholder="Subjects"
-            subjects={allSubjects}
-            currentlySelected={localSubjects}
-            onSelect={selectSubject}
-          />
-        {/snippet}
-        {#snippet display()}
-          <DisplaySelectedSubjects disabled={noSubjects} subjects={allSubjects} currentlySelected={localSubjects} onRemove={removeSubject} />
-        {/snippet}
-      </SelectAndDisplayContainer>
-
-      <div class="sm:col-span-2">
-        <label class="checkbox">
-          <input type="checkbox" name="child-subjects" value="true" checked={!!localSearchValues.childSubjects} />
-          Also search child subjects
-        </label>
+      <div class="mt-5">
+        <Button type="submit">Search</Button>
       </div>
-
-      <div class="sm:col-span-2">
-        <label class="checkbox">
-          <input type="checkbox" name="no-subjects" value="true" bind:checked={noSubjects} />
-          Search books with no subjects set
-        </label>
-      </div>
-    </div>
-
-    <div class="mt-5">
-      <Button theme="primary">Search</Button>
-    </div>
-  </form>
+    </form>
+  </div>
 </Modal>
