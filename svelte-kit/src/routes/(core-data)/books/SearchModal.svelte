@@ -180,7 +180,7 @@
       </div>
 
       <div class="mt-5">
-        <Button theme="primary">Search</Button>
+        <Button>Search</Button>
       </div>
     </form>
   </div>
