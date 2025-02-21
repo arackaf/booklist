@@ -91,22 +91,22 @@
       {/if}
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
         <div class="flex flex-col gap-1.5">
-          <Label>Title</Label>
-          <Input bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
+          <Label for="search-title">Title</Label>
+          <Input id="search-title" bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <Label>Publisher</Label>
-          <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+          <Label for="search-publisher">Publisher</Label>
+          <Input id="search-publisher" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <Label>Author</Label>
-          <Input name="author" value={localSearchValues.author} placeholder="Author" />
+          <Label for="search-author">Author</Label>
+          <Input id="search-author" name="author" value={localSearchValues.author} placeholder="Author" />
         </div>
 
         <div class="flex flex-col gap-1.5">
-          <Label>Is Read?</Label>
+          <span class="text-neutral-600 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Is Read?</span>
 
           <RadioGroup.Root class="flex gap-4 my-auto" name="is-read" value={localSearchValues.isRead} orientation="horizontal">
             <div class="inline-flex items-center gap-1.5">
@@ -124,10 +124,10 @@
           </RadioGroup.Root>
         </div>
         <div class="flex flex-col gap-1.5">
-          <Label>Sort</Label>
+          <Label for="search-sort">Sort</Label>
 
           <Select.Root name="sort" type="single" bind:value={selectedSortValue}>
-            <Select.Trigger>{sortDisplayLookup[selectedSortValue]}</Select.Trigger>
+            <Select.Trigger id="search-sort">{sortDisplayLookup[selectedSortValue]}</Select.Trigger>
             <Select.Content>
               {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
                 <Select.Item value={sortVal} label={display}>{display}</Select.Item>
