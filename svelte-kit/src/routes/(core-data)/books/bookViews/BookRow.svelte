@@ -15,7 +15,7 @@
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
-  import { createChangeFilters } from "../state/searchState.svelte";
+  import { ChangeFilters } from "../state/searchState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
   import { booksReadSaving } from "../state/booksReadSavingState.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
@@ -31,7 +31,7 @@
 
   let { isPublic, book, subjects, tags, previewBook }: Props = $props();
 
-  const changeFilter = createChangeFilters();
+  const changeFilter = new ChangeFilters();
 
   const booksModuleContext: any = getContext("books-module-context");
   const { editBook } = booksModuleContext;

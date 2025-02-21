@@ -76,77 +76,75 @@ export class SearchState {
   });
 }
 
-export function createChangeFilters() {
-  const url = $derived(page.url);
-  const userId = $derived(url.searchParams.get("userId"));
-  const pageNumber = $derived(parseInt(url.searchParams.get("page")!) || 1);
+export class ChangeFilters {
+  url = $derived(page.url);
+  userId = $derived(this.url.searchParams.get("userId"));
+  pageNumber = $derived(parseInt(this.url.searchParams.get("page")!) || 1);
 
-  function pageTo(val: number, totalPages?: number) {
-    if (val === 1 && pageNumber === 1) {
+  getPageToUrl(val: number, totalPages?: number) {
+    if (val === 1 && this.pageNumber === 1) {
       return null;
     }
     if (val === 1) {
-      return urlWithoutFilter(url, "page");
+      return urlWithoutFilter(this.url, "page");
     }
 
-    if (val === pageNumber || val < 1 || val > totalPages!) {
+    if (val === this.pageNumber || val < 1 || val > totalPages!) {
       return null;
     }
 
-    return urlWithFilter(url, "page", String(val));
+    return urlWithFilter(this.url, "page", String(val));
   }
 
-  return {
-    withoutSearch: urlWithoutFilter(url, "search"),
-    withoutAuthor: urlWithoutFilter(url, "author"),
-    withoutIsRead: urlWithoutFilter(url, "is-read"),
-    withoutPublisher: urlWithoutFilter(url, "publisher"),
-    withoutNoSubjects: urlWithoutFilter(url, "no-subjects"),
-    withoutChildSubjects: urlWithoutFilter(url, "child-subjects"),
-    withoutSort: urlWithoutFilter(url, "sort"),
-    withoutFilters: `/books${userId ? `?userId=${userId}` : ""}`,
-    pageTo: (val: number, totalPages?: number) => pageTo(val, totalPages),
+  withoutSearch = $derived(urlWithoutFilter(this.url, "search"));
+  withoutAuthor = $derived(urlWithoutFilter(this.url, "author"));
+  withoutIsRead = $derived(urlWithoutFilter(this.url, "is-read"));
+  withoutPublisher = $derived(urlWithoutFilter(this.url, "publisher"));
+  withoutNoSubjects = $derived(urlWithoutFilter(this.url, "no-subjects"));
+  withoutChildSubjects = $derived(urlWithoutFilter(this.url, "child-subjects"));
+  withoutSort = $derived(urlWithoutFilter(this.url, "sort"));
+  withoutFilters = $derived(`/books${this.userId ? `?userId=${this.userId}` : ""}`);
+  pageTo = (val: number, totalPages?: number) => this.getPageToUrl(val, totalPages);
 
-    withSort(field: string) {
-      const [sortField, sortDirection] = (url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
+  withSort(field: string) {
+    const [sortField, sortDirection] = (this.url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
 
-      let direction = "asc";
-      if (field === sortField && sortDirection === "asc") {
-        direction = "desc";
-      }
-      return urlWithFilter(url, "sort", `${field}-${direction}`);
-    },
-
-    addSubject(id: number) {
-      const subjects = url.searchParams.getAll("subjects");
-      if (subjects.includes(id + "")) {
-        return null;
-      }
-
-      return urlWithArrayFilter(url, "subjects", subjects.concat(id + ""));
-    },
-    withoutSubject(id: number) {
-      const subjects = url.searchParams.getAll("subjects");
-      const newSubjects = subjects.filter(s => s !== id + "");
-
-      return urlWithArrayFilter(url, "subjects", newSubjects);
-    },
-
-    addTag(id: number) {
-      const tags = url.searchParams.getAll("tags");
-      if (tags.includes(id + "")) {
-        return null;
-      }
-
-      return urlWithArrayFilter(url, "tags", tags.concat(id + ""));
-    },
-    withoutTag(id: number) {
-      const tags = url.searchParams.getAll("tags");
-      const newTags = tags.filter(s => s !== id + "");
-
-      return urlWithArrayFilter(url, "tags", newTags);
+    let direction = "asc";
+    if (field === sortField && sortDirection === "asc") {
+      direction = "desc";
     }
-  };
+    return urlWithFilter(this.url, "sort", `${field}-${direction}`);
+  }
+
+  addSubject(id: number) {
+    const subjects = this.url.searchParams.getAll("subjects");
+    if (subjects.includes(id + "")) {
+      return null;
+    }
+
+    return urlWithArrayFilter(this.url, "subjects", subjects.concat(id + ""));
+  }
+  withoutSubject(id: number) {
+    const subjects = this.url.searchParams.getAll("subjects");
+    const newSubjects = subjects.filter(s => s !== id + "");
+
+    return urlWithArrayFilter(this.url, "subjects", newSubjects);
+  }
+
+  addTag(id: number) {
+    const tags = this.url.searchParams.getAll("tags");
+    if (tags.includes(id + "")) {
+      return null;
+    }
+
+    return urlWithArrayFilter(this.url, "tags", tags.concat(id + ""));
+  }
+  withoutTag(id: number) {
+    const tags = this.url.searchParams.getAll("tags");
+    const newTags = tags.filter(s => s !== id + "");
+
+    return urlWithArrayFilter(this.url, "tags", newTags);
+  }
 }
 
 const urlWithoutFilter = (url: URL, filter: string) => {
