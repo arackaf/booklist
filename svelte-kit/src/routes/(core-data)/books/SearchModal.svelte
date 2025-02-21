@@ -180,7 +180,7 @@
       </div>
 
       <div class="mt-5">
-        <Button>Search</Button>
+        <Button type="submit">Search</Button>
       </div>
     </form>
   </div>
