@@ -1,19 +1,26 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte";
+  import { fade } from "svelte/transition";
+  import { BookCheckIcon, SearchIcon } from "lucide-svelte";
+
   import type { Book } from "$data/types";
+  import { ajaxUtil } from "$lib/util/ajaxUtil";
+
+  import Input from "$lib/components/ui/input/input.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
-  import SlideAnimate from "$lib/util/SlideAnimate.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
-  import ScanResults from "./ScanResults.svelte";
-  import BookEntryItem from "./BookEntryItem.svelte";
 
   let { data } = $props();
   let { subjects: allSubjects, tags } = $derived(data);
 
   let editingBook = $state<Book | null>(null);
   let enteringBook = $state(false);
-  let showScanInstructions = $state(false);
   let focused = $state(0);
-  let selected = $state<any>(null);
+  let inputEl = $state<HTMLInputElement | null>(null);
+
+  onMount(() => {
+    inputEl?.focus();
+  });
 
   const defaultEmptyBook = () =>
     ({
@@ -32,68 +39,85 @@
     enteringBook = true;
   };
 
-  const entryFinished = (index: number) => {
-    if (index < 9) {
-      focused = index + 1;
-      selected = index + 1;
-    } else {
-      focused = 0;
-      selected = 0;
+  const onFocus = () => {
+    if (!focused) {
+      onFocus();
     }
+  };
+
+  let isSearching = $state(false);
+  let isbn = $state("");
+  let isbnClean = $derived(isbn.trim());
+  let canSearch = $derived(!isSearching && (isbnClean.length == 10 || isbnClean.length == 13));
+  let scannedMessage = $state("");
+
+  function entryFinished() {
+    isbn = "";
+  }
+
+  let lastScannedTimeout = $state<any>(0);
+  let mounted = true;
+  onDestroy(() => {
+    mounted = false;
+  });
+
+  const handleSearch = (evt: any) => {
+    evt.preventDefault();
+
+    if (!canSearch) {
+      return;
+    }
+
+    const isbnCapture = isbnClean;
+    entryFinished();
+
+    clearTimeout(lastScannedTimeout);
+    ajaxUtil.post("/api/scan-book", { isbn: isbnCapture }, () => {
+      lastScannedTimeout = setTimeout(() => {
+        if (mounted) {
+          scannedMessage = "";
+        }
+      }, 1500);
+    });
+    scannedMessage = `${isbnCapture} queued for lookup!`;
   };
 </script>
 
-<section>
-  <div class="flex flex-col-reverse md:grid md:grid-cols-2 gap-2 pt-2">
-    <div>
-      <div class="flex items-center">
-        <h4 class="text-base my-0 flex gap-1">
-          Enter your books here
-          <button
-            class="raw-button cursor-pointer"
-            onclick={() => (showScanInstructions = !showScanInstructions)}
-            aria-label="Show scan instructions"
-          >
-            <i class="far fa-question-circle"></i>
-          </button>
-        </h4>
-        <Button size="sm" class="ml-6" onclick={manuallyEnterBook}>Manual entry</Button>
-      </div>
-      <div class="mt-2">
-        <SlideAnimate open={showScanInstructions} class="p-3 bg-info-9 text-info-1 border-info-8 border rounded" style="width: 80%">
-          <div>
-            Enter each isbn below, and press "Retrieve and save all" to search for all entered books. Or, use a barcode scanner to search for each
-            book immediately (pressing enter after typing in a 10 or 13 digit isbn has the same effect).
-            <br />
-            <br />
-            After you enter the isbn in the last textbox, focus will jump back to the first. This is to make scanning a large number of books with a barcode
-            scanner as smooth as possible; just make sure you don't have any partially-entered ISBNs up top, or else they may get overridden.
-          </div>
-        </SlideAnimate>
-      </div>
-      <br />
+<section class="flush-bottom flex flex-col gap-8">
+  <div class="pt-4">
+    <div class="flex flex-col gap-4">
+      <h1 class="text-lg font-bold">Edit Books</h1>
 
-      {#each Array.from({ length: 10 }) as _, idx}
-        <div>
-          <BookEntryItem
-            {idx}
-            onFocus={() => (focused = idx)}
-            focused={idx == focused}
-            selected={idx == selected}
-            entryFinished={() => entryFinished(idx)}
-          />
+      <div class="flex items-start gap-3">
+        <div class="flex flex-col gap-2 h-20">
+          <form onsubmit={handleSearch} class="flex gap-2 w-full max-w-sm">
+            <Input bind:ref={inputEl} type="text" placeholder="Enter ISBN..." bind:value={isbn} />
+            <Button type="submit" disabled={!canSearch}>
+              <SearchIcon class="h-4 w-4 mr-2" />
+              Search
+            </Button>
+          </form>
+          {#if scannedMessage}
+            <p transition:fade class="text-sm text-muted-foreground">{scannedMessage}</p>
+          {/if}
         </div>
-      {/each}
+
+        <Button onclick={manuallyEnterBook} variant="outline">Manual Entry</Button>
+      </div>
+      <a href="/recent-scans" class="inline-flex items-center text-sm text-primary hover:text-primary/80">
+        <BookCheckIcon class="h-4 w-4 mr-2" />
+        View recently scanned books here
+      </a>
     </div>
-    <ScanResults />
+
+    <EditBookModal
+      isOpen={enteringBook}
+      book={editingBook}
+      subjects={allSubjects}
+      {tags}
+      onSave={() => (editingBook = defaultEmptyBook())}
+      onHide={() => (enteringBook = false)}
+      header={"Enter book"}
+    />
   </div>
-  <EditBookModal
-    isOpen={enteringBook}
-    book={editingBook}
-    subjects={allSubjects}
-    {tags}
-    onSave={() => (editingBook = defaultEmptyBook())}
-    onHide={() => (enteringBook = false)}
-    header={"Enter book"}
-  />
 </section>
