@@ -13,6 +13,7 @@
 
   import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
   import DeleteBook from "./DeleteBook.svelte";
+  import Separator from "../ui/separator/separator.svelte";
 
   type Props = {
     book: Book;
@@ -85,7 +86,8 @@
     </TabContents>
   </Tabs>
 
-  <hr class="my-3" />
+  <Separator class="my-4 h-[2px]" />
+
   <div class="flex flex-row">
     <ActionButton disabled={tab === "delete"} theme="primary" type="submit" running={saving}>Save</ActionButton>
     <Button disabled={saving} class="ml-auto" type="button" onclick={onCancel}>Cancel</Button>

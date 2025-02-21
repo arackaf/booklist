@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Separator from "./ui/separator/separator.svelte";
+
   type Props = {
     caption?: string;
     smaller?: boolean;
@@ -15,4 +17,4 @@
     <i class="far fa-times"></i>
   </button>
 </div>
-<hr class="my-3" />
+<Separator class="mt-2 h-[2px]" />
