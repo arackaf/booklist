@@ -1,5 +1,3 @@
-import { derived } from "svelte/store";
-import { page as pageLegacy } from "$app/stores";
 import { page } from "$app/state";
 import { toHash } from "$lib/state/helpers";
 
