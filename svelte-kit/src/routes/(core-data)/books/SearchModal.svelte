@@ -89,17 +89,17 @@
         <input type="hidden" name="user" value={publicUser.value} />
       {/if}
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1">
           <Label>Title</Label>
           <Input bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
         </div>
 
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1">
           <Label>Publisher</Label>
           <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
         </div>
 
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col gap-1">
           <Label>Author</Label>
           <Input name="author" value={localSearchValues.author} placeholder="Author" />
         </div>
