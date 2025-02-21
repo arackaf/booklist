@@ -11,12 +11,10 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
-  import SelectGroup from "$lib/components/form-elements/Select/SelectGroup.svelte";
-  import Select from "$lib/components/form-elements/Select/Select.svelte";
-
   import { SearchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
   import { Label } from "$lib/components/ui/label";
+  import * as Select from "$lib/components/ui/select";
 
   type Props = {
     isOpen: boolean;
@@ -31,6 +29,7 @@
 
   let titleEl = $state<HTMLInputElement | null>(null);
   let localSearchValues = $state<(typeof searchState)["value"]>({} as any);
+  let selectedSortValue = $state("id-desc");
   let localSubjects = $state<any[]>([]);
   let localTags = $state<any[]>([]);
   let noSubjects = $state(false);
@@ -52,6 +51,7 @@
 
   function syncSearchState() {
     localSearchValues = searchState.value;
+    selectedSortValue = localSearchValues.sort || "id-desc";
     localSubjects = localSearchValues.subjects;
     localTags = localSearchValues.tags;
     noSubjects = localSearchValues.noSubjects;
@@ -89,17 +89,17 @@
         <input type="hidden" name="user" value={publicUser.value} />
       {/if}
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1.5">
           <Label>Title</Label>
           <Input bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
         </div>
 
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1.5">
           <Label>Publisher</Label>
           <Input name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
         </div>
 
-        <div class="flex flex-col gap-1">
+        <div class="flex flex-col gap-1.5">
           <Label>Author</Label>
           <Input name="author" value={localSearchValues.author} placeholder="Author" />
         </div>
@@ -121,13 +121,24 @@
             </div>
           </div>
         </div>
-        <SelectGroup labelText="Sort">
-          <Select name="sort" value={localSearchValues.sortPacket || "id-desc"}>
-            {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
-              <option value={sortVal}>{display}</option>
-            {/each}
-          </Select>
-        </SelectGroup>
+        <div class="flex flex-col gap-1.5">
+          <Label>Sort</Label>
+
+          <Select.Root
+            type="single"
+            value={selectedSortValue}
+            onValueChange={val => {
+              selectedSortValue = val;
+            }}
+          >
+            <Select.Trigger>{sortDisplayLookup[selectedSortValue]}</Select.Trigger>
+            <Select.Content>
+              {#each Object.entries(sortDisplayLookup) as [sortVal, display]}
+                <Select.Item value={sortVal} label={display}>{display}</Select.Item>
+              {/each}
+            </Select.Content>
+          </Select.Root>
+        </div>
 
         <SelectAndDisplayContainer class="sm:col-span-2 pt-2">
           {#snippet select()}
