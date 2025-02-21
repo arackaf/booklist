@@ -82,6 +82,10 @@
       searchParams.delete("child-subjects");
     }
 
+    if (!searchParams.get("subjects")) {
+      searchParams.delete("child-subjects");
+    }
+
     sanitize(searchParams);
   };
 </script>

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { page as pageStore } from "$app/stores";
   import Button from "$lib/components/Button/Button.svelte";
-  import { createChangeFilters } from "../state/searchState.svelte";
+  import { ChangeFilters } from "../state/searchState.svelte";
 
   let { page, totalPages } = $derived($pageStore.data);
 
-  const changeFilter = createChangeFilters();
+  const changeFilter = new ChangeFilters();
 
   let canPageUp = $derived(page < totalPages);
   let canPageDown = $derived(page > 1);
