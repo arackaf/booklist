@@ -40,9 +40,9 @@
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        class="w-[150px] justify-between border rounded
+        class="w-[150px] justify-between border rounded font-normal
           {size === 'sm' ? 'h-8' : ''}
-          {triggerClasses} 
+          {triggerClasses}   
           {disabled ? ' cursor-not-allowed ' : ''}"
         {disabled}
         {...props}
