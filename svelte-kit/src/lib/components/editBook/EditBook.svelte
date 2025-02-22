@@ -60,7 +60,7 @@
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <input type="hidden" name="id" value={book?.id ?? null} />
-  <Tabs.Root bind:value={tab} class="">
+  <Tabs.Root bind:value={tab}>
     <Tabs.List class={cn("w-full grid gap-2", book?.id ? "grid-cols-3" : "grid-cols-2")}>
       <Tabs.Trigger value="basic">Book info</Tabs.Trigger>
       <Tabs.Trigger value="covers">Covers</Tabs.Trigger>
