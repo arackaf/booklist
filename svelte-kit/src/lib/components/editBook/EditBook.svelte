@@ -3,17 +3,18 @@
 
   import type { Book, Subject, Tag } from "$data/types";
 
+  import * as Tabs from "$lib/components/ui/tabs";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
+  import { cn } from "$lib/utils";
   import Button from "$lib/components/Button/Button.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
+  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import EditBookCovers from "./EditBookCovers.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
-
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
-
-  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "../layout/tabs/index";
   import DeleteBook from "./DeleteBook.svelte";
-  import Separator from "../ui/separator/separator.svelte";
+  import { CircleAlertIcon } from "lucide-svelte";
 
   type Props = {
     book: Book;
@@ -59,32 +60,31 @@
 
 <form method="post" action="/books?/saveBook" use:enhance={executeSave}>
   <input type="hidden" name="id" value={book?.id ?? null} />
-  <Tabs bind:currentTab={tab}>
-    <TabHeaders>
-      <TabHeader tabName="basic">Book info</TabHeader>
-      <TabHeader tabName="covers">Covers</TabHeader>
+  <Tabs.Root bind:value={tab} class="">
+    <Tabs.List class={cn("w-full grid gap-2", book?.id ? "grid-cols-3" : "grid-cols-2")}>
+      <Tabs.Trigger value="basic">Book info</Tabs.Trigger>
+      <Tabs.Trigger value="covers">Covers</Tabs.Trigger>
       {#if book?.id}
-        <TabHeader tabName="delete" class="text-red-600">Delete</TabHeader>
+        <Tabs.Trigger value="delete" class="flex items-center gap-2">Delete <CircleAlertIcon class="text-red-600" size="18" /></Tabs.Trigger>
       {/if}
-    </TabHeaders>
-    <TabContents>
-      <TabContent tabName="basic">
-        {#if editingBook}
-          <EditBookInfo {saveAttempted} {saving} book={editingBook} {subjects} {tags} />
-        {/if}
-      </TabContent>
-      <TabContent tabName="covers">
-        {#if book}
-          <EditBookCovers {book} />
-        {/if}
-      </TabContent>
-      <TabContent tabName="delete">
-        {#if book?.id}
-          <DeleteBook id={book?.id} {afterDelete} />
-        {/if}
-      </TabContent>
-    </TabContents>
-  </Tabs>
+    </Tabs.List>
+    <Tabs.Content value="basic">
+      {#if editingBook}
+        <EditBookInfo {saveAttempted} {saving} book={editingBook} {subjects} {tags} />
+      {/if}
+    </Tabs.Content>
+    <Tabs.Content value="covers">
+      {#if book}
+        <EditBookCovers {book} />
+      {/if}
+    </Tabs.Content>
+
+    <Tabs.Content value="delete">
+      {#if book?.id}
+        <DeleteBook id={book?.id} {afterDelete} />
+      {/if}
+    </Tabs.Content>
+  </Tabs.Root>
 
   <Separator class="my-4 h-[2px]" />
 
