@@ -40,7 +40,7 @@
         variant="outline"
         role="combobox"
         aria-expanded={open}
-        class="w-[150px] justify-between border rounded border-neutral-400 
+        class="w-[150px] justify-between border rounded
           {size === 'sm' ? 'h-8' : ''}
           {triggerClasses} 
           {disabled ? ' cursor-not-allowed ' : ''}"
