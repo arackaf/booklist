@@ -5,6 +5,8 @@
   import type { Book, Subject } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
+  import * as Tabs from "$lib/components/ui/tabs";
+
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
@@ -12,7 +14,6 @@
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
   type Props = {
     modifyingBooks: any[];
@@ -74,55 +75,55 @@
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Subjects" standardFooter={false}>
   <form method="post" action="?/setBooksSubjects" use:enhance={save}>
-    <Tabs currentTab="subjects">
-      <TabHeaders>
-        <TabHeader tabName="subjects">Choose subjects</TabHeader>
-        <TabHeader tabName="books">For books</TabHeader>
-      </TabHeaders>
-      <TabContents>
-        <TabContent tabName="subjects">
-          {#each modifyingBooks as b}
-            <input type="hidden" name="ids" value={b.id} />
-          {/each}
-          {#each addingSubjects as s}
-            <input type="hidden" name="add" value={s} />
-          {/each}
-          {#each removingSubjects as s}
-            <input type="hidden" name="remove" value={s} />
-          {/each}
-          <div class="flex flex-col gap-4 pt-3">
-            <SelectAndDisplayContainer>
-              {#snippet select()}
-                <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
-              {/snippet}
-              {#snippet display()}
-                <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
-              {/snippet}
-            </SelectAndDisplayContainer>
+    <Tabs.Root value="subjects" class="">
+      <Tabs.List class="w-full grid grid-cols-2 gap-2">
+        <Tabs.Trigger value="subjects">Choose subjects</Tabs.Trigger>
+        <Tabs.Trigger value="books">For books</Tabs.Trigger>
+      </Tabs.List>
 
-            <SelectAndDisplayContainer>
-              {#snippet select()}
-                <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
-              {/snippet}
-              {#snippet display()}
-                <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
-              {/snippet}
-            </SelectAndDisplayContainer>
+      <Tabs.Content value="subjects">
+        {#each modifyingBooks as b}
+          <input type="hidden" name="ids" value={b.id} />
+        {/each}
+        {#each addingSubjects as s}
+          <input type="hidden" name="add" value={s} />
+        {/each}
+        {#each removingSubjects as s}
+          <input type="hidden" name="remove" value={s} />
+        {/each}
+        <div class="flex flex-col gap-4 pt-3">
+          <SelectAndDisplayContainer>
+            {#snippet select()}
+              <SelectAvailableSubjects {subjects} placeholder="Adding" currentlySelected={addingSubjects} onSelect={subjectSelectedToAdd} />
+            {/snippet}
+            {#snippet display()}
+              <DisplaySelectedSubjects {subjects} currentlySelected={addingSubjects} onRemove={dontAddSubject} />
+            {/snippet}
+          </SelectAndDisplayContainer>
 
-            <div>
-              <Button size="sm" type="button" onclick={resetSubjects}>Reset subjects</Button>
-            </div>
+          <SelectAndDisplayContainer>
+            {#snippet select()}
+              <SelectAvailableSubjects {subjects} placeholder="Removing" currentlySelected={removingSubjects} onSelect={subjectSelectedToRemove} />
+            {/snippet}
+            {#snippet display()}
+              <DisplaySelectedSubjects {subjects} currentlySelected={removingSubjects} onRemove={dontRemoveSubject} />
+            {/snippet}
+          </SelectAndDisplayContainer>
+
+          <div>
+            <Button size="sm" type="button" onclick={resetSubjects}>Reset subjects</Button>
           </div>
-        </TabContent>
-        <TabContent tabName="books">
-          <div class="flex flex-col gap-2 text-sm">
-            {#each modifyingBooks as book (book.id)}
-              <div>{book.title}</div>
-            {/each}
-          </div>
-        </TabContent>
-      </TabContents>
-    </Tabs>
+        </div>
+      </Tabs.Content>
+      <Tabs.Content value="books">
+        <div class="flex flex-col gap-2 text-sm">
+          {#each modifyingBooks as book (book.id)}
+            <div>{book.title}</div>
+          {/each}
+        </div>
+      </Tabs.Content>
+    </Tabs.Root>
+
     <StandardModalFooter>
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
