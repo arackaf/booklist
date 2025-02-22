@@ -117,15 +117,15 @@
           <span class="text-neutral-600 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Is Read?</span>
 
           <RadioGroup.Root class="flex gap-4 my-auto" name="is-read" value={localSearchValues.isRead} orientation="horizontal">
-            <div class="inline-flex items-center gap-1.5">
+            <div class="inline-flex items-center gap-1">
               <RadioGroup.Item value="" id="read-either" />
               <Label for="read-either">Either</Label>
             </div>
-            <div class="inline-flex items-center gap-1.5">
+            <div class="inline-flex items-center gap-1">
               <RadioGroup.Item value="true" id="read-yes" />
               <Label for="read-yes">Yes</Label>
             </div>
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1">
               <RadioGroup.Item value="false" id="read-no" />
               <Label for="read-no">No</Label>
             </div>
