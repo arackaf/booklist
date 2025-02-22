@@ -5,6 +5,8 @@
   import type { Book, Tag } from "$data/types";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
 
+  import * as Tabs from "$lib/components/ui/tabs";
+
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
@@ -12,7 +14,6 @@
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import { Tabs, TabHeaders, TabHeader, TabContents, TabContent } from "$lib/components/layout/tabs/index";
 
   type Props = {
     modifyingBooks: any[];
@@ -72,55 +73,55 @@
 
 <Modal {isOpen} {onHide} headerCaption="Add / Remove Tags" standardFooter={false}>
   <form method="post" action="?/setBooksTags" use:enhance={save}>
-    <Tabs currentTab="tags">
-      <TabHeaders>
-        <TabHeader tabName="tags">Choose tags</TabHeader>
-        <TabHeader tabName="books">For books</TabHeader>
-      </TabHeaders>
-      <TabContents>
-        <TabContent tabName="tags">
-          {#each modifyingBooks as b}
-            <input type="hidden" name="ids" value={b.id} />
-          {/each}
-          {#each addingTags as t}
-            <input type="hidden" name="add" value={t} />
-          {/each}
-          {#each removingTags as t}
-            <input type="hidden" name="remove" value={t} />
-          {/each}
-          <div class="flex flex-col gap-4 pt-3">
-            <SelectAndDisplayContainer>
-              {#snippet select()}
-                <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
-              {/snippet}
-              {#snippet display()}
-                <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
-              {/snippet}
-            </SelectAndDisplayContainer>
+    <Tabs.Root value="tags" class="">
+      <Tabs.List class="w-full grid grid-cols-2 gap-2">
+        <Tabs.Trigger value="tags">Choose tags</Tabs.Trigger>
+        <Tabs.Trigger value="books">For books</Tabs.Trigger>
+      </Tabs.List>
 
-            <SelectAndDisplayContainer>
-              {#snippet select()}
-                <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
-              {/snippet}
-              {#snippet display()}
-                <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
-              {/snippet}
-            </SelectAndDisplayContainer>
+      <Tabs.Content value="tags">
+        {#each modifyingBooks as b}
+          <input type="hidden" name="ids" value={b.id} />
+        {/each}
+        {#each addingTags as t}
+          <input type="hidden" name="add" value={t} />
+        {/each}
+        {#each removingTags as t}
+          <input type="hidden" name="remove" value={t} />
+        {/each}
+        <div class="flex flex-col gap-4 pt-3">
+          <SelectAndDisplayContainer>
+            {#snippet select()}
+              <SelectAvailableTags {tags} placeholder="Adding" currentlySelected={addingTags} onSelect={tagSelectedToAdd} />
+            {/snippet}
+            {#snippet display()}
+              <DisplaySelectedTags {tags} currentlySelected={addingTags} onRemove={dontAddTag} />
+            {/snippet}
+          </SelectAndDisplayContainer>
 
-            <div>
-              <Button size="sm" type="button" onclick={resetTags}>Reset tags</Button>
-            </div>
+          <SelectAndDisplayContainer>
+            {#snippet select()}
+              <SelectAvailableTags {tags} placeholder="Removing" currentlySelected={removingTags} onSelect={tagSelectedToRemove} />
+            {/snippet}
+            {#snippet display()}
+              <DisplaySelectedTags {tags} currentlySelected={removingTags} onRemove={dontRemoveTag} />
+            {/snippet}
+          </SelectAndDisplayContainer>
+
+          <div>
+            <Button size="sm" type="button" onclick={resetTags}>Reset tags</Button>
           </div>
-        </TabContent>
-        <TabContent tabName="books">
-          <div class="flex flex-col gap-2 text-sm">
-            {#each modifyingBooks as book (book.id)}
-              <div>{book.title}</div>
-            {/each}
-          </div>
-        </TabContent>
-      </TabContents>
-    </Tabs>
+        </div>
+      </Tabs.Content>
+      <Tabs.Content value="books">
+        <div class="flex flex-col gap-2 text-sm">
+          {#each modifyingBooks as book (book.id)}
+            <div>{book.title}</div>
+          {/each}
+        </div>
+      </Tabs.Content>
+    </Tabs.Root>
+
     <StandardModalFooter>
       <div class="flex flex-row">
         <ActionButton running={saving} theme="primary">Save</ActionButton>
