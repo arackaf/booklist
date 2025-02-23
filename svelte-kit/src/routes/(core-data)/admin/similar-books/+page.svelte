@@ -36,7 +36,7 @@
         <div class="relative suppress-dropdown">
           <SelectAndDisplayContainer>
             {#snippet select()}
-              <SelectAvailableSubjects {subjects} currentlySelected={localSubjects} onSelect={selectSubject} />
+              <SelectAvailableSubjects {subjects} currentlySelected={localSubjects} onSelect={selectSubject} popoverClass="z-40" />
             {/snippet}
             {#snippet display()}
               <DisplaySelectedSubjects {subjects} currentlySelected={localSubjects} onRemove={removeSubject} />

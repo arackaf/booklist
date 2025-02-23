@@ -10,9 +10,10 @@
     onSelect: (tag: Tag) => void;
     placeholder?: string;
     currentlySelected: number[];
+    popoverClass?: string;
   };
 
-  let { tags, onSelect, placeholder = "Tags", currentlySelected = [] }: Props = $props();
+  let { tags, onSelect, placeholder = "Tags", currentlySelected = [], popoverClass = "" }: Props = $props();
 
   let search = $state("");
 
@@ -34,4 +35,4 @@
 {#each currentlySelected as id}
   <input type="hidden" name="tags" value={id} />
 {/each}
-<GenericLabelSelect {placeholder} bind:search options={() => eligible} onItemSelected={doSelect} />
+<GenericLabelSelect {placeholder} bind:search options={() => eligible} onItemSelected={doSelect} {popoverClass} />

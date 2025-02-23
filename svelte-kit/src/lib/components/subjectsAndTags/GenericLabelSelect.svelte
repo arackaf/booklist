@@ -16,6 +16,7 @@
     triggerClasses?: string;
     renderPlaceholder?: Snippet;
     disabled?: boolean;
+    popoverClass?: string;
   };
 
   let {
@@ -26,7 +27,8 @@
     size = "default",
     triggerClasses = "",
     renderPlaceholder,
-    disabled
+    disabled,
+    popoverClass = ""
   }: Props = $props();
 
   let open = $state(false);
@@ -57,7 +59,7 @@
     {/snippet}
   </Popover.Trigger>
 
-  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0">
+  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0 {popoverClass}">
     <div>
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search" />

@@ -15,6 +15,7 @@
     noHiddenFields?: boolean;
     disabled?: boolean;
     renderPlaceholder?: Snippet;
+    popoverClass?: string;
   };
 
   let {
@@ -26,7 +27,8 @@
     triggerClasses = "",
     noHiddenFields = false,
     disabled,
-    renderPlaceholder: placeholderSnippetPassed
+    renderPlaceholder: placeholderSnippetPassed,
+    popoverClass = ""
   }: Props = $props();
 
   let search = $state("");
@@ -51,7 +53,7 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect {disabled} {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses}>
+<GenericLabelSelect {disabled} {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses} {popoverClass}>
   {#snippet renderPlaceholder()}
     {#if placeholderSnippetPassed}
       {@render placeholderSnippetPassed()}
