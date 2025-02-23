@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
@@ -60,7 +62,7 @@
   {#if !nextPageKey.value}
     <div>
       {#if scans.value.length}
-        <hr class="my-3" />
+        <Separator class="my-4 h-[2px]" />
       {/if}
       <Alert type="info">
         {noResultsMessage}
