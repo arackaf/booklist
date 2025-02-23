@@ -11,7 +11,7 @@
 
 <div class="max-w-[400px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
   <div data-reach-dialog-content class="border-4 border-[var(--primary-3)] rounded-xl lg:p-5 p-3">
-    <h4>Book Search</h4>
+    <h4 class="text-lg font-medium">Book Search</h4>
     <Separator class="my-4 h-[2px]" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="col-span-2">

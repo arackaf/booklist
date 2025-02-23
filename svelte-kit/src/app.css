@@ -66,11 +66,6 @@ select {
   touch-action: manipulation;
 }
 
-h4 {
-  margin: 0;
-  font-size: 18px;
-}
-
 label {
   font-size: 14px;
 }

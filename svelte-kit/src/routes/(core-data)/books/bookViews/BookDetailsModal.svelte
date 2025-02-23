@@ -158,7 +158,7 @@
           <div class="p-2">
             <div>
               {#if !editorialReviews || !editorialReviews.length}
-                <h4>No editorial reviews for this book</h4>
+                <h4 class="text-lg my-2">No editorial reviews for this book</h4>
               {:else}
                 <div>
                   {#each editorialReviews as review, index}
@@ -181,7 +181,7 @@
 
             <div>
               {#if !similarBooks || !similarBooks.length}
-                <h4>No similar items found for this book</h4>
+                <h4 class="text-lg my-2">No similar items found for this book</h4>
               {:else}
                 <div>
                   <div class="flex flex-col">
