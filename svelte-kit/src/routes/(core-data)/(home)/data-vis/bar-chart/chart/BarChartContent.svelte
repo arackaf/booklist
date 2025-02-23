@@ -10,6 +10,7 @@
   import Tooltip from "../../tooltip/Tooltip.svelte";
   import { createTooltipState } from "../../tooltip/tooltipState.svelte";
   import LinearGradient from "./LinearGradient.svelte";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
 
   type Props = {
     showingData: any[];
@@ -121,5 +122,5 @@
       </g>
     </svg>
   </div>
-  <hr />
+  <Separator class="my-4 h-[2px]" />
 </div>

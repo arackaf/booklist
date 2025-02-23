@@ -1,6 +1,8 @@
 <script lang="ts">
   import { getContext, untrack } from "svelte";
   import { spring } from "svelte/motion";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import type { createTooltipState, TooltipPayload } from "./tooltipState.svelte";
 
   type Props = {
@@ -110,7 +112,7 @@
           <i class="fad fa-times-circle"></i>
         </button>
       </div>
-      <hr class="border-slate-600 my-0" />
+      <Separator class="h-[2px]" />
     </div>
     <div class="md:text-base text-xs pl-1">
       <span>{currentData.count} {currentData.count === 1 ? "Book" : "Books"}</span>
