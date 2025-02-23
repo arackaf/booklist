@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import Button from "$lib/components/Button/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
 
   type Props = {
     onHide?: () => void;
@@ -11,10 +12,10 @@
 </script>
 
 <div class="mt-8">
-  <hr class="my-3" />
+  <Separator class="my-4 h-[2px]" />
   {#if children}
     {@render children()}
   {:else}
-    <Button onclick={onHide}>Close</Button>
+    <Button variant="secondary" onclick={onHide}>Close</Button>
   {/if}
 </div>
