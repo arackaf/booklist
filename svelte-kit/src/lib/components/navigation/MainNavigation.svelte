@@ -74,7 +74,7 @@
   ]);
 </script>
 
-<header class="z-50 sticky top-0 w-full border-b bg-background">
+<header class="z-[9999] sticky top-0 w-full border-b bg-background">
   <nav class="container flex h-14 items-center">
     {#if loggedInUser}
       <Sheet.Root

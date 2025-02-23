@@ -14,7 +14,7 @@
 
 <section class="p-0">
   <div style="max-width: var(--content-max-width)">
-    <header class="z-50 sticky-content w-full border-b bg-background pl-1">
+    <header class="z-[9999] sticky-content w-full border-b bg-background pl-1">
       <div class="scroll-gradient"></div>
       <nav class="container flex h-14 items-center">
         <NavItems {navItems} />
