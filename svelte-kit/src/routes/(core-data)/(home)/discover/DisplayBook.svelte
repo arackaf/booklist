@@ -6,6 +6,7 @@
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
   import Button from "$lib/components/Button/Button.svelte";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
 
   type Props = {
     book: Book;
@@ -48,6 +49,6 @@
         <Button class="mt-auto self-start" theme="danger" size="sm" onclick={() => unselectBook(book)}>Remove</Button>
       </div>
     </div>
-    <hr class="my-2" />
+    <Separator class="my-4 h-[2px]" />
   </div>
 </div>

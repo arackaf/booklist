@@ -3,6 +3,8 @@
 
   import { fade } from "svelte/transition";
   import { enhance } from "$app/forms";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
   import Alert from "$lib/components/Alert.svelte";
@@ -187,7 +189,7 @@
                 </Button>
               </div>
             </div>
-            <hr class="my-2" />
+            <Separator class="my-4 h-[2px]" />
           {/if}
         </div>
       </div>

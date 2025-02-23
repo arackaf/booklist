@@ -1,6 +1,8 @@
 <script lang="ts">
   import { quadIn } from "svelte/easing";
 
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import BookCover from "$lib/components/BookCover.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
@@ -51,5 +53,5 @@
       </Button>
     </div>
   </div>
-  <hr class="my-2" />
+  <Separator class="my-4 h-[2px]" />
 </div>
