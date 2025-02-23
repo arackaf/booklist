@@ -66,12 +66,6 @@ select {
   touch-action: manipulation;
 }
 
-hr {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  border: var(--default-border-width) solid var(--primary-4);
-}
-
 h4 {
   margin: 0;
   font-size: 18px;
