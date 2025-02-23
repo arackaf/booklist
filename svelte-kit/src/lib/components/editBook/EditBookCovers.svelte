@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Book, BookImages } from "$data/types";
+  import Separator from "$lib/components/ui/separator/separator.svelte";
 
   import ManageBookCover from "./ManageBookCover.svelte";
   import UploadResults from "./UploadResults.svelte";
@@ -51,7 +52,7 @@
 
 <div>
   <CurrentCovers {book} />
-  <hr class="my-3" />
+  <Separator class="my-4 h-[2px]" />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
