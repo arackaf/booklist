@@ -3,6 +3,8 @@
   import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
@@ -51,7 +53,7 @@
           Your collection is currently public, viewable{" "}
           <a target="_blank" rel="noreferrer" href={publicLink}> here </a>
         </div>
-        <hr style="width: 100%" class="mt-2 mb-0" />
+        <Separator class="my-4 h-[2px]" />
       </div>
     {/if}
 

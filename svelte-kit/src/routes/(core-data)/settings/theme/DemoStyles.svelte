@@ -1,6 +1,8 @@
 <svelte:options runes={true} />
 
 <script lang="ts">
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import Input from "$lib/components/form-elements/Input/Input.svelte";
@@ -10,7 +12,7 @@
 <div class="max-w-[400px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
   <div data-reach-dialog-content class="border-4 border-[var(--primary-3)] rounded-xl lg:p-5 p-3">
     <h4>Book Search</h4>
-    <hr class="my-4" />
+    <Separator class="my-4 h-[2px]" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="col-span-2">
         <div class="flex flex-col gap-2">
@@ -39,7 +41,7 @@
         </div>
       </div>
     </div>
-    <hr />
+    <Separator class="my-4 h-[2px]" />
     <div class="flex flex-row">
       <Button theme="primary">Filter</Button>
       <Button class="ml-auto">Close</Button>

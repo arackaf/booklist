@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { Subject } from "$data/types";
 
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import { stackAndGetTopLevelSubjects } from "$lib/state/subjectsState";
@@ -57,6 +59,6 @@
 </section>
 <Modal openFocus={inputEl} isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
   <EditSubject allSubjects={subjects} {colors} subject={editingSubject} onComplete={closeEditModal} onCancelEdit={closeEditModal} />
-  <hr class="my-3" />
+  <Separator class="my-4 h-[2px]" />
   <Button variant="outline" onclick={closeEditModal}>Close</Button>
 </Modal>

@@ -5,6 +5,8 @@
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
 
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import Input from "$lib/components/form-elements/Input/Input.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
@@ -99,13 +101,13 @@
     placeholder="Title search"
   />
 
-  <hr class="m-0" />
+  <Separator class="my-0 h-[2px]" />
 
   <Button title="Filter search" onclick={mobileHandler(openFilterModal)} class="h-8">
     <span>Set Filters</span>
     <i class="fal fa-fw fa-filter ml-auto"></i>
   </Button>
-  <hr class="m-0" />
+  <Separator class="my-0 h-[2px]" />
   {#if !isPublic}
     <Button title="Edit subjects" onclick={mobileHandler(editSubjects)} class="h-8">
       <span>Edit Subjects</span>
@@ -115,7 +117,7 @@
       <span>Edit Tags</span>
       <i class="fal fa-fw fa-tags ml-auto"></i>
     </Button>
-    <hr class="m-0" />
+    <Separator class="my-0 h-[2px]" />
   {/if}
 
   <form method="POST" action="?/reloadBooks" class="contents" use:enhance={reload}>
@@ -124,9 +126,9 @@
       <i class="fal fa-fw fa-sync ml-auto" class:fa-spin={reloading}></i>
     </Button>
   </form>
-  <hr class="m-0" />
+  <Separator class="my-0 h-[2px]" />
 {:else if !isPublic}
-  <hr class="m-0" />
+  <Separator class="my-0 h-[2px]" />
   <Button class="h-8" title="Add/remove subjects" onclick={mobileHandler(editSubjectsForSelectedBooks)}>
     <span>Edit Subjects</span>
     <i class="fal fa-fw fa-sitemap ml-auto"></i>
@@ -147,5 +149,5 @@
       <i class="fal fa-fw fa-eye-slash ml-auto"></i>
     </Button>
   </BookReadSetter>
-  <hr class="m-0" />
+  <Separator class="my-0 h-[2px]" />
 {/if}

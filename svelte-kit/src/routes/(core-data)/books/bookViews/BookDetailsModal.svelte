@@ -2,6 +2,8 @@
   import { getContext } from "svelte";
   import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
+  import Separator from "$lib/components/ui/separator/separator.svelte";
+
   import Modal from "$lib/components/Modal.svelte";
   import EditBook from "$lib/components/editBook/EditBook.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
@@ -162,7 +164,7 @@
                   {#each editorialReviews as review, index}
                     <div>
                       {#if index > 0}
-                        <hr style="border: 2px solid #eee" />
+                        <Separator class="my-4 h-[2px]" />
                       {/if}
                       <div class="flex flex-col">
                         <span class="text-base">{review.source || "<unknown source>"}</span>
