@@ -100,17 +100,17 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
         <div class="flex flex-col gap-1.5">
           <Label for="search-title">Title</Label>
-          <Input id="search-title" bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
+          <Input id="search-title" autocomplete="off" bind:ref={titleEl} name="search" placeholder="Title" value={localSearchValues.search} />
         </div>
 
         <div class="flex flex-col gap-1.5">
           <Label for="search-publisher">Publisher</Label>
-          <Input id="search-publisher" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
+          <Input id="search-publisher" autocomplete="off" name="publisher" value={localSearchValues.publisher} placeholder="Publisher" />
         </div>
 
         <div class="flex flex-col gap-1.5">
           <Label for="search-author">Author</Label>
-          <Input id="search-author" name="author" value={localSearchValues.author} placeholder="Author" />
+          <Input id="search-author" autocomplete="off" name="author" value={localSearchValues.author} placeholder="Author" />
         </div>
 
         <div class="flex flex-col gap-1.5">
