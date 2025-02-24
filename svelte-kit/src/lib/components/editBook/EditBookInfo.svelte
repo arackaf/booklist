@@ -11,6 +11,10 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
 
+  import Label from "$lib/components/ui/label/label.svelte";
+  import InputNew from "$lib/components/ui/input/input.svelte";
+  import { cn } from "$lib/utils";
+
   type Props = {
     book: any;
     tags: Tag[];
@@ -46,16 +50,21 @@
 
 <fieldset disabled={saving}>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-    <InputGroup labelText="Title">
-      <Input
+    <div class="flex flex-col gap-1.5">
+      <Label for="edit-title">Title</Label>
+      <InputNew
+        id="edit-title"
         name="title"
-        error={saveAttempted && missingTitle}
+        autocomplete="off"
+        class={cn("focus:border-border", {
+          "border-red-600": saveAttempted && !book.title,
+          "focus-visible:ring-red-600": saveAttempted && !book.title
+        })}
         bind:value={book.title}
-        bind:inputEl={titleEl}
-        oninput={evt => (missingTitle = !titleEl.value.trim())}
+        bind:ref={titleEl}
         placeholder="Title (required)"
       />
-    </InputGroup>
+    </div>
 
     <InputGroup labelText="ISBN">
       <Input name="isbn" bind:value={book.isbn} placeholder="ISBN" />
