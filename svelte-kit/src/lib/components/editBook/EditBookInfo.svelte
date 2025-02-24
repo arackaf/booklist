@@ -1,9 +1,7 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/Button/Button.svelte";
-  import Input from "../form-elements/Input/Input.svelte";
-  import InputGroup from "../form-elements/Input/InputGroup.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
@@ -12,7 +10,7 @@
   import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import Label from "$lib/components/ui/label/label.svelte";
-  import InputNew from "$lib/components/ui/input/input.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
   import { cn } from "$lib/utils";
 
   type Props = {
@@ -52,7 +50,7 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
     <div class="flex flex-col gap-1.5">
       <Label for="edit-title">Title</Label>
-      <InputNew
+      <Input
         id="edit-title"
         name="title"
         autocomplete="off"
@@ -66,21 +64,25 @@
       />
     </div>
 
-    <InputGroup labelText="ISBN">
-      <Input name="isbn" bind:value={book.isbn} placeholder="ISBN" />
-    </InputGroup>
+    <div class="flex flex-col gap-1.5">
+      <Label for="edit-isbn">ISBN</Label>
+      <Input id="edit-isbn" name="isbn" bind:value={book.isbn} placeholder="ISBN" />
+    </div>
 
-    <InputGroup labelText="Pages">
-      <Input name="pages" bind:value={book.pages} type="number" placeholder="Number of pages" />
-    </InputGroup>
+    <div class="flex flex-col gap-1.5">
+      <Label for="edit-pages">Pages</Label>
+      <Input id="edit-pages" name="pages" bind:value={book.pages} type="number" placeholder="Number of pages" />
+    </div>
 
-    <InputGroup labelText="Publisher">
-      <Input name="publisher" bind:value={book.publisher} placeholder="Publisher" />
-    </InputGroup>
+    <div class="flex flex-col gap-1.5">
+      <Label for="edit-publisher">Publisher</Label>
+      <Input id="edit-publisher" name="publisher" bind:value={book.publisher} placeholder="Publisher" />
+    </div>
 
-    <InputGroup labelText="Published">
-      <Input name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
-    </InputGroup>
+    <div class="flex flex-col gap-1.5">
+      <Label for="edit-published">Published</Label>
+      <Input id="edit-published" name="publicationDate" bind:value={book.publicationDate} placeholder="Publication date" />
+    </div>
 
     <SelectAndDisplayContainer class="sm:col-span-2">
       {#snippet select()}
@@ -102,14 +104,15 @@
 
     <div class="sm:col-span-2 grid grid-cols-3 gap-x-5 gap-y-4">
       {#each book.authors || [] as _, index (index)}
-        <InputGroup labelText="Author">
-          <Input name="authors" bind:value={book.authors[index]} placeholder={`Author ${index + 1}`} />
-        </InputGroup>
+        <div class="flex flex-col gap-1.5">
+          <Label for="edit-author-{index}">Author</Label>
+          <Input id="edit-author-{index}" name="authors" bind:value={book.authors[index]} placeholder={`Author ${index + 1}`} />
+        </div>
       {/each}
     </div>
 
     <div class="sm:col-span-2">
-      <Button size="sm" type="button" disabled={saving} onclick={addAuthor}><i class="far fa-fw fa-plus"></i>Add author</Button>
+      <Button variant="secondary" size="sm" type="button" disabled={saving} onclick={addAuthor}><i class="far fa-fw fa-plus"></i>Add author</Button>
     </div>
   </div>
 </fieldset>
