@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Book, Subject, Tag } from "$data/types";
+  import type { Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/ui/button/button.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -24,7 +24,6 @@
 
   let { book, tags, subjects, saving, saveAttempted }: Props = $props();
 
-  let missingTitle = $state(false);
   let titleEl = $state<HTMLInputElement>(null as any);
 
   const addSubject = (subject: Subject) => {
