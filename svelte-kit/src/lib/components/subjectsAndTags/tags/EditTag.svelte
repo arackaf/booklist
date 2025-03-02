@@ -6,14 +6,17 @@
 
   import type { Color, Tag } from "$data/types";
 
+  import { cn } from "$lib/utils";
   import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
+
   import Label from "$lib/components/form-elements/Label/Label.svelte";
+
+  import InputLabel from "$lib/components/ui/label/label.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
 
   type Props = {
     tag: Tag;
@@ -30,7 +33,7 @@
   const textColors = ["#ffffff", "#000000"];
 
   let missingName = $state(false);
-  let inputEl = $state<HTMLInputElement>();
+  let inputEl = $state<HTMLInputElement>(null as any);
 
   let originalName = $state("");
 
@@ -102,14 +105,19 @@
     <input type="hidden" name="id" value={editingTag.id} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div class="md:col-span-2">
-        <div class="flex flex-col gap-1">
-          <InputGroup labelText="Name">
-            <Input error={missingName} bind:inputEl bind:value={editingTag.name} name="name" placeholder="Tag name" />
-          </InputGroup>
-
-          {#if missingName}
-            <Label theme="error" class="self-start">Tags need names!</Label>
-          {/if}
+        <div class="flex flex-col gap-1.5">
+          <InputLabel for="edit-tag-name">Tag name</InputLabel>
+          <Input
+            class={cn("focus:border-border", {
+              "border-red-600": missingName,
+              "focus-visible:ring-red-600": missingName
+            })}
+            bind:ref={inputEl}
+            bind:value={editingTag.name}
+            name="name"
+            placeholder="Tag name"
+            autocomplete="off"
+          />
           <Label colors={editingTag} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
             {editingTag.name.trim() || "<label preview>"}
           </Label>
