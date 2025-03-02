@@ -16,6 +16,6 @@
   {#if children}
     {@render children()}
   {:else}
-    <Button variant="secondary" onclick={onHide}>Close</Button>
+    <Button variant="outline" onclick={onHide}>Close</Button>
   {/if}
 </div>
