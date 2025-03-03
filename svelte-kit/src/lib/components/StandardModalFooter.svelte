@@ -11,11 +11,13 @@
   let { onHide = () => {}, children }: Props = $props();
 </script>
 
-<div class="mt-8">
+<div>
   <Separator class="my-4 h-[2px]" />
   {#if children}
     {@render children()}
   {:else}
-    <Button variant="outline" onclick={onHide}>Close</Button>
+    <div class="flex">
+      <Button class="ml-auto" variant="outline" onclick={onHide}>Close</Button>
+    </div>
   {/if}
 </div>
