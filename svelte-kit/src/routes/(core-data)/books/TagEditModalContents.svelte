@@ -32,8 +32,7 @@
       <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
       <Button size="sm" variant="outline" class="sm:ml-auto flex flex-row gap-1 self-start items-center" onclick={newTag}>
-        <span>Add new tag </span>
-        <i class="far fa-fw fa-plus-square"></i>
+        <span>New tag </span>
       </Button>
     </div>
   {/if}

@@ -14,8 +14,6 @@
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  //import Button from "$lib/components/Button/Button.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import Label from "$lib/components/form-elements/Label/Label.svelte";
 
@@ -107,7 +105,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
       <div class="md:col-span-2">
         <div class="flex flex-col gap-1.5">
-          <InputLabel for="edit-tag-name">Tag name</InputLabel>
+          <InputLabel for="edit-tag-name">Name</InputLabel>
 
           <Input
             class={cn("focus:border-border", {

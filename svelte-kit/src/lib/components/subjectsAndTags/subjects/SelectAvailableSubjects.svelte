@@ -6,11 +6,10 @@
   import GenericLabelSelect from "../GenericLabelSelect.svelte";
 
   type Props = {
+    subjects: Subject[];
     onSelect: (item: DisablableSubject) => void;
     placeholder?: string;
     currentlySelected?: number[];
-    subjects: Subject[];
-    size?: "sm" | "default";
     triggerClasses?: string;
     noHiddenFields?: boolean;
     disabled?: boolean;
@@ -23,7 +22,6 @@
     placeholder,
     currentlySelected = [],
     subjects,
-    size = "default",
     triggerClasses = "",
     noHiddenFields = false,
     disabled,
@@ -53,7 +51,7 @@
     <input type="hidden" name="subjects" value={id} />
   {/each}
 {/if}
-<GenericLabelSelect {disabled} {placeholder} {size} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses} {popoverClass}>
+<GenericLabelSelect {disabled} {placeholder} bind:search options={() => eligible} onItemSelected={doSelect} {triggerClasses} {popoverClass}>
   {#snippet renderPlaceholder()}
     {#if placeholderSnippetPassed}
       {@render placeholderSnippetPassed()}

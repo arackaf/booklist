@@ -38,7 +38,6 @@
 
       <Button size="sm" variant="outline" class="flex flex-row gap-1 items-center self-start sm:ml-auto" onclick={newSubject}>
         <span>New subject </span>
-        <i class="far fa-fw fa-plus-square"></i>
       </Button>
     </div>
   {/if}
