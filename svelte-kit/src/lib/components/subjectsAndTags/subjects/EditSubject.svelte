@@ -130,8 +130,8 @@
           {editingSubject.name.trim() || "<label preview>"}
         </Label>
       </div>
-      <div class="flex flex-col gap-1">
-        <span class="text-sm -mb-0.5 md:mb-0">Parent</span>
+      <div class="flex flex-col gap-1.5">
+        <InputLabel>Parent</InputLabel>
 
         <div>
           <SelectAvailableSubjects

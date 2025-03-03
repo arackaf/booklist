@@ -31,7 +31,7 @@
   const editSubject = (subject: Subject) => (editingSubject = subject);
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-5">
   {#if !deleteShowing}
     <div class="flex flex-col-reverse sm:flex-row gap-5">
       <SelectAvailableSubjects {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />

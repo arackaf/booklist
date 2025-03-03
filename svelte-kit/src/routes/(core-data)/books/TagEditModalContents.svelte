@@ -26,7 +26,7 @@
   const editTag = (tag: Tag) => (editingTag = tag);
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-5">
   {#if !deleteShowing}
     <div class="flex flex-col-reverse sm:flex-row gap-5">
       <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
