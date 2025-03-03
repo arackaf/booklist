@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Color, Tag } from "$data/types";
-  import Button from "$lib/components/Button/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import EditTag from "$lib/components/subjectsAndTags/tags/EditTag.svelte";
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
 
@@ -31,7 +31,7 @@
     <div class="flex flex-col-reverse sm:flex-row gap-5">
       <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
-      <Button size="med" class="sm:ml-auto flex flex-row gap-1 self-start items-center" onclick={newTag}>
+      <Button size="sm" variant="outline" class="sm:ml-auto flex flex-row gap-1 self-start items-center" onclick={newTag}>
         <span>Add new tag </span>
         <i class="far fa-fw fa-plus-square"></i>
       </Button>
