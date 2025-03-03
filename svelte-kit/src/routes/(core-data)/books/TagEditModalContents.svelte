@@ -31,9 +31,7 @@
     <div class="flex flex-col-reverse sm:flex-row gap-5">
       <SelectAvailableTags {tags} placeholder="Edit tag" currentlySelected={[]} onSelect={item => editTag(item)} />
 
-      <Button size="sm" variant="outline" class="sm:ml-auto flex flex-row gap-1 self-start items-center" onclick={newTag}>
-        <span>New tag </span>
-      </Button>
+      <Button size="sm" variant="secondary" class="sm:ml-auto flex flex-row gap-1 self-start items-center" onclick={newTag}>New tag</Button>
     </div>
   {/if}
 
