@@ -7,6 +7,9 @@
   import type { Color, Tag } from "$data/types";
 
   import { cn } from "$lib/utils";
+  import Input from "$lib/components/ui/input/input.svelte";
+  import InputLabel from "$lib/components/ui/label/label.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
@@ -14,9 +17,6 @@
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import Label from "$lib/components/form-elements/Label/Label.svelte";
-
-  import InputLabel from "$lib/components/ui/label/label.svelte";
-  import Input from "$lib/components/ui/input/input.svelte";
 
   type Props = {
     tag: Tag;
@@ -107,6 +107,7 @@
       <div class="md:col-span-2">
         <div class="flex flex-col gap-1.5">
           <InputLabel for="edit-tag-name">Tag name</InputLabel>
+
           <Input
             class={cn("focus:border-border", {
               "border-red-600": missingName,
