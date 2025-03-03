@@ -13,7 +13,8 @@
   import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  //import Button from "$lib/components/Button/Button.svelte";
   import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import Label from "$lib/components/form-elements/Label/Label.svelte";
@@ -155,12 +156,12 @@
       </div>
       <div class="md:col-span-2">
         <div class="flex flex-row gap-2">
-          <Button size="sm" theme="primary" disabled={saving}>Save</Button>
-          <Button size="sm" disabled={saving} onclick={onCancelEdit}>Cancel</Button>
+          <Button type="submit" size="sm" disabled={saving}>Save</Button>
+          <Button size="sm" variant="outline" disabled={saving} onclick={onCancelEdit}>Cancel</Button>
           {#if editingTag.id}
             <Button
               size="sm"
-              theme="danger"
+              variant="destructive"
               type="button"
               disabled={saving}
               class="ml-auto flex flex-row gap-1"
@@ -186,8 +187,8 @@
       </Alert>
 
       <div class="flex flex-row gap-4">
-        <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
-        <Button size="sm" disabled={deleting} onclick={() => (deleteShowing = false)}>Cancel</Button>
+        <Button type="submit" size="sm" variant="destructive" disabled={deleting}>Delete it!</Button>
+        <Button size="sm" variant="outline" disabled={deleting} onclick={() => (deleteShowing = false)}>Cancel</Button>
       </div>
     </div>
   </form>
