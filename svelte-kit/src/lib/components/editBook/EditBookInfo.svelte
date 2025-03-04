@@ -1,17 +1,18 @@
 <script lang="ts">
   import type { Subject, Tag } from "$data/types";
 
+  import { cn } from "$lib/utils";
   import Button from "$lib/components/ui/button/button.svelte";
+  import Label from "$lib/components/ui/label/label.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
+
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
-  import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
 
-  import Label from "$lib/components/ui/label/label.svelte";
-  import Input from "$lib/components/ui/input/input.svelte";
-  import { cn } from "$lib/utils";
+  import SelectAndDisplayContainer from "../subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   type Props = {
     book: any;
