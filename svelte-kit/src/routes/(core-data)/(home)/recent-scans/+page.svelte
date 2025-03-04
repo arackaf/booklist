@@ -1,8 +1,9 @@
 <script lang="ts">
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
+  import Button from "$lib/components/ui/button/button.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
   import type { Ref } from "$lib/state/reactivityHelpers.svelte";
 
@@ -55,7 +56,7 @@
 
       {#if nextPageKey.value}
         <div></div>
-        <ActionButton class="w-[40ch]" theme="primary" running={loading} onclick={loadNextScans}>Load More</ActionButton>
+        <Button class="w-[40ch]" disabled={loading} onclick={loadNextScans}>Load More</Button>
       {/if}
     </div>
   </div>
