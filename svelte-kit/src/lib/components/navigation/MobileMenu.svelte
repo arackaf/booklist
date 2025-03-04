@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, type Snippet } from "svelte";
-  import RawButton from "../Button/RawButton.svelte";
+
+  import Button from "$lib/components/ui/button/button.svelte";
 
   type Props = {
     onClose: () => void;
@@ -48,15 +49,13 @@
 </script>
 
 <div bind:this={rootEl} class="hidden">
-  <div>
-    <div>
-      <div class="flex items-center header">
-        <RawButton aria-label="Close mobile menu" class="text-[1.4rem] ml-[2px]" onClick={onClose}>
-          <i class="far fa-times"></i>
-        </RawButton>
-        <h3 class="leading-none ml-2 text-lg">{title}</h3>
-      </div>
-      {@render children()}
+  <div class="flex flex-col gap-2 mb-2">
+    <div class="flex items-center header">
+      <h3 class="leading-none ml-2 text-lg">{title}</h3>
+      <Button aria-label="Close mobile menu" variant="outline" size="icon" onclick={onClose} class="text-xl border-0 ml-auto p-1 w-8 h-8">
+        <i class="far fa-times"></i>
+      </Button>
     </div>
+    {@render children()}
   </div>
 </div>

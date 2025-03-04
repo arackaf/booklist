@@ -1,9 +1,9 @@
 <script lang="ts">
   import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
 
+  import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
-  import RawButton from "$lib/components/Button/RawButton.svelte";
 
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
@@ -39,7 +39,7 @@
 <div class="sticky-content">
   <div class="scroll-gradient-flush"></div>
   <MobileMenu title="Search options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
-    <div class="flex flex-col gap-2 w-[175px] mt-4 mb-2">
+    <div class="flex flex-col gap-2 w-[175px]">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
       <BookViewsMobile {bookViewToUse} {closeMobileMenu} />
     </div>
@@ -47,15 +47,16 @@
 
   <div class="pt-2" style="font-size: 11pt; position: relative">
     <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
-      <RawButton
-        style="font-size: 1.4rem; align-self: center"
-        class="block lg:hidden leading-none"
+      <Button
+        variant="outline"
+        size="icon"
+        class="lg:hidden text-xl"
         aria-label="Open mobile menu"
-        onClick={() => (mobileMenuOpen = true)}
+        onclick={() => (mobileMenuOpen = true)}
         data-mobile-menu
       >
         <i class="far fa-fw fa-bars"></i>
-      </RawButton>
+      </Button>
       {#if isPublic}
         <PublicBooksHeader />
       {/if}
