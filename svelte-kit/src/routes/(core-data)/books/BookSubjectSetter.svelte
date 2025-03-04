@@ -7,13 +7,13 @@
 
   import * as Tabs from "$lib/components/ui/tabs";
 
+  import Button from "$lib/components/ui/button/button.svelte";
+
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import StandardModalFooter from "$lib/components/StandardModalFooter.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   type Props = {
     modifyingBooks: any[];
@@ -111,7 +111,7 @@
           </SelectAndDisplayContainer>
 
           <div>
-            <Button size="sm" type="button" onclick={resetSubjects}>Reset subjects</Button>
+            <Button variant="secondary" size="sm" type="button" onclick={resetSubjects}>Reset subjects</Button>
           </div>
         </div>
       </Tabs.Content>
@@ -126,9 +126,8 @@
 
     <StandardModalFooter>
       <div class="flex flex-row">
-        <ActionButton running={saving} theme="primary">Save</ActionButton>
-
-        <Button type="button" class="ml-auto" onclick={onHide}>Cancel</Button>
+        <Button type="submit" disabled={saving}>Save</Button>
+        <Button variant="outline" type="button" class="ml-auto" onclick={onHide}>Cancel</Button>
       </div>
     </StandardModalFooter>
   </form>
