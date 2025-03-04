@@ -3,11 +3,12 @@
   import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
+  import Button from "$lib/components/ui/button/button.svelte";
+  import Label from "$lib/components/ui/label/label.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
+  import { cn } from "$lib/utils";
 
   type Props = {
     user: DynamoUser;
@@ -67,16 +68,29 @@
     <div style="margin-left: 20px">
       <div class="flex flex-col gap-4">
         {#if showForm}
-          <InputGroup labelText="Publicly display your name as">
-            <Input name="publicName" value={publicName} {error} onchange={nameChange} disabled={saving} placeholder="Name" />
-          </InputGroup>
+          <div class="flex flex-col gap-1.5">
+            <Label for="input-display-name">Publicly display your name as</Label>
+            <Input
+              id="input-display-name"
+              class={cn("focus:border-border", {
+                "border-red-600": error,
+                "focus-visible:ring-red-600": error
+              })}
+              name="publicName"
+              value={publicName}
+              onchange={nameChange}
+              disabled={saving}
+              placeholder="Name"
+            />
+          </div>
 
-          <InputGroup labelText="Publicly display your collection as">
-            <Input name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
-          </InputGroup>
+          <div class="flex flex-col gap-1.5">
+            <Label for="collection-display-value">Publicly display your collection as</Label>
+            <Input id="collection-display-value" name="publicBooksHeader" value={publicBooksHeader} disabled={saving} placeholder="Header" />
+          </div>
         {/if}
         <div>
-          <ActionButton running={saving} theme="primary">Save</ActionButton>
+          <Button type="submit" disabled={saving}>Save</Button>
         </div>
       </div>
     </div>
