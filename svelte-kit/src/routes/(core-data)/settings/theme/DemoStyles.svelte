@@ -5,8 +5,9 @@
 
   import Alert from "$lib/components/Alert.svelte";
   import Button from "$lib/components/Button/Button.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
+
+  import Label from "$lib/components/ui/label/label.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
 </script>
 
 <div class="max-w-[400px] xs:max-w-[200px] sm:max-w-[300px] md:max-w-[400px] lg:max-w-[550px]">
@@ -16,27 +17,30 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="col-span-2">
         <div class="flex flex-col gap-2">
-          <InputGroup labelText="Title">
+          <div class="flex flex-col gap-1.5">
+            <Label>Search title</Label>
             <Input placeholder="Search title" value="The Slefish Gene" />
-          </InputGroup>
+          </div>
 
           <Alert type="warning">Did you spell this right?</Alert>
         </div>
       </div>
       <div class="col-span-2 md:col-span-1">
         <div class="flex flex-col gap-2">
-          <InputGroup labelText="Publisher">
+          <div class="flex flex-col gap-1.5">
+            <Label>Publisher</Label>
             <Input placeholder="Publisher" value="Basic Books" />
-          </InputGroup>
+          </div>
 
           <Alert type="success">Looks good to me!</Alert>
         </div>
       </div>
       <div class="col-span-2 md:col-span-1">
         <div class="flex flex-col gap-2">
-          <InputGroup labelText="Author">
-            <Input placeholder="Author" />
-          </InputGroup>
+          <div class="flex flex-col gap-1.5">
+            <Label>Author</Label>
+            <Input placeholder="Author" value="Richard Dawkins" />
+          </div>
           <Alert type="error">Author is required!</Alert>
         </div>
       </div>
