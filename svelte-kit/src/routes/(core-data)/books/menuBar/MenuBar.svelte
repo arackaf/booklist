@@ -1,5 +1,10 @@
 <script lang="ts">
+  import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
+
+  import Input from "$lib/components/ui/input/input.svelte";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
+  import RawButton from "$lib/components/Button/RawButton.svelte";
+
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
   import BookViewsDesktop from "./BookViewsDesktop.svelte";
@@ -8,9 +13,6 @@
   import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
   import { SearchState } from "../state/searchState.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import RawButton from "$lib/components/Button/RawButton.svelte";
-  import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -22,11 +24,11 @@
 
   const searchState = new SearchState();
 
-  let quickSearchEl = $state<any>({});
+  let quickSearchEl = $state<HTMLInputElement | null>(null);
   let mobileMenuOpen = $state(false);
 
   const resetSearch = () => {
-    quickSearchEl.value = searchState.value.search;
+    quickSearchEl!.value = searchState.value.search;
   };
 
   const closeMobileMenu = () => {
@@ -61,14 +63,13 @@
       <div class="hidden sm:block">
         <div class="flex">
           <Input
-            size="sm"
             autocomplete="off"
-            bind:inputEl={quickSearchEl}
+            bind:ref={quickSearchEl}
             onkeydown={evt => evt.key === "Enter" && updateSearchParam("search", evt.currentTarget.value)}
             value={searchState.value.search}
             onblur={resetSearch}
             name="search"
-            class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+            class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:outline-none border-neutral-400"
             placeholder="Title search"
           />
           <MenuOptionsDesktop {isPublic} />
