@@ -2,6 +2,7 @@
   import { page as pageStore } from "$app/stores";
 
   import Button from "$lib/components/ui/button/button.svelte";
+  import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from "lucide-svelte";
 
   import { ChangeFilters } from "../state/searchState.svelte";
 
@@ -25,14 +26,19 @@
       variant="outline"
       href={changeFilter.pageTo(1)}
       disabled={!canPageOne}
-      class="h-8 w-11 border-r-0 rounded-r-none hidden sm:flex border-neutral-300"
+      class="h-8 w-10 border-r-0 rounded-r-none hidden sm:flex border-neutral-300"
+      aria-label="Go to page 1"
     >
-      <span class="sr">Go to page 1</span>
-      <i class="fal fa-fw fa-angle-double-left"></i>
+      <ChevronsLeftIcon />
     </Button>
-    <Button variant="outline" href={pageDownHref} disabled={!canPageDown} class="h-8 w-11 sm:rounded-l-none rounded-l border-neutral-300">
-      <span class="sr">Go a page down</span>
-      <i class="fal fa-fw fa-angle-left"></i>
+    <Button
+      variant="outline"
+      href={pageDownHref}
+      disabled={!canPageDown}
+      class="h-8 w-10 sm:rounded-l-none rounded-l border-neutral-300"
+      aria-label="Go a page down"
+    >
+      <ChevronLeftIcon />
     </Button>
   </div>
 
@@ -50,15 +56,20 @@
     <Button
       variant="outline"
       href={pageUpHref}
-      class="h-8 w-11 border-r sm:border-r-0 rounded-r sm:rounded-r-none border-neutral-300"
+      class="h-8 w-10 border-r sm:border-r-0 rounded-r sm:rounded-r-none border-neutral-300"
       disabled={!canPageUp}
+      aria-label="Go a page up"
     >
-      <span class="sr">Go a page up</span>
-      <i class="fal fa-fw fa-angle-right"></i>
+      <ChevronRightIcon />
     </Button>
-    <Button variant="outline" href={pageLastHref} class="h-8 w-11 rounded-l-none hidden sm:flex border-neutral-300" disabled={!canPageLast}>
-      <span class="sr">Go to last page</span>
-      <i class="fal fa-fw fa-angle-double-right"></i>
+    <Button
+      variant="outline"
+      href={pageLastHref}
+      class="h-8 w-10 rounded-l-none hidden sm:flex border-neutral-300"
+      disabled={!canPageLast}
+      aria-label="Go to last page"
+    >
+      <ChevronsRightIcon />
     </Button>
   </div>
 </div>
