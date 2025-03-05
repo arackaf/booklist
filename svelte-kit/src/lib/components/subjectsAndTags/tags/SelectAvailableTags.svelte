@@ -19,7 +19,6 @@
 
   const doSelect = (item: any) => {
     onSelect(item);
-    search = "";
   };
 
   let itemHash = $derived(currentlySelected.reduce<TagSelectedHash>((hash, id) => ((hash[id] = true), hash), {}));

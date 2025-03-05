@@ -32,6 +32,12 @@
   }: Props = $props();
 
   let open = $state(false);
+
+  function closeAnimationEnd() {
+    if (!open) {
+      search = "";
+    }
+  }
 </script>
 
 <Popover.Root {open} onOpenChange={newVal => (open = newVal)}>
@@ -59,7 +65,7 @@
     {/snippet}
   </Popover.Trigger>
 
-  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0 {popoverClass}">
+  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0 {popoverClass}" onanimationend={closeAnimationEnd}>
     <div>
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search" />
