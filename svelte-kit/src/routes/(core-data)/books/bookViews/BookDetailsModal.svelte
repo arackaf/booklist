@@ -2,13 +2,13 @@
   import { getContext } from "svelte";
   import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
+  import Button from "$lib/components/ui/button/button.svelte";
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
   import Modal from "$lib/components/Modal.svelte";
   import EditBook from "$lib/components/editBook/EditBook.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
 
   import { updateSingleObject, type UpdatesTo } from "$lib/state/dataUpdates";
@@ -16,6 +16,7 @@
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   import { afterDelete as updateStateAfterDelete } from "../state/onDelete";
+  import { ChevronsDownIcon, ChevronsUpIcon, PencilIcon } from "lucide-svelte";
 
   type Props = {
     viewingBook: Book | null;
@@ -140,17 +141,22 @@
                       <i class="fab fa-goodreads-g"></i>
                     </a>
                   {/if}
-                  <Button size="sm" class="gap-2" onclick={() => (editing = true)}>
+                  <Button variant="secondary" class="flex gap-3 h-8" onclick={() => (editing = true)}>
                     <span>Edit book</span>
-                    <i class="fal fa-pencil-alt"></i>
+                    <PencilIcon />
                   </Button>
                 </div>
               </div>
             {/if}
           </div>
         </div>
-        <Button onclick={toggleDetails} disabled={detailsLoading} size="sm" class="flex gap-1 items-center self-start text-sm">
-          <span>Details</span><i class="far {detailsBtnClass}"></i>
+        <Button variant="outline" onclick={toggleDetails} disabled={detailsLoading} class="flex gap-2 items-center self-start h-6">
+          <span>Details</span>
+          {#if expanded}
+            <ChevronsUpIcon />
+          {:else}
+            <ChevronsDownIcon />
+          {/if}
         </Button>
       </div>
       <div class="overflow-auto">
