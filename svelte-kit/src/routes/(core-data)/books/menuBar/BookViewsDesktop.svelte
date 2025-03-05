@@ -6,6 +6,7 @@
 
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
   import { selectionState } from "../state/selectionState.svelte";
+  import { LayoutGrid, LayoutListIcon, TablePropertiesIcon } from "lucide-svelte";
 
   type Props = {
     bookViewToUse: string;
@@ -33,7 +34,7 @@
     disabled={bookViewToUse == GRID_VIEW || anyBooksSelected}
     class="h-8 w-11 border-r-0 rounded-r-none border-neutral-300"
   >
-    <i class="fal fa-fw fa-table"></i>
+    <TablePropertiesIcon class="rotate-180" />
   </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange}>
@@ -44,7 +45,7 @@
     disabled={bookViewToUse == COVERS_LIST || anyBooksSelected}
     class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
   >
-    <i class="fas fa-fw fa-th"></i>
+    <LayoutGrid />
   </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange}>
@@ -55,6 +56,6 @@
     disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected}
     class="h-8 w-11 rounded-l-none border-neutral-300"
   >
-    <i class="fal fa-fw fa-list"></i>
+    <LayoutListIcon />
   </Button>
 </form>

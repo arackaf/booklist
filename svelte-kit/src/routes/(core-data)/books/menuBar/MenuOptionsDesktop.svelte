@@ -9,6 +9,8 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
+  import { FilterIcon, RefreshCwIcon } from "lucide-svelte";
+  import { cn } from "$lib/utils";
 
   type Props = {
     isPublic: boolean;
@@ -51,7 +53,7 @@
 <div class="hidden lg:flex">
   {#if !selectedBooksCount}
     <Button variant="outline" title="Filter search" onclick={openFilterModal} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
-      <i class="fal fa-fw fa-filter"></i>
+      <FilterIcon />
     </Button>
     {#if !isPublic}
       <Button variant="outline" title="Edit subjects" onclick={editSubjects} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
@@ -64,7 +66,7 @@
 
     <form method="POST" action="?/reloadBooks" use:enhance={reload}>
       <Button variant="outline" class="h-8 w-11 rounded-l-none border-neutral-300" type="submit" disabled={reloading}>
-        <i class="fal fa-fw fa-sync" class:fa-spin={reloading}></i>
+        <RefreshCwIcon class={cn({ "fa-spin": reloading })} />
       </Button>
     </form>
   {:else if !isPublic}
