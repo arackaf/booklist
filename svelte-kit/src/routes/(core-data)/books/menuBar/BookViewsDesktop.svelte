@@ -1,7 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { enhance } from "$app/forms";
-  import Button from "$lib/components/Button/Button.svelte";
+
+  import Button from "$lib/components/ui/button/button.svelte";
 
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
   import { selectionState } from "../state/selectionState.svelte";
@@ -26,19 +27,34 @@
 
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange}>
   <input type="hidden" name="view" value={GRID_VIEW} />
-  <Button disabled={bookViewToUse == GRID_VIEW || anyBooksSelected} softDisable={true} class="h-8 connect-right">
+  <Button
+    type="submit"
+    variant="outline"
+    disabled={bookViewToUse == GRID_VIEW || anyBooksSelected}
+    class="h-8 w-11 border-r-0 rounded-r-none border-neutral-300"
+  >
     <i class="fal fa-fw fa-table"></i>
   </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange}>
   <input type="hidden" name="view" value={COVERS_LIST} />
-  <Button disabled={bookViewToUse == COVERS_LIST || anyBooksSelected} softDisable={true} class="h-8 connect-right connect-left">
+  <Button
+    type="submit"
+    variant="outline"
+    disabled={bookViewToUse == COVERS_LIST || anyBooksSelected}
+    class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
+  >
     <i class="fas fa-fw fa-th"></i>
   </Button>
 </form>
 <form method="POST" action="?/setBooksView" use:enhance={uiViewChange}>
   <input type="hidden" name="view" value={BASIC_LIST_VIEW} />
-  <Button disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected} softDisable={true} class="h-8 connect-left">
+  <Button
+    type="submit"
+    variant="outline"
+    disabled={bookViewToUse == BASIC_LIST_VIEW || anyBooksSelected}
+    class="h-8 w-11 rounded-l-none border-neutral-300"
+  >
     <i class="fal fa-fw fa-list"></i>
   </Button>
 </form>
