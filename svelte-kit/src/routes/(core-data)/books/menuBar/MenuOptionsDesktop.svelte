@@ -68,19 +68,36 @@
       </Button>
     </form>
   {:else if !isPublic}
-    <Button class="h-8 connect-left connect-right" title="Add/remove subjects" onclick={editSubjectsForSelectedBooks}>
+    <Button
+      variant="outline"
+      class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
+      title="Add/remove subjects"
+      onclick={editSubjectsForSelectedBooks}
+    >
       <i class="fal fa-fw fa-sitemap"></i>
     </Button>
-    <Button class="h-8 connect-left connect-right" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
+    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0 border-neutral-300" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
       <i class="fal fa-fw fa-tags"></i>
     </Button>
     <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
-      <Button class="h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
+      <Button
+        type="submit"
+        variant="outline"
+        class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
+        title="Set read"
+        disabled={bulkReadSaving || bulkUnReadSaving}
+      >
         <i class="fal fa-fw fa-eye"></i>
       </Button>
     </BookReadSetter>
     <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
-      <Button class="h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
+      <Button
+        type="submit"
+        variant="outline"
+        class="h-8 w-11 rounded-l-none border-neutral-300"
+        title="Set un-read"
+        disabled={bulkReadSaving || bulkUnReadSaving}
+      >
         <i class="fal fa-fw fa-eye-slash"></i>
       </Button>
     </BookReadSetter>
