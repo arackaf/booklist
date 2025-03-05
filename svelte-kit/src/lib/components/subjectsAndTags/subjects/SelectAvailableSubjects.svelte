@@ -36,7 +36,6 @@
       return false;
     }
     onSelect(item);
-    search = "";
   };
 
   type LookupHash = { [id: string]: true };
