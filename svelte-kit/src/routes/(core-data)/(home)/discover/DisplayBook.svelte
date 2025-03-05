@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { quadIn, quadOut, quintIn, circIn } from "svelte/easing";
+  import { quadIn, quadOut, quintIn } from "svelte/easing";
   import type { Book } from "$data/types";
+
+  import Button from "$lib/components/ui/button/button.svelte";
 
   import BookCover from "$lib/components/BookCover.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
   type Props = {
@@ -46,7 +47,7 @@
             {book.authors.join(", ")}
           </SubTitleText>
         {/if}
-        <Button class="mt-auto self-start" theme="danger" size="sm" onclick={() => unselectBook(book)}>Remove</Button>
+        <Button variant="outline" class="mt-auto ml-auto self-start h-6" size="sm" onclick={() => unselectBook(book)}>Remove</Button>
       </div>
     </div>
     <Separator class="my-4 h-[2px]" />

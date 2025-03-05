@@ -1,12 +1,12 @@
 <script lang="ts">
   import { quadIn } from "svelte/easing";
 
+  import Button from "$lib/components/ui/button/button.svelte";
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
   import BookCover from "$lib/components/BookCover.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
 
   import type { Book } from "$data/types";
 
@@ -47,10 +47,7 @@
         <SubTitleText>{book.authors.join(", ")}</SubTitleText>
       {/if}
 
-      <Button type="button" theme="primary" size="sm" class="mt-auto self-start gap-2" disabled={adding} onclick={_selectBook}>
-        Add to list
-        <i class="fal fa-plus"></i>
-      </Button>
+      <Button type="button" variant="secondary" class="mt-auto self-start gap-2 h-6" disabled={adding} onclick={_selectBook}>Select</Button>
     </div>
   </div>
   <Separator class="my-4 h-[2px]" />
