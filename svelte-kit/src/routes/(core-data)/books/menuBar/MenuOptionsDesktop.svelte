@@ -1,12 +1,14 @@
 <script lang="ts">
+  import { getContext } from "svelte";
+
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import { getContext } from "svelte";
-  import BookReadSetter from "../BookReadSetter.svelte";
 
+  import Button from "$lib/components/ui/button/button.svelte";
+
+  import BookReadSetter from "../BookReadSetter.svelte";
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -46,39 +48,41 @@
   });
 </script>
 
-{#if !selectedBooksCount}
-  <Button title="Filter search" onclick={openFilterModal} class="hidden lg:flex h-8 connect-left connect-right">
-    <i class="fal fa-fw fa-filter"></i>
-  </Button>
-  {#if !isPublic}
-    <Button title="Edit subjects" onclick={editSubjects} class="hidden lg:flex h-8 connect-left connect-right">
+<div class="hidden lg:flex">
+  {#if !selectedBooksCount}
+    <Button variant="outline" title="Filter search" onclick={openFilterModal} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
+      <i class="fal fa-fw fa-filter"></i>
+    </Button>
+    {#if !isPublic}
+      <Button variant="outline" title="Edit subjects" onclick={editSubjects} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
+        <i class="fal fa-fw fa-sitemap"></i>
+      </Button>
+      <Button variant="outline" title="Edit tags" onclick={editTags} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
+        <i class="fal fa-fw fa-tags"></i>
+      </Button>
+    {/if}
+
+    <form method="POST" action="?/reloadBooks" use:enhance={reload}>
+      <Button variant="outline" class="h-8 w-11 rounded-l-none border-neutral-300" type="submit" disabled={reloading}>
+        <i class="fal fa-fw fa-sync" class:fa-spin={reloading}></i>
+      </Button>
+    </form>
+  {:else if !isPublic}
+    <Button class="h-8 connect-left connect-right" title="Add/remove subjects" onclick={editSubjectsForSelectedBooks}>
       <i class="fal fa-fw fa-sitemap"></i>
     </Button>
-    <Button title="Edit tags" onclick={editTags} class="hidden lg:flex h-8 connect-left connect-right">
+    <Button class="h-8 connect-left connect-right" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
       <i class="fal fa-fw fa-tags"></i>
     </Button>
+    <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
+      <Button class="h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
+        <i class="fal fa-fw fa-eye"></i>
+      </Button>
+    </BookReadSetter>
+    <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
+      <Button class="h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
+        <i class="fal fa-fw fa-eye-slash"></i>
+      </Button>
+    </BookReadSetter>
   {/if}
-
-  <form method="POST" action="?/reloadBooks" use:enhance={reload}>
-    <Button class="hidden lg:flex h-8 connect-left" type="submit" disabled={reloading}>
-      <i class="fal fa-fw fa-sync" class:fa-spin={reloading}></i>
-    </Button>
-  </form>
-{:else if !isPublic}
-  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove subjects" onclick={editSubjectsForSelectedBooks}>
-    <i class="fal fa-fw fa-sitemap"></i>
-  </Button>
-  <Button class="hidden lg:flex h-8 connect-left connect-right" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
-    <i class="fal fa-fw fa-tags"></i>
-  </Button>
-  <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
-    <Button class="hidden lg:flex h-8 connect-left connect-right" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
-      <i class="fal fa-fw fa-eye"></i>
-    </Button>
-  </BookReadSetter>
-  <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
-    <Button class="hidden lg:flex h-8 connect-left" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
-      <i class="fal fa-fw fa-eye-slash"></i>
-    </Button>
-  </BookReadSetter>
-{/if}
+</div>
