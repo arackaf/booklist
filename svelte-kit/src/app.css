@@ -108,14 +108,6 @@ input[type="radio"]:checked:before {
   @apply bg-[var(--primary-5)];
 }
 
-.connect-left {
-  @apply rounded-tl-none rounded-bl-none;
-}
-
-.connect-right {
-  @apply border-r-0 rounded-tr-none rounded-br-none;
-}
-
 @layer base {
   .raw-button {
     @apply p-0 bg-transparent border-0 text-neutral-600 shadow-none;
