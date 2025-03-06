@@ -84,19 +84,16 @@
   function f() {}
 
   let booksSubjectsModalOpen = $state(false);
-  let booksTagsModalOpen = $state(false);
 
   let booksEditing = $derived(books.filter(b => selectionState.selectedBooksLookup[b.id]));
-  const editBooksSubjects = () => (booksSubjectsModalOpen = true);
-  const editBooksTags = () => (booksTagsModalOpen = true);
+  const editBooksSubjectsTags = () => (booksSubjectsModalOpen = true);
 
   let booksModuleContext = {
     openFilterModal,
     editSubjects,
     editTags,
     editBook,
-    editBooksSubjects,
-    editBooksTags,
+    editBooksSubjectsTags,
     onBooksUpdated,
     overrideBookView
   };

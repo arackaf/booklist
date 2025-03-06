@@ -9,7 +9,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
-  import { FilterIcon, RefreshCwIcon } from "lucide-svelte";
+  import { FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
   import { cn } from "$lib/utils";
 
   type Props = {
@@ -26,11 +26,10 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjects, editTags, editBooksSubjectsTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
-  const editSubjectsForSelectedBooks = () => editBooksSubjects();
-  const editTagsForSelectedBooks = () => editBooksTags();
+  const editSubjectsForSelectedBooks = () => editBooksSubjectsTags();
 
   const reload = () => {
     reloading = true;
@@ -76,10 +75,7 @@
       title="Add/remove subjects"
       onclick={editSubjectsForSelectedBooks}
     >
-      <i class="fal fa-fw fa-sitemap"></i>
-    </Button>
-    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0 border-neutral-300" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
-      <i class="fal fa-fw fa-tags"></i>
+      <TagIcon />
     </Button>
     <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
       <Button
