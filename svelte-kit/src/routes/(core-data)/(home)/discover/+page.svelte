@@ -2,8 +2,7 @@
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
   import Alert from "$lib/components/Alert.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   import DisplayBook from "./DisplayBook.svelte";
   import DisplayRecommendation from "./DisplayRecommendation.svelte";
@@ -60,9 +59,7 @@
         </Button>
 
         {#if selectedBooks.length}
-          <ActionButton theme="primary" class="ml-auto" onclick={getRecommendations} running={recommendationsLoading}>
-            Get Recommendations
-          </ActionButton>
+          <Button variant="secondary" class="ml-auto" onclick={getRecommendations} disabled={recommendationsLoading}>Get Recommendations</Button>
         {/if}
       </div>
 

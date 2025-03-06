@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { signOut } from "@auth/sveltekit/client";
 
   import { page } from "$app/stores";
@@ -7,7 +6,7 @@
   import { invalidateAll } from "$app/navigation";
   import type { Login } from "$lib/types";
 
-  import Button from "../Button/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
 
   type Props = {
@@ -62,7 +61,7 @@
         <span class="break-words">{loggedInUser.email}</span>
       </div>
       <span>
-        <Button size="med" onclick={() => signOut().then(() => invalidateAll())}>Logout</Button>
+        <Button variant="outline" size="sm" onclick={() => signOut().then(() => invalidateAll())}>Logout</Button>
       </span>
     </div>
   </div>

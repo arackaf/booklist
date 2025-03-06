@@ -1,5 +1,10 @@
 <script lang="ts">
+  import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
+
+  import Button from "$lib/components/ui/button/button.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
   import MobileMenu from "$lib/components/navigation/MobileMenu.svelte";
+
   import ActiveSearchFilters from "./ActiveSearchFilters.svelte";
   import PagingButtons from "./PagingButtons.svelte";
   import BookViewsDesktop from "./BookViewsDesktop.svelte";
@@ -8,9 +13,6 @@
   import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
   import { SearchState } from "../state/searchState.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import RawButton from "$lib/components/Button/RawButton.svelte";
-  import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -22,11 +24,11 @@
 
   const searchState = new SearchState();
 
-  let quickSearchEl = $state<any>({});
+  let quickSearchEl = $state<HTMLInputElement | null>(null);
   let mobileMenuOpen = $state(false);
 
   const resetSearch = () => {
-    quickSearchEl.value = searchState.value.search;
+    quickSearchEl!.value = searchState.value.search;
   };
 
   const closeMobileMenu = () => {
@@ -37,7 +39,7 @@
 <div class="sticky-content">
   <div class="scroll-gradient-flush"></div>
   <MobileMenu title="Search options" onClose={() => (mobileMenuOpen = false)} open={mobileMenuOpen}>
-    <div class="flex flex-col gap-2 w-[175px] mt-4 mb-2">
+    <div class="flex flex-col gap-2 w-[175px]">
       <MenuOptionsMobile {isPublic} {closeMobileMenu} />
       <BookViewsMobile {bookViewToUse} {closeMobileMenu} />
     </div>
@@ -45,15 +47,16 @@
 
   <div class="pt-2" style="font-size: 11pt; position: relative">
     <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
-      <RawButton
-        style="font-size: 1.4rem; align-self: center"
-        class="block lg:hidden leading-none"
+      <Button
+        variant="outline"
+        size="icon"
+        class="lg:hidden text-xl"
         aria-label="Open mobile menu"
-        onClick={() => (mobileMenuOpen = true)}
+        onclick={() => (mobileMenuOpen = true)}
         data-mobile-menu
       >
         <i class="far fa-fw fa-bars"></i>
-      </RawButton>
+      </Button>
       {#if isPublic}
         <PublicBooksHeader />
       {/if}
@@ -61,14 +64,13 @@
       <div class="hidden sm:block">
         <div class="flex">
           <Input
-            size="sm"
             autocomplete="off"
-            bind:inputEl={quickSearchEl}
+            bind:ref={quickSearchEl}
             onkeydown={evt => evt.key === "Enter" && updateSearchParam("search", evt.currentTarget.value)}
             value={searchState.value.search}
             onblur={resetSearch}
             name="search"
-            class="lg:rounded-tr-none lg:rounded-br-none lg:border-r-0"
+            class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:outline-none border-neutral-300"
             placeholder="Title search"
           />
           <MenuOptionsDesktop {isPublic} />

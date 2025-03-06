@@ -7,12 +7,12 @@
 
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
+  import Button from "$lib/components/ui/button/button.svelte";
+  import Label from "$lib/components/ui/label/label.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import InputGroup from "$lib/components/form-elements/Input/InputGroup.svelte";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
@@ -42,7 +42,7 @@
   let books = $state<Book[]>([]);
   let subjects = $state<number[]>([]);
   let tags = $state<number[]>([]);
-  let titleEl = $state<HTMLInputElement | null>();
+  let titleEl = $state<HTMLInputElement | null>(null);
 
   let loading = $state(false);
   let noResults = $derived(active && !books?.length);
@@ -101,13 +101,14 @@
   <form bind:this={searchFormEl} method="post" action="?/search" use:enhance={executeSearch}>
     <input type="hidden" name="page" value={pageBind} />
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
-      <InputGroup labelText="Title">
-        <Input bind:inputEl={titleEl} name="search" placeholder="Search title" />
-      </InputGroup>
+      <div class="flex flex-col gap-1.5">
+        <Label for="search-modal-title">Title</Label>
+        <Input id="search-modal-title" bind:ref={titleEl} name="search" placeholder="Search title" />
+      </div>
 
       <div class="flex">
         <div class="flex flex-col">
-          <span class="text-sm">Is read?</span>
+          <Label>Is read?</Label>
           <div class="flex-1 flex flex-row gap-4 items-center">
             <div class="flex flex-row items-center gap-1">
               <input type="radio" checked value="" name="is-read" id="isReadE" />
@@ -149,7 +150,7 @@
 
       <div class="sm:col-span-2">
         <div class="flex flex-row gap-3">
-          <ActionButton running={loading}>Search</ActionButton>
+          <Button size="sm" type="submit" disabled={loading}>Search</Button>
 
           <div class="flex relative flex-1 self-stretch">
             {#if noAvailableBooks}
@@ -172,20 +173,14 @@
           {#if totalBooks}
             <div class="flex flex-row gap-1 items-center">
               <div class="flex">
-                <Button type="button" onclick={pageOne} disabled={!canPageDown} icon={true} class="connect-right">
-                  <i class="fal fa-fw fa-angle-double-left"></i>
-                </Button>
-                <Button type="button" onclick={pageDown} disabled={!canPageDown} icon={true} class="connect-left">
+                <Button type="button" onclick={pageDown} disabled={!canPageDown} variant="outline" size="icon" class="h-8">
                   <i class="fal fa-fw fa-angle-left"></i>
                 </Button>
               </div>
               <span class="text-sm mx-1">{page} of {totalPages}</span>
               <div class="flex">
-                <Button type="button" onclick={pageUp} disabled={!canPageUp} icon={true} class="connect-right">
+                <Button type="button" onclick={pageUp} disabled={!canPageUp} variant="outline" size="icon" class="h-8">
                   <i class="fal fa-fw fa-angle-right"></i>
-                </Button>
-                <Button type="button" onclick={pageLast} disabled={!canPageUp} icon={true} class="connect-left">
-                  <i class="fal fa-fw fa-angle-double-right"></i>
                 </Button>
               </div>
             </div>

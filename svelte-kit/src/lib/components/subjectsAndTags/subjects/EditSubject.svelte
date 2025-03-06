@@ -1,22 +1,26 @@
 <script lang="ts">
+  import { untrack } from "svelte";
+
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
 
   import type { Color, Subject } from "$data/types";
 
+  import { cn } from "$lib/utils";
+  import Input from "$lib/components/ui/input/input.svelte";
+  import InputLabel from "$lib/components/ui/label/label.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+
+  import Label from "$lib/components/form-elements/Label/Label.svelte";
 
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
 
   import LabelDisplay from "../LabelDisplay.svelte";
-  import { untrack } from "svelte";
 
   type Props = {
     subject: Subject;
@@ -25,13 +29,14 @@
     onCancelEdit: () => void;
     deleteShowing?: boolean;
     onComplete?: () => void;
-    inputEl?: HTMLInputElement | undefined;
   };
   const textColors = ["#ffffff", "#000000"];
 
-  let { subject, allSubjects, colors, onCancelEdit, deleteShowing = $bindable(), onComplete = () => {}, inputEl }: Props = $props();
+  let { subject, allSubjects, colors, onCancelEdit, deleteShowing = $bindable(), onComplete = () => {} }: Props = $props();
 
   let missingName = $state(false);
+  let inputEl = $state<HTMLInputElement>(null as any);
+
   let originalName = $state("");
   let originalParentId = $state(0);
 
@@ -107,30 +112,26 @@
     <input type="hidden" name="originalParentId" value={originalParentId} />
     <input type="hidden" name="parentId" value={editingSubject.parentId || ""} />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-4">
-      <div class="flex flex-col gap-1">
-        <label class="text-sm" for="subject-name">Name</label>
+      <div class="flex flex-col gap-1.5">
+        <InputLabel for="subject-name">Name</InputLabel>
 
         <Input
           id="subject-name"
-          class="h-9"
-          error={missingName}
-          bind:inputEl
+          class={cn("focus:border-border", {
+            "border-red-600": missingName,
+            "focus-visible:ring-red-600": missingName
+          })}
+          bind:ref={inputEl}
           bind:value={editingSubject.name}
           name="name"
           placeholder="Subject name"
         />
-
-        <div class="flex flex-col gap-1">
-          {#if missingName}
-            <Label theme="error" class="self-start">Subjects need names!</Label>
-          {/if}
-          <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
-            {editingSubject.name.trim() || "<label preview>"}
-          </Label>
-        </div>
+        <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
+          {editingSubject.name.trim() || "<label preview>"}
+        </Label>
       </div>
-      <div class="flex flex-col gap-1">
-        <span class="text-sm -mb-0.5 md:mb-0">Parent</span>
+      <div class="flex flex-col gap-1.5">
+        <InputLabel>Parent</InputLabel>
 
         <div>
           <SelectAvailableSubjects
@@ -186,10 +187,10 @@
       </div>
       <div class="md:col-span-2">
         <div class="flex flex-row gap-3">
-          <Button size="sm" theme="primary" disabled={saving}>Save</Button>
-          <Button size="sm" type="button" disabled={saving} onclick={onCancelEdit}>Cancel</Button>
+          <Button size="sm" disabled={saving}>Save</Button>
+          <Button size="sm" variant="outline" type="button" disabled={saving} onclick={onCancelEdit}>Cancel</Button>
           {#if editingSubject.id}
-            <Button size="sm" theme="danger" class="ml-auto gap-1" type="button" disabled={saving} onclick={() => (deleteShowing = true)}>
+            <Button size="sm" variant="destructive" class="ml-auto gap-1" type="button" disabled={saving} onclick={() => (deleteShowing = true)}>
               <span>
                 Delete {originalName}
               </span>
@@ -212,8 +213,8 @@
       </Alert>
 
       <div class="flex flex-row gap-3">
-        <ActionButton size="sm" theme="danger" running={deleting}>Delete it!</ActionButton>
-        <Button size="sm" type="button" disabled={deleting} onclick={() => (deleteShowing = false)}>Cancel</Button>
+        <Button size="sm" variant="destructive" disabled={deleting}>Delete it!</Button>
+        <Button size="sm" variant="outline" type="button" disabled={deleting} onclick={() => (deleteShowing = false)}>Cancel</Button>
       </div>
     </div>
   </form>

@@ -5,11 +5,10 @@
 
   import * as Tabs from "$lib/components/ui/tabs";
   import Separator from "$lib/components/ui/separator/separator.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
 
   import { cn } from "$lib/utils";
-  import Button from "$lib/components/Button/Button.svelte";
   import type { UpdatesTo } from "$lib/state/dataUpdates";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
 
   import EditBookCovers from "./EditBookCovers.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
@@ -89,7 +88,7 @@
   <Separator class="my-4 h-[2px]" />
 
   <div class="flex flex-row">
-    <ActionButton disabled={tab === "delete"} theme="primary" type="submit" running={saving}>Save</ActionButton>
-    <Button disabled={saving} class="ml-auto" type="button" onclick={onCancel}>Cancel</Button>
+    <Button disabled={tab === "delete" || saving} type="submit">Save</Button>
+    <Button variant="outline" disabled={saving} class="ml-auto" type="button" onclick={onCancel}>Cancel</Button>
   </div>
 </form>

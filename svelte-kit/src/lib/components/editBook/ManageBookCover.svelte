@@ -2,8 +2,8 @@
   import Dropzone from "svelte-file-dropzone";
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
-  import Button from "$lib/components/Button/Button.svelte";
-  import Input from "$lib/components/form-elements/Input/Input.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
   import Label from "$lib/components/form-elements/Label/Label.svelte";
 
   type Props = {
@@ -103,11 +103,10 @@
         <Input
           bind:value={remoteUrl}
           disabled={uploading}
-          class="flex-1 rounded-tr-none rounded-br-none border-r-0"
+          class="flex-1 rounded-tr-none rounded-br-none border-r-0 focus-visible:ring-0 focus-visible:ring-transparent"
           placeholder="New Cover URL"
-          size="sm"
         />
-        <Button class="h-8 p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
+        <Button type="submit" variant="outline" size="icon" class="p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
           <i class="far fa-cloud-upload-alt"></i>
         </Button>
       </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Color, Subject } from "$data/types";
-  import Button from "$lib/components/Button/Button.svelte";
+  import Button from "$lib/components/ui/button/button.svelte";
   import EditSubject from "$lib/components/subjectsAndTags/subjects/EditSubject.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
 
@@ -31,15 +31,12 @@
   const editSubject = (subject: Subject) => (editingSubject = subject);
 </script>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-5">
   {#if !deleteShowing}
     <div class="flex flex-col-reverse sm:flex-row gap-5">
-      <SelectAvailableSubjects size="sm" {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
+      <SelectAvailableSubjects {subjects} placeholder="Edit subject" currentlySelected={[]} onSelect={item => editSubject(item)} />
 
-      <Button size="med" class="flex flex-row gap-1 items-center self-start sm:ml-auto" onclick={newSubject}>
-        <span>New subject </span>
-        <i class="far fa-fw fa-plus-square"></i>
-      </Button>
+      <Button size="sm" variant="secondary" class="flex flex-row gap-1 items-center self-start sm:ml-auto" onclick={newSubject}>New subject</Button>
     </div>
   {/if}
 

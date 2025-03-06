@@ -2,8 +2,9 @@
   import { enhance } from "$app/forms";
   import type { BookWithSimilarItems, SimilarBook } from "$data/types";
 
+  import Button from "$lib/components/ui/button/button.svelte";
+
   import Alert from "$lib/components/Alert.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
@@ -80,7 +81,7 @@
 
     <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
       <input type="hidden" name="id" value={book.id} />
-      <ActionButton theme="primary" type="submit" running={isRunning} class="mt-3">Re-attempt</ActionButton>
+      <Button type="submit" disabled={isRunning} class="mt-3">Re-attempt</Button>
     </form>
   {:else}
     <Alert type="info">Sync pending</Alert>

@@ -1,9 +1,11 @@
 <script lang="ts">
   import { page } from "$app/stores";
+
+  import Button from "$lib/components/ui/button/button.svelte";
+
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAvailableSubjects from "$lib/components/subjectsAndTags/subjects/SelectAvailableSubjects.svelte";
-  import Button from "$lib/components/Button/Button.svelte";
   import { updateSearchParam } from "$lib/state/urlHelpers.svelte";
 
   import BookDisplay from "./BookDisplay.svelte";
@@ -45,14 +47,14 @@
         </div>
       </div>
       <div class="flex gap-3">
-        <Button size="med" theme="primary" class="self-start">Search</Button>
-        <Button size="med" theme="default" onclick={() => updateSearchParam("page", "")} disabled={pageNumber === 1}>
+        <Button size="sm" class="self-start">Search</Button>
+        <Button class="h-8" variant="outline" onclick={() => updateSearchParam("page", "")} disabled={pageNumber === 1}>
           <i class="fal fa-fw fa-angle-double-left"></i>
         </Button>
-        <Button size="med" theme="default" onclick={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
+        <Button class="h-8" variant="outline" onclick={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
           <i class="fal fa-fw fa-angle-left"></i>
         </Button>
-        <Button size="med" theme="default" onclick={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
+        <Button class="h-8" variant="outline" onclick={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
           <i class="fal fa-fw fa-angle-right"></i>
         </Button>
       </div>

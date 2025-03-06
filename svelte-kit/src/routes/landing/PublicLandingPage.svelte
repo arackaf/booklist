@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { signIn } from "@auth/sveltekit/client";
-  import Button from "$lib/components/Button/Button.svelte";
+
+  import Button from "$lib/components/ui/button/button.svelte";
 
   let { loggedIn } = $derived($page.data);
 </script>
@@ -33,7 +34,7 @@
             {#if !loggedIn}
               <Button
                 class="self-start"
-                theme="primary"
+                variant="default"
                 onclick={() => {
                   signIn("", { callbackUrl: "/books" });
                 }}
@@ -41,7 +42,7 @@
                 Login or create an account
               </Button>
             {:else}
-              <Button class="self-start" theme="primary" href="/books">Go to your library</Button>
+              <Button class="self-start" variant="default" href="/books">Go to your library</Button>
             {/if}
           </div>
         </div>

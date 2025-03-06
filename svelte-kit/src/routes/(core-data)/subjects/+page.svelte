@@ -36,8 +36,6 @@
     backgroundColor: "#847E71",
     textColor: "#ffffff"
   });
-
-  let inputEl = $state<HTMLElement | null>(null);
 </script>
 
 <section class="flush-bottom flex flex-col gap-4">
@@ -57,7 +55,7 @@
     </ul>
   </div>
 </section>
-<Modal openFocus={inputEl} isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
+<Modal isOpen={editModalOpen} onHide={() => (editModalOpen = false)} headerCaption={"Edit Subject"} standardFooter={false}>
   <EditSubject allSubjects={subjects} {colors} subject={editingSubject} onComplete={closeEditModal} onCancelEdit={closeEditModal} />
   <Separator class="my-4 h-[2px]" />
   <Button variant="outline" onclick={closeEditModal}>Close</Button>

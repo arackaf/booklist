@@ -5,15 +5,16 @@
 
   import type { Book, Subject, Tag } from "$data/types";
 
-  import Button from "$lib/components/Button/Button.svelte";
-  import ActionButton from "$lib/components/Button/ActionButton.svelte";
+  import { cn } from "$lib/utils";
+  import { isbn13To10 } from "$lib/util/isbn13to10";
+
+  import Button from "$lib/components/ui/button/button.svelte";
   import Label from "$lib/components/form-elements/Label/Label.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
-  import { isbn13To10 } from "$lib/util/isbn13to10";
 
   import { ChangeFilters } from "../state/searchState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
@@ -127,13 +128,13 @@
           {#if pendingDelete}
             <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
               <input type="hidden" name="id" value={id} />
-              <ActionButton running={deleting} theme="danger" size="sm">Confirm Delete</ActionButton>
+              <Button type="submit" disabled={deleting} variant="destructive" class="h-6 px-2 text-xs">Confirm Delete</Button>
             </form>
           {/if}
           {#if pendingDelete}
-            <Button size="sm" disabled={deleting} onclick={() => (pendingDelete = false)}>Cancel</Button>
+            <Button variant="outline" disabled={deleting} onclick={() => (pendingDelete = false)} class="h-6 px-2 text-xs">Cancel</Button>
           {/if}
-          <Button size="sm" class="invisible">.</Button>
+          <Button size="sm" class="invisible px-2 text-xs">Cancel</Button>
         </div>
       </div>
     </div>
@@ -152,14 +153,24 @@
     <div class="mt-1">
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
-          <ActionButton size="sm" running={readSaving || multiReadSaving} theme={book.isRead ? "success" : "default"}>
+          <Button
+            type="submit"
+            variant="outline"
+            disabled={readSaving || multiReadSaving}
+            class={cn("h-6 px-2 text-xs", {
+              "bg-green-600": book.isRead,
+              "hover:bg-green-700": book.isRead,
+              "text-background": book.isRead,
+              "hover:text-background": book.isRead
+            })}
+          >
             <span>
               {book.isRead ? "Read" : "Set read"}
             </span>
             {#if book.isRead}
               <i class="far fa-fw fa-check"></i>
             {/if}
-          </ActionButton>
+          </Button>
         </BookReadSetter>
       {:else if book.isRead}
         <Label theme="success">Read <i class="far fa-fw fa-check"></i></Label>
