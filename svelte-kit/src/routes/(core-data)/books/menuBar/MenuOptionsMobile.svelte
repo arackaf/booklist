@@ -1,5 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { FilterIcon } from "lucide-svelte";
+
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { enhance } from "$app/forms";
@@ -105,7 +107,7 @@
 
   <Button variant="outline" size="sm" title="Filter search" onclick={mobileHandler(openFilterModal)}>
     <span>Set Filters</span>
-    <i class="fal fa-fw fa-filter ml-auto"></i>
+    <FilterIcon class="ml-auto" />
   </Button>
   <Separator class="my-0 h-[2px]" />
   {#if !isPublic}
