@@ -19,8 +19,7 @@
   import type SubjectEditModalType from "./SubjectEditModal.svelte";
   import type TagEditModalType from "./TagEditModal.svelte";
   import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
-  import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
-  import type BookTagSetterType from "./BookTagSetter.svelte";
+  import type BookSubjectTagSetterType from "./BookSubjectTagSetter.svelte";
   import { SearchState } from "./state/searchState.svelte";
   import { afterDelete } from "./state/onDelete";
   import { afterNavigate } from "$app/navigation";
@@ -42,8 +41,7 @@
   let SubjectEditModal = $state<typeof SubjectEditModalType | null>(null);
   let TagEditModal = $state<typeof TagEditModalType | null>(null);
   let EditBookModal = $state<typeof EditBookModalType | null>(null);
-  let BookSubjectSetter = $state<typeof BookSubjectSetterType | null>(null);
-  let BookTagSetter = $state<typeof BookTagSetterType | null>(null);
+  let BookSubjectTagSetter = $state<typeof BookSubjectTagSetterType | null>(null);
 
   onMount(() => {
     Promise.all([
@@ -51,10 +49,9 @@
       import("./SubjectEditModal.svelte").then(res => res.default),
       import("./TagEditModal.svelte").then(res => res.default),
       import("$lib/components/editBook/EditBookModal.svelte").then(res => res.default),
-      import("./BookSubjectSetter.svelte").then(res => res.default),
-      import("./BookTagSetter.svelte").then(res => res.default)
+      import("./BookSubjectTagSetter.svelte").then(res => res.default)
     ]).then(results => {
-      [BookSearchModal, SubjectEditModal, TagEditModal, EditBookModal, BookSubjectSetter, BookTagSetter] = results;
+      [BookSearchModal, SubjectEditModal, TagEditModal, EditBookModal, BookSubjectTagSetter] = results;
       modalsReady = true;
     });
   });
@@ -154,16 +151,10 @@
             {afterDelete}
           />
 
-          <BookSubjectSetter
+          <BookSubjectTagSetter
             isOpen={booksSubjectsModalOpen}
             onSave={onBooksUpdated}
             onHide={() => (booksSubjectsModalOpen = false)}
-            modifyingBooks={booksEditing}
-          />
-          <BookTagSetter
-            isOpen={booksTagsModalOpen}
-            onSave={onBooksUpdated}
-            onHide={() => (booksTagsModalOpen = false)}
             modifyingBooks={booksEditing}
           />
 

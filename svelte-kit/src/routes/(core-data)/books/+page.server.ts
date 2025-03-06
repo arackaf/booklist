@@ -64,6 +64,26 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: fields } };
   },
+  async setBooksSubjectsTags({ request, cookies, locals }) {
+    const session = await locals.getSession();
+    if (!session) {
+      return { success: false };
+    }
+
+    const formData: FormData = await request.formData();
+
+    const fields = toJson(formData, {
+      arrays: ["ids", "subjects-add", "subjects-remove", "tags-add", "tags-remove"]
+    }) as any;
+
+    await Promise.all([
+      updateBooksSubjects(session.userId, { ...fields, add: fields["subjects-add"], remove: fields["subjects-remove"] }),
+      updateBooksTags(session.userId, { ...fields, add: fields["tags-add"], remove: fields["tags-remove"] })
+    ]);
+    updateCacheCookie(cookies, BOOKS_CACHE);
+
+    return { success: true };
+  },
   async setBooksSubjects({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
