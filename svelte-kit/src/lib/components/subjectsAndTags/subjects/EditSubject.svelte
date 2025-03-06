@@ -187,7 +187,7 @@
       </div>
       <div class="md:col-span-2">
         <div class="flex flex-row gap-3">
-          <Button size="sm" disabled={saving}>Save</Button>
+          <Button type="submit" size="sm" disabled={saving}>Save</Button>
           <Button size="sm" variant="outline" type="button" disabled={saving} onclick={onCancelEdit}>Cancel</Button>
           {#if editingSubject.id}
             <Button size="sm" variant="destructive" class="ml-auto gap-1" type="button" disabled={saving} onclick={() => (deleteShowing = true)}>
@@ -213,7 +213,7 @@
       </Alert>
 
       <div class="flex flex-row gap-3">
-        <Button size="sm" variant="destructive" disabled={deleting}>Delete it!</Button>
+        <Button type="submit" size="sm" variant="destructive" disabled={deleting}>Delete it!</Button>
         <Button size="sm" variant="outline" type="button" disabled={deleting} onclick={() => (deleteShowing = false)}>Cancel</Button>
       </div>
     </div>
