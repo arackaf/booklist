@@ -178,11 +178,7 @@
     <input type="hidden" name="id" value={editingTag.id} />
 
     <div class="flex flex-col gap-3">
-      <Alert type="error" layout="slim">
-        <div>
-          <span>Delete {originalName}?</span>
-        </div>
-      </Alert>
+      <div class="font-bold text-xl leading-none">Delete {originalName}?</div>
 
       <div class="flex flex-row gap-4">
         <Button type="submit" size="sm" variant="destructive" disabled={deleting}>Delete it!</Button>
