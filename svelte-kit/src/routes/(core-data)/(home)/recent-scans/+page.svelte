@@ -1,9 +1,7 @@
 <script lang="ts">
   import Separator from "$lib/components/ui/separator/separator.svelte";
-
   import Button from "$lib/components/ui/button/button.svelte";
 
-  import Alert from "$lib/components/Alert.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
   import type { Ref } from "$lib/state/reactivityHelpers.svelte";
 
@@ -46,10 +44,8 @@
           <div>{item.title ?? `${item.isbn} Failure`}</div>
         {:else}
           <div></div>
-          <div>
-            <Alert type="error" class="w-[40ch] inline-flex">
-              Failed to lookup isbn {item.isbn}
-            </Alert>
+          <div class="text-red-500 font-bold text-base">
+            Failed to lookup isbn {item.isbn}
           </div>
         {/if}
       {/each}
@@ -65,9 +61,7 @@
       {#if scans.value.length}
         <Separator class="my-4 h-[2px]" />
       {/if}
-      <Alert type="info">
-        {noResultsMessage}
-      </Alert>
+      <div class="text-lg font-bold">No more recent scans</div>
     </div>
   {/if}
 </div>
