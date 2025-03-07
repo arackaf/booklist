@@ -29,7 +29,6 @@
   const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
-  const editSubjectsForSelectedBooks = () => editBooksSubjectsTags();
 
   const reload = () => {
     reloading = true;
@@ -71,12 +70,7 @@
       </Button>
     </form>
   {:else if !isPublic}
-    <Button
-      variant="outline"
-      class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
-      title="Add/remove subjects"
-      onclick={editSubjectsForSelectedBooks}
-    >
+    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0 border-neutral-300" title="Add/remove subjects" onclick={editBooksSubjectsTags}>
       <TagIcon />
     </Button>
     <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>

@@ -35,11 +35,10 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjectsAndTags, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags, editBooksTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
 
-  const editSubjectsForSelectedBooks = () => editBooksSubjects();
   const editTagsForSelectedBooks = () => editBooksTags();
 
   const mobileHandler = (fn: () => unknown) => () => {
@@ -127,13 +126,9 @@
   <Separator class="my-0 h-[2px]" />
 {:else if !isPublic}
   <Separator class="my-0 h-[2px]" />
-  <Button variant="outline" size="sm" title="Add/remove subjects" onclick={mobileHandler(editSubjectsForSelectedBooks)}>
-    <span>Edit Subjects</span>
+  <Button variant="outline" size="sm" title="Add/remove subjects" onclick={mobileHandler(editBooksSubjectsTags)}>
+    <span>Subjects & Tags</span>
     <i class="fal fa-fw fa-sitemap ml-auto"></i>
-  </Button>
-  <Button variant="outline" size="sm" title="Add/remove tags" onclick={mobileHandler(editTagsForSelectedBooks)}>
-    <span>Edit Tags</span>
-    <i class="fal fa-fw fa-tags ml-auto"></i>
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
     <Button variant="outline" size="sm" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
