@@ -26,10 +26,10 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTagsForSelectedBooks } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
-  const editSubjectsForSelectedBooks = () => editBooksSubjectsTags();
+  const editSubjectsForSelectedBooks = () => editBooksSubjectsTagsForSelectedBooks();
 
   const reload = () => {
     reloading = true;
