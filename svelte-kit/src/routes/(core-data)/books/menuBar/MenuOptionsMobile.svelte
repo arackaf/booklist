@@ -35,7 +35,7 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjects, editBooksTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
 
@@ -111,8 +111,8 @@
   </Button>
   <Separator class="my-0 h-[2px]" />
   {#if !isPublic}
-    <Button variant="outline" size="sm" title="Edit subjects" onclick={mobileHandler(editSubjects)}>
-      <span>Edit Subjects & Tags</span>
+    <Button variant="outline" size="sm" title="Edit subjects" onclick={mobileHandler(editSubjectsAndTags)}>
+      <span>Subjects & Tags</span>
       <TagIcon class="ml-auto" />
     </Button>
     <Separator class="my-0 h-[2px]" />

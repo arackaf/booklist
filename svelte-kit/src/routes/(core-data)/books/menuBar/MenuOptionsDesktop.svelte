@@ -26,7 +26,7 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editBooksSubjectsTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
   const editSubjectsForSelectedBooks = () => editBooksSubjectsTags();
@@ -55,7 +55,12 @@
       <FilterIcon />
     </Button>
     {#if !isPublic}
-      <Button variant="outline" title="Edit subjects and tags" onclick={editSubjects} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
+      <Button
+        variant="outline"
+        title="Edit subjects and tags"
+        onclick={editSubjectsAndTags}
+        class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
+      >
         <TagIcon />
       </Button>
     {/if}
