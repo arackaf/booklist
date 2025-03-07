@@ -70,12 +70,6 @@
     <Alert type="warning">
       It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
     </Alert>
-    {#if !hasPublicId}
-      <Alert type="warning" class="mt-7">
-        If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
-        <a href="/settings/account-sync">here</a>
-      </Alert>
-    {/if}
   {:else}
     <Alert type="warning">
       It looks like the subjects under {header} currently have no books assigned
