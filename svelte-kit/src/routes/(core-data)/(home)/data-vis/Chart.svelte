@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { MessageCircleWarningIcon, TerminalIcon } from "lucide-svelte";
+
   import { page } from "$app/stores";
-  import Alert from "$lib/components/Alert.svelte";
+  import * as Alert from "$lib/components/ui/alert/index.js";
 
   import { stackGraphData } from "./stackGraphData";
   import BarChartContent from "./bar-chart/chart/BarChartContent.svelte";
@@ -67,13 +69,21 @@
 
 {#if !graphData.length}
   {#if chartIndex == 0}
-    <Alert type="warning">
-      It looks like there's nothing to show here. Once you add some books to your library, and add subjects to them, they'll show up here.
-    </Alert>
+    <Alert.Root>
+      <TerminalIcon class="size-4" />
+      <Alert.Title>Hi there!</Alert.Title>
+      <Alert.Description>
+        It looks like there's nothing to show. Once you add some books to your library, and add subjects to them, they'll show up here.
+      </Alert.Description>
+    </Alert.Root>
   {:else}
-    <Alert type="warning">
-      It looks like the subjects under {header} currently have no books assigned
-    </Alert>
+    <Alert.Root>
+      <MessageCircleWarningIcon class="size-4" />
+      <Alert.Title>Oops</Alert.Title>
+      <Alert.Description>
+        It looks like the subjects under {header} currently have no books assigned
+      </Alert.Description>
+    </Alert.Root>
   {/if}
 {:else}
   <div class="pb-20">
