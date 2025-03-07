@@ -19,10 +19,10 @@
 </script>
 
 <Modal {isOpen} {onHide} headerCaption="Edit Subjects & Tags">
-  <Tabs.Root>
+  <Tabs.Root value="subjects">
     <Tabs.List class="w-full grid gap-2 grid-cols-2">
-      <Tabs.Trigger value="subjects">Book info</Tabs.Trigger>
-      <Tabs.Trigger value="tags">Covers</Tabs.Trigger>
+      <Tabs.Trigger value="subjects">Subjects</Tabs.Trigger>
+      <Tabs.Trigger value="tags">Tags</Tabs.Trigger>
     </Tabs.List>
     <Tabs.Content value="subjects">
       <SubjectEditModalContents {colors} {subjects} />

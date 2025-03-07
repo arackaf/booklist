@@ -102,7 +102,7 @@
     {#each modifyingBooks as b}
       <input type="hidden" name="ids" value={b.id} />
     {/each}
-    <Tabs.Root value="subjects" class="">
+    <Tabs.Root value="subjects">
       <Tabs.List class="w-full grid grid-cols-3 gap-2">
         <Tabs.Trigger value="subjects">Subjects</Tabs.Trigger>
         <Tabs.Trigger value="tags">Tags</Tabs.Trigger>
