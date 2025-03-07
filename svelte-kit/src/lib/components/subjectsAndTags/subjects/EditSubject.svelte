@@ -10,7 +10,6 @@
   import Input from "$lib/components/ui/input/input.svelte";
   import InputLabel from "$lib/components/ui/label/label.svelte";
 
-  import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
@@ -21,6 +20,7 @@
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
 
   import LabelDisplay from "../LabelDisplay.svelte";
+  import { CircleAlertIcon } from "lucide-svelte";
 
   type Props = {
     subject: Subject;
@@ -205,12 +205,12 @@
   <form method="POST" action="/subjects?/deleteSubject" use:enhance={runDelete}>
     <input type="hidden" name="id" value={editingSubject.id} />
     <div class="flex flex-col gap-3">
-      <Alert type="error" layout="slim">
-        <div class="flex flex-row gap-2">
-          <span>Delete {editingSubject.name}?</span>
-          {#if childSubjects?.length}<strong>Child subjects will also be deleted!</strong>{/if}
-        </div>
-      </Alert>
+      <div class="flex flex-col gap-2">
+        <div class="font-bold text-xl leading-none">Delete {editingSubject.name}?</div>
+        {#if childSubjects?.length}
+          <div class="text-base">Child subjects will also be deleted!</div>
+        {/if}
+      </div>
 
       <div class="flex flex-row gap-3">
         <Button type="submit" size="sm" variant="destructive" disabled={deleting}>Delete it!</Button>
