@@ -32,7 +32,7 @@
     }
   }
 
-  const previewToUse = $state<string | PreviewPacket | null>(getPreview());
+  const previewToUse = $derived<string | PreviewPacket | null>(getPreview());
 
   let previewString = $derived(previewToUse == null ? "" : typeof previewToUse === "string" ? previewToUse : previewToUse.b64);
   let sizingStyle = $derived(previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "");
