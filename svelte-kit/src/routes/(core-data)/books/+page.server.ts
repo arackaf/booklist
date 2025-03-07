@@ -84,40 +84,6 @@ export const actions = {
 
     return { success: true };
   },
-  async setBooksSubjects({ request, cookies, locals }) {
-    const session = await locals.getSession();
-    if (!session) {
-      return { success: false };
-    }
-
-    const formData: FormData = await request.formData();
-
-    const fields = toJson(formData, {
-      arrays: ["ids", "add", "remove"]
-    }) as any;
-
-    await updateBooksSubjects(session.userId, fields);
-    updateCacheCookie(cookies, BOOKS_CACHE);
-
-    return { success: true };
-  },
-  async setBooksTags({ request, cookies, locals }) {
-    const session = await locals.getSession();
-    if (!session) {
-      return { success: false };
-    }
-
-    const formData: FormData = await request.formData();
-
-    const fields = toJson(formData, {
-      arrays: ["ids", "add", "remove"]
-    }) as any;
-
-    await updateBooksTags(session.userId, fields);
-    updateCacheCookie(cookies, BOOKS_CACHE);
-
-    return { success: true };
-  },
   async setBooksRead({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
