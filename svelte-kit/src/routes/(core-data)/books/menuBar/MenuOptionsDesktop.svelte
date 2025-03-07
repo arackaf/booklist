@@ -9,7 +9,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
-  import { FilterIcon, RefreshCwIcon } from "lucide-svelte";
+  import { FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
   import { cn } from "$lib/utils";
 
   type Props = {
@@ -26,11 +26,9 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
-  const editSubjectsForSelectedBooks = () => editBooksSubjects();
-  const editTagsForSelectedBooks = () => editBooksTags();
 
   const reload = () => {
     reloading = true;
@@ -56,11 +54,13 @@
       <FilterIcon />
     </Button>
     {#if !isPublic}
-      <Button variant="outline" title="Edit subjects" onclick={editSubjects} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
-        <i class="fal fa-fw fa-sitemap"></i>
-      </Button>
-      <Button variant="outline" title="Edit tags" onclick={editTags} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
-        <i class="fal fa-fw fa-tags"></i>
+      <Button
+        variant="outline"
+        title="Edit subjects and tags"
+        onclick={editSubjectsAndTags}
+        class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
+      >
+        <TagIcon />
       </Button>
     {/if}
 
@@ -70,16 +70,8 @@
       </Button>
     </form>
   {:else if !isPublic}
-    <Button
-      variant="outline"
-      class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
-      title="Add/remove subjects"
-      onclick={editSubjectsForSelectedBooks}
-    >
-      <i class="fal fa-fw fa-sitemap"></i>
-    </Button>
-    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0 border-neutral-300" title="Add/remove tags" onclick={editTagsForSelectedBooks}>
-      <i class="fal fa-fw fa-tags"></i>
+    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0 border-neutral-300" title="Add/remove subjects" onclick={editBooksSubjectsTags}>
+      <TagIcon />
     </Button>
     <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
       <Button

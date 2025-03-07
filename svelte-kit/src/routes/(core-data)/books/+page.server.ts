@@ -64,7 +64,7 @@ export const actions = {
 
     return { success: true, updates: { fieldsSet: fields } };
   },
-  async setBooksSubjects({ request, cookies, locals }) {
+  async setBooksSubjectsTags({ request, cookies, locals }) {
     const session = await locals.getSession();
     if (!session) {
       return { success: false };
@@ -73,27 +73,13 @@ export const actions = {
     const formData: FormData = await request.formData();
 
     const fields = toJson(formData, {
-      arrays: ["ids", "add", "remove"]
+      arrays: ["ids", "subjects-add", "subjects-remove", "tags-add", "tags-remove"]
     }) as any;
 
-    await updateBooksSubjects(session.userId, fields);
-    updateCacheCookie(cookies, BOOKS_CACHE);
-
-    return { success: true };
-  },
-  async setBooksTags({ request, cookies, locals }) {
-    const session = await locals.getSession();
-    if (!session) {
-      return { success: false };
-    }
-
-    const formData: FormData = await request.formData();
-
-    const fields = toJson(formData, {
-      arrays: ["ids", "add", "remove"]
-    }) as any;
-
-    await updateBooksTags(session.userId, fields);
+    await Promise.all([
+      updateBooksSubjects(session.userId, { ...fields, add: fields["subjects-add"], remove: fields["subjects-remove"] }),
+      updateBooksTags(session.userId, { ...fields, add: fields["tags-add"], remove: fields["tags-remove"] })
+    ]);
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true };

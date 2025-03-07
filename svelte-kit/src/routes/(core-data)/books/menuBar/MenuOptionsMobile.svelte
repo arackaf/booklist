@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { FilterIcon } from "lucide-svelte";
+  import { FilterIcon, TagIcon } from "lucide-svelte";
 
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
@@ -35,11 +35,10 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjects, editTags, editBooksSubjects, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags, editBooksTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
 
-  const editSubjectsForSelectedBooks = () => editBooksSubjects();
   const editTagsForSelectedBooks = () => editBooksTags();
 
   const mobileHandler = (fn: () => unknown) => () => {
@@ -111,13 +110,9 @@
   </Button>
   <Separator class="my-0 h-[2px]" />
   {#if !isPublic}
-    <Button variant="outline" size="sm" title="Edit subjects" onclick={mobileHandler(editSubjects)}>
-      <span>Edit Subjects</span>
-      <i class="fal fa-fw fa-sitemap ml-auto"></i>
-    </Button>
-    <Button variant="outline" size="sm" title="Edit tags" onclick={mobileHandler(editTags)}>
-      <span>Edit Tags</span>
-      <i class="fal fa-fw fa-tags ml-auto"></i>
+    <Button variant="outline" size="sm" title="Edit subjects" onclick={mobileHandler(editSubjectsAndTags)}>
+      <span>Subjects & Tags</span>
+      <TagIcon class="ml-auto" />
     </Button>
     <Separator class="my-0 h-[2px]" />
   {/if}
@@ -131,13 +126,9 @@
   <Separator class="my-0 h-[2px]" />
 {:else if !isPublic}
   <Separator class="my-0 h-[2px]" />
-  <Button variant="outline" size="sm" title="Add/remove subjects" onclick={mobileHandler(editSubjectsForSelectedBooks)}>
-    <span>Edit Subjects</span>
+  <Button variant="outline" size="sm" title="Add/remove subjects" onclick={mobileHandler(editBooksSubjectsTags)}>
+    <span>Subjects & Tags</span>
     <i class="fal fa-fw fa-sitemap ml-auto"></i>
-  </Button>
-  <Button variant="outline" size="sm" title="Add/remove tags" onclick={mobileHandler(editTagsForSelectedBooks)}>
-    <span>Edit Tags</span>
-    <i class="fal fa-fw fa-tags ml-auto"></i>
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
     <Button variant="outline" size="sm" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>

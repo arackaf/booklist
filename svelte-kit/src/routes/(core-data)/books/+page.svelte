@@ -16,11 +16,9 @@
   import { BASIC_LIST_VIEW, GRID_VIEW } from "./bookViews/constants";
 
   import type BookSearchModalType from "./SearchModal.svelte";
-  import type SubjectEditModalType from "./SubjectEditModal.svelte";
-  import type TagEditModalType from "./TagEditModal.svelte";
+  import type SubjectsTagsEditModalType from "./SubjectTagEditModal.svelte";
   import type EditBookModalType from "$lib/components/editBook/EditBookModal.svelte";
-  import type BookSubjectSetterType from "./BookSubjectSetter.svelte";
-  import type BookTagSetterType from "./BookTagSetter.svelte";
+  import type BookSubjectTagSetterType from "./BookSubjectTagSetter.svelte";
   import { SearchState } from "./state/searchState.svelte";
   import { afterDelete } from "./state/onDelete";
   import { afterNavigate } from "$app/navigation";
@@ -39,22 +37,18 @@
   let modalsReady = $state(false);
 
   let BookSearchModal = $state<typeof BookSearchModalType | null>(null);
-  let SubjectEditModal = $state<typeof SubjectEditModalType | null>(null);
-  let TagEditModal = $state<typeof TagEditModalType | null>(null);
+  let SubjectsTagsEditModal = $state<typeof SubjectsTagsEditModalType | null>(null);
   let EditBookModal = $state<typeof EditBookModalType | null>(null);
-  let BookSubjectSetter = $state<typeof BookSubjectSetterType | null>(null);
-  let BookTagSetter = $state<typeof BookTagSetterType | null>(null);
+  let BookSubjectTagSetter = $state<typeof BookSubjectTagSetterType | null>(null);
 
   onMount(() => {
     Promise.all([
       import("./SearchModal.svelte").then(res => res.default),
-      import("./SubjectEditModal.svelte").then(res => res.default),
-      import("./TagEditModal.svelte").then(res => res.default),
+      import("./SubjectTagEditModal.svelte").then(res => res.default),
       import("$lib/components/editBook/EditBookModal.svelte").then(res => res.default),
-      import("./BookSubjectSetter.svelte").then(res => res.default),
-      import("./BookTagSetter.svelte").then(res => res.default)
+      import("./BookSubjectTagSetter.svelte").then(res => res.default)
     ]).then(results => {
-      [BookSearchModal, SubjectEditModal, TagEditModal, EditBookModal, BookSubjectSetter, BookTagSetter] = results;
+      [BookSearchModal, SubjectsTagsEditModal, EditBookModal, BookSubjectTagSetter] = results;
       modalsReady = true;
     });
   });
@@ -66,11 +60,10 @@
   let filterModalOpen = $state(false);
   let openFilterModal = () => (filterModalOpen = true);
 
-  let editSubjectsModalOpen = $state(false);
-  let editSubjects = () => (editSubjectsModalOpen = true);
+  let editSubjectsTagsModalOpen = $state(false);
+  let editSubjectsAndTags = () => (editSubjectsTagsModalOpen = true);
 
   let editTagsModalOpen = $state(false);
-  let editTags = () => (editTagsModalOpen = true);
 
   let editBookModalOpen = $state(false);
   let editingBook = $state<any>(null);
@@ -87,19 +80,15 @@
   function f() {}
 
   let booksSubjectsModalOpen = $state(false);
-  let booksTagsModalOpen = $state(false);
 
   let booksEditing = $derived(books.filter(b => selectionState.selectedBooksLookup[b.id]));
-  const editBooksSubjects = () => (booksSubjectsModalOpen = true);
-  const editBooksTags = () => (booksTagsModalOpen = true);
+  const editBooksSubjectsTags = () => (booksSubjectsModalOpen = true);
 
   let booksModuleContext = {
     openFilterModal,
-    editSubjects,
-    editTags,
+    editSubjectsAndTags,
     editBook,
-    editBooksSubjects,
-    editBooksTags,
+    editBooksSubjectsTags,
     onBooksUpdated,
     overrideBookView
   };
@@ -154,22 +143,14 @@
             {afterDelete}
           />
 
-          <BookSubjectSetter
+          <BookSubjectTagSetter
             isOpen={booksSubjectsModalOpen}
             onSave={onBooksUpdated}
             onHide={() => (booksSubjectsModalOpen = false)}
             modifyingBooks={booksEditing}
           />
-          <BookTagSetter
-            isOpen={booksTagsModalOpen}
-            onSave={onBooksUpdated}
-            onHide={() => (booksTagsModalOpen = false)}
-            modifyingBooks={booksEditing}
-          />
 
-          <SubjectEditModal {colors} {subjects} isOpen={editSubjectsModalOpen} onHide={() => (editSubjectsModalOpen = false)} />
-
-          <TagEditModal {colors} {tags} isOpen={editTagsModalOpen} onHide={() => (editTagsModalOpen = false)} />
+          <SubjectsTagsEditModal {colors} {tags} {subjects} isOpen={editSubjectsTagsModalOpen} onHide={() => (editSubjectsTagsModalOpen = false)} />
         {/if}
       </div>
     </div>
