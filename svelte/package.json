@@ -35,7 +35,7 @@
     "query-string": "4.3.2",
     "sass": "^1.43.4",
     "shallow-equal": "^1.0.0",
-    "svelte": "^3.46.4",
+    "svelte": "^3.49.0",
     "svelte-check": "^2.2.10",
     "svelte-file-dropzone": "0.0.15",
     "svelte-helpers": "0.2.5",
