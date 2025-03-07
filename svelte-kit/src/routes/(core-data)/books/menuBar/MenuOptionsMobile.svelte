@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { FilterIcon, TagIcon } from "lucide-svelte";
+  import { BookCheckIcon, BookXIcon, FilterIcon, TagIcon } from "lucide-svelte";
 
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
@@ -128,18 +128,18 @@
   <Separator class="my-0 h-[2px]" />
   <Button variant="outline" size="sm" title="Add/remove subjects" onclick={mobileHandler(editBooksSubjectsTags)}>
     <span>Subjects & Tags</span>
-    <i class="fal fa-fw fa-sitemap ml-auto"></i>
+    <TagIcon class="ml-auto" />
   </Button>
   <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
-    <Button variant="outline" size="sm" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
+    <Button type="submit" variant="outline" size="sm" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Read</span>
-      <i class="fal fa-fw fa-eye ml-auto"></i>
+      <BookCheckIcon class="ml-auto" />
     </Button>
   </BookReadSetter>
   <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
-    <Button variant="outline" size="sm" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
+    <Button type="submit" variant="outline" size="sm" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
       <span>Set Un-Read</span>
-      <i class="fal fa-fw fa-eye-slash ml-auto"></i>
+      <BookXIcon class="ml-auto" />
     </Button>
   </BookReadSetter>
   <Separator class="my-0 h-[2px]" />

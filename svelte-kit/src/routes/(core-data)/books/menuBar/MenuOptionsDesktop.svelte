@@ -9,7 +9,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
-  import { FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
+  import { BookCheckIcon, BookXIcon, FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
   import { cn } from "$lib/utils";
 
   type Props = {
@@ -81,7 +81,7 @@
         title="Set read"
         disabled={bulkReadSaving || bulkUnReadSaving}
       >
-        <i class="fal fa-fw fa-eye"></i>
+        <BookCheckIcon />
       </Button>
     </BookReadSetter>
     <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
@@ -92,7 +92,7 @@
         title="Set un-read"
         disabled={bulkReadSaving || bulkUnReadSaving}
       >
-        <i class="fal fa-fw fa-eye-slash"></i>
+        <BookXIcon />
       </Button>
     </BookReadSetter>
   {/if}
