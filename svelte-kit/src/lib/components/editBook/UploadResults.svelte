@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { BookImages } from "$data/types";
-  import Alert from "$lib/components/Alert.svelte";
+
+  import * as Alert from "$lib/components/ui/alert/index.js";
+  import { CircleAlertIcon, MessageCircleWarningIcon } from "lucide-svelte";
 
   import UploadResult from "./UploadResult.svelte";
 
@@ -15,9 +17,17 @@
 
 {#if error}
   {#if status === "invalid-size"}
-    <Alert type="warning" class="mt-3">This image is too small to use</Alert>
+    <Alert.Root>
+      <MessageCircleWarningIcon class="size-4" />
+      <Alert.Title>Invalid Image</Alert.Title>
+      <Alert.Description>This image is too small to use</Alert.Description>
+    </Alert.Root>
   {:else}
-    <Alert type="error" class="mt-3">An error occured</Alert>
+    <Alert.Root variant="destructive">
+      <CircleAlertIcon class="size-4" />
+      <Alert.Title>Error</Alert.Title>
+      <Alert.Description>An error occured</Alert.Description>
+    </Alert.Root>
   {/if}
 {:else}
   <div class="flex flex-row mt-3">

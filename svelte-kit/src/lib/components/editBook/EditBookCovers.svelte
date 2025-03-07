@@ -50,9 +50,9 @@
   let mediumImagePreview = $derived(uploadResults?.mediumImagePreview);
 </script>
 
-<div>
+<div class="flex flex-col gap-4">
   <CurrentCovers {book} />
-  <Separator class="my-4 h-[2px]" />
+  <Separator class="h-[2px]" />
 
   <ManageBookCover onError={onCoverError} onResults={onCoverResults} />
 
