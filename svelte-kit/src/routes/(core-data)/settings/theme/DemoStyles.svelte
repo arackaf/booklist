@@ -21,8 +21,6 @@
             <Label>Search title</Label>
             <Input placeholder="Search title" value="The Slefish Gene" />
           </div>
-
-          <Alert type="warning">Did you spell this right?</Alert>
         </div>
       </div>
       <div class="col-span-2 md:col-span-1">
@@ -31,8 +29,6 @@
             <Label>Publisher</Label>
             <Input placeholder="Publisher" value="Basic Books" />
           </div>
-
-          <Alert type="success">Looks good to me!</Alert>
         </div>
       </div>
       <div class="col-span-2 md:col-span-1">
@@ -41,7 +37,6 @@
             <Label>Author</Label>
             <Input placeholder="Author" value="Richard Dawkins" />
           </div>
-          <Alert type="error">Author is required!</Alert>
         </div>
       </div>
     </div>
@@ -51,5 +46,4 @@
       <Button variant="outline" class="ml-auto">Close</Button>
     </div>
   </div>
-  <Alert type="info" class="mt-2">This color theme will be saved locally, and remembered the next time you browse here (on the same device)</Alert>
 </div>
