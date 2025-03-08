@@ -2,9 +2,9 @@
   import Dropzone from "svelte-file-dropzone";
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
+  import Badge from "$lib/components/ui/badge/badge.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
 
   type Props = {
     onResults: (results: any) => void;
@@ -76,7 +76,7 @@
 
 <form onsubmit={doRemoteSave}>
   <div class="flex flex-row gap-4">
-    <div class="flex-1" style="position: relative;">
+    <div class="flex-1 flex flex-col gap-1.5" style="position: relative;">
       {#key uploading ? 1 : 0}
         <Dropzone
           inputElement={null}
@@ -94,7 +94,7 @@
         </Dropzone>
       {/key}
       {#if uploadError}
-        <Label theme="error">{uploadError}</Label>
+        <Badge class="self-start" variant="destructive">{uploadError}</Badge>
       {/if}
     </div>
 
