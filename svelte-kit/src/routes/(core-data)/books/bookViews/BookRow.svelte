@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { CheckIcon } from "lucide-svelte";
 
   import { enhance } from "$app/forms";
 
@@ -8,8 +9,8 @@
   import { cn } from "$lib/utils";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
+  import Badge from "$lib/components/ui/badge/badge.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
@@ -173,7 +174,7 @@
           </Button>
         </BookReadSetter>
       {:else if book.isRead}
-        <Label theme="success">Read <i class="far fa-fw fa-check"></i></Label>
+        <Badge class="inline-flex gap-1" variant="outline">Read <CheckIcon size={14} /></Badge>
       {/if}
     </div>
   </td>

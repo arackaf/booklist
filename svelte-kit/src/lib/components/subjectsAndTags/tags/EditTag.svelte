@@ -14,7 +14,7 @@
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
 
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
+  import LabelDisplay from "../LabelDisplay.svelte";
 
   type Props = {
     tag: Tag;
@@ -106,20 +106,22 @@
         <div class="flex flex-col gap-1.5">
           <InputLabel for="edit-tag-name">Name</InputLabel>
 
-          <Input
-            class={cn("focus:border-border", {
-              "border-red-600": missingName,
-              "focus-visible:ring-red-600": missingName
-            })}
-            bind:ref={inputEl}
-            bind:value={editingTag.name}
-            name="name"
-            placeholder="Tag name"
-            autocomplete="off"
-          />
-          <Label colors={editingTag} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
-            {editingTag.name.trim() || "<label preview>"}
-          </Label>
+          <div class="flex flex-col gap-0.5">
+            <Input
+              class={cn("focus:border-border", {
+                "border-red-600": missingName,
+                "focus-visible:ring-red-600": missingName
+              })}
+              bind:ref={inputEl}
+              bind:value={editingTag.name}
+              name="name"
+              placeholder="Tag name"
+              autocomplete="off"
+            />
+            <div>
+              <LabelDisplay item={{ ...editingTag, name: editingTag.name || "<tag preview>" }} />
+            </div>
+          </div>
         </div>
       </div>
 

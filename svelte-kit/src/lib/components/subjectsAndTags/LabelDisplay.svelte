@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
+  import Badge from "../ui/badge/badge.svelte";
   import type { Label as LabelType } from "./types";
 
   type Props = {
@@ -18,12 +18,12 @@
 
 {#if href}
   <a {href} style={extraStyles} class="{disabled ? disabledClasses : ''} {extraClasses}">
-    <Label colors={item}>
+    <Badge class="bg-neutral-500 text-white px-2 text-xs leading-none" style="background-color: {item.backgroundColor}; color: {item.textColor};">
       {item.name}
-    </Label>
+    </Badge>
   </a>
 {:else}
-  <Label colors={item} class="{disabled ? disabledClasses : ''} {extraClasses}">
+  <Badge class="bg-neutral-500 text-white px-2 text-xs leading-none" style="background-color: {item.backgroundColor}; color: {item.textColor};">
     {item.name}
-  </Label>
+  </Badge>
 {/if}
