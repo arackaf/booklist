@@ -14,7 +14,6 @@
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
 
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
   import LabelDisplay from "../LabelDisplay.svelte";
 
   type Props = {
