@@ -2,7 +2,7 @@
   import { CircleAlertIcon, MessageCircleWarningIcon } from "lucide-svelte";
 
   import type { BookImages } from "$data/types";
-  import * as Alert from "$lib/components/ui/alert/index.js";
+  import * as Alert from "$lib/components/ui/alert";
 
   import UploadResult from "./UploadResult.svelte";
 

@@ -3,7 +3,7 @@
 
   import { fade } from "svelte/transition";
   import { enhance } from "$app/forms";
-  import * as Alert from "$lib/components/ui/alert/index.js";
+  import * as Alert from "$lib/components/ui/alert";
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";

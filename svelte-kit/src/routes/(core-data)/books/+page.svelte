@@ -5,7 +5,7 @@
   import type { Book } from "$data/types";
 
   import { afterNavigate } from "$app/navigation";
-  import * as Alert from "$lib/components/ui/alert/index.js";
+  import * as Alert from "$lib/components/ui/alert";
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
 
   import GridView from "./bookViews/GridView.svelte";
