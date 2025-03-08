@@ -9,6 +9,8 @@
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
   import BookDisplay from "./BookDisplay.svelte";
+  import { ChevronsDown, LoaderIcon } from "lucide-svelte";
+  import { cn } from "$lib/utils";
 
   type Props = {
     book: BookWithSimilarItems;
@@ -53,18 +55,16 @@
 </script>
 
 {#if hasSimilarBooks}
-  <Alert type="success">
+  <Button class="self-start" variant="outline" disabled={loading} onclick={expand}>
     <span>
       {similarBooksCount} similar book{similarBooksCount === 1 ? "" : "s"}
     </span>
-    <button disabled={loading} class="raw-button ml-auto" class:cursor-pointer={loading} class:rotate-180={expanded} onclick={expand}>
-      {#if loading}
-        <i class="far fa-spinner fa-spin"></i>
-      {:else}
-        <i class="far fa-angle-double-down"></i>
-      {/if}
-    </button>
-  </Alert>
+    {#if loading}
+      <LoaderIcon class="animate-spin" />
+    {:else}
+      <ChevronsDown class={cn({ "rotate-180": expanded })} />
+    {/if}
+  </Button>
 
   <SlideAnimate open={expanded}>
     <div class="flex flex-col gap-3 mt-3 max-h-80 overflow-y-scroll">
