@@ -10,7 +10,6 @@
   import Input from "$lib/components/ui/input/input.svelte";
   import InputLabel from "$lib/components/ui/label/label.svelte";
 
-  import Alert from "$lib/components/Alert.svelte";
   import ColorsPalette from "$lib/components/ColorsPalette.svelte";
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
