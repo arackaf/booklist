@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
+  import { MessageCircleWarningIcon, TerminalIcon } from "lucide-svelte";
 
   import type { Book } from "$data/types";
-  import Alert from "$lib/components/Alert.svelte";
+
+  import { afterNavigate } from "$app/navigation";
+  import * as Alert from "$lib/components/ui/alert/index.js";
   import { runUpdate, type UpdatesTo } from "$lib/state/dataUpdates";
 
   import GridView from "./bookViews/GridView.svelte";
@@ -21,7 +24,6 @@
   import type BookSubjectTagSetterType from "./BookSubjectTagSetter.svelte";
   import { SearchState } from "./state/searchState.svelte";
   import { afterDelete } from "./state/onDelete";
-  import { afterNavigate } from "$app/navigation";
   import { uiState } from "./currentUiState.svelte";
 
   let { data } = $props();
@@ -105,13 +107,20 @@
       <div class="overlay-holder mt-1" style="flex: 1; padding: 0px; grid-template-columns: 100%">
         {#if !books.length}
           <div>
-            <Alert type="warning">No books found</Alert>
-
             {#if !hasPublicId && searchState.value.activeFilterCount === 0}
-              <Alert class="mt-4" type="warning">
-                If you previously have an account with the old version of this site, your books are safe. Just sync your account&nbsp;
-                <a href="/settings/account-sync">here</a>
-              </Alert>
+              <Alert.Root>
+                <TerminalIcon class="size-4" />
+                <Alert.Title>Hi there!</Alert.Title>
+                <Alert.Description>
+                  It looks like there's nothing to show. Once you add some books to your library they'll show up here.
+                </Alert.Description>
+              </Alert.Root>
+            {:else}
+              <Alert.Root class="self-start">
+                <MessageCircleWarningIcon class="size-4" />
+                <Alert.Title>Nothing here!</Alert.Title>
+                <Alert.Description>No books found matching this search</Alert.Description>
+              </Alert.Root>
             {/if}
           </div>
         {:else}
