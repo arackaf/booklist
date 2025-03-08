@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { LibraryBigIcon } from "lucide-svelte";
+
   import { page } from "$app/stores";
   import { invalidate } from "$app/navigation";
 
@@ -22,12 +24,14 @@
 </script>
 
 <footer>
-  <i class="fal fa-book"></i>
-  <span style="margin-left: 5px; margin-right: 5px">My Library</span>
-  {#if showChooseDesktop}
-    <button class="raw-button cursor-pointer" name="Use desktop version" onclick={requestDesktop}> Use desktop version </button>
-  {/if}
-  {#if showSwitchBackMobile}
-    <button class="raw-button cursor-pointer" name="Use mobile version" onclick={requestMobile}> Use mobile version </button>
-  {/if}
+  <div class="flex items-center">
+    <LibraryBigIcon class="inline" size={18} />
+    <span style="margin-left: 5px; margin-right: 5px">My Library</span>
+    {#if showChooseDesktop}
+      <button class="raw-button cursor-pointer" name="Use desktop version" onclick={requestDesktop}> Use desktop version </button>
+    {/if}
+    {#if showSwitchBackMobile}
+      <button class="raw-button cursor-pointer" name="Use mobile version" onclick={requestMobile}> Use mobile version </button>
+    {/if}
+  </div>
 </footer>
