@@ -161,6 +161,7 @@
             class={cn("h-6 px-2 text-xs", {
               "bg-green-600": book.isRead,
               "hover:bg-green-700": book.isRead,
+              "text-muted-foreground": !book.isRead,
               "text-background": book.isRead,
               "hover:text-background": book.isRead
             })}

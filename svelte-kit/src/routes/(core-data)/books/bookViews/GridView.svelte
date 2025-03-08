@@ -41,7 +41,7 @@
   <thead>
     <tr>
       {#if !isPublic}
-        <th class="p-0 w-6" data-style="text-align: center; width: 25px;">
+        <th class="p-0 w-6 text-center">
           <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll} aria-label="Select all">
             <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
           </button>

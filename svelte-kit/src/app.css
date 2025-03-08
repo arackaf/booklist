@@ -21,17 +21,6 @@
   box-sizing: border-box;
 }
 
-#app,
-input,
-select,
-a,
-button {
-  color: var(--neutral-3);
-}
-button[type="submit"] {
-  font-weight: normal;
-}
-
 footer {
   background-color: var(--primary-8);
   padding: 9px;
