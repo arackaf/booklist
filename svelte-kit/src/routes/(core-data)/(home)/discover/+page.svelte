@@ -1,13 +1,16 @@
 <script lang="ts">
+  import { MessageCircleWarningIcon } from "lucide-svelte";
+
+  import type { Book } from "$data/types";
+
   import { ajaxUtil } from "$lib/util/ajaxUtil";
 
-  import Alert from "$lib/components/Alert.svelte";
+  import * as Alert from "$lib/components/ui/alert/index.js";
   import Button from "$lib/components/ui/button/button.svelte";
 
   import DisplayBook from "./DisplayBook.svelte";
   import DisplayRecommendation from "./DisplayRecommendation.svelte";
   import SearchModal from "./SearchModal.svelte";
-  import type { Book } from "$data/types";
 
   type Props = {
     data: {
@@ -82,7 +85,11 @@
         </div>
       </div>
     {:else if recommendationsLoaded}
-      <Alert type="warning">Nothing found</Alert>
+      <Alert.Root>
+        <MessageCircleWarningIcon class="size-4" />
+        <Alert.Title>Nothing found</Alert.Title>
+        <Alert.Description>No similar books found for what you selected</Alert.Description>
+      </Alert.Root>
     {/if}
   </div>
 </div>
