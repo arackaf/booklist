@@ -1,11 +1,13 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { BookCheckIcon, BookXIcon, FilterIcon, TagIcon } from "lucide-svelte";
+  import { BookCheckIcon, BookXIcon, FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
 
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
+
+  import { cn } from "$lib/utils";
 
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
@@ -120,7 +122,7 @@
   <form method="POST" action="?/reloadBooks" class="contents" use:enhance={reload}>
     <Button variant="outline" size="sm" type="submit" disabled={reloading}>
       <span>Reload Books</span>
-      <i class="fal fa-fw fa-sync ml-auto" class:fa-spin={reloading}></i>
+      <RefreshCwIcon class={cn({ "animate-spin": reloading }, "ml-auto")} />
     </Button>
   </form>
   <Separator class="my-0 h-[2px]" />

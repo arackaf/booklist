@@ -66,7 +66,7 @@
 
     <form method="POST" action="?/reloadBooks" use:enhance={reload}>
       <Button variant="outline" class="h-8 w-11 rounded-l-none border-neutral-300" type="submit" disabled={reloading}>
-        <RefreshCwIcon class={cn({ "fa-spin": reloading })} />
+        <RefreshCwIcon class={cn({ "animate-spin": reloading })} />
       </Button>
     </form>
   {:else if !isPublic}
