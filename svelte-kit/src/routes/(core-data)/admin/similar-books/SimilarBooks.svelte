@@ -75,15 +75,15 @@
   </SlideAnimate>
 {:else if isbn10}
   {#if book.similarBooksLastSyncDisplay}
-    <Alert type="warning">
+    <div class="text-base">
       None found. Last attempt {book.similarBooksLastSyncDisplay}
-    </Alert>
+    </div>
 
     <form method="POST" action="?/updateRecommended" use:enhance={attemptUpdate}>
       <input type="hidden" name="id" value={book.id} />
       <Button type="submit" disabled={isRunning} class="mt-3">Re-attempt</Button>
     </form>
   {:else}
-    <Alert type="info">Sync pending</Alert>
+    <span>Sync pending</span>
   {/if}
 {/if}
