@@ -21,17 +21,6 @@
   box-sizing: border-box;
 }
 
-#app,
-input,
-select,
-a,
-button {
-  color: var(--neutral-3);
-}
-button[type="submit"] {
-  font-weight: normal;
-}
-
 footer {
   background-color: var(--primary-8);
   padding: 9px;
@@ -131,9 +120,7 @@ button::-moz-focus-inner {
 }
 
 th {
-  font-size: 16px;
-  text-align: left;
-  border-bottom: 2px solid var(--primary-8);
+  @apply text-left text-muted-foreground h-8 font-medium align-middle border-b-2 border-b-primary;
 }
 
 td {

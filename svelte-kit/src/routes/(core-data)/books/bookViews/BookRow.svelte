@@ -65,7 +65,7 @@
   }
 </script>
 
-<tr class="hover:bg-primary-10">
+<tr class="hover:bg-primary/5">
   {#if !isPublic}
     <td>
       <button style="font-size: 12pt" class="raw-button" onclick={() => selectionState.toggle(id)} aria-label="Select book">
@@ -161,6 +161,7 @@
             class={cn("h-6 px-2 text-xs", {
               "bg-green-600": book.isRead,
               "hover:bg-green-700": book.isRead,
+              "text-muted-foreground": !book.isRead,
               "text-background": book.isRead,
               "hover:text-background": book.isRead
             })}

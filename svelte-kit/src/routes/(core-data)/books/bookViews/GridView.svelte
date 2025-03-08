@@ -41,33 +41,35 @@
   <thead>
     <tr>
       {#if !isPublic}
-        <th class="p-0" style="text-align: center; width: 25px;">
+        <th class="p-0 w-6 text-center">
           <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll} aria-label="Select all">
             <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
           </button>
         </th>
       {/if}
-      <th class="p-0" style="width: 60px"></th>
-      <th class="p-0" style="min-width: 200px">
-        <a class="bold" href={changeFilter.withSort("title")}>
+      <th class="p-0 w-[60px]"></th>
+      <th class="p-0 min-w-48">
+        <a href={changeFilter.withSort("title")}>
           Title
-          {#if searchState.value.sortField == "title"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}
-            ></i>{/if}
+          {#if searchState.value.sortField == "title"}
+            <i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>
+          {/if}
         </a>
       </th>
-      <th class="p-0" style="min-width: 90px;">Subjects</th>
-      <th class="p-0" style="min-width: 90px;">Tags</th>
-      <th class="p-0" style="min-width: 90px;"></th>
+      <th class="p-0 min-w-20">Subjects</th>
+      <th class="p-0 min-w-20">Tags</th>
+      <th class="p-0 min-w-20"></th>
       <th class="p-0"></th>
-      <th class="p-0" style="min-width: 85px; ">
-        <a class="bold" href={changeFilter.withSort("pages")}>
+      <th class="p-0 min-w-20">
+        <a href={changeFilter.withSort("pages")}>
           Pages
-          {#if searchState.value.sortField == "pages"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}
-            ></i>{/if}
+          {#if searchState.value.sortField == "pages"}
+            <i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>
+          {/if}
         </a>
       </th>
       <th class="p-0">
-        <a class="bold" href={changeFilter.withSort("id")}>
+        <a href={changeFilter.withSort("id")}>
           Added
           {#if searchState.value.sortField == "id"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>{/if}
         </a>
