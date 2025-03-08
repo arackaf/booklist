@@ -1,5 +1,7 @@
 <script lang="ts">
-  import Alert from "$lib/components/Alert.svelte";
+  import { CircleAlertIcon } from "lucide-svelte";
+
+  import * as Alert from "$lib/components/ui/alert/index.js";
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";
 
   let { data } = $props();
@@ -12,7 +14,11 @@
       {#if user}
         <EditPublicUserSettings {user} {isPublic} {publicLink} />
       {:else}
-        <Alert type="error">An error occured</Alert>
+        <Alert.Root variant="destructive">
+          <CircleAlertIcon class="size-4" />
+          <Alert.Title>Error</Alert.Title>
+          <Alert.Description>An error occured</Alert.Description>
+        </Alert.Root>
       {/if}
     </div>
   </div>
