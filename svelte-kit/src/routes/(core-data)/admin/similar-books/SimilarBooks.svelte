@@ -4,7 +4,6 @@
 
   import Button from "$lib/components/ui/button/button.svelte";
 
-  import Alert from "$lib/components/Alert.svelte";
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
