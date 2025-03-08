@@ -11,6 +11,8 @@
 
   import Badge from "$lib/components/ui/badge/badge.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import * as Table from "$lib/components/ui/table";
+
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
@@ -65,20 +67,20 @@
   }
 </script>
 
-<tr class="hover:bg-primary-10">
+<Table.Row class="hover:bg-primary-10">
   {#if !isPublic}
-    <td>
+    <Table.Cell>
       <button style="font-size: 12pt" class="raw-button" onclick={() => selectionState.toggle(id)} aria-label="Select book">
         <i class={"fal fa-fw " + (!!selectionState.selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
       </button>
-    </td>
+    </Table.Cell>
   {/if}
-  <td>
+  <Table.Cell>
     <div style="width: 60px; min-height: 50px;">
       <BookCover size="small" {book} />
     </div>
-  </td>
-  <td class="group">
+  </Table.Cell>
+  <Table.Cell class="group">
     <div>
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-1">
@@ -139,18 +141,18 @@
         </div>
       </div>
     </div>
-  </td>
-  <td>
+  </Table.Cell>
+  <Table.Cell>
     <div class="mt-1">
       <DisplaySelectedSubjects vertical={true} currentlySelected={book.subjects} {subjects} href={s => changeFilter.addSubject(s.id)} />
     </div>
-  </td>
-  <td>
+  </Table.Cell>
+  <Table.Cell>
     <div class="mt-1">
       <DisplaySelectedTags vertical={true} currentlySelected={book.tags} {tags} href={t => changeFilter.addTag(t.id)} />
     </div>
-  </td>
-  <td>
+  </Table.Cell>
+  <Table.Cell>
     <div class="mt-1">
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
@@ -177,8 +179,8 @@
         <Badge class="inline-flex gap-1" variant="outline">Read <CheckIcon size={14} /></Badge>
       {/if}
     </div>
-  </td>
-  <td>
+  </Table.Cell>
+  <Table.Cell>
     {#if book.publisher}
       <div class="text-sm truncate max-w-[150px]">{book.publisher}</div>
     {/if}
@@ -188,15 +190,15 @@
     {#if book.isbn}
       <div class="text-sm">{book.isbn}</div>
     {/if}
-  </td>
-  <td>
+  </Table.Cell>
+  <Table.Cell>
     <span class="text-sm">
       {book.pages == null ? "" : book.pages}
     </span>
-  </td>
-  <td>
+  </Table.Cell>
+  <Table.Cell>
     <span class="text-sm">
       {getDisplayDate(addedDate)}
     </span>
-  </td>
-</tr>
+  </Table.Cell>
+</Table.Row>
