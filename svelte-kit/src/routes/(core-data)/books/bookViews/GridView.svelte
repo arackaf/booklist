@@ -1,5 +1,8 @@
 <script lang="ts">
   import type { Book, Subject, Tag } from "$data/types";
+
+  import * as Table from "$lib/components/ui/table";
+
   import BookRow from "./BookRow.svelte";
   import { ChangeFilters, SearchState } from "../state/searchState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
@@ -37,46 +40,49 @@
 
 <BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
-<table style="position: relative; align-self: start;" class="table w-full max-w-full">
-  <thead>
-    <tr>
+<Table.Root data-style="position: relative; align-self: start;" data-class="table w-full max-w-full">
+  <Table.Header>
+    <Table.Row>
       {#if !isPublic}
-        <th class="p-0" style="text-align: center; width: 25px;">
+        <Table.Head class="p-0 w-6 text-center">
           <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll} aria-label="Select all">
             <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
           </button>
-        </th>
+        </Table.Head>
       {/if}
-      <th class="p-0" style="width: 60px"></th>
-      <th class="p-0" style="min-width: 200px">
-        <a class="bold" href={changeFilter.withSort("title")}>
+      <Table.Head class="p-0 w-[60px]"></Table.Head>
+      <Table.Head class="p-0 min-w-52">
+        <a href={changeFilter.withSort("title")}>
           Title
           {#if searchState.value.sortField == "title"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}
             ></i>{/if}
         </a>
-      </th>
-      <th class="p-0" style="min-width: 90px;">Subjects</th>
-      <th class="p-0" style="min-width: 90px;">Tags</th>
-      <th class="p-0" style="min-width: 90px;"></th>
-      <th class="p-0"></th>
-      <th class="p-0" style="min-width: 85px; ">
-        <a class="bold" href={changeFilter.withSort("pages")}>
+      </Table.Head>
+      <Table.Head class="min-w-20">Subjects</Table.Head>
+      <Table.Head class="min-w-20">Tags</Table.Head>
+      <Table.Head class="min-w-20"></Table.Head>
+      <Table.Head></Table.Head>
+      <Table.Head class="min-w-20">
+        <a href={changeFilter.withSort("pages")}>
           Pages
-          {#if searchState.value.sortField == "pages"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}
-            ></i>{/if}
+          {#if searchState.value.sortField == "pages"}
+            <i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>
+          {/if}
         </a>
-      </th>
-      <th class="p-0">
-        <a class="bold" href={changeFilter.withSort("id")}>
+      </Table.Head>
+      <Table.Head>
+        <a href={changeFilter.withSort("id")}>
           Added
-          {#if searchState.value.sortField == "id"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>{/if}
+          {#if searchState.value.sortField == "id"}
+            <i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>
+          {/if}
         </a>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
+      </Table.Head>
+    </Table.Row>
+  </Table.Header>
+  <Table.Body>
     {#each books as book (book.id)}
       <BookRow {book} {subjects} {tags} {isPublic} {previewBook} />
     {/each}
-  </tbody>
-</table>
+  </Table.Body>
+</Table.Root>
