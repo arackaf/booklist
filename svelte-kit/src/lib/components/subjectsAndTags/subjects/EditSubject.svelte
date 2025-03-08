@@ -14,13 +14,10 @@
   import CustomColorPicker from "$lib/components/CustomColorPicker.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
 
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
-
   import { computeParentId, getChildSubjectsSorted, getEligibleParents, getSubjectsHash } from "$lib/state/subjectsState";
   import SelectAvailableSubjects from "./SelectAvailableSubjects.svelte";
 
   import LabelDisplay from "../LabelDisplay.svelte";
-  import { CircleAlertIcon } from "lucide-svelte";
 
   type Props = {
     subject: Subject;
@@ -115,20 +112,22 @@
       <div class="flex flex-col gap-1.5">
         <InputLabel for="subject-name">Name</InputLabel>
 
-        <Input
-          id="subject-name"
-          class={cn("focus:border-border", {
-            "border-red-600": missingName,
-            "focus-visible:ring-red-600": missingName
-          })}
-          bind:ref={inputEl}
-          bind:value={editingSubject.name}
-          name="name"
-          placeholder="Subject name"
-        />
-        <Label colors={editingSubject} style="max-width: 100%; overflow: hidden; align-self: flex-start;">
-          {editingSubject.name.trim() || "<label preview>"}
-        </Label>
+        <div class="flex flex-col gap-0.5">
+          <Input
+            id="subject-name"
+            class={cn("focus:border-border", {
+              "border-red-600": missingName,
+              "focus-visible:ring-red-600": missingName
+            })}
+            bind:ref={inputEl}
+            bind:value={editingSubject.name}
+            name="name"
+            placeholder="Subject name"
+          />
+          <div>
+            <LabelDisplay item={{ ...editingSubject, name: editingSubject.name || "<subject preview>" }} />
+          </div>
+        </div>
       </div>
       <div class="flex flex-col gap-1.5">
         <InputLabel>Parent</InputLabel>
