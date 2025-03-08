@@ -18,12 +18,12 @@
 
 {#if href}
   <a {href} style={extraStyles} class="{disabled ? disabledClasses : ''} {extraClasses}">
-    <Badge class="px-2 text-xs leading-none" style="background-color: {item.backgroundColor}; color: {item.textColor};">
+    <Badge class="bg-neutral-500 text-white px-2 text-xs leading-none" style="background-color: {item.backgroundColor}; color: {item.textColor};">
       {item.name}
     </Badge>
   </a>
 {:else}
-  <Badge class="px-2 text-xs leading-none" style="background-color: {item.backgroundColor}; color: {item.textColor};">
+  <Badge class="bg-neutral-500 text-white px-2 text-xs leading-none" style="background-color: {item.backgroundColor}; color: {item.textColor};">
     {item.name}
   </Badge>
 {/if}

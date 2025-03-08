@@ -26,56 +26,44 @@
   <div style="flex: 0 0 auto; margin-right: 5px; align-self: center;">{resultsDisplay}</div>
 {/if}
 
-<div style="display: flex; align-items: flex-start; align-content: center; flex-wrap: wrap">
+<div class="flex flex-wrap items-start content-center gap-1">
   {#if searchState.value.search}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `"${searchState.value.search}"` }} href={changeFilter.withoutSearch} />
+    <RemovableLabelDisplay item={{ name: `"${searchState.value.search}"` }} href={changeFilter.withoutSearch} />
   {/if}
   {#if searchState.value.isRead == "true" || searchState.value.isRead == "false"}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} href={changeFilter.withoutIsRead}>
+    <RemovableLabelDisplay href={changeFilter.withoutIsRead}>
       <span>
         {#if searchState.value.isRead == "true"}Is Read <i class="far fa-check"></i>{:else}Not Read{/if}
       </span>
     </RemovableLabelDisplay>
   {/if}
   {#if searchState.value.publisher}
-    <RemovableLabelDisplay
-      extraStyles={filterDisplayStyles}
-      item={{ name: `Publisher: "${searchState.value.publisher}"` }}
-      href={changeFilter.withoutPublisher}
-    />
+    <RemovableLabelDisplay item={{ name: `Publisher: "${searchState.value.publisher}"` }} href={changeFilter.withoutPublisher} />
   {/if}
   {#if searchState.value.author}
-    <RemovableLabelDisplay
-      extraStyles={filterDisplayStyles}
-      item={{ name: `Author: "${searchState.value.author}"` }}
-      href={changeFilter.withoutAuthor}
-    />
+    <RemovableLabelDisplay item={{ name: `Author: "${searchState.value.author}"` }} href={changeFilter.withoutAuthor} />
   {/if}
 
   {#if searchState.value.noSubjects}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `No subjects` }} href={changeFilter.withoutNoSubjects} />
+    <RemovableLabelDisplay item={{ name: `No subjects` }} href={changeFilter.withoutNoSubjects} />
   {/if}
 
   {#each searchState.value.subjectsObjects as s}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={s} href={changeFilter.withoutSubject(s.id)} />
+    <RemovableLabelDisplay item={s} href={changeFilter.withoutSubject(s.id)} />
   {/each}
 
   {#each searchState.value.tagObjects as t}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={t} href={changeFilter.withoutTag(t.id)} />
+    <RemovableLabelDisplay item={t} href={changeFilter.withoutTag(t.id)} />
   {/each}
 
   {#if searchState.value.childSubjects}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={{ name: `Include child subjects` }} href={changeFilter.withoutChildSubjects} />
+    <RemovableLabelDisplay item={{ name: `Include child subjects` }} href={changeFilter.withoutChildSubjects} />
   {/if}
 
   {#if searchState.value.sort}
-    <RemovableLabelDisplay
-      extraStyles={filterDisplayStyles}
-      item={{ name: `Sort: ${getSortDisplay(searchState.value.sortPacket)}` }}
-      href={changeFilter.withoutSort}
-    />
+    <RemovableLabelDisplay item={{ name: `Sort: ${getSortDisplay(searchState.value.sortPacket)}` }} href={changeFilter.withoutSort} />
   {/if}
   {#if searchState.value.activeFilterCount > 1}
-    <RemovableLabelDisplay extraStyles={filterDisplayStyles} item={removeAllFiltersLabel} href={changeFilter.withoutFilters} />
+    <RemovableLabelDisplay item={removeAllFiltersLabel} href={changeFilter.withoutFilters} />
   {/if}
 </div>

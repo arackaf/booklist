@@ -1,26 +1,27 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import Label from "$lib/components/form-elements/Label/Label.svelte";
-  import type { Label as LabelType, LabelColors } from "./types";
+  import { XIcon } from "lucide-svelte";
+
+  import Badge from "$lib/components/ui/badge/badge.svelte";
+  import type { Label as LabelType } from "./types";
 
   type Props = {
     item?: Partial<LabelType> | null;
-    extraStyles?: string;
     doRemove?: () => void;
-    class?: string;
     href?: string;
     disabled?: boolean;
     children?: Snippet;
   };
 
-  let { item = null, extraStyles = "", doRemove = () => {}, class: className = "", href = "", disabled = false, children }: Props = $props();
-
-  let colorsPacket: LabelColors | null = $derived(item?.name && (item?.textColor || item?.backgroundColor) ? (item as LabelColors) : null);
+  let { item = null, doRemove = () => {}, href = "", disabled = false, children }: Props = $props();
 </script>
 
-<Label colors={colorsPacket} style={extraStyles} class={"flex gap-1 " + className}>
+<Badge
+  class="bg-neutral-500 text-white flex gap-1 px-2 text-xs leading-none"
+  style={item?.backgroundColor && item?.textColor ? `background-color: ${item.backgroundColor}; color: ${item.textColor};` : ""}
+>
   {#if href}
-    <a {href} class="font-bold text-inherit" style="font-size: inherit">X</a>
+    <a {href} class="font-bold text-inherit" style="font-size: inherit"><XIcon size="12" /></a>
   {:else}
     <button
       type="button"
@@ -30,13 +31,13 @@
       class:cursor-pointer={!disabled}
       style="font-size: inherit; color: inherit;"
     >
-      X
+      <XIcon size="12" />
     </button>
   {/if}
-  <span style="border-left: 1px solid {item?.textColor || 'white'}"></span>
+
   {#if children}
     {@render children()}
   {:else}
     {item?.name}
   {/if}
-</Label>
+</Badge>
