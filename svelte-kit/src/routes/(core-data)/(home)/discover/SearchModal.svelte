@@ -3,6 +3,7 @@
 
   import { fade } from "svelte/transition";
   import { enhance } from "$app/forms";
+  import * as Alert from "$lib/components/ui/alert/index.js";
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
@@ -11,7 +12,6 @@
   import Label from "$lib/components/ui/label/label.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
 
-  import Alert from "$lib/components/Alert.svelte";
   import Modal from "$lib/components/Modal.svelte";
 
   import SelectAvailableTags from "$lib/components/subjectsAndTags/tags/SelectAvailableTags.svelte";
@@ -21,6 +21,7 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
+  import { CheckIcon } from "lucide-svelte";
 
   type Props = {
     isOpen: boolean;
@@ -149,22 +150,23 @@
       </div>
 
       <div class="sm:col-span-2">
-        <div class="flex flex-row gap-3">
-          <Button size="sm" type="submit" disabled={loading}>Search</Button>
+        <div class="flex flex-col gap-3">
+          <Button class="self-start" size="sm" type="submit" disabled={loading}>Search</Button>
 
-          <div class="flex relative flex-1 self-stretch">
-            {#if noAvailableBooks}
-              <div in:fade={{ duration: 150 }}>
-                <Alert type="info" layout="slimmer">You've added all of the books from this page</Alert>
-              </div>
-            {/if}
+          {#if noAvailableBooks}
+            <div class="flex" in:fade={{ duration: 150 }}>
+              <Alert.Root>
+                <CheckIcon class="size-4 !text-green-600" />
+                <Alert.Description>You've added all of the books from this page</Alert.Description>
+              </Alert.Root>
+            </div>
+          {/if}
 
-            {#if noResults}
-              <div class="flex items-start justify-start" style="backface-visibility: hidden;" transition:fade={{ duration: 150 }}>
-                <Alert type="warning" layout="slimmer">No results</Alert>
-              </div>
-            {/if}
-          </div>
+          {#if noResults}
+            <div class="flex items-start justify-start" style="backface-visibility: hidden;" transition:fade={{ duration: 150 }}>
+              <div class="text-lg font-bold">No results</div>
+            </div>
+          {/if}
         </div>
       </div>
 
