@@ -63,8 +63,6 @@
   let editSubjectsTagsModalOpen = $state(false);
   let editSubjectsAndTags = () => (editSubjectsTagsModalOpen = true);
 
-  let editTagsModalOpen = $state(false);
-
   let editBookModalOpen = $state(false);
   let editingBook = $state<any>(null);
   const editBook = (book: any) => {
