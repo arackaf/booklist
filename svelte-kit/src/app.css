@@ -37,14 +37,6 @@ a {
   outline: 0;
 }
 
-body,
-.app-container {
-  --content-background: var(--primary-11);
-}
-.app-container.white-bg {
-  --content-background: #fff;
-}
-
 #app {
   -webkit-overflow-scrolling: touch;
 }
