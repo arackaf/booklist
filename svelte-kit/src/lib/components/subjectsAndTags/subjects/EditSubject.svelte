@@ -1,5 +1,6 @@
 <script lang="ts">
   import { untrack } from "svelte";
+  import { Trash2Icon } from "lucide-svelte";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
@@ -193,7 +194,7 @@
               <span>
                 Delete {originalName}
               </span>
-              <i class="fal fa-fw fa-trash-alt"></i>
+              <Trash2Icon />
             </Button>
           {/if}
         </div>

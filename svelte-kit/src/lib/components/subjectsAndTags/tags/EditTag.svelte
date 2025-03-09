@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { Trash2Icon } from "lucide-svelte";
 
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
@@ -167,7 +168,7 @@
               onclick={() => (deleteShowing = true)}
             >
               <span>Delete {originalName}</span>
-              <i class="fal fa-fw fa-trash-alt"></i>
+              <Trash2Icon />
             </Button>
           {/if}
         </div>
