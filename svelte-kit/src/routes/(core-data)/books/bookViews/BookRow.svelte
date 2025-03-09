@@ -140,27 +140,29 @@
       </div>
     </div>
   </td>
-  <td>
-    <div class="mt-1">
-      <DisplaySelectedSubjects vertical={true} currentlySelected={book.subjects} {subjects} href={s => changeFilter.addSubject(s.id)} />
+  <td class="pt-2">
+    <div class="flex flex-col gap-4">
+      {#if subjects.length}
+        <DisplaySelectedSubjects currentlySelected={book.subjects} {subjects} href={s => changeFilter.addSubject(s.id)} />
+      {/if}
+      {#if tags.length}
+        <DisplaySelectedTags currentlySelected={book.tags} {tags} href={t => changeFilter.addTag(t.id)} />
+      {/if}
     </div>
   </td>
-  <td>
-    <div class="mt-1">
-      <DisplaySelectedTags vertical={true} currentlySelected={book.tags} {tags} href={t => changeFilter.addTag(t.id)} />
-    </div>
-  </td>
-  <td>
-    <div class="mt-1">
+  <td class="pt-2">
+    <div>
       {#if !isPublic}
         <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
           <Button
             type="submit"
             variant="outline"
             disabled={readSaving || multiReadSaving}
-            class={cn("h-6 px-2 text-xs", {
+            class={cn("h-5 px-2 text-xs mt-0 flex", {
               "bg-green-600": book.isRead,
+              "border-green-600": book.isRead,
               "hover:bg-green-700": book.isRead,
+              "hover:border-green-700": book.isRead,
               "text-muted-foreground": !book.isRead,
               "text-background": book.isRead,
               "hover:text-background": book.isRead
