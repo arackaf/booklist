@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { LoaderCircleIcon } from "lucide-svelte";
   import { signOut } from "@auth/sveltekit/client";
 
   import { page } from "$app/stores";
@@ -8,6 +9,8 @@
 
   import Button from "$lib/components/ui/button/button.svelte";
   import TagsSubjectsSummaryItem from "./TagsSubjectsSummaryItem.svelte";
+  import GoogleIcon from "$lib/svg/GoogleIcon.svelte";
+  import GitHubIcon from "$lib/svg/GithubIcon.svelte";
 
   type Props = {
     loggedInUser: Login;
@@ -26,7 +29,10 @@
     </div>
     <div class="flex flex-col gap-2">
       {#if !userSummary}
-        <div class="flex gap-2 items-center"><span>Book data loading</span><i class="far fa-fw fa-spin fa-spinner"></i></div>
+        <div class="flex gap-1 items-center">
+          <span>Book data loading</span>
+          <LoaderCircleIcon size={20} class="animate-spin" />
+        </div>
       {:else}
         <span class="text-lg">Total Books: {userSummary?.allBooksCount}</span>
         {#if userSummary.maxUsedSubjects}
@@ -52,8 +58,12 @@
     <div class="flex flex-col gap-6 mt-auto">
       <div class="grid gap-x-2 gap-y-2 grid-cols-[minmax(0,auto)_minmax(0,1fr)] grid-rows-[auto_auto] leading-none">
         <span>Provider:</span>
-        <div class="flex gap-1">
-          <i class="fab {loggedInUser.provider === 'google' ? 'fa-google' : 'fa-github'}"></i>
+        <div class="flex gap-1 items-center">
+          {#if loggedInUser.provider === "google"}
+            <GoogleIcon size={18} />
+          {:else}
+            <GitHubIcon size={18} />
+          {/if}
           <span>{loggedInUser.provider === "google" ? "Google" : "Github"}</span>
         </div>
 
