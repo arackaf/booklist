@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { PlusIcon } from "lucide-svelte";
+
   import type { Subject, Tag } from "$data/types";
 
   import { cn } from "$lib/utils";
@@ -112,7 +114,7 @@
     </div>
 
     <div class="sm:col-span-2">
-      <Button variant="secondary" size="sm" type="button" disabled={saving} onclick={addAuthor}><i class="far fa-fw fa-plus"></i>Add author</Button>
+      <Button variant="secondary" size="sm" type="button" disabled={saving} onclick={addAuthor}><PlusIcon />Add author</Button>
     </div>
   </div>
 </fieldset>

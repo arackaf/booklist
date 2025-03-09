@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { Trash2Icon } from "lucide-svelte";
+
   import { ajaxUtil } from "$lib/util/ajaxUtil";
   import Button from "$lib/components/ui/button/button.svelte";
 
@@ -25,7 +27,7 @@
 <div class="mt-2 leading-none">
   {#if !pendingDelete}
     <Button variant="destructive" size="sm" class="flex gap-1" onclick={() => (pendingDelete = true)}>
-      Delete <i class={`fal fa-trash-alt fa-fw`}></i>
+      Delete <Trash2Icon />
     </Button>
   {:else}
     <div class="flex gap-3">
