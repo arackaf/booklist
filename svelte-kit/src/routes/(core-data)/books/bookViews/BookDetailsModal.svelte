@@ -40,7 +40,6 @@
   let detailsLoading = $state(false);
   let bookDetails = $state<BookDetails | null>(null);
 
-  let detailsBtnClass = $derived(expanded ? "fa-angle-double-up" : "fa-angle-double-down");
   let { editorialReviews, similarBooks } = $derived(bookDetails || ({} as any));
 
   $effect(() => {
