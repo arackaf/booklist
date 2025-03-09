@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
+  import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+
   import type { Book, Subject, Tag } from "$data/types";
 
-  import { fade } from "svelte/transition";
   import { enhance } from "$app/forms";
   import * as Alert from "$lib/components/ui/alert";
   import Separator from "$lib/components/ui/separator/separator.svelte";
@@ -21,7 +23,6 @@
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
   import SearchResults from "./SearchResults.svelte";
-  import { CheckIcon } from "lucide-svelte";
 
   type Props = {
     isOpen: boolean;
@@ -176,13 +177,13 @@
             <div class="flex flex-row gap-1 items-center">
               <div class="flex">
                 <Button type="button" onclick={pageDown} disabled={!canPageDown} variant="outline" size="icon" class="h-8">
-                  <i class="fal fa-fw fa-angle-left"></i>
+                  <ChevronLeftIcon />
                 </Button>
               </div>
               <span class="text-sm mx-1">{page} of {totalPages}</span>
               <div class="flex">
                 <Button type="button" onclick={pageUp} disabled={!canPageUp} variant="outline" size="icon" class="h-8">
-                  <i class="fal fa-fw fa-angle-right"></i>
+                  <ChevronRightIcon />
                 </Button>
               </div>
             </div>
