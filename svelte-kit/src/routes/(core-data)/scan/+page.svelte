@@ -104,7 +104,7 @@
 
         <Button onclick={manuallyEnterBook} variant="outline">Manual Entry</Button>
       </div>
-      <a href="/recent-scans" class="inline-flex items-center text-sm text-primary hover:text-primary/80">
+      <a href="/recent-scans" class="inline-flex items-center text-sm hover:text-primary/80">
         <BookCheckIcon class="h-4 w-4 mr-2" />
         View recently looked up books here
       </a>
