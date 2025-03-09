@@ -1,14 +1,16 @@
 <script lang="ts">
-  import { MessageCircleWarningIcon, TerminalIcon } from "lucide-svelte";
+  import { onMount } from "svelte";
+  import { ChartColumnIcon, ChartPieIcon, MessageCircleWarningIcon, TerminalIcon } from "lucide-svelte";
 
   import { page } from "$app/stores";
+  import type { BookSubjectStack, Hash, Subject } from "$data/types";
+
+  import { cn } from "$lib/utils";
   import * as Alert from "$lib/components/ui/alert/index.js";
 
   import { stackGraphData } from "./stackGraphData";
   import BarChartContent from "./bar-chart/chart/BarChartContent.svelte";
-  import type { BookSubjectStack, Hash, Subject } from "$data/types";
   import PieChartContent from "./pie-chart/PieChartContent.svelte";
-  import { onMount } from "svelte";
 
   type Props = {
     books: BookSubjectStack[];
@@ -88,28 +90,24 @@
 {:else}
   <div class="pb-20">
     <div class="flex items-baseline gap-4">
-      <div bind:this={chartContainer} class="flex flex-col {chartIndex > 0 ? 'pt-16 -mt-16' : ''}">
+      <div bind:this={chartContainer} class="flex flex-col gap-2 {chartIndex > 0 ? 'pt-16 -mt-16' : ''}">
         <h4 style="display: inline; text-wrap: nowrap" class="text-xl font-semibold">{header}</h4>
         <div class="flex items-center gap-3 ml-1">
           <button
             onclick={() => setChartType("BAR")}
             style={isBar ? activeBtnStyle : ""}
-            class="p-0 bg-transparent border-0 shadow-none"
-            class:text-neutral-600={!isBar}
-            class:text-primary-5={isBar}
+            class={cn("p-0 bg-transparent border-0 shadow-none", { "text-muted-foreground": !isBar })}
             aria-label="View bar chart"
           >
-            <i class="fad fa-chart-bar"></i>
+            <ChartColumnIcon size={16} />
           </button>
           <button
             onclick={() => setChartType("PIE")}
             style={isPie ? activeBtnStyle : ""}
-            class="p-0 bg-transparent border-0 shadow-none"
-            class:text-neutral-600={!isPie}
-            class:text-primary-5={isPie}
+            class={cn("p-0 bg-transparent border-0 shadow-none", { "text-muted-foreground": !isPie })}
             aria-label="View pie chart"
           >
-            <i class="fad fa-chart-pie"></i>
+            <ChartPieIcon size={16} />
           </button>
         </div>
       </div>
