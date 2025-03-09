@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { XIcon } from "lucide-svelte";
   import Separator from "./ui/separator/separator.svelte";
 
   type Props = {
@@ -14,7 +15,7 @@
   <h1 class:text-base={smaller} class:text-xl={!smaller} class="font-normal">{caption}</h1>
 
   <button style="margin-left: auto; display: flex;" class="close raw-button text-lg font-bold" onclick={onHide} aria-label="Close modal">
-    <i class="far fa-times"></i>
+    <XIcon />
   </button>
 </div>
 <Separator class="mt-2 h-[2px]" />
