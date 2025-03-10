@@ -107,11 +107,6 @@ select {
   touch-action: manipulation;
 }
 
-fieldset[disabled] input,
-input[disabled] {
-  opacity: 0.6;
-}
-
 @media (max-width: 600px) {
   input {
     font-size: 16px;
