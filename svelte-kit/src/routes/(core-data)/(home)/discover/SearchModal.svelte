@@ -11,8 +11,9 @@
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
   import Button from "$lib/components/ui/button/button.svelte";
-  import Label from "$lib/components/ui/label/label.svelte";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
+  import Label from "$lib/components/ui/label/label.svelte";
   import * as RadioGroup from "$lib/components/ui/radio-group";
 
   import Modal from "$lib/components/Modal.svelte";
@@ -54,8 +55,6 @@
 
   const pageUp = () => gotoPage(page + 1);
   const pageDown = () => gotoPage(page - 1);
-  const pageOne = () => gotoPage(1);
-  const pageLast = () => gotoPage(totalPages);
 
   const gotoPage = (pg: number) => {
     pageBind = pg;
@@ -147,8 +146,9 @@
         {/snippet}
       </SelectAndDisplayContainer>
 
-      <div class="sm:col-span-2">
-        <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
+      <div class="sm:col-span-2 flex items-center gap-2">
+        <Checkbox id="search-child-subjects" name="child-subjects" value="true" />
+        <Label for="search-child-subjects" class="checkbox">Also search child subjects</Label>
       </div>
 
       <div class="sm:col-span-2">
