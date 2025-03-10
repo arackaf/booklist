@@ -107,10 +107,6 @@ select {
   touch-action: manipulation;
 }
 
-label {
-  font-size: 14px;
-}
-
 fieldset[disabled] input,
 input[disabled] {
   opacity: 0.6;
@@ -148,13 +144,6 @@ td {
   vertical-align: top;
   padding: 5px;
   @apply border-t border-t-primary/30;
-}
-
-label.checkbox {
-  display: flex;
-}
-label.checkbox > input {
-  margin-right: 5px;
 }
 
 .sliding-mobile-menu {
