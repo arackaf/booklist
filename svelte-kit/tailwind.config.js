@@ -62,19 +62,7 @@ const config = {
         "info-7": "var(--info-7)",
         "info-8": "var(--info-8)",
         "info-9": "var(--info-9)",
-        "info-10": "var(--info-10)",
-
-        "warning-1": "var(--warning-1)",
-        "warning-2": "var(--warning-2)",
-        "warning-3": "var(--warning-3)",
-        "warning-4": "var(--warning-4)",
-        "warning-5": "var(--warning-5)",
-        "warning-6": "var(--warning-6)",
-        "warning-7": "var(--warning-7)",
-        "warning-8": "var(--warning-8)",
-        "warning-9": "var(--warning-9)",
-        "warning-10": "var(--warning-10)",
-        "warning-11": "var(--warning-11)"
+        "info-10": "var(--info-10)"
       },
       borderRadius: {
         lg: "var(--radius)",
