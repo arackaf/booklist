@@ -24,13 +24,6 @@
   @apply bg-background text-foreground flex p-3;
 }
 
-button,
-input,
-select,
-a {
-  outline: 0;
-}
-
 #app {
   -webkit-overflow-scrolling: touch;
 }
