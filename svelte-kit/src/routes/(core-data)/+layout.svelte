@@ -1,13 +1,12 @@
 <script lang="ts">
   import { mount, onMount } from "svelte";
-  import { page } from "$app/stores";
 
   import Toastify from "toastify-js";
   import "toastify-js/src/toastify.css";
 
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
   import type { Book } from "$data/types";
-  import ScanToasterSuccessContent from "$lib/components/ScanToasterSuccessContent.svelte";
+  import ScanToasterSuccessContent from "$lib/components/ScanToasterResultContent.svelte";
 
   let { data, children } = $props();
   let { loggedIn, userId } = $derived(data);
@@ -31,7 +30,7 @@
 
     mount(ScanToasterSuccessContent, {
       target: node,
-      props: { book }
+      props: { book, success: true }
     });
 
     Toastify({
@@ -49,7 +48,7 @@
 
     mount(ScanToasterSuccessContent, {
       target: node,
-      props: { book }
+      props: { book, success: false }
     });
 
     Toastify({

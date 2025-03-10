@@ -6,17 +6,4 @@
 div.toast-notification {
   display: flex;
   padding: 10px;
-  background: var(--primary-4);
-  color: var(--primary-10);
-}
-div.toast-notification.success {
-  background: var(--success-7);
-}
-div.toast-notification.error {
-  background: var(--danger-7);
-}
-div.toast-notification a,
-div.toast-notification span,
-div.toast-notification h4 {
-  color: var(--primary-10);
 }
