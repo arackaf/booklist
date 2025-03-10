@@ -39,7 +39,7 @@
       duration: 5 * 1000,
       gravity: "bottom",
       close: true,
-      className: "toast-notification success"
+      className: "toast-notification"
     }).showToast();
   }
 
@@ -57,7 +57,7 @@
       duration: 5 * 1000,
       gravity: "bottom",
       close: true,
-      className: "toast-notification error"
+      className: "toast-notification"
     }).showToast();
   }
 
