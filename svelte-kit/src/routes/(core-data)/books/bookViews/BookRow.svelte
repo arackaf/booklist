@@ -129,13 +129,12 @@
           {#if pendingDelete}
             <form method="POST" action="?/deleteBook" use:enhance={deleteBook}>
               <input type="hidden" name="id" value={id} />
-              <Button type="submit" disabled={deleting} variant="destructive" class="h-6 px-2 text-xs">Confirm Delete</Button>
+              <Button type="submit" disabled={deleting} variant="destructive" class="flex h-5 px-2 text-xs">Confirm Delete</Button>
             </form>
           {/if}
           {#if pendingDelete}
-            <Button variant="outline" disabled={deleting} onclick={() => (pendingDelete = false)} class="h-6 px-2 text-xs">Cancel</Button>
+            <Button variant="outline" disabled={deleting} onclick={() => (pendingDelete = false)} class="h-5 px-2 text-xs">Cancel</Button>
           {/if}
-          <Button size="sm" class="invisible px-2 text-xs">Cancel</Button>
         </div>
       </div>
     </div>
