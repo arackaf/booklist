@@ -2,6 +2,8 @@
   import { page } from "$app/stores";
 
   import Button from "$lib/components/ui/button/button.svelte";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+  import { Label } from "$lib/components/ui/label";
 
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
@@ -31,10 +33,10 @@
     <div class="flex flex-col gap-3">
       <h1 class="text-lg font-bold">Filter</h1>
       <div class="flex flex-row items-center gap-4">
-        <label class="checkbox">
-          <input type="checkbox" name="my-books" value="true" checked={currentlyChecked} />
-          Only show my books
-        </label>
+        <div class="flex items-center gap-2">
+          <Checkbox id="search-my-books" name="my-books" value="true" checked={currentlyChecked} />
+          <Label for="search-my-books" class="checkbox">Only show my books</Label>
+        </div>
         <div class="relative suppress-dropdown">
           <SelectAndDisplayContainer>
             {#snippet select()}
