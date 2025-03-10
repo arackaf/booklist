@@ -1,6 +1,5 @@
 @import "./styles/themes.css";
 @import "./styles/main-layout.css";
-@import "./styles/toast.css";
 @import "./styles/site-styles.css";
 @import "./styles/fontawesome/css/all.min.css";
 
@@ -20,12 +19,9 @@
   box-sizing: border-box;
 }
 
-footer {
-  padding: 9px;
-}
-
-a {
-  cursor: pointer;
+.toastify {
+  background: unset;
+  @apply bg-background text-foreground flex p-3;
 }
 
 button,
@@ -47,15 +43,6 @@ select {
 
 label {
   font-size: 14px;
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Chrome/Safari/Opera */
-  -khtml-user-select: none; /* Konqueror */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }
 
 fieldset[disabled] input,
