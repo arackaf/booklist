@@ -23,7 +23,7 @@
   let showSwitchBackMobile = $derived(isMobile && desktopRequested === "1");
 </script>
 
-<footer>
+<footer class="p-2 bg-secondary">
   <div class="flex items-center">
     <LibraryBigIcon class="inline" size={18} />
     <span style="margin-left: 5px; margin-right: 5px">My Library</span>

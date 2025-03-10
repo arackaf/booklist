@@ -56,7 +56,7 @@
     }
   }
 
-  const noCoverCommonClasses = "bg-primary-4 text-primary-9 text-center";
+  const noCoverCommonClasses = "bg-secondary border text-muted-foreground text-center";
   function getNoCoverClasses() {
     let result = noCoverCommonClasses + " ";
     if (size === "mobile") {

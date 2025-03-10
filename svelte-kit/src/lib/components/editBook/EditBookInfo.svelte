@@ -49,7 +49,7 @@
 </script>
 
 <fieldset disabled={saving}>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4 border-border">
     <div class="flex flex-col gap-1.5">
       <Label for="edit-title">Title</Label>
       <Input

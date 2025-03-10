@@ -3,6 +3,7 @@
   import { invalidate } from "$app/navigation";
   import type { DynamoUser } from "$data/types";
 
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Label from "$lib/components/ui/label/label.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
@@ -58,11 +59,9 @@
       </div>
     {/if}
 
-    <div class="flex font-bold text-sm">
-      <label class="checkbox">
-        Allow your book collection to be viewed publicly?
-        <input name="isPublic" bind:checked={showForm} disabled={saving} style="margin-left: 5px" type="checkbox" />
-      </label>
+    <div class="flex items-center gap-2">
+      <Checkbox id="share-collection-publicly" name="isPublic" value="true" disabled={saving} bind:checked={showForm} />
+      <Label for="share-collection-publicly" class="checkbox">Allow your book collection to be viewed publicly?</Label>
     </div>
 
     <div style="margin-left: 20px">

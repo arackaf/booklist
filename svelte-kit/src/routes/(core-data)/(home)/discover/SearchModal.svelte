@@ -11,8 +11,10 @@
   import { BOOKS_CACHE, getCurrentCookieValue } from "$lib/state/cacheHelpers";
 
   import Button from "$lib/components/ui/button/button.svelte";
-  import Label from "$lib/components/ui/label/label.svelte";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
+  import Label from "$lib/components/ui/label/label.svelte";
+  import * as RadioGroup from "$lib/components/ui/radio-group";
 
   import Modal from "$lib/components/Modal.svelte";
 
@@ -53,8 +55,6 @@
 
   const pageUp = () => gotoPage(page + 1);
   const pageDown = () => gotoPage(page - 1);
-  const pageOne = () => gotoPage(1);
-  const pageLast = () => gotoPage(totalPages);
 
   const gotoPage = (pg: number) => {
     pageBind = pg;
@@ -111,20 +111,20 @@
       <div class="flex">
         <div class="flex flex-col">
           <Label>Is read?</Label>
-          <div class="flex-1 flex flex-row gap-4 items-center">
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" checked value="" name="is-read" id="isReadE" />
-              <label for="isReadE">Either</label>
+          <RadioGroup.Root class="flex gap-4 my-auto" name="is-read" value="" orientation="horizontal">
+            <div class="inline-flex items-center gap-1">
+              <RadioGroup.Item value="" id="read-either" />
+              <Label for="read-either">Either</Label>
             </div>
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" value="true" name="is-read" id="isReadY" />
-              <label for="isReadY">Yes</label>
+            <div class="inline-flex items-center gap-1">
+              <RadioGroup.Item value="true" id="read-yes" />
+              <Label for="read-yes">Yes</Label>
             </div>
-            <div class="flex flex-row items-center gap-1">
-              <input type="radio" value="false" name="is-read" id="isReadN" />
-              <label for="isReadN">No</label>
+            <div class="inline-flex items-center gap-1">
+              <RadioGroup.Item value="false" id="read-no" />
+              <Label for="read-no">No</Label>
             </div>
-          </div>
+          </RadioGroup.Root>
         </div>
       </div>
 
@@ -146,8 +146,9 @@
         {/snippet}
       </SelectAndDisplayContainer>
 
-      <div class="sm:col-span-2">
-        <div class="checkbox"><label> <input type="checkbox" name="child-subjects" /> Also search child subjects </label></div>
+      <div class="sm:col-span-2 flex items-center gap-2">
+        <Checkbox id="search-child-subjects" name="child-subjects" value="true" />
+        <Label for="search-child-subjects" class="checkbox">Also search child subjects</Label>
       </div>
 
       <div class="sm:col-span-2">

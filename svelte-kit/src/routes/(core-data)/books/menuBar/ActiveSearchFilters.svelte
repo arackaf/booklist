@@ -1,4 +1,5 @@
 <script lang="ts">
+  import colors from "tailwindcss/colors";
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { SearchState, ChangeFilters, getSortDisplay } from "../state/searchState.svelte";
 
@@ -15,7 +16,7 @@
 
   const removeAllFiltersLabel = {
     textColor: "white",
-    backgroundColor: "var(--danger-7)",
+    backgroundColor: colors.red[500],
     name: "Remove all filters"
   };
 

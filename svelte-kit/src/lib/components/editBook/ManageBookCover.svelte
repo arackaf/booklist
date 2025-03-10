@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { LoaderCircle } from "lucide-svelte";
   import Dropzone from "svelte-file-dropzone";
 
+  import { cn } from "$lib/utils";
   import { ajaxUtil } from "$lib/util/ajaxUtil";
   import Badge from "$lib/components/ui/badge/badge.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
@@ -17,8 +19,6 @@
   let uploading = $state(false);
   let dragging = $state(false);
   let remoteUrl = $state("");
-
-  let dropAddedStyles = $derived(uploading ? "border-color: var(--neutral-6); cursor: wait;" : dragging ? "border-color: var(--primary-8);" : "");
   let uploadError = $derived(uploadState.uploadError);
 
   const doRemoteSave = (evt: Event) => {
@@ -53,6 +53,7 @@
     requestData.append("fileUploaded", file);
     requestData.append("filename", file.path);
 
+    dragging = false;
     uploading = true;
 
     ajaxUtil.post(
@@ -87,10 +88,18 @@
           on:drop={onDrop}
           on:dragenter={() => (dragging = true)}
           on:dragleave={() => (dragging = false)}
-          containerClasses="dropzone-container"
-          containerStyles={dropAddedStyles}
+          containerClasses={cn("dropzone-container rounded p-1 text-center border-2", {
+            "border-primary": dragging,
+            "border-border": !dragging || uploading
+          })}
         >
-          <div style="padding: 15px">Click or drag to upload</div>
+          <div class={cn("flex gap-2 items-center p-4 justify-center", { "text-muted-foreground": uploading })}>
+            {#if uploading}
+              <span>Uploading</span> <LoaderCircle size={20} class="animate-spin" />
+            {:else}
+              <span>Click or drag to upload</span>
+            {/if}
+          </div>
         </Dropzone>
       {/key}
       {#if uploadError}
