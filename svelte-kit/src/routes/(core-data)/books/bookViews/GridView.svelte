@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { TagIcon } from "lucide-svelte";
-
   import type { Book, Subject, Tag } from "$data/types";
 
   import BookRow from "./BookRow.svelte";
@@ -59,7 +57,7 @@
           {/if}
         </a>
       </th>
-      <th class="p-0 min-w-32"><TagIcon size={19} /></th>
+      <th class="p-0 min-w-32">Subjects & Tags</th>
       <th class="p-0 min-w-20"></th>
       <th class="p-0"></th>
       <th class="p-0 min-w-20">
