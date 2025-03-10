@@ -78,7 +78,7 @@ th {
 td {
   vertical-align: top;
   padding: 5px;
-  border-top: var(--default-border-width) solid var(--neutral-6);
+  @apply border-t border-t-primary/30;
 }
 
 @layer base {
