@@ -64,18 +64,6 @@ const config = {
         "info-9": "var(--info-9)",
         "info-10": "var(--info-10)",
 
-        "success-1": "var(--success-1)",
-        "success-2": "var(--success-2)",
-        "success-3": "var(--success-3)",
-        "success-4": "var(--success-4)",
-        "success-5": "var(--success-5)",
-        "success-6": "var(--success-6)",
-        "success-7": "var(--success-7)",
-        "success-8": "var(--success-8)",
-        "success-9": "var(--success-9)",
-        "success-10": "var(--success-10)",
-        "success-11": "var(--success-11)",
-
         "warning-1": "var(--warning-1)",
         "warning-2": "var(--warning-2)",
         "warning-3": "var(--warning-3)",
