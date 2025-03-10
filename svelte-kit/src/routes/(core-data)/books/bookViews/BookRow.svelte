@@ -63,6 +63,8 @@
   function getDisplayDate(date: Date) {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   }
+
+  let bookHeight = $derived(typeof book.smallImagePreview === "object" && book.smallImagePreview != null ? book.smallImagePreview.h : 65);
 </script>
 
 <tr class="hover:bg-secondary">
@@ -80,7 +82,7 @@
   </td>
   <td class="group">
     <div>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2" style="min-height: {bookHeight}px">
         <div class="flex flex-col gap-1">
           <BookTitle>{book.title}</BookTitle>
           {#if book.authors}
@@ -88,7 +90,7 @@
           {/if}
         </div>
 
-        <div class="flex flex-row gap-2 items-center mt-auto flex-1">
+        <div class="flex flex-row gap-2 items-center mt-auto">
           <button
             onclick={() => previewBook(book)}
             style={hoverOverride}
