@@ -1,4 +1,3 @@
-@import "./styles/themes.css";
 @import "./styles/main-layout.css";
 @import "./styles/site-styles.css";
 @import "./styles/fontawesome/css/all.min.css";
@@ -72,7 +71,7 @@ button::-moz-focus-inner {
 }
 
 th {
-  @apply text-left text-muted-foreground h-8 font-medium align-middle border-b-2 border-b-primary;
+  @apply text-left text-muted-foreground h-8 font-medium align-middle border-b-2 border-b-primary/30;
 }
 
 td {
