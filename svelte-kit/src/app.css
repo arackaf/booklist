@@ -128,10 +128,6 @@ input[disabled] {
   }
 }
 
-button::-moz-focus-inner {
-  border: 0;
-}
-
 .overlay-holder {
   display: grid;
   grid-template-columns: 1fr;
