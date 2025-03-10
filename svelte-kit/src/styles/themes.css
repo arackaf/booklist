@@ -1,15 +1,4 @@
 :root {
-  --neutral-1: hsl(42, 15%, 13%);
-  --neutral-2: hsl(40, 13%, 23%);
-  --neutral-3: hsl(37, 11%, 28%);
-  --neutral-4: hsl(41, 9%, 35%);
-  --neutral-5: hsl(41, 8%, 45%);
-  --neutral-6: hsl(41, 8%, 61%);
-  --neutral-7: hsl(39, 11%, 69%);
-  --neutral-8: hsl(40, 15%, 80%);
-  --neutral-9: hsl(43, 13%, 90%);
-  --neutral-10: hsl(40, 23%, 97%);
-
   --info-1: hsl(184, 91%, 17%);
   --info-2: hsl(185, 84%, 25%);
   --info-3: hsl(185, 81%, 29%);
