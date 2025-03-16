@@ -11,8 +11,6 @@
   let currentPathname = $derived(page.url.pathname);
   let hrefPathname = $derived(href ? href.replace(/\?.*/, "") : "");
   let isActive = $derived(active != null ? active : currentPathname === hrefPathname);
-
-  $effect(() => console.log("badge", badge));
 </script>
 
 <Button

@@ -115,7 +115,7 @@ select {
 
 @layer base {
   .raw-button {
-    @apply p-0 bg-transparent border-0 text-neutral-600 shadow-none;
+    @apply p-0 bg-transparent border-0 shadow-none;
   }
 }
 
