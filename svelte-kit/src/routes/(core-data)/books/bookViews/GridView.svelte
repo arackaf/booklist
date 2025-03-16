@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { ChevronDownIcon, ChevronUpIcon } from "lucide-svelte";
+
   import type { Book, Subject, Tag } from "$data/types";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
 
   import BookRow from "./BookRow.svelte";
   import { ChangeFilters, SearchState } from "../state/searchState.svelte";
@@ -22,11 +25,11 @@
 
   let allBooksSelected = $derived(books.length === selectionState.selectedBooks.length);
 
-  function toggleCheckAll() {
-    if (allBooksSelected) {
-      selectionState.clear();
-    } else {
+  function checkAll(val: boolean) {
+    if (val) {
       selectionState.selectAll(books);
+    } else {
+      selectionState.clear();
     }
   }
 
@@ -43,17 +46,19 @@
     <tr>
       {#if !isPublic}
         <th class="p-0 w-6 text-center">
-          <button class="raw-button" style="font-size: 12pt" onclick={toggleCheckAll} aria-label="Select all">
-            <i class={"fal fa-fw " + (!!allBooksSelected ? "fa-check-square" : "fa-square")}></i>
-          </button>
+          <Checkbox bind:checked={() => !!allBooksSelected, val => checkAll(val)} />
         </th>
       {/if}
       <th class="p-0 w-[60px]"></th>
       <th class="p-0 min-w-48">
-        <a href={changeFilter.withSort("title")}>
+        <a class="flex gap-1" href={changeFilter.withSort("title")}>
           Title
           {#if searchState.value.sortField == "title"}
-            <i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>
+            {#if searchState.value.sortDirection == "asc"}
+              <ChevronUpIcon />
+            {:else}
+              <ChevronDownIcon />
+            {/if}
           {/if}
         </a>
       </th>
@@ -61,17 +66,27 @@
       <th class="p-0 min-w-20"></th>
       <th class="p-0"></th>
       <th class="p-0 min-w-20">
-        <a href={changeFilter.withSort("pages")}>
+        <a class="flex gap-1" href={changeFilter.withSort("pages")}>
           Pages
           {#if searchState.value.sortField == "pages"}
-            <i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>
+            {#if searchState.value.sortDirection == "asc"}
+              <ChevronUpIcon />
+            {:else}
+              <ChevronDownIcon />
+            {/if}
           {/if}
         </a>
       </th>
       <th class="p-0">
-        <a href={changeFilter.withSort("id")}>
+        <a class="flex gap-1" href={changeFilter.withSort("id")}>
           Added
-          {#if searchState.value.sortField == "id"}<i class={"far fa-angle-" + (searchState.value.sortDirection == "asc" ? "up" : "down")}></i>{/if}
+          {#if searchState.value.sortField == "id"}
+            {#if searchState.value.sortDirection == "asc"}
+              <ChevronUpIcon />
+            {:else}
+              <ChevronDownIcon />
+            {/if}
+          {/if}
         </a>
       </th>
     </tr>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { CheckIcon } from "lucide-svelte";
+  import { BookIcon, CheckIcon, PencilIcon, Trash2Icon } from "lucide-svelte";
 
   import { enhance } from "$app/forms";
 
@@ -11,6 +11,8 @@
 
   import Badge from "$lib/components/ui/badge/badge.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
+  import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
+
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import DisplaySelectedTags from "$lib/components/subjectsAndTags/tags/DisplaySelectedTags.svelte";
   import BookCover from "$lib/components/BookCover.svelte";
@@ -22,6 +24,7 @@
   import { booksReadSaving } from "../state/booksReadSavingState.svelte";
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
+  import AmazonIcon from "$lib/svg/AmazonIcon.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -70,9 +73,9 @@
 <tr class="hover:bg-secondary">
   {#if !isPublic}
     <td>
-      <button style="font-size: 12pt" class="raw-button" onclick={() => selectionState.toggle(id)} aria-label="Select book">
-        <i class={"fal fa-fw " + (!!selectionState.selectedBooksLookup[id] ? "fa-check-square" : "fa-square")}></i>
-      </button>
+      <Checkbox
+        bind:checked={() => !!selectionState.selectedBooksLookup[id], val => (val ? selectionState.selectBook(id) : selectionState.unSelectBook(id))}
+      />
     </td>
   {/if}
   <td>
@@ -90,24 +93,24 @@
           {/if}
         </div>
 
-        <div class="flex flex-row gap-2 items-center mt-auto">
+        <div class="flex flex-row gap-2 items-center mt-auto h-5">
           <button
             onclick={() => previewBook(book)}
             style={hoverOverride}
-            class="raw-button invisible text-neutral-500 group-hover:visible text-sm"
+            class="raw-button invisible text-neutral-500 group-hover:visible"
             aria-label="View book details"
           >
-            <i class="fa-fw fal fa-eye"></i>
+            <BookIcon size={16} />
           </button>
           {#if isbn10}
             <a
-              style="padding-top: 1px; {hoverOverride}"
+              style={hoverOverride}
               target="_new"
-              class="invisible text-neutral-500 group-hover:visible text-sm"
+              class="invisible text-neutral-500 group-hover:visible text-sm mt-0.5"
               href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
               aria-label="View book on Amazon"
             >
-              <i class={`fab fa-amazon fa-fw`}></i>
+              <AmazonIcon size={16} />
             </a>
           {/if}
           {#if !isPublic}
@@ -117,7 +120,7 @@
               onclick={() => editBook(book)}
               aria-label="Edit book"
             >
-              <i class="fal fa-pencil-alt fa-fw"></i>
+              <PencilIcon size={16} />
             </button>
             <button
               style={hoverOverride}
@@ -125,7 +128,7 @@
               onclick={() => (pendingDelete = true)}
               aria-label="Delete book"
             >
-              <i class={`fal fa-trash-alt fa-fw`}></i>
+              <Trash2Icon size={16} />
             </button>
           {/if}
           {#if pendingDelete}
@@ -173,7 +176,7 @@
               {book.isRead ? "Read" : "Set read"}
             </span>
             {#if book.isRead}
-              <i class="far fa-fw fa-check"></i>
+              <CheckIcon />
             {/if}
           </Button>
         </BookReadSetter>
