@@ -17,6 +17,8 @@
 
   import { afterDelete as updateStateAfterDelete } from "../state/onDelete";
   import { ChevronsDownIcon, ChevronsUpIcon, PencilIcon } from "lucide-svelte";
+  import AmazonIcon from "$lib/svg/AmazonIcon.svelte";
+  import GoodreadsIcon from "$lib/svg/GoodreadsIcon.svelte";
 
   type Props = {
     viewingBook: Book | null;
@@ -134,10 +136,10 @@
                 <div class="flex gap-5 items-center">
                   {#if book.isbn}
                     <a target="_new" href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`} aria-label="View on Amazon">
-                      <i class="fab fa-amazon"></i>
+                      <AmazonIcon size={16} />
                     </a>
                     <a target="_new" href={`https://www.goodreads.com/book/isbn/${isbn10}`} aria-label="View on Goodreads">
-                      <i class="fab fa-goodreads-g"></i>
+                      <GoodreadsIcon size={16} />
                     </a>
                   {/if}
                   <Button variant="secondary" class="flex gap-3 h-8" onclick={() => (editing = true)}>

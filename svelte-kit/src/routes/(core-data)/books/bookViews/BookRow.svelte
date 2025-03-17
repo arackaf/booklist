@@ -110,7 +110,7 @@
               href={`https://www.amazon.com/gp/product/${isbn10}/?tag=zoomiec-20`}
               aria-label="View book on Amazon"
             >
-              <AmazonIcon size={16} />
+              <AmazonIcon class="fill-neutral-500" size={16} />
             </a>
           {/if}
           {#if !isPublic}
