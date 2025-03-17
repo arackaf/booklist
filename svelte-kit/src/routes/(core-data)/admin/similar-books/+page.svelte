@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { ChevronFirstIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+
   import { page } from "$app/stores";
 
   import Button from "$lib/components/ui/button/button.svelte";
@@ -51,13 +53,13 @@
       <div class="flex gap-3">
         <Button size="sm" class="self-start">Search</Button>
         <Button class="h-8" variant="outline" onclick={() => updateSearchParam("page", "")} disabled={pageNumber === 1}>
-          <i class="fal fa-fw fa-angle-double-left"></i>
+          <ChevronFirstIcon />
         </Button>
         <Button class="h-8" variant="outline" onclick={() => updateSearchParam("page", nextPageDown)} disabled={pageNumber === 1}>
-          <i class="fal fa-fw fa-angle-left"></i>
+          <ChevronLeftIcon />
         </Button>
         <Button class="h-8" variant="outline" onclick={() => updateSearchParam("page", nextPageUp)} disabled={books.length < 50}>
-          <i class="fal fa-fw fa-angle-right"></i>
+          <ChevronRightIcon />
         </Button>
       </div>
     </div>

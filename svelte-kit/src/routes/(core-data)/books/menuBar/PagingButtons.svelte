@@ -2,7 +2,7 @@
   import { page as pageStore } from "$app/stores";
 
   import Button from "$lib/components/ui/button/button.svelte";
-  import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon } from "lucide-svelte";
+  import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
 
   import { ChangeFilters } from "../state/searchState.svelte";
 
@@ -29,7 +29,7 @@
       class="h-8 w-10 border-r-0 rounded-r-none hidden sm:flex border-neutral-300"
       aria-label="Go to page 1"
     >
-      <ChevronsLeftIcon />
+      <ChevronFirstIcon />
     </Button>
     <Button
       variant="outline"
@@ -69,7 +69,7 @@
       disabled={!canPageLast}
       aria-label="Go to last page"
     >
-      <ChevronsRightIcon />
+      <ChevronLastIcon />
     </Button>
   </div>
 </div>
