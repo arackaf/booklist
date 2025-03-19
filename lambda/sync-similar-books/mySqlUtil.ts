@@ -2,6 +2,7 @@ import mysql from "mysql";
 import { getSecrets } from "../util/getSecrets";
 
 export async function getMySqlConnection() {
+  return;
   const secrets = await getSecrets();
 
   const stage = process.env.stage || "live";
