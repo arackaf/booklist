@@ -1,5 +1,4 @@
 service: sync-similar-books
-frameworkVersion: "3"
 
 provider:
   name: aws
