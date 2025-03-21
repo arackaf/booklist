@@ -1,5 +1,7 @@
 <script lang="ts">
   import colors from "tailwindcss/colors";
+  import { CheckIcon } from "lucide-svelte";
+
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { SearchState, ChangeFilters, getSortDisplay } from "../state/searchState.svelte";
 
@@ -33,8 +35,8 @@
   {/if}
   {#if searchState.value.isRead == "true" || searchState.value.isRead == "false"}
     <RemovableLabelDisplay href={changeFilter.withoutIsRead}>
-      <span>
-        {#if searchState.value.isRead == "true"}Is Read <i class="far fa-check"></i>{:else}Not Read{/if}
+      <span class="flex gap-2 items-center">
+        {#if searchState.value.isRead == "true"}Is Read <CheckIcon size={12} />{:else}Not Read{/if}
       </span>
     </RemovableLabelDisplay>
   {/if}

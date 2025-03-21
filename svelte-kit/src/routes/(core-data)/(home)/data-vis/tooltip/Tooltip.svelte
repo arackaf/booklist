@@ -1,6 +1,8 @@
 <script lang="ts">
   import { getContext, untrack } from "svelte";
   import { spring } from "svelte/motion";
+  import { XIcon } from "lucide-svelte";
+
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
   import type { createTooltipState, TooltipPayload } from "./tooltipState.svelte";
@@ -94,7 +96,7 @@
 >
   <div class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
-      <div class="flex items-baseline gap-2 md:text-lg text-xs">
+      <div class="flex items-center gap-6 md:text-lg text-xs">
         <div class="flex flex-col gap-1">
           {#each currentData.entries ?? [] as entry}
             <span class="name">{entry.name}</span>
@@ -109,7 +111,7 @@
           }}
           aria-label="Remove"
         >
-          <i class="fad fa-times-circle"></i>
+          <XIcon class="!h-5 !w-5" />
         </button>
       </div>
       <Separator class="h-[2px]" />
