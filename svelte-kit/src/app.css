@@ -1,5 +1,4 @@
 @import "./styles/main-layout.css";
-@import "./styles/fontawesome/css/all.min.css";
 
 @tailwind base;
 @tailwind components;
