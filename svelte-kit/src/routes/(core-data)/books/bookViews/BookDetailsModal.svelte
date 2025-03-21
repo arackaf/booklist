@@ -169,17 +169,19 @@
               {:else}
                 <div>
                   {#each editorialReviews as review, index}
-                    <div>
-                      {#if index > 0}
-                        <Separator class="my-4 h-[2px]" />
-                      {/if}
-                      <div class="flex flex-col">
-                        <span class="text-base">{review.source || "<unknown source>"}</span>
-                        <div>
-                          {@html review.content}
+                    {#if review?.content}
+                      <div>
+                        {#if index > 0}
+                          <Separator class="my-4 h-[2px]" />
+                        {/if}
+                        <div class="flex flex-col">
+                          <span class="text-base">{review.source || "<unknown source>"}</span>
+                          <div>
+                            {@html review.content}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    {/if}
                   {/each}
                   <br />
                 </div>
@@ -190,38 +192,32 @@
               {#if !similarBooks || !similarBooks.length}
                 <h4 class="text-lg my-2">No similar items found for this book</h4>
               {:else}
-                <div>
-                  <div class="flex flex-col">
-                    <span class="text-base">Similar Books</span>
-                    <table class="table table-condensed w-full max-w-full text-sm" style="backgroundColor: transparent">
-                      <tbody>
-                        {#each similarBooks as book}
-                          <tr>
-                            <td>
-                              {#if book.smallImage}
-                                <BookCover size="small" {book} />
-                              {/if}
-                            </td>
-                            <td>
-                              <span style="font-weight: bold">{book.title}</span>
-                              <br />
-                              {#if book.authors?.length}
-                                <span style="font-style: italic">{book.authors.join(", ")}</span>
-                                <br />
-                              {/if}
-                              <a
-                                target="_new"
-                                style="color: black"
-                                href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
-                                aria-label="View on Amazon"
-                              >
-                                <i class="fab fa-amazon"></i>
-                              </a>
-                            </td>
-                          </tr>
-                        {/each}
-                      </tbody>
-                    </table>
+                <div class="flex flex-col gap-1">
+                  <span class="text-base">Similar Books</span>
+                  <div class="flex flex-col gap-2">
+                    {#each similarBooks as book}
+                      <div class="flex gap-2">
+                        <div class="w-[60px]">
+                          {#if book.smallImage}
+                            <BookCover size="small" {book} />
+                          {/if}
+                        </div>
+                        <div class="flex flex-col flex-1">
+                          <span class="leading-none font-bold">{book.title}</span>
+                          {#if book.authors?.length}
+                            <span style="font-style: italic">{book.authors.join(", ")}</span>
+                          {/if}
+                          <a
+                            class="mt-auto"
+                            target="_new"
+                            href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`}
+                            aria-label="View on Amazon"
+                          >
+                            <AmazonIcon size={14} />
+                          </a>
+                        </div>
+                      </div>
+                    {/each}
                   </div>
                 </div>
               {/if}

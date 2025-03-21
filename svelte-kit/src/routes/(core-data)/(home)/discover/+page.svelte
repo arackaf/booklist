@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageCircleWarningIcon } from "lucide-svelte";
+  import { MessageCircleWarningIcon, SearchIcon } from "lucide-svelte";
 
   import type { Book } from "$data/types";
 
@@ -57,7 +57,7 @@
 
       <div class="flex flex-row">
         <Button class="gap-2" onclick={openModal}>
-          <i class="fal fa-search"></i>
+          <SearchIcon />
           <span>Search your books</span>
         </Button>
 

@@ -3,6 +3,7 @@
   import BookCover from "$lib/components/BookCover.svelte";
   import BookTitle from "$lib/components/BookDisplay/BookTitle.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
+  import AmazonIcon from "$lib/svg/AmazonIcon.svelte";
 
   type Props = {
     book: Book;
@@ -24,7 +25,7 @@
 
       {#if book.isbn}
         <a target="_new" class="mr-2 mt-auto" href={`https://www.amazon.com/gp/product/${book.isbn}/?tag=zoomiec-20`} aria-label="View on Amazon">
-          <i class="fab fa-amazon"></i>
+          <AmazonIcon size={16} />
         </a>
       {/if}
     {/if}
