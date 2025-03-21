@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { ChartColumnIcon, ChartPieIcon, MessageCircleWarningIcon, TerminalIcon } from "lucide-svelte";
+  import { ChartColumnIcon, ChartPieIcon, MessageCircleWarningIcon, RedoIcon, TerminalIcon } from "lucide-svelte";
 
   import { page } from "$app/stores";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";
@@ -116,12 +116,14 @@
         {#if excludedCount}
           <span>Excluding: </span>
           {#each graphData.filter(d => excluding[d.groupId]) as d}
-            <span style="margin-left: 10px; text-wrap: nowrap">
-              {" " + d.display}
+            <div class="flex items-center gap-2">
+              <span style="margin-left: 10px; text-wrap: nowrap">
+                {" " + d.display}
+              </span>
               <button class="raw-button" style="color: black" onclick={() => restore(d.groupId)} aria-label="Put back into the graph">
-                <i class="far fa-redo"></i>
+                <RedoIcon />
               </button>
-            </span>
+            </div>
           {/each}
         {/if}
       </div>
