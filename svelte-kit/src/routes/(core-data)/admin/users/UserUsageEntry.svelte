@@ -1,7 +1,12 @@
 <script lang="ts">
+  import { UserIcon } from "lucide-svelte";
   import type { StoredUserInfo } from "$data/types";
   import type { UserUsageEntry } from "$data/user-usage-info";
-  import UserIcon from "./UserIcon.svelte";
+
+  import GoogleIcon from "$lib/svg/GoogleIcon.svelte";
+  import GithubIcon from "$lib/svg/GithubIcon.svelte";
+
+  import UserProviderIcon from "./UserProviderIcon.svelte";
 
   type Props = {
     userUsageEntry: UserUsageEntry;
@@ -22,7 +27,7 @@
 </script>
 
 <div class="flex flex-row gap-4">
-  <UserIcon avatar={userUsageEntry.avatar} {provider} />
+  <UserProviderIcon avatar={userUsageEntry.avatar} {provider} />
   <div class="flex flex-col gap-2">
     <div class="flex flex-col">
       <div class="text-lg leading-none">
@@ -32,7 +37,16 @@
         Last book entered: {lastEnteredDate}
       </div>
     </div>
-    <div>
+    <div class="flex gap-2 items-center">
+      <span>
+        {#if provider === "google"}
+          <GoogleIcon size={16} />
+        {:else if provider === "github"}
+          <GithubIcon size={16} />
+        {:else}
+          <UserIcon size={16} />
+        {/if}
+      </span>
       {userUsageEntry.email}
     </div>
   </div>

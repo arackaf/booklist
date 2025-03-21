@@ -13,6 +13,7 @@
   import MenuOptionsDesktop from "./MenuOptionsDesktop.svelte";
   import { SearchState } from "../state/searchState.svelte";
   import PublicBooksHeader from "./PublicBooksHeader.svelte";
+  import { MenuIcon } from "lucide-svelte";
 
   type Props = {
     isPublic: boolean;
@@ -55,7 +56,7 @@
         onclick={() => (mobileMenuOpen = true)}
         data-mobile-menu
       >
-        <i class="far fa-fw fa-bars"></i>
+        <MenuIcon class="!w-5 !h-5" />
       </Button>
       {#if isPublic}
         <PublicBooksHeader />
