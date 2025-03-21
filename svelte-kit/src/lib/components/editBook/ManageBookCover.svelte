@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LoaderCircle } from "lucide-svelte";
+  import { CloudUploadIcon, LoaderCircle } from "lucide-svelte";
   import Dropzone from "svelte-file-dropzone";
 
   import { cn } from "$lib/utils";
@@ -116,7 +116,7 @@
           placeholder="New Cover URL"
         />
         <Button type="submit" variant="outline" size="icon" class="p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
-          <i class="far fa-cloud-upload-alt"></i>
+          <CloudUploadIcon class="!h-5 !w-5" />
         </Button>
       </div>
     </div>

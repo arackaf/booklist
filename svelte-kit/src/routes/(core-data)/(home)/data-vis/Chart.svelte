@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { ChartColumnIcon, ChartPieIcon, MessageCircleWarningIcon, RedoIcon, TerminalIcon } from "lucide-svelte";
+  import { ChartColumnBigIcon, ChartPieIcon, MessageCircleWarningIcon, RedoIcon, TerminalIcon } from "lucide-svelte";
 
   import { page } from "$app/stores";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";
@@ -99,7 +99,7 @@
             class={cn("p-0 bg-transparent border-0 shadow-none", { "text-muted-foreground": !isBar })}
             aria-label="View bar chart"
           >
-            <ChartColumnIcon size={16} />
+            <ChartColumnBigIcon size={16} />
           </button>
           <button
             onclick={() => setChartType("PIE")}

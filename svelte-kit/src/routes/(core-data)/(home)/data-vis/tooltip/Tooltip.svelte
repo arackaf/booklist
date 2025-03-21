@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext, untrack } from "svelte";
   import { spring } from "svelte/motion";
-  import { XIcon } from "lucide-svelte";
+  import { ChartColumnBigIcon, XIcon } from "lucide-svelte";
 
   import Separator from "$lib/components/ui/separator/separator.svelte";
 
@@ -126,10 +126,10 @@
             runDrilldown();
             gone = true;
           }}
-          class="raw-button flex gap-2"
+          class="raw-button flex gap-2 items-center"
         >
-          <span class="leading-none text-black">Drilldown</span>
-          <i class="far fa-chart-bar leading-none text-black"></i>
+          <span>Drilldown</span>
+          <ChartColumnBigIcon class="!w-4 !h-4" />
         </button>
       </div>
     {/if}
