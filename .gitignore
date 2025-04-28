@@ -30,3 +30,5 @@ mysql/.idea
 mysql/data-import/dev.env
 lambda/sync-similar-books/build
 lambda/my-library-pg-backup/secrets.yml
+lambda/sync-similar-books/.env.local
+lambda/sync-similar-books/.env.prod
