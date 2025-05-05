@@ -25,7 +25,8 @@ export const localSync = async () => {
   let captchaDone = false;
   try {
     let book;
-    book = await getNextBookToSync();
+    book = { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" };
+    // book = await getNextBookToSync();
 
     if (!book) {
       return;
@@ -37,7 +38,8 @@ export const localSync = async () => {
     while (book) {
       await doSync(book, page, captchaDone);
       await new Promise(res => setTimeout(res, 4000));
-      book = await getNextBookToSync();
+      book = null;
+      // book = await getNextBookToSync();
       captchaDone = true;
     }
   } catch (er) {
@@ -68,14 +70,15 @@ export const syncNextBook = async () => {
 };
 
 async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
-  const mySqlConnection = await getMySqlConnection();
+  // const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
   try {
     if (isbn.length === 13) {
       isbn = isbn13To10(isbn);
       if (isbn == null) {
-        await bookSyncFailure(mySqlConnection, id, "13 digit ISBN that can't be converted to 10 digit");
+        console.log("13 digit ISBN that can't be converted to 10 digit");
+        // await bookSyncFailure(mySqlConnection, id, "13 digit ISBN that can't be converted to 10 digit");
         return;
       }
     }
@@ -89,11 +92,11 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
     const allResults = page ? await doScrape(page, isbn, title, captchaDone) : await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
-      await bookSyncFailure(mySqlConnection, id, "No results");
+      // await bookSyncFailure(mySqlConnection, id, "No results");
       console.log("Sync complete for", id, title, "No results found");
       return;
     } else {
-      await bookSyncSuccess(mySqlConnection, id, allResults);
+      // await bookSyncSuccess(mySqlConnection, id, allResults);
     }
     console.log(
       "Sync complete for",
@@ -105,9 +108,9 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
     return allResults;
   } catch (err) {
     console.log("Error", err);
-    await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
+    // await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
   } finally {
-    mySqlConnection?.end();
+    // mySqlConnection?.end();
   }
 }
 
