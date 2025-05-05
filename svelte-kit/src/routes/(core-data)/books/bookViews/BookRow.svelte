@@ -93,7 +93,7 @@
           {/if}
         </div>
 
-        <div class="flex flex-row gap-2 items-center mt-auto h-5">
+        <div class="flex flex-row gap-3 items-center mt-auto h-5">
           <button
             onclick={() => previewBook(book)}
             style={hoverOverride}
