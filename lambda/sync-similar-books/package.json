@@ -23,6 +23,7 @@
     "typescript": "^5.8.2"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.7.10",
     "@types/node": "^22.13.10"
   }
 }
