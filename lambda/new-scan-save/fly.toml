@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for new-scan-save-dev on 2025-05-19T23:11:23-05:00
+# fly.toml app configuration file generated for new-scan-save-live on 2025-05-20T14:58:42-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -17,6 +17,6 @@ primary_region = 'iad'
   processes = ['app']
 
 [[vm]]
-  memory = '4gb'
+  memory = '16gb'
   cpu_kind = 'shared'
-  cpus = 4
+  cpus = 8
