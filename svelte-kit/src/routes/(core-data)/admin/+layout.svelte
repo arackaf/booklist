@@ -3,7 +3,7 @@
 <script lang="ts">
   import PageWithNavigation from "$lib/components/navigation/PageWithNavigation.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types";
-  import { BookCopyIcon, UsersIcon } from "lucide-svelte";
+  import { BookCopyIcon, FlagIcon, UsersIcon } from "lucide-svelte";
 
   let { children } = $props();
 
@@ -17,6 +17,11 @@
       href: "/admin/users",
       label: "Users",
       Icon: UsersIcon
+    },
+    {
+      href: "/admin/sandbox",
+      label: "Users",
+      Icon: FlagIcon
     }
   ];
 </script>
