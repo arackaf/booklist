@@ -8,8 +8,9 @@ export const load = async ({ parent, url }) => {
     redirect(302, "/");
   }
   const token = env.FLY_TOKEN;
+  const app = env.FLY_BOOK_SCAN_SAVE_APP;
 
-  const response = await fetch(`https://api.machines.dev/v1/apps/${"my-library-svelte-kit"}/machines`, {
+  const response = await fetch(`https://api.machines.dev/v1/apps/${app}/machines`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
