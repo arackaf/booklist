@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for sync-similar-books-2 on 2025-05-18T22:26:11-05:00
+# fly.toml app configuration file generated for sync-similar-books on 2025-05-18T16:43:23-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'sync-similar-books-2'
+app = 'sync-similar-books'
 primary_region = 'iad'
 
 [build]
@@ -14,10 +14,9 @@ primary_region = 'iad'
   auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  max_machines_running = 1
   processes = ['app']
 
 [[vm]]
-  memory = '128gb'
+  memory = '128GB'
   cpu_kind = 'performance'
   cpus = 16

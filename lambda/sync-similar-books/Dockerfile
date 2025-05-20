@@ -1,17 +1,16 @@
-# syntax = docker/dockerfile:1
+FROM node:20-bookworm
 
-# Adjust NODE_VERSION as desired
+WORKDIR /app
 
-FROM FROM oven/bun:latest
-
-
-# Set production environment
 ENV NODE_ENV="production"
+
+COPY ./package.json ./package.json
+COPY ./package-lock.json ./package-lock.json
+
+RUN npm install
+RUN npm run playwright
+
 
 COPY . .
 
-RUN bun install
-
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD [ "node", "index.js" ]
+CMD [ "npx", "tsx", "index" ]

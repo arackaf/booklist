@@ -26,7 +26,10 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 }
 
 export async function getBrowser() {
-  const headless = process.env.stage && process.env.stage !== "local";
+  const headless = true; // process.env.stage && process.env.stage !== "local";
+
+  console.log("playwright.launchChromium", typeof playwright.launchChromium);
+  console.log("playwright.chromium", typeof playwright.chromium?.launch);
 
   return playwright.launchChromium
     ? await playwright.launchChromium({ headless })
@@ -38,14 +41,14 @@ export async function getBrowser() {
 export async function getPage(browser: any) {
   return browser.newPage({
     extraHTTPHeaders: {
-      // "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-      // accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-      // "sec-fetch-site": "same-origin",
-      // "sec-fetch-mode": "navigate",
-      // "sec-fetch-user": "?1",
-      // "sec-fetch-dest": "document",
-      // referer: "https://www.amazon.com/",
-      // "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
+      "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-user": "?1",
+      "sec-fetch-dest": "document",
+      referer: "https://www.amazon.com/",
+      "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
     }
   });
 }
@@ -78,8 +81,6 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
   }
 
   const entireHtml = await page.content();
-  console.log("Entire page:");
-  console.log(entireHtml);
 
   for (let i = 1; i <= 15; i++) {
     try {
@@ -105,6 +106,11 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
       await page.waitForSelector("[data-a-carousel-options]", { timeout: 5000 });
       allCarousels = await page.locator("[data-a-carousel-options]").all();
       console.log("Second attempt found:", allCarousels.length, "carousels");
+
+      if (!allCarousels.length) {
+        console.log("Entire page:");
+        console.log(entireHtml);
+      }
     } catch (er) {
       console.log("Second attemt failed");
     }
@@ -133,7 +139,7 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
   }
 
   const allResults = [...allBookResults.values()];
-  await processImages(allResults);
+  //await processImages(allResults);
 
   return allResults;
 }
