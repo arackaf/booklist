@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "local": "tsx index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/lib-dynamodb": "^3.814.0",
     "dotenv": "^16.4.5",
     "npx": "^10.2.2",
     "pg": "^8.13.0",
