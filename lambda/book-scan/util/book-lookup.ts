@@ -176,19 +176,6 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
         };
 
         try {
-          // const result = await fetch(`${MY_LIBRARY_URL}/api/save-book`, {
-          //   method: "POST",
-          //   body: JSON.stringify({ book, secret: pgInsertSecret }),
-          //   headers: {
-          //     "Content-Type": "application/json"
-          //   }
-          // });
-          // if (!result.ok) {
-          //   throw new Error(`Error saving book to pg ${result.status}`);
-          // }
-
-          // console.log("Book saved to Postgres", book);
-
           const newScanKey = getNewScanKeyPacket();
           db.put(getPutPacket({ pk: newScanKey[0], sk: newScanKey[1], book: JSON.stringify(book) }));
 
