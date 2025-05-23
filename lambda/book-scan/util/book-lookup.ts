@@ -7,13 +7,16 @@ import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { getSecrets } from "../../util/getSecrets";
-
-const MY_LIBRARY_URL = "https://mylibrary.io";
+import { syncWithFly } from "./fly-sync";
 
 type BookLookupPacket = {
   pk: string;
   sk: string;
   scanItems: ScanItem[];
+};
+
+const getNewScanKeyPacket = () => {
+  return ["#NewBookScanned", uuid()];
 };
 
 export const runBookLookupIfAvailable = async () => {
@@ -127,6 +130,10 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
               try {
                 const newBook = await getBookFromIsbnDbData(book, scanInput.userId);
                 const idx = scanItems.indexOf(scanInput);
+
+                delete (newBook as any).pk;
+                // make certain there's no pk field sent back from isbndb for the check below
+                // very ugly and hacky but good enough for now
                 (scanItems as any)[idx] = newBook;
               } catch (er) {}
             })()
@@ -152,37 +159,38 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
         const book = {
           title: bookToInsert.title,
           pages: bookToInsert.pages ?? null,
-          authors: JSON.stringify(bookToInsert.authors ?? []),
+          authors: bookToInsert.authors ?? [],
           isbn: bookToInsert.isbn,
           publisher: bookToInsert.publisher,
           publicationDate: bookToInsert.publicationDate,
           isRead: false,
           mobileImage: bookToInsert.mobileImage,
-          mobileImagePreview: JSON.stringify(bookToInsert.mobileImagePreview ?? null),
+          mobileImagePreview: bookToInsert.mobileImagePreview ?? null,
           smallImage: bookToInsert.smallImage,
-          smallImagePreview: JSON.stringify(bookToInsert.smallImagePreview ?? null),
+          smallImagePreview: bookToInsert.smallImagePreview ?? null,
           mediumImage: bookToInsert.mediumImage,
-          mediumImagePreview: JSON.stringify(bookToInsert.mediumImagePreview ?? null),
-          editorialReviews: JSON.stringify(bookToInsert.editorialReviews ?? []),
+          mediumImagePreview: bookToInsert.mediumImagePreview ?? null,
+          editorialReviews: bookToInsert.editorialReviews ?? [],
           userId: bookToInsert.userId,
           dateAdded: new Date()
         };
 
-        console.log("Saving book to Postgres", book);
-
         try {
-          const result = await fetch(`${MY_LIBRARY_URL}/api/save-book`, {
-            method: "POST",
-            body: JSON.stringify({ book, secret: pgInsertSecret }),
-            headers: {
-              "Content-Type": "application/json"
-            }
-          });
-          if (!result.ok) {
-            throw new Error(`Error saving book to pg ${result.status}`);
-          }
+          // const result = await fetch(`${MY_LIBRARY_URL}/api/save-book`, {
+          //   method: "POST",
+          //   body: JSON.stringify({ book, secret: pgInsertSecret }),
+          //   headers: {
+          //     "Content-Type": "application/json"
+          //   }
+          // });
+          // if (!result.ok) {
+          //   throw new Error(`Error saving book to pg ${result.status}`);
+          // }
 
-          console.log("Book saved to Postgres", book);
+          // console.log("Book saved to Postgres", book);
+
+          const newScanKey = getNewScanKeyPacket();
+          db.put(getPutPacket({ pk: newScanKey[0], sk: newScanKey[1], book: JSON.stringify(book) }));
 
           const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
           userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
@@ -197,7 +205,9 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
       }
     }
 
-    console.log("---- FINISHED. ALL SAVED ----");
+    await syncWithFly();
+
+    console.log("---- FINISHED. ALL SAVED AND SYNCD WITH FLY ----");
 
     for (const [userId, packet] of Object.entries(userMessages)) {
       sendWsMessageToUser(userId, { type: "scanResults", packet });
