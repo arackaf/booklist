@@ -75,7 +75,6 @@ async function sync() {
 
     await db.insert(schema.books).values(book);
     await dynamo.delete(getDeletePacket({ pk: bookPacket.pk, sk: bookPacket.sk }));
-    break;
   }
 }
 
