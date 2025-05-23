@@ -209,6 +209,8 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
 
     console.log("---- FINISHED. ALL SAVED AND SYNCD WITH FLY ----");
 
+    await wait(3000);
+
     for (const [userId, packet] of Object.entries(userMessages)) {
       sendWsMessageToUser(userId, { type: "scanResults", packet });
     }
