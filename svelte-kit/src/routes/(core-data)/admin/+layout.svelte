@@ -20,7 +20,7 @@
     },
     {
       href: "/admin/sandbox",
-      label: "Users",
+      label: "Fly Sandbox",
       Icon: FlagIcon
     }
   ];
