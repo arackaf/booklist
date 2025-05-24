@@ -18,7 +18,7 @@
 </script>
 
 <Dialog.Portal {...portalProps}>
-  <Dialog.Overlay />
+  <Dialog.Overlay class="bg-black/60" />
   <DialogPrimitive.Content
     bind:ref
     data-slot="dialog-content"
