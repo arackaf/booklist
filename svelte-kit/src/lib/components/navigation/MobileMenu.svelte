@@ -54,7 +54,7 @@
     <div class="flex items-center header">
       <h3 class="leading-none ml-2 text-lg">{title}</h3>
       <Button aria-label="Close mobile menu" variant="outline" size="icon" onclick={onClose} class="text-lg border-0 ml-auto p-1 w-8 h-8">
-        <XIcon class="!h-5 !w-5" />
+        <XIcon class="h-5! w-5!" />
       </Button>
     </div>
     {@render children()}

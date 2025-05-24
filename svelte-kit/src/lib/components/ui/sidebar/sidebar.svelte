@@ -24,7 +24,7 @@
 </script>
 
 {#if collapsible === "none"}
-  <div class={cn("bg-sidebar text-sidebar-foreground flex h-full w-[--sidebar-width] flex-col", className)} bind:this={ref} {...restProps}>
+  <div class={cn("bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col", className)} bind:this={ref} {...restProps}>
     {@render children?.()}
   </div>
 {:else if sidebar.isMobile}
@@ -32,7 +32,7 @@
     <Sheet.Content
       data-sidebar="sidebar"
       data-mobile="true"
-      class="bg-sidebar text-sidebar-foreground w-[--sidebar-width] p-0 [&>button]:hidden"
+      class="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
       style="--sidebar-width: {SIDEBAR_WIDTH_MOBILE};"
       {side}
     >
@@ -53,24 +53,24 @@
     <!-- This is what handles the sidebar gap on desktop -->
     <div
       class={cn(
-        "relative h-svh w-[--sidebar-width] bg-transparent transition-[width] duration-200 ease-linear",
+        "relative h-svh w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear",
         "group-data-[collapsible=offcanvas]:w-0",
         "group-data-[side=right]:rotate-180",
         variant === "floating" || variant === "inset"
-          ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]"
-          : "group-data-[collapsible=icon]:w-[--sidebar-width-icon]"
+          ? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]"
+          : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
       )}
     ></div>
     <div
       class={cn(
-        "fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] duration-200 ease-linear md:flex",
+        "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
         side === "left"
           ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
           : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
         // Adjust the padding for floating and inset variants.
         variant === "floating" || variant === "inset"
-          ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]"
-          : "group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l",
+          ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
+          : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
         className
       )}
       {...restProps}

@@ -20,7 +20,7 @@
         <NavItems {navItems} />
       </nav>
     </header>
-    <section class="p-[var(--main-spacing)] pt-3">
+    <section class="p-(--main-spacing) pt-3">
       {@render children()}
     </section>
   </div>

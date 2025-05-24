@@ -111,7 +111,7 @@
           }}
           aria-label="Remove"
         >
-          <XIcon class="!h-5 !w-5" />
+          <XIcon class="h-5! w-5!" />
         </button>
       </div>
       <Separator class="h-[2px]" />
@@ -129,7 +129,7 @@
           class="raw-button flex gap-2 items-center"
         >
           <span>Drilldown</span>
-          <ChartColumnBigIcon class="!w-4 !h-4" />
+          <ChartColumnBigIcon class="w-4! h-4!" />
         </button>
       </div>
     {/if}
