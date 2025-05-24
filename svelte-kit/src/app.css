@@ -70,15 +70,6 @@
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
 :root {
   --animation-duration: 300ms;
 
@@ -93,7 +84,6 @@
 
 .toastify {
   background: unset;
-  @apply bg-background text-foreground flex p-3;
 }
 
 #app {
@@ -112,12 +102,6 @@ select {
   }
 }
 
-@layer base {
-  .raw-button {
-    @apply p-0 bg-transparent border-0 shadow-none;
-  }
-}
-
 .overlay-holder {
   display: grid;
   grid-template-columns: 1fr;
@@ -130,20 +114,14 @@ select {
   grid-column-end: 2;
 }
 
-th {
-  @apply text-left text-muted-foreground h-8 font-medium align-middle border-b-2 border-b-primary/30;
-}
-
 td {
   vertical-align: top;
   padding: 5px;
-  @apply border-t border-t-primary/30;
 }
 
 .sliding-mobile-menu {
   transform: translateX(-100%);
   transition: transform 150ms ease-out;
-  @apply bg-white rounded-br absolute border border-neutral-400 border-t-0 border-l-0;
 }
 
 .sliding-mobile-menu.open {
@@ -152,10 +130,6 @@ td {
 
 .animation-duration-override-200 {
   animation-duration: 200ms !important;
-}
-
-.sticky-content {
-  @apply sticky top-[calc(3.5rem+1px)] z-[3] bg-white;
 }
 
 .scroll-gradient,
