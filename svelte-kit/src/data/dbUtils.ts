@@ -14,7 +14,7 @@ type InitializeProps = {
 export function initializePostgres(props: InitializeProps) {
   const { useMockDb, connectionString } = props;
 
-  if (useMockDb) {
+  if (true) {
     db = drizzlePg.mock({ schema });
   } else {
     const { Pool } = pg;
