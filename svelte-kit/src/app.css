@@ -143,6 +143,11 @@ select {
   touch-action: manipulation;
 }
 
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
 @media (max-width: 600px) {
   input {
     font-size: 16px;
