@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import * as AlertDialog from "$lib/components/ui/alert-dialog";
+  import * as Dialog from "$lib/components/ui/dialog";
   import ModalContents from "./ModalContents.svelte";
   import StandardModalHeader from "./StandardModalHeader.svelte";
   import StandardModalFooter from "./StandardModalFooter.svelte";
@@ -18,7 +18,7 @@
   let { isOpen, onHide, headerCaption = "", standardFooter = true, smallerHeader = false, openFocus = null, children }: Props = $props();
 </script>
 
-<AlertDialog.Root
+<Dialog.Root
   bind:open={isOpen}
   onOpenChange={open => {
     console.log({ open });
@@ -27,21 +27,21 @@
     }
   }}
 >
-  <AlertDialog.Content
+  <Dialog.Content
     interactOutsideBehavior="close"
     onOpenAutoFocus={() => openFocus?.focus()}
     class="translate-y-[0] top-8 sm:top-16 p-5 pt-6 overflow-auto"
   >
-    <AlertDialog.Header class="px-1">
-      <AlertDialog.Title>
+    <Dialog.Header class="px-1">
+      <Dialog.Title>
         <StandardModalHeader caption={headerCaption} smaller={smallerHeader} {onHide} />
-      </AlertDialog.Title>
-    </AlertDialog.Header>
-    <AlertDialog.Description>
+      </Dialog.Title>
+    </Dialog.Header>
+    <Dialog.Description>
       <ModalContents>{@render children()}</ModalContents>
       {#if standardFooter}
         <StandardModalFooter {onHide} />
       {/if}
-    </AlertDialog.Description>
-  </AlertDialog.Content>
-</AlertDialog.Root>
+    </Dialog.Description>
+  </Dialog.Content>
+</Dialog.Root>
