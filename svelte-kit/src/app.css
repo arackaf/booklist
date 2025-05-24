@@ -44,7 +44,8 @@
 @layer base {
   :root {
     --background: hsl(0 0% 100%);
-    --foreground: hsl(224 71.4% 4.1%);
+    --foreground: rgb(64, 64, 64);
+    /* --foreground: hsl(224 71.4% 4.1%); */
 
     --muted: hsl(220 14.3% 95.9%);
     --muted-foreground: hsl(220 8.9% 46.1%);
