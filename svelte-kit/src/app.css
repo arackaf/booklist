@@ -153,3 +153,23 @@ td {
 .animation-duration-override-200 {
   animation-duration: 200ms !important;
 }
+
+.sticky-content {
+  @apply sticky top-[calc(3.5rem+1px)] z-[3] bg-white;
+}
+
+.scroll-gradient,
+.scroll-gradient-flush {
+  background: linear-gradient(rgba(255, 255, 255, 1) 10%, rgba(255, 255, 255, 0.8) 80%, rgba(255, 255, 255, 0) 100%);
+  height: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+}
+.scroll-gradient {
+  transform: translateY(11px);
+}
+.scroll-gradient-flush {
+  transform: translateY(10px);
+}
