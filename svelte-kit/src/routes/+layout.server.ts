@@ -5,8 +5,6 @@ import type { Login } from "$lib/types";
 export async function load({ locals, isDataRequest, request, cookies, depends }) {
   depends("app:root");
 
-  const session = await locals.getSession();
-
   const userAgent = request.headers.get("User-Agent")!;
   const isMobile = /mobile/i.test(userAgent);
 
@@ -21,19 +19,10 @@ export async function load({ locals, isDataRequest, request, cookies, depends })
 
   let loggedInUser: Login | null = null;
 
-  if (session?.user) {
-    loggedInUser = {
-      name: session.user.name!,
-      email: session.user.email!,
-      image: session.user.image!,
-      provider: session.provider
-    };
-  }
-
   return {
-    loggedIn: !!session?.user,
+    loggedIn: false,
     loggedInUser,
-    userId: session?.userId,
+    userId: "",
     uxState,
     isMobile,
     booksCache,
