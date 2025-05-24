@@ -2,7 +2,6 @@
   import { mount, onMount } from "svelte";
 
   import Toastify from "toastify-js";
-  import "toastify-js/src/toastify.css";
 
   import { checkPendingCount, dispatchScanDataUpdate, getScanWebSocket } from "$lib/util/scanUtils";
   import type { Book } from "$data/types";
