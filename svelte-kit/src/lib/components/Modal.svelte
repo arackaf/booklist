@@ -30,7 +30,7 @@
   <Dialog.Content
     interactOutsideBehavior="close"
     onOpenAutoFocus={() => openFocus?.focus()}
-    class="translate-y-[0] top-8 sm:top-16 p-5 pt-6 overflow-auto"
+    class="translate-y-[0] top-8 sm:top-16 p-5 pt-6 overflow-auto max-h-[calc(100dvh-64px)] sm:max-h-[calc(100vh-100px)] max-w-[min(95vw,600px)]!"
   >
     <Dialog.Header class="px-1">
       <Dialog.Title>
