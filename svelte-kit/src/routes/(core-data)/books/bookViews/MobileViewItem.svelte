@@ -17,7 +17,7 @@
   onkeydown={() => {}}
   role="button"
   tabindex={-1}
-  class="py-1 border-b border-b-neutral-400 first:border-t-primary first:border-t-[2px] hover:bg-secondary"
+  class="py-1 border-b border-b-neutral-400 first:border-t-primary first:border-t-2 hover:bg-secondary"
 >
   <div style="display: flex">
     <div style="margin-right: 5px; min-width: 40px">

@@ -45,7 +45,7 @@
   <thead>
     <tr>
       {#if !isPublic}
-        <th class="p-0 w-6 text-center">
+        <th class="p-0 w-6 justify-items-center">
           <Checkbox bind:checked={() => !!allBooksSelected, val => checkAll(val)} />
         </th>
       {/if}

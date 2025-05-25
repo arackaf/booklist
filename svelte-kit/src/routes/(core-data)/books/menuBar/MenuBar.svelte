@@ -56,7 +56,7 @@
         onclick={() => (mobileMenuOpen = true)}
         data-mobile-menu
       >
-        <MenuIcon class="!w-5 !h-5" />
+        <MenuIcon class="w-5! h-5!" />
       </Button>
       {#if isPublic}
         <PublicBooksHeader />

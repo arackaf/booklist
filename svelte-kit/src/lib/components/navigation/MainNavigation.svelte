@@ -99,5 +99,5 @@
       {/each}
     </div>
   </nav>
-  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10 mt-[1px]"></div>
+  <div id="main-mobile-menu" class="sliding-mobile-menu p-2 z-10 mt-px"></div>
 </header>
