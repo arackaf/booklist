@@ -14,7 +14,7 @@
 <div class="flex items-center">
   <h1 class:text-base={smaller} class:text-xl={!smaller} class="font-normal">{caption}</h1>
 
-  <button style="margin-left: auto; display: flex;" class="close raw-button text-lg font-bold" onclick={onHide} aria-label="Close modal">
+  <button style="margin-left: auto; display: flex;" class="close raw-button text-lg" onclick={onHide} aria-label="Close modal">
     <XIcon />
   </button>
 </div>
