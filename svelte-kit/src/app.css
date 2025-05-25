@@ -128,6 +128,12 @@
   --default-border-radius: 5px;
 }
 
+/* darken radio and checkbox borders */
+[data-slot="radio-group-item"],
+[data-slot="checkbox"] {
+  border-color: var(--color-neutral-500);
+}
+
 * {
   box-sizing: border-box;
 }
