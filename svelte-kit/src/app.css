@@ -134,6 +134,9 @@
   [data-slot="checkbox"] {
     border-color: var(--color-neutral-500);
   }
+  [data-slot="label"] {
+    color: var(--color-neutral-600);
+  }
 }
 
 * {
@@ -184,14 +187,16 @@ button,
   grid-column-end: 2;
 }
 
-th {
-  @apply text-left text-muted-foreground h-8 font-medium align-middle border-b-2 border-b-primary/30;
-}
+@layer base {
+  th {
+    @apply text-left text-muted-foreground h-8 font-medium align-middle border-b-2 border-b-primary/30;
+  }
 
-td {
-  vertical-align: top;
-  padding: 5px;
-  @apply border-t border-t-primary/30;
+  td {
+    vertical-align: top;
+    padding: 5px;
+    @apply border-t border-t-primary/30;
+  }
 }
 
 .sliding-mobile-menu {
