@@ -47,7 +47,7 @@
   </MobileMenu>
 
   <div class="pt-2" style="font-size: 11pt; position: relative">
-    <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
+    <div class="flex flex-wrap gap-2 items-center menu-bar-content pb-[5px]">
       <Button
         variant="outline"
         size="icon"

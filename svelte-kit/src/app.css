@@ -238,3 +238,19 @@ button,
 .scroll-gradient-flush {
   transform: translateY(10px);
 }
+
+.menu-bar-content button {
+  position: relative;
+}
+.menu-bar-content button:focus-visible {
+  box-shadow: none;
+}
+.menu-bar-content button:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  bottom: -1px;
+  box-shadow:
+    0 2px var(--color-background),
+    0 4px var(--color-neutral-700);
+}
