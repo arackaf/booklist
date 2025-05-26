@@ -71,7 +71,7 @@
             value={searchState.value.search}
             onblur={resetSearch}
             name="search"
-            class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:outline-none border-neutral-300"
+            class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:outline-none"
             placeholder="Title search"
           />
           <MenuOptionsDesktop {isPublic} />
