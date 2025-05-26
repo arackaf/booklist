@@ -241,10 +241,16 @@ button,
 
 .menu-bar-content button {
   position: relative;
+  border-color: var(--color-input);
 }
-.menu-bar-content button:focus-visible {
+.menu-bar-content input {
   box-shadow: none;
 }
+.menu-bar-content :focus-visible {
+  box-shadow: none;
+  border-color: var(--color-input);
+}
+
 .menu-bar-content button:focus-visible::after {
   content: "";
   position: absolute;
