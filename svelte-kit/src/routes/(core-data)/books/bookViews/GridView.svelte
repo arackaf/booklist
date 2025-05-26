@@ -51,7 +51,7 @@
       {/if}
       <th class="p-0 w-[60px]"></th>
       <th class="p-0 min-w-48">
-        <a class="flex gap-1" href={changeFilter.withSort("title")}>
+        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("title")}>
           Title
           {#if searchState.value.sortField == "title"}
             {#if searchState.value.sortDirection == "asc"}
@@ -66,7 +66,7 @@
       <th class="p-0 min-w-20"></th>
       <th class="p-0"></th>
       <th class="p-0 min-w-20">
-        <a class="flex gap-1" href={changeFilter.withSort("pages")}>
+        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("pages")}>
           Pages
           {#if searchState.value.sortField == "pages"}
             {#if searchState.value.sortDirection == "asc"}
@@ -78,7 +78,7 @@
         </a>
       </th>
       <th class="p-0">
-        <a class="flex gap-1" href={changeFilter.withSort("id")}>
+        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("id")}>
           Added
           {#if searchState.value.sortField == "id"}
             {#if searchState.value.sortDirection == "asc"}
