@@ -87,7 +87,7 @@
         <Sheet.Trigger class="items-center mx-2 my-auto" onmouseenter={fetchUserSummaryIfNeeded}>
           <img alt="User profile" class="rounded-full h-8 w-8 max-h-8 max-w-8" src={loggedInUser.image} />
         </Sheet.Trigger>
-        <Sheet.Content side="left">
+        <Sheet.Content side="left" class="p-6">
           <ProfilePanel {userSummary} {loggedInUser} />
         </Sheet.Content>
       </Sheet.Root>
