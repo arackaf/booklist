@@ -5,4 +5,4 @@
   let { ref = $bindable(null), class: className, ...restProps }: CommandPrimitive.EmptyProps = $props();
 </script>
 
-<CommandPrimitive.Empty class={cn("py-6 text-center text-sm", className)} {...restProps} />
+<CommandPrimitive.Empty bind:ref data-slot="command-empty" class={cn("py-6 text-center text-sm", className)} {...restProps} />
