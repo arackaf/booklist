@@ -239,13 +239,14 @@ button,
   transform: translateY(10px);
 }
 
-.menu-bar-content button {
+.menu-bar-content :is(button, input) {
   position: relative;
 }
-.menu-bar-content button:focus-visible {
+.menu-bar-content :focus-visible {
   box-shadow: none;
+  border-color: var(--color-input);
 }
-.menu-bar-content button:focus-visible::after {
+.menu-bar-content :focus-visible::after {
   content: "";
   position: absolute;
   inset: 0;
