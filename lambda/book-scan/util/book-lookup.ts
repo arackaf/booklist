@@ -1,12 +1,12 @@
 import { v4 as uuid } from "uuid";
 
-import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "../../util/dynamoHelpers";
+import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "./dynamoHelpers";
 
 import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
 import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
-import { getSecrets } from "../../util/getSecrets";
+import { getSecrets } from "./getSecrets";
 import { syncWithFly } from "./fly-sync";
 
 type BookLookupPacket = {

@@ -1,4 +1,4 @@
-import { getSecrets } from "../../util/getSecrets";
+import { getSecrets } from "./getSecrets";
 
 export async function syncWithFly() {
   try {

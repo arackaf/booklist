@@ -1,10 +1,10 @@
 import fetch from "node-fetch";
 import { toUtf8 } from "@aws-sdk/util-utf8-node";
 
-import { getOpenLibraryCoverUri } from "../../util/bookCoverHelpers";
-import { IS_DEV } from "../../util/environment";
-import { invoke } from "../../util/invokeLambda";
-import { getSecrets } from "../../util/getSecrets";
+import { getOpenLibraryCoverUri } from "./bookCoverHelpers";
+import { IS_DEV } from "./environment";
+import { invoke } from "./invokeLambda";
+import { getSecrets } from "./getSecrets";
 import { ScanItem } from "./data-helpers";
 
 const COVER_PROCESSING_LAMBDA = `process-book-cover-${IS_DEV ? "dev" : "live"}-processCover`;
