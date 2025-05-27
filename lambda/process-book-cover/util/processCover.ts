@@ -3,7 +3,7 @@ import sharp, { Sharp, Metadata } from "sharp";
 import { getPlaiceholder } from "plaiceholder";
 import { v4 as uuid } from "uuid";
 import { sharpDownload } from "./sharpDownload";
-import { uploadToS3 } from "../../util/uploadToS3";
+import { uploadToS3 } from "./uploadToS3";
 
 type Sizes = "mobile" | "small" | "medium";
 
