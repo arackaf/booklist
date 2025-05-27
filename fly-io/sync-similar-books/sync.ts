@@ -1,5 +1,5 @@
 import { Page } from "playwright-core";
-import { isbn13To10 } from "../util/isbn13to10";
+import { isbn13To10 } from "./isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
 import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser, getPage } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
@@ -20,24 +20,30 @@ export const syncBook = async ({ id }) => {
 };
 
 export const localSync = async () => {
+  console.log("Starting sync");
   let browser: any;
   let page: Page;
-  let captchaDone = false;
+  let captchaDone = true;
   try {
     let book;
-    book = await getNextBookToSync();
+    book = { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" };
+    // book = await getNextBookToSync();
 
     if (!book) {
       return;
     }
 
     browser = await getBrowser();
+
+    console.log("Got browser");
+
     page = await getPage(browser);
 
     while (book) {
       await doSync(book, page, captchaDone);
       await new Promise(res => setTimeout(res, 4000));
-      book = await getNextBookToSync();
+      book = null;
+      // book = await getNextBookToSync();
       captchaDone = true;
     }
   } catch (er) {
@@ -68,14 +74,15 @@ export const syncNextBook = async () => {
 };
 
 async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
-  const mySqlConnection = await getMySqlConnection();
+  // const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
   try {
     if (isbn.length === 13) {
       isbn = isbn13To10(isbn);
       if (isbn == null) {
-        await bookSyncFailure(mySqlConnection, id, "13 digit ISBN that can't be converted to 10 digit");
+        console.log("13 digit ISBN that can't be converted to 10 digit");
+        // await bookSyncFailure(mySqlConnection, id, "13 digit ISBN that can't be converted to 10 digit");
         return;
       }
     }
@@ -89,11 +96,11 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
     const allResults = page ? await doScrape(page, isbn, title, captchaDone) : await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
-      await bookSyncFailure(mySqlConnection, id, "No results");
+      // await bookSyncFailure(mySqlConnection, id, "No results");
       console.log("Sync complete for", id, title, "No results found");
       return;
     } else {
-      await bookSyncSuccess(mySqlConnection, id, allResults);
+      // await bookSyncSuccess(mySqlConnection, id, allResults);
     }
     console.log(
       "Sync complete for",
@@ -105,9 +112,9 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
     return allResults;
   } catch (err) {
     console.log("Error", err);
-    await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
+    // await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
   } finally {
-    mySqlConnection?.end();
+    // mySqlConnection?.end();
   }
 }
 

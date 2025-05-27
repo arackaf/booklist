@@ -10,7 +10,7 @@ const client = new LambdaClient({
   region: "us-east-1"
 });
 
-const playwright: any = process.env.stage && process.env.stage !== "local" ? require("playwright-aws-lambda") : require("playwright");
+const playwright: any = require("playwright");
 
 export async function getBookRelatedItems(isbn: string, bookTitle: string) {
   const browser = await getBrowser();
@@ -26,7 +26,10 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 }
 
 export async function getBrowser() {
-  const headless = process.env.stage && process.env.stage !== "local";
+  const headless = true; // process.env.stage && process.env.stage !== "local";
+
+  console.log("playwright.launchChromium", typeof playwright.launchChromium);
+  console.log("playwright.chromium", typeof playwright.chromium?.launch);
 
   return playwright.launchChromium
     ? await playwright.launchChromium({ headless })
@@ -78,8 +81,6 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
   }
 
   const entireHtml = await page.content();
-  console.log("Entire page:");
-  console.log(entireHtml);
 
   for (let i = 1; i <= 15; i++) {
     try {
@@ -105,6 +106,11 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
       await page.waitForSelector("[data-a-carousel-options]", { timeout: 5000 });
       allCarousels = await page.locator("[data-a-carousel-options]").all();
       console.log("Second attempt found:", allCarousels.length, "carousels");
+
+      if (!allCarousels.length) {
+        console.log("Entire page:");
+        console.log(entireHtml);
+      }
     } catch (er) {
       console.log("Second attemt failed");
     }
@@ -133,7 +139,7 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
   }
 
   const allResults = [...allBookResults.values()];
-  await processImages(allResults);
+  //await processImages(allResults);
 
   return allResults;
 }

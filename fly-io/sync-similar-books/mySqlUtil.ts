@@ -1,5 +1,9 @@
 import mysql from "mysql";
-import { getSecrets } from "../util/getSecrets";
+//import { getSecrets } from "../util/getSecrets";
+
+const getSecrets = () => {
+  return {} as any;
+};
 
 export async function getMySqlConnection() {
   const secrets = await getSecrets();

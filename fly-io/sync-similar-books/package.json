@@ -9,20 +9,25 @@
     "tsc": "rm -rf build && tsc",
     "tscw": "rm -rf build && tsc -w",
     "run-local": "npm run tsc && node ./build/sync-similar-books/local",
-    "local": "npm run tsc && node ./build/sync-similar-books/local"
+    "local": "npm run tsc && node ./build/sync-similar-books/local",
+    "playwright": "npx playwright install && npx playwright install-deps",
+    "playwright-x": "npx -y playwright@1.52.0 install --with-deps"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.812.0",
+    "@aws-sdk/util-utf8": "^3.374.0",
     "dotenv": "^16.4.5",
     "mysql": "^2.18.1",
+    "npx": "^10.2.2",
     "pg": "^8.13.0",
-    "playwright": "^1.43.1",
-    "playwright-core": "^1.43.1",
-    "tsx": "^4.19.3",
+    "playwright": "^1.52.0",
+    "tsx": "^4.19.4",
     "typescript": "^5.8.2"
   },
   "devDependencies": {
-    "@types/node": "^22.13.10"
+    "@flydotio/dockerfile": "^0.7.10",
+    "@types/node": "^22.15.21"
   }
 }
