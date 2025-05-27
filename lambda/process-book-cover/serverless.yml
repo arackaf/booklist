@@ -22,7 +22,7 @@ provider:
 
 functions:
   processCover:
-    handler: ./dist/process-book-cover/index.handler
+    handler: ./dist/index.handler
 
 build:
   esbuild: false
