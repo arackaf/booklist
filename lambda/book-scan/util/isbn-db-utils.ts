@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import { toUtf8 } from "@aws-sdk/util-utf8-node";
 
 import { getOpenLibraryCoverUri } from "./bookCoverHelpers";
