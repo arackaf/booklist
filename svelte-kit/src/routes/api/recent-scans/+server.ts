@@ -24,6 +24,7 @@ export async function GET({ url, locals }) {
     getQueryPacket(`pk = :pk`, {
       ExpressionAttributeValues: { ":pk": pk },
       ExclusiveStartKey: pageKey ?? void 0,
+      ScanIndexForward: false,
       Limit: 10
     })
   );
