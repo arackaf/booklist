@@ -1,0 +1,25 @@
+service: get-recommendations
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: live
+  environment:
+    stage: ${self:provider.stage}
+    STAGE: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
+
+functions:
+  getRecommendations:
+    timeout: 10
+    handler: handler.getRecommendations
+
+package:
+  individually: true

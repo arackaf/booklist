@@ -1,0 +1,24 @@
+{
+  "name": "lambda-mongocluster-s3",
+  "version": "1.1.0",
+  "description": "Backup a MongoDB cluster database with replica set via mongodump to a S3 bucket.",
+  "main": "index.js",
+  "dependencies": {
+    "dayjs": "^1.7.8",
+    "zip-a-folder": "0.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/llangit/lambda-mongocluster-s3.git"
+  },
+  "author": "Laurent Lang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/llangit/lambda-mongocluster-s3/issues"
+  },
+  "homepage": "https://github.com/llangit/lambda-mongocluster-s3#readme"
+}

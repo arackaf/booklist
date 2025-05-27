@@ -1,0 +1,52 @@
+service: book-covers-v2
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  timeout: 30
+
+  # you can overwrite defaults here
+  stage: dev
+  #  region: us-east-1
+  environment:
+    STAGE: ${self:provider.stage}
+    stage: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+
+functions:
+  uploadFromUrl:
+    handler: handlerUrlUpload.handler
+
+  isbnDbBookCoverLookup:
+    timeout: 10
+    handler: handlerIsbnDbLookup.handler
+
+  bookRecommendationBadCoverSync:
+    timeout: 750
+    handler: handlerUpdateSimilarItemsCovers.handler
+    events:
+      - schedule: rate(24 hours)
+
+custom:
+  esbuild:
+    packager: yarn
+    bundle: true
+    minify: true
+
+package:
+  individually: true
+
+plugins:
+  - serverless-esbuild

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "module": "CommonJS",
+    "target": "es2017",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true
+  },
+  "include": ["./index.ts"],
+  "exclude": ["./node_modules/*"]
+}

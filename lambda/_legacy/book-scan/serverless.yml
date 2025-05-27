@@ -1,0 +1,101 @@
+service: book-scan
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  environment:
+    stage: ${self:provider.stage}
+    STAGE: ${self:provider.stage}
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeStream
+            - dynamodb:ConditionCheckItem
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}"
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeStream
+            - dynamodb:ConditionCheckItem
+          Resource: "arn:aws:dynamodb:*:*:table/My_Library_${self:provider.stage}/index/*"
+        - Effect: "Allow"
+          Action:
+            - "secretsmanager:GetSecretValue"
+          Resource: "arn:aws:secretsmanager:us-east-1:*"
+        - Effect: "Allow"
+          Action:
+            - "s3:*"
+          Resource: ["arn:aws:s3:::my-library-cover-upload-staging/*", "arn:aws:s3:::my-library-cover-uploads/*"]
+        - Effect: Allow
+          Action:
+            - "execute-api:ManageConnections"
+          Resource:
+            - "arn:aws:execute-api:*:*:**/@connections/*"
+
+functions:
+  connect:
+    handler: ws-connection.connect
+    events:
+      - websocket:
+          route: $connect
+
+  disconnect:
+    handler: ws-connection.disconnect
+    events:
+      - websocket:
+          route: $disconnect
+
+  sync:
+    handler: ws-connection.sync
+    events:
+      - websocket:
+          route: sync
+
+  checkScanStatus:
+    handler: handlers/getPendingScanCount.handler
+    events:
+      - http:
+          path: getScanStatus
+          method: get
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                userId: true
+                loginToken: true
+
+  scanBook:
+    handler: handlers/scanBook.handler
+    events:
+      - http:
+          path: scan
+          method: post
+          cors: true
+
+custom:
+  esbuild:
+    packager: yarn
+    bundle: true
+    minify: true
+
+package:
+  individually: true
+
+plugins:
+  - serverless-esbuild
