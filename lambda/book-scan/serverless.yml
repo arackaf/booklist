@@ -1,3 +1,5 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: arackaf
 service: book-scan-v2
 
 provider:

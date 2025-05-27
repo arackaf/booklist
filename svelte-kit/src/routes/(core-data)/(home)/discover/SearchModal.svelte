@@ -158,7 +158,7 @@
           {#if noAvailableBooks}
             <div class="flex" in:fade={{ duration: 150 }}>
               <Alert.Root>
-                <CheckIcon class="size-4 !text-green-600" />
+                <CheckIcon class="size-4 text-green-600!" />
                 <Alert.Description>You've added all of the books from this page</Alert.Description>
               </Alert.Root>
             </div>

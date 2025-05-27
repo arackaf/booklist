@@ -47,7 +47,7 @@
   </MobileMenu>
 
   <div class="pt-2" style="font-size: 11pt; position: relative">
-    <div class="flex flex-wrap gap-2 items-center" style="margin-bottom: 5px">
+    <div class="flex flex-wrap gap-2 items-center menu-bar-content pb-[5px]">
       <Button
         variant="outline"
         size="icon"
@@ -56,7 +56,7 @@
         onclick={() => (mobileMenuOpen = true)}
         data-mobile-menu
       >
-        <MenuIcon class="!w-5 !h-5" />
+        <MenuIcon class="w-5! h-5!" />
       </Button>
       {#if isPublic}
         <PublicBooksHeader />
@@ -71,7 +71,7 @@
             value={searchState.value.search}
             onblur={resetSearch}
             name="search"
-            class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:outline-none border-neutral-300"
+            class="h-8 lg:rounded-tr-none lg:rounded-br-none lg:border-r-0 focus-visible:ring-0 focus-visible:ring-transparent focus-visible:outline-none"
             placeholder="Title search"
           />
           <MenuOptionsDesktop {isPublic} />

@@ -2,7 +2,7 @@ import { getPendingCount, getStatusCountUpdate } from "../util/data-helpers";
 import { getScanItemKey } from "../util/key-helpers";
 import { sendWsMessageToUser } from "../util/ws-helpers";
 
-import { db, getPutPacket } from "../../util/dynamoHelpers";
+import { db, getPutPacket } from "../util/dynamoHelpers";
 
 export const handler = async event => {
   try {

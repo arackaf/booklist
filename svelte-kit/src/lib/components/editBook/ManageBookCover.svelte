@@ -108,7 +108,7 @@
     </div>
 
     <div class="flex-1">
-      <div class="flex">
+      <div class="flex menu-bar-content">
         <Input
           bind:value={remoteUrl}
           disabled={uploading}
@@ -116,7 +116,7 @@
           placeholder="New Cover URL"
         />
         <Button type="submit" variant="outline" size="icon" class="p-0 rounded-tl-none rounded-bl-none" disabled={!remoteUrl || uploading}>
-          <CloudUploadIcon class="!h-5 !w-5" />
+          <CloudUploadIcon class="h-5! w-5!" />
         </Button>
       </div>
     </div>

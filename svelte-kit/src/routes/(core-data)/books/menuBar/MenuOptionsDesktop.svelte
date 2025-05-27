@@ -50,48 +50,31 @@
 
 <div class="hidden lg:flex">
   {#if !selectedBooksCount}
-    <Button variant="outline" title="Filter search" onclick={openFilterModal} class="h-8 w-11 rounded-none border-r-0 border-neutral-300">
+    <Button variant="outline" title="Filter search" onclick={openFilterModal} class="h-8 w-11 rounded-none border-r-0">
       <FilterIcon />
     </Button>
     {#if !isPublic}
-      <Button
-        variant="outline"
-        title="Edit subjects and tags"
-        onclick={editSubjectsAndTags}
-        class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
-      >
+      <Button variant="outline" title="Edit subjects and tags" onclick={editSubjectsAndTags} class="h-8 w-11 rounded-none border-r-0">
         <TagIcon />
       </Button>
     {/if}
 
     <form method="POST" action="?/reloadBooks" use:enhance={reload}>
-      <Button variant="outline" class="h-8 w-11 rounded-l-none border-neutral-300" type="submit" disabled={reloading}>
+      <Button variant="outline" class="h-8 w-11 rounded-l-none" type="submit" disabled={reloading}>
         <RefreshCwIcon class={cn({ "animate-spin": reloading })} />
       </Button>
     </form>
   {:else if !isPublic}
-    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0 border-neutral-300" title="Add/remove subjects" onclick={editBooksSubjectsTags}>
+    <Button variant="outline" class="h-8 w-11 rounded-none border-r-0" title="Add/remove subjects" onclick={editBooksSubjectsTags}>
       <TagIcon />
     </Button>
     <BookReadSetter ids={selectedBooksIds} value={true} bind:saving={bulkReadSaving}>
-      <Button
-        type="submit"
-        variant="outline"
-        class="h-8 w-11 rounded-none border-r-0 border-neutral-300"
-        title="Set read"
-        disabled={bulkReadSaving || bulkUnReadSaving}
-      >
+      <Button type="submit" variant="outline" class="h-8 w-11 rounded-none border-r-0" title="Set read" disabled={bulkReadSaving || bulkUnReadSaving}>
         <BookCheckIcon />
       </Button>
     </BookReadSetter>
     <BookReadSetter ids={selectedBooksIds} value={false} bind:saving={bulkUnReadSaving}>
-      <Button
-        type="submit"
-        variant="outline"
-        class="h-8 w-11 rounded-l-none border-neutral-300"
-        title="Set un-read"
-        disabled={bulkReadSaving || bulkUnReadSaving}
-      >
+      <Button type="submit" variant="outline" class="h-8 w-11 rounded-l-none" title="Set un-read" disabled={bulkReadSaving || bulkUnReadSaving}>
         <BookXIcon />
       </Button>
     </BookReadSetter>
