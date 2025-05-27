@@ -1,5 +1,5 @@
 import { getWsSessionKey, WebSocketMessenger } from "./util/ws-helpers";
-import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo, getPutPacket } from "../util/dynamoHelpers";
+import { db, getGetPacket, getUpdatePacket, TABLE_NAME, dynamo, getPutPacket } from "./util/dynamoHelpers";
 
 export const connect = async event => {
   const connectionId = event.requestContext.connectionId;
