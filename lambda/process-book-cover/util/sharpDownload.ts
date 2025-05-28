@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 export const sharpDownload = async (url: string) => {
   try {
     const result = await fetch(url);
