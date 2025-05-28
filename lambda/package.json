@@ -1,0 +1,44 @@
+{
+  "name": "book-covers",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install-deps": "npm i && SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm i --arch=x64 --platform=linux sharp"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.264.0",
+    "@aws-sdk/client-dynamodb": "^3.264.0",
+    "@aws-sdk/client-lambda": "^3.264.0",
+    "@aws-sdk/client-s3": "^3.264.0",
+    "@aws-sdk/client-secrets-manager": "^3.264.0",
+    "@aws-sdk/lib-dynamodb": "^3.264.0",
+    "@aws-sdk/util-utf8-node": "^3.259.0",
+    "@planetscale/database": "^1.5.0",
+    "aws-sdk": "2.1120.0",
+    "blurhash": "^1.1.5",
+    "del": "^6.0.0",
+    "dlv": "1.1.3",
+    "jimp": "0.16.1",
+    "lambda-multipart-parser": "0.0.2",
+    "lodash.orderby": "^4.6.0",
+    "mongodb": "^4.2.0",
+    "node-fetch": "^3.1.0",
+    "node-html-parser": "^6.1.5",
+    "plaiceholder": "^2.5.0",
+    "playwright": "^1.31.2",
+    "serverless": "^4.4.5",
+    "sharp": "^0.31.3",
+    "ulid": "^2.3.0",
+    "uuid": "7.0.3",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "serverless-esbuild": "^1.52.1",
+    "serverless-plugin-ifelse": "^1.0.7",
+    "typescript": "^4.9.5"
+  }
+}
