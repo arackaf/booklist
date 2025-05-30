@@ -1,7 +1,7 @@
 import { Page } from "playwright-core";
 import { isbn13To10 } from "./isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser, getPage } from "./scrape";
+import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
 export const syncBook = async ({ id }) => {
@@ -26,7 +26,8 @@ export const localSync = async () => {
   let captchaDone = true;
   try {
     let book;
-    book = { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" };
+    // book = { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" };
+    book = { id: 1, title: "Building Microservices: Designing Fine-Grained Systems", isbn: "1492034029" };
     // book = await getNextBookToSync();
 
     if (!book) {
@@ -37,7 +38,7 @@ export const localSync = async () => {
 
     console.log("Got browser");
 
-    page = await getPage(browser);
+    //page = await getPage(browser);
 
     while (book) {
       await doSync(book, page, captchaDone);
@@ -93,7 +94,7 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
       await new Promise(res => setTimeout(res, 10000));
     }
     // this is absolutely awful but I don't have time to make it less so
-    const allResults = page ? await doScrape(page, isbn, title, captchaDone) : await getBookRelatedItems(isbn, title);
+    const allResults = page ? null /*await doScrape(page, isbn, title, captchaDone)*/ : await getBookRelatedItems(isbn, title);
 
     if (!allResults || !allResults.length) {
       // await bookSyncFailure(mySqlConnection, id, "No results");

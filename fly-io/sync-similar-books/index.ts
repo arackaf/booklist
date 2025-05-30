@@ -1,7 +1,5 @@
-import { config } from "dotenv";
+import "./config";
 import { localSync } from "./sync";
-
-config();
 
 Promise.resolve(localSync()).then(() => {
   console.log("Done");

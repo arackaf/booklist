@@ -32,3 +32,4 @@ lambda/sync-similar-books/build
 lambda/my-library-pg-backup/secrets.yml
 lambda/sync-similar-books/.env.local
 lambda/sync-similar-books/.env.prod
+.env.*
