@@ -1,6 +1,5 @@
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
-import type { Page } from "playwright";
 import puppeteer, { type Browser, type ElementHandle } from "puppeteer-core";
 
 // aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
@@ -280,80 +279,5 @@ async function getAuthor(card: ElementHandle<HTMLLIElement>) {
   const author = await card.$$(".a-size-small");
   for (const a of author) {
     return a.evaluate(el => el.textContent);
-  }
-}
-
-export async function getAuthorFromBookPage(isbn: string) {
-  const REAL_BROWSER = false;
-
-  const browser = process.env.stage
-    ? await playwright.launchChromium({
-        headless: !REAL_BROWSER
-      })
-    : await playwright.chromium.launch({
-        headless: !REAL_BROWSER
-      });
-  try {
-    const page: Page = await browser.newPage({
-      userAgent: "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
-      extraHTTPHeaders: {
-        accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "accept-encoding": "gzip, deflate, br",
-        "accept-language": "en",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
-      }
-    });
-
-    await page.goto(`https://www.amazon.com/dp/${isbn}`, {});
-    await wait(4000);
-    const robot = await page.getByText("Sorry, we just need to make sure you're not a robot").all();
-
-    if (robot.length) {
-      console.log("ROBOT");
-      return -1;
-    }
-
-    const title = await page.title();
-    if (/page not found/i.test(title)) {
-      console.log("Page not found when syncing author");
-      return null;
-    }
-
-    const allAuthorElements = await page.$$("span.author");
-
-    for (const author of allAuthorElements) {
-      console.log("Author Element");
-      const innerHtml = await author.innerHTML();
-      console.log("Author Element innerHTML", innerHtml);
-
-      const totalText = await author.innerText();
-      console.log({ totalText });
-      let anchors = await author.$$("a.contributorNameID");
-
-      console.log({ anchors_length: anchors.length });
-
-      if (!anchors.length) {
-        console.log("Nothing with 'contributorNameID' found, settling for regular anchors");
-        anchors = await author.$$("a");
-      }
-
-      for (const anchor of anchors) {
-        const text = await anchor.innerText();
-        console.log({ text });
-        if (text && text.length) {
-          console.log("================================");
-          console.log("Returning:", `'${text.trim()}'`);
-          console.log("================================");
-          return text.trim();
-        }
-      }
-
-      console.log("----------");
-    }
-  } catch (er) {
-    console.log("Error", er);
-  } finally {
-    await browser?.close();
   }
 }

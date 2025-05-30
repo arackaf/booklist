@@ -1,7 +1,7 @@
 import { Page } from "playwright-core";
 import { isbn13To10 } from "./isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser } from "./scrape";
+import { doScrape, getBookRelatedItems, getBrowser } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
 export const syncBook = async ({ id }) => {
@@ -116,54 +116,5 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
     // await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
   } finally {
     // mySqlConnection?.end();
-  }
-}
-
-export async function doSyncAuthor() {
-  const mySqlConnection = await getMySqlConnection();
-  const [book] = await query<any>(
-    mySqlConnection,
-    `
-    SELECT id, isbn, title 
-    FROM similar_books
-    WHERE 
-      (authorsLastManualSync IS NULL OR DATEDIFF(NOW(), authorsLastManualSync) > 60) 
-      AND 
-      (authors IS NULL OR (json_contains(authors, json_array(), '$') AND json_length(authors, '$') = 0)) 
-    ORDER BY id 
-    LIMIT 1
-  `
-  );
-
-  let { id, isbn, title } = book;
-  console.log({ id, isbn, title });
-  try {
-    if (isbn.length === 13) {
-      isbn = isbn13To10(isbn);
-      if (isbn == null) {
-        console.log("Bad isbn");
-        return;
-      }
-    }
-
-    const author = await getAuthorFromBookPage(isbn);
-
-    try {
-      await query<any>(
-        mySqlConnection,
-        `
-          UPDATE similar_books
-          SET authors = ?, authorsLastManualSync = ?
-          WHERE id = ?
-          `,
-        [JSON.stringify([author || "<>"]), new Date(), id]
-      );
-      console.log("Updated", id, " - ", title, "with", author);
-    } catch (er) {
-      console.log("Error", er);
-    }
-  } catch (err) {
-  } finally {
-    mySqlConnection?.end();
   }
 }
