@@ -320,7 +320,7 @@ export async function getAuthorFromBookPage(isbn: string) {
       return null;
     }
 
-    const allAuthorElements = await page.locator("span.author").all();
+    const allAuthorElements = await page.$$("span.author");
 
     for (const author of allAuthorElements) {
       console.log("Author Element");
@@ -329,13 +329,13 @@ export async function getAuthorFromBookPage(isbn: string) {
 
       const totalText = await author.innerText();
       console.log({ totalText });
-      let anchors = await author.locator("a.contributorNameID").all();
+      let anchors = await author.$$("a.contributorNameID");
 
       console.log({ anchors_length: anchors.length });
 
       if (!anchors.length) {
         console.log("Nothing with 'contributorNameID' found, settling for regular anchors");
-        anchors = await author.locator("a").all();
+        anchors = await author.$$("a");
       }
 
       for (const anchor of anchors) {
