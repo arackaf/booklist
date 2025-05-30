@@ -29,13 +29,10 @@ function wait(ms: number) {
 }
 
 export async function doScrape(page: Page, isbn: string, bookTitle: string, capctaDone: boolean = false) {
-  console.log("Original title", bookTitle);
   const titleForUrl = bookTitle
     .replace(/\//g, "")
     .replace(/\s+/g, "-")
     .replace(/[^(\w-)]/g, "");
-
-  console.log("Title for url", titleForUrl);
 
   const urlToUse = `https://www.amazon.com/${titleForUrl}/dp/${isbn}`;
   console.log("Attempting url", urlToUse);
