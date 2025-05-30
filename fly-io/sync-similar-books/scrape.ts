@@ -100,8 +100,7 @@ export async function doScrape(browser: Browser, isbn: string, bookTitle: string
       await wait(500);
       let allCarousels = await page.$$("[data-a-carousel-options]");
       console.log("Scroll", i, "carousels found", allCarousels.length);
-      if (allCarousels.length) {
-        console.log("Breaking");
+      if (i >= 4 && allCarousels.length) {
         break;
       }
     } catch (er) {
@@ -229,7 +228,6 @@ async function getBookInfo(card: ElementHandle<HTMLLIElement>) {
   } else {
     const author = await getAuthor(card);
     if (author) {
-      console.log("Found author", author);
       return { ...coreBookData, author };
     } else {
       console.log("No author found");
@@ -255,7 +253,6 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
         if (isbnMaybe.length >= 10 && [...isbnMaybe.slice(0, 9)].every(c => !isNaN(c as any))) {
           if (!isbn) {
             isbn = isbnMaybe;
-            console.log("Found isbn", isbn);
           } else if (isbn !== isbnMaybe) {
             continue;
           }
@@ -275,9 +272,9 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
       }
     }
   }
-  console.log("Results found", { isbn, title, img });
-  if (isbn && title && img) {
-    return { isbn: isbn.toUpperCase(), title: title.trim(), img };
+  if (isbn && title && img && title != "Shop the Store on Amazon") {
+    console.log("Results found", { isbn, title, img });
+    return { isbn: isbn.toUpperCase(), title: title.trim() };
   }
 }
 
