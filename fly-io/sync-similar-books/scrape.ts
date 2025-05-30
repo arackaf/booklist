@@ -2,7 +2,6 @@ import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import playwright from "playwright";
 import puppeteer, { Page, type Browser, type ElementHandle } from "puppeteer-core";
-import { v4 as uuidv4 } from "uuid";
 
 // aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
 // https://www.amazon.com/Programming-TypeScript-Making-JavaScript-Applications/dp/1492037656/ref=sr_1_5?crid=1EYSNI5TQD8HI&keywords=typescript&qid=1655178647&sprefix=ty%2Caps%2C517&sr=8-5
@@ -16,37 +15,6 @@ const client = new LambdaClient({
   region: "us-east-1"
 });
 
-export async function getBrowser() {
-  // const headless = true;
-  // return playwright.chromium.launch({
-  //   headless
-  // }) as any as Browser;
-
-  const browser = await puppeteer.connect({
-    // browserWSEndpoint: `${BRIGHT_DATA_URL}`
-    browserWSEndpoint: `${BRIGHT_DATA_URL}?session=${uuidv4()}`
-  });
-
-  return browser;
-}
-
-export async function getPuppeteerPage(browser: Browser) {
-  const page = await browser.newPage();
-  if (true) {
-    await page.setRequestInterception(true);
-    page.on("request", req => {
-      const blockedResourceTypes = ["image", "stylesheet", "media", "font"];
-      if (blockedResourceTypes.includes(req.resourceType())) {
-        req.abort();
-      } else {
-        req.continue();
-      }
-    });
-  }
-
-  return page;
-}
-
 export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: string) {
   try {
     //const page = await getPage(browser);
@@ -55,21 +23,6 @@ export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: s
     console.log("Error", er);
   }
 }
-
-// export async function getPage(browser: Browser) {
-//   return browser.newPage({
-//     extraHTTPHeaders: {
-//       "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-//       accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-//       "sec-fetch-site": "same-origin",
-//       "sec-fetch-mode": "navigate",
-//       "sec-fetch-user": "?1",
-//       "sec-fetch-dest": "document",
-//       referer: "https://www.amazon.com/",
-//       "accept-language": "en-GB,en-US;q=0.9,en;q=0.8"
-//     }
-//   });
-// }
 
 function wait(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

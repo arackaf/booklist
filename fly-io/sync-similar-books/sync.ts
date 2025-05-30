@@ -1,8 +1,9 @@
 import { Browser, Page } from "puppeteer-core";
 import { isbn13To10 } from "./isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { doScrape, getBookRelatedItems, getBrowser, getPuppeteerPage } from "./scrape";
+import { doScrape, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
+import { init } from "./setup";
 
 const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -24,25 +25,15 @@ export const localSync = async () => {
     console.log("Got browser");
 
     for (const book of books) {
-      const browser = await getBrowser();
-      const page = await getPuppeteerPage(browser);
+      const { page, dispose } = await init("puppeteer");
 
       await doSync(book, page, captchaDone);
       await new Promise(res => setTimeout(res, 2000));
 
       captchaDone = true;
 
-      try {
-        await page?.close();
-      } catch (er) {}
-      try {
-        await browser?.close();
-      } catch (er) {}
-      try {
-        await browser?.disconnect();
-      } catch (er) {}
-
       await wait(5000);
+      await dispose();
     }
   } catch (er) {
     console.log("Error: ", er);
