@@ -1,5 +1,6 @@
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
+import playwright from "playwright";
 import puppeteer, { Page, type Browser, type ElementHandle } from "puppeteer-core";
 import { v4 as uuidv4 } from "uuid";
 
@@ -111,8 +112,8 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
       await page.evaluate(scrollAmount => window.scrollTo(0, scrollAmount), scrollAmount);
       await wait(500);
       let allCarousels = await page.$$("[data-a-carousel-options]");
-      console.log("Scroll", i, "carousels found", allCarousels.length);
       if (i >= 4 && allCarousels.length) {
+        console.log("Scroll", i, "carousels found", allCarousels.length);
         break;
       }
     } catch (er) {
@@ -149,8 +150,10 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
       console.log("No carousel heading found");
       continue;
     } else {
+      const headerText = (await headerEl.evaluate(el => el.textContent)).replace(/\n/g, " ");
+      console.log("Processing carousel", headerText);
       const results = await processCarousel(carousel);
-      console.log("Found", results.length, "in", (await headerEl.evaluate(el => el.textContent)).replace(/\n/g, " "));
+      console.log("Found", results.length, "in", headerText);
 
       for (const book of results) {
         if (!allBookResults.has(book.isbn)) {
@@ -209,10 +212,14 @@ async function processCarousel(carousel: ElementHandle<Element>) {
     }
     page++;
     console.log("Clicking to next page", page);
-    // needed for use with Playwright - harmless in Puppeteer
-    // @ts-ignore
-    await nextPageLink.click({ force: true });
-    await wait(5000);
+    try {
+      // needed for use with Playwright - harmless in Puppeteer
+      // @ts-ignore
+      await nextPageLink.click({ force: true });
+      await wait(5000);
+    } catch (er) {
+      console.log("Error clicking to next page", er);
+    }
   } while (page <= 6);
 
   return results;
@@ -285,7 +292,7 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
     }
   }
   if (isbn && title && img && title != "Shop the Store on Amazon") {
-    console.log("Results found", { isbn, title, img });
+    console.log("Found", isbn, " - ", title);
     return { isbn: isbn.toUpperCase(), title: title.trim() };
   }
 }
