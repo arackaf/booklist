@@ -1,6 +1,7 @@
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import puppeteer, { type Browser, type ElementHandle } from "puppeteer-core";
+import playwright from "playwright";
 
 // aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
 
@@ -14,8 +15,6 @@ const BRIGHT_DATA_URL = `wss://${BD_ZONE}:${BD_KEY}@brd.superproxy.io:9222`;
 const client = new LambdaClient({
   region: "us-east-1"
 });
-
-const playwright: any = require("playwright");
 
 export async function getBookRelatedItems(isbn: string, bookTitle: string) {
   const browser = await getBrowser();
@@ -31,6 +30,11 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 }
 
 export async function getBrowser() {
+  const headless = true;
+  return playwright.chromium.launch({
+    headless
+  }) as any as Browser;
+
   const browser = await puppeteer.connect({
     browserWSEndpoint: BRIGHT_DATA_URL
   });
@@ -194,7 +198,9 @@ async function processCarousel(carousel: ElementHandle<Element>) {
     }
     page++;
     console.log("Clicking to next page", page);
-    await nextPageLink.click();
+    // needed for use with Playwright - harmless in Puppeteer
+    // @ts-ignore
+    await nextPageLink.click({ force: true });
     await wait(5000);
   } while (page <= 6);
 
