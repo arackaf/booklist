@@ -30,10 +30,10 @@ export async function getBookRelatedItems(isbn: string, bookTitle: string) {
 }
 
 export async function getBrowser() {
-  const headless = true;
-  return playwright.chromium.launch({
-    headless
-  }) as any as Browser;
+  // const headless = true;
+  // return playwright.chromium.launch({
+  //   headless
+  // }) as any as Browser;
 
   const browser = await puppeteer.connect({
     browserWSEndpoint: BRIGHT_DATA_URL
