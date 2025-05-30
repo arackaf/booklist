@@ -135,7 +135,7 @@ export async function doScrape(browser: Browser, isbn: string, bookTitle: string
       console.log("No carousel heading found");
       continue;
     } else {
-      const results = await processCarousel(page, carousel);
+      const results = await processCarousel(carousel);
       console.log("Found", results.length, "in", (await headerEl.evaluate(el => el.textContent)).replace(/\n/g, " "));
 
       for (const book of results) {
@@ -178,22 +178,26 @@ async function processImages(books: any[]) {
   }
 }
 
-async function processCarousel(page, carousel: ElementHandle<Element>) {
-  const results = await getResults(carousel);
-
-  if (results.length) {
-    const nextPage = await carousel.$("a.a-carousel-goto-nextpage");
-    console.log("Next page button found", { nextPage });
-    if (nextPage) {
-      console.log("Clicking to next page");
-      await nextPage.click();
-      await wait(5000);
-
-      console.log("Getting results from next page");
-      const page2 = await getResults(carousel);
-      results.push(...page2);
+async function processCarousel(carousel: ElementHandle<Element>) {
+  let page = 1;
+  let results = [];
+  do {
+    let currentPage = await getResults(carousel);
+    if (!currentPage.length) {
+      break;
     }
-  }
+    results.push(...currentPage);
+
+    const nextPageLink = await carousel.$("a.a-carousel-goto-nextpage");
+    if (!nextPageLink) {
+      console.log("Page", page, "was the last page found");
+      break;
+    }
+    page++;
+    console.log("Clicking to next page", page);
+    await nextPageLink.click();
+    await wait(5000);
+  } while (page <= 6);
 
   return results;
 }
