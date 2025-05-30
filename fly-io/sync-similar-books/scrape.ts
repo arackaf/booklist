@@ -1,10 +1,9 @@
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
-import puppeteer, { type Browser, type ElementHandle } from "puppeteer-core";
-import playwright from "playwright";
+import puppeteer, { Page, type Browser, type ElementHandle } from "puppeteer-core";
+import { v4 as uuidv4 } from "uuid";
 
 // aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
-
 // https://www.amazon.com/Programming-TypeScript-Making-JavaScript-Applications/dp/1492037656/ref=sr_1_5?crid=1EYSNI5TQD8HI&keywords=typescript&qid=1655178647&sprefix=ty%2Caps%2C517&sr=8-5
 
 const BD_ZONE = process.env.BRIGHT_DATA_ZONE;
@@ -16,19 +15,6 @@ const client = new LambdaClient({
   region: "us-east-1"
 });
 
-export async function getBookRelatedItems(isbn: string, bookTitle: string) {
-  const browser = await getBrowser();
-
-  try {
-    //const page = await getPage(browser);
-    return await doScrape(browser, isbn, bookTitle);
-  } catch (er) {
-    console.log("Error", er);
-  } finally {
-    await browser?.close();
-  }
-}
-
 export async function getBrowser() {
   // const headless = true;
   // return playwright.chromium.launch({
@@ -36,10 +22,37 @@ export async function getBrowser() {
   // }) as any as Browser;
 
   const browser = await puppeteer.connect({
-    browserWSEndpoint: BRIGHT_DATA_URL
+    // browserWSEndpoint: `${BRIGHT_DATA_URL}`
+    browserWSEndpoint: `${BRIGHT_DATA_URL}?session=${uuidv4()}`
   });
 
   return browser;
+}
+
+export async function getPuppeteerPage(browser: Browser) {
+  const page = await browser.newPage();
+  if (true) {
+    await page.setRequestInterception(true);
+    page.on("request", req => {
+      const blockedResourceTypes = ["image", "stylesheet", "media", "font"];
+      if (blockedResourceTypes.includes(req.resourceType())) {
+        req.abort();
+      } else {
+        req.continue();
+      }
+    });
+  }
+
+  return page;
+}
+
+export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: string) {
+  try {
+    //const page = await getPage(browser);
+    return await doScrape(page, isbn, bookTitle);
+  } catch (er) {
+    console.log("Error", er);
+  }
 }
 
 // export async function getPage(browser: Browser) {
@@ -61,7 +74,7 @@ function wait(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function doScrape(browser: Browser, isbn: string, bookTitle: string, capctaDone: boolean = false) {
+export async function doScrape(page: Page, isbn: string, bookTitle: string, capctaDone: boolean = false) {
   console.log("Original title", bookTitle);
   const titleForUrl = bookTitle
     .replace(/\//g, "")
@@ -73,7 +86,6 @@ export async function doScrape(browser: Browser, isbn: string, bookTitle: string
   const urlToUse = `https://www.amazon.com/${titleForUrl}/dp/${isbn}`;
   console.log("Attempting url", urlToUse);
 
-  const page = await browser.newPage();
   await page.goto(urlToUse, { waitUntil: "domcontentloaded", timeout: 60000 });
 
   await wait(100);

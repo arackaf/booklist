@@ -1,80 +1,55 @@
-import { Page } from "playwright-core";
+import { Browser, Page } from "puppeteer-core";
 import { isbn13To10 } from "./isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { doScrape, getBookRelatedItems, getBrowser } from "./scrape";
+import { doScrape, getBookRelatedItems, getBrowser, getPuppeteerPage } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 
-export const syncBook = async ({ id }) => {
-  console.log("Id sent", id);
-  const book = await getBook(id);
-
-  console.log("book found", { book });
-  if (book) {
-    try {
-      await doSync(book);
-      console.log("Done with sync");
-    } catch (er) {
-      console.log("Error", er);
-    }
-  }
-};
+const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export const localSync = async () => {
   console.log("Starting sync");
-  let browser: any;
-  let page: Page;
   let captchaDone = true;
   try {
-    let book;
-    // book = { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" };
-    book = { id: 1, title: "Building Microservices: Designing Fine-Grained Systems", isbn: "1492034029" };
-    // book = await getNextBookToSync();
-
-    if (!book) {
-      return;
-    }
-
-    browser = await getBrowser();
+    let books = [
+      { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" },
+      { id: 2, title: "Building Microservices: Designing Fine-Grained Systems", isbn: "1492034029" },
+      {
+        id: 3,
+        title: "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems",
+        isbn: "1449373321"
+      },
+      { id: 4, title: "Fundamentals of Data Engineering: Plan and Build Robust Data Systems", isbn: "1098108302" }
+    ];
 
     console.log("Got browser");
 
-    //page = await getPage(browser);
+    for (const book of books) {
+      const browser = await getBrowser();
+      const page = await getPuppeteerPage(browser);
 
-    while (book) {
       await doSync(book, page, captchaDone);
-      await new Promise(res => setTimeout(res, 4000));
-      book = null;
-      // book = await getNextBookToSync();
+      await new Promise(res => setTimeout(res, 2000));
+
       captchaDone = true;
+
+      try {
+        await page?.close();
+      } catch (er) {}
+      try {
+        await browser?.close();
+      } catch (er) {}
+      try {
+        await browser?.disconnect();
+      } catch (er) {}
+
+      await wait(5000);
     }
-  } catch (er) {
-    console.log("Error: ", er);
-  } finally {
-    try {
-      await page?.close();
-    } catch (er) {}
-    try {
-      await browser?.close();
-    } catch (er) {}
-  }
-};
-
-export const syncNextBook = async () => {
-  try {
-    const book = await getNextBookToSync();
-
-    if (!book) {
-      console.log("No books pending sync found");
-      return;
-    }
-
-    await doSync(book);
   } catch (er) {
     console.log("Error: ", er);
   }
 };
 
-async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
+async function doSync(book: any, page: Page, captchaDone: boolean = false) {
   // const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
@@ -94,7 +69,7 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
       await new Promise(res => setTimeout(res, 10000));
     }
     // this is absolutely awful but I don't have time to make it less so
-    const allResults = page ? null /*await doScrape(page, isbn, title, captchaDone)*/ : await getBookRelatedItems(isbn, title);
+    const allResults = await getBookRelatedItems(page, isbn, title);
 
     if (!allResults || !allResults.length) {
       // await bookSyncFailure(mySqlConnection, id, "No results");
