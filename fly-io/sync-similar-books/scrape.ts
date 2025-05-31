@@ -93,23 +93,26 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
 
   for (const carousel of allCarousels) {
     console.log("Processing carousel");
+    try {
+      const headerEl = await carousel.$(".a-carousel-heading");
 
-    const headerEl = await carousel.$(".a-carousel-heading");
+      if (headerEl == null) {
+        console.log("No carousel heading found");
+        continue;
+      } else {
+        const headerText = (await headerEl.evaluate(el => el.textContent)).replace(/\n/g, " ");
+        console.log("Processing carousel", headerText);
+        const results = await processCarousel(carousel);
+        console.log("Found", results.length, "in", headerText);
 
-    if (headerEl == null) {
-      console.log("No carousel heading found");
-      continue;
-    } else {
-      const headerText = (await headerEl.evaluate(el => el.textContent)).replace(/\n/g, " ");
-      console.log("Processing carousel", headerText);
-      const results = await processCarousel(carousel);
-      console.log("Found", results.length, "in", headerText);
-
-      for (const book of results) {
-        if (!allBookResults.has(book.isbn)) {
-          allBookResults.set(book.isbn, book);
+        for (const book of results) {
+          if (!allBookResults.has(book.isbn)) {
+            allBookResults.set(book.isbn, book);
+          }
         }
       }
+    } catch (er) {
+      console.log("Error processing carousel", er);
     }
   }
 
@@ -178,14 +181,17 @@ async function processCarousel(carousel: ElementHandle<Element>) {
 async function getResults(carousel: ElementHandle<Element>) {
   const resultsMap = new Map();
 
-  const cards = await carousel.$$("li.a-carousel-card");
+  let cards: any[];
+  do {
+    cards = await carousel.$$("li.a-carousel-card");
 
-  for (const card of cards) {
-    const bookInfo = await getBookInfo(card);
-    if (bookInfo && !resultsMap.get(bookInfo.isbn)) {
-      resultsMap.set(bookInfo.isbn, bookInfo);
+    for (const card of cards) {
+      const bookInfo = await getBookInfo(card);
+      if (bookInfo && !resultsMap.get(bookInfo.isbn)) {
+        resultsMap.set(bookInfo.isbn, bookInfo);
+      }
     }
-  }
+  } while (!cards.length && i++ < 2);
 
   return [...resultsMap.values()];
 }
@@ -243,13 +249,49 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
   }
   if (isbn && title && img && title != "Shop the Store on Amazon") {
     console.log("Found", isbn, " - ", title);
-    return { isbn: isbn.toUpperCase(), title: title.trim() };
+    return { isbn: isbn.toUpperCase(), title: title.trim(), img };
+  }
+
+  const sponsoredData = await card.$("[data-adfeedbackdetails]");
+  if (sponsoredData) {
+    const sponsoredDataText = await sponsoredData.evaluate(el => el.getAttribute("data-adfeedbackdetails"));
+    if (!sponsoredDataText) {
+      console.log("No sponsored data found");
+      return null;
+    }
+
+    try {
+      const sponsoredDataJson = JSON.parse(sponsoredDataText);
+      title = sponsoredDataJson.title;
+      isbn = sponsoredDataJson.isbn || sponsoredDataJson.asin;
+    } catch (er) {
+      console.log("Error parsing sponsored data", er);
+    }
+
+    if (!isbn) {
+      console.log("No title or ISBN found in sponsored data");
+      return null;
+    }
+
+    const img = await card.$("a img");
+    if (!img) {
+      console.log("No image found in sponsored data");
+      return null;
+    }
+    if (!title) {
+      title = await img.evaluate(el => el.getAttribute("alt"));
+    }
+    const src = await img.evaluate(el => el.getAttribute("src"));
+    if (!src) {
+      console.log("No image source found in sponsored data");
+    }
+    return { isbn: isbn.toUpperCase(), title: title.trim(), img };
   }
 }
 
 async function getAuthor(card: ElementHandle<HTMLLIElement>) {
   const author = await card.$$(".a-size-small");
   for (const a of author) {
-    return a.evaluate(el => el.textContent);
+    return a.evaluate(el => el.textContent.trim());
   }
 }

@@ -4,8 +4,22 @@ import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUt
 import { doScrape, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
 import { init } from "./setup";
+import readline from "readline";
 
 const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+function waitForKeypress() {
+  return new Promise(resolve => {
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.once("data", () => {
+      process.stdin.setRawMode(false);
+      process.stdin.pause();
+      resolve(null);
+    });
+  });
+}
 
 export const localSync = async () => {
   console.log("Starting sync");
@@ -24,17 +38,18 @@ export const localSync = async () => {
 
     console.log("Got browser");
 
+    const { page, dispose } = await init("playwright");
     for (const book of books) {
-      const { page, dispose } = await init("puppeteer");
-
       await doSync(book, page, captchaDone);
       await new Promise(res => setTimeout(res, 2000));
 
       captchaDone = true;
 
+      console.log("Press any key to continue");
+      await waitForKeypress();
       await wait(5000);
-      await dispose();
     }
+    await dispose();
   } catch (er) {
     console.log("Error: ", er);
   }
