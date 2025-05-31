@@ -56,6 +56,29 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
     return null;
   }
 
+  let averageRating: string | number = "";
+  let reviewCount: string | number = "";
+
+  const ratingsElement = await page.$("#averageCustomerReviews");
+  if (ratingsElement) {
+    const reviewAverageParentEl = await ratingsElement.$("a.a-popover-trigger");
+    if (reviewAverageParentEl) {
+      const reviewAverageEl = await reviewAverageParentEl.$(":scope > span");
+      if (reviewAverageEl) {
+        averageRating = await reviewAverageEl.evaluate(el => el.textContent);
+        const reviewCountEl = await ratingsElement.$("#acrCustomerReviewLink > span");
+        if (reviewCountEl) {
+          reviewCount = await reviewCountEl.evaluate(el => el.textContent.replace(/\(|\)/g, "").trim());
+        }
+      }
+    }
+  }
+
+  if (averageRating && reviewCount) {
+    averageRating = parseFloat(averageRating);
+    reviewCount = parseInt(reviewCount);
+  }
+
   for (let i = 1; i <= 15; i++) {
     try {
       const scrollAmount = i * 300;
@@ -116,10 +139,10 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
     }
   }
 
-  const allResults = [...allBookResults.values()];
+  const similarItems = [...allBookResults.values()];
   //await processImages(allResults);
 
-  return allResults;
+  return { similarItems, averageRating, reviewCount };
 }
 
 async function processImages(books: any[]) {

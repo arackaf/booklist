@@ -76,21 +76,16 @@ async function doSync(book: any, page: Page, captchaDone: boolean = false) {
     }
     // this is absolutely awful but I don't have time to make it less so
     const allResults = await getBookRelatedItems(page, isbn, title);
+    const { averageRating, reviewCount, similarItems } = allResults;
 
-    if (!allResults || !allResults.length) {
+    if (!similarItems || !similarItems.length) {
       // await bookSyncFailure(mySqlConnection, id, "No results");
       console.log("Sync complete for", id, title, "No results found");
       return;
     } else {
       // await bookSyncSuccess(mySqlConnection, id, allResults);
     }
-    console.log(
-      "Sync complete for",
-      id,
-      title,
-      "similar books found",
-      allResults.map(b => b.title)
-    );
+    console.log("Sync complete for", id, title, { averageRating, reviewCount, similarItems: similarItems.map(b => b.title) });
     return allResults;
   } catch (err) {
     console.log("Error", err);
