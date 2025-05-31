@@ -33,7 +33,7 @@ async function getPuppeteerPage(browser: Browser) {
 }
 
 async function getPlaywrightBrowser() {
-  const headless = true;
+  const headless = false;
   return playwright.chromium.launch({
     headless
   }) as any as Browser;

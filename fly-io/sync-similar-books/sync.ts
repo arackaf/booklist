@@ -45,8 +45,8 @@ export const localSync = async () => {
 
       captchaDone = true;
 
-      console.log("Press any key to continue");
-      await waitForKeypress();
+      // console.log("Press any key to continue");
+      // await waitForKeypress();
       await wait(5000);
     }
     await dispose();
