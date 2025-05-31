@@ -191,7 +191,7 @@ async function getResults(carousel: ElementHandle<Element>) {
         resultsMap.set(bookInfo.isbn, bookInfo);
       }
     }
-  } while (!cards.length && i++ < 2);
+  } while (!cards.length);
 
   return [...resultsMap.values()];
 }
@@ -256,9 +256,9 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
   if (sponsoredData) {
     const sponsoredDataText = await sponsoredData.evaluate(el => el.getAttribute("data-adfeedbackdetails"));
     if (!sponsoredDataText) {
-      console.log("No sponsored data found");
       return null;
     }
+    console.log("Sponsored Data Found");
 
     try {
       const sponsoredDataJson = JSON.parse(sponsoredDataText);
@@ -285,6 +285,7 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
     if (!src) {
       console.log("No image source found in sponsored data");
     }
+    console.log("Found", isbn, " - ", title);
     return { isbn: isbn.toUpperCase(), title: title.trim(), img };
   }
 }
