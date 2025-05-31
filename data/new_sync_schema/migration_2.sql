@@ -1,0 +1,1 @@
+ALTER TABLE similar_books ADD COLUMN unprocessed_image VARCHAR;

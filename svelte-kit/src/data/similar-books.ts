@@ -35,7 +35,7 @@ export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: Query
     );
   }
 
-  const { id, title, authors, isbn, smallImage, smallImagePreview, similarBooks } = getTableColumns(booksTable);
+  const { id, title, authors, isbn, smallImage, smallImagePreview, similarBooks, lastAmazonSync } = getTableColumns(booksTable);
   const eligibleBooks = await executeDrizzle(
     "books that might have similar books",
     db
@@ -47,7 +47,7 @@ export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: Query
         smallImage,
         smallImagePreview,
         similarBooks,
-        similarBooksLastSync: sql<string>`TO_CHAR(${booksTable.similarBooksLastSync} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')`,
+        lastAmazonSync,
         similarBooksLastSyncDisplay: sql<string>`''`
       })
       .from(booksTable)
@@ -68,13 +68,7 @@ export const getBooksWithSimilarBooks = async ({ page, userId, subjects }: Query
 };
 
 export const clearSync = async (id: number) => {
-  await executeDrizzle(
-    "clear sync",
-    db
-      .update(booksTable)
-      .set({ similarBooksLastSync: new Date("01-01-1990") })
-      .where(eq(booksTable.id, id))
-  );
+  await executeDrizzle("clear sync", db.update(booksTable).set({ lastAmazonSync: null }).where(eq(booksTable.id, id)));
 };
 
 export const getSimilarBooksForBook = async (id: number) => {
