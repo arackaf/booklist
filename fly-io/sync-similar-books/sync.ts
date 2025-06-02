@@ -1,79 +1,61 @@
-import { Page } from "playwright-core";
+import { Browser, Page } from "puppeteer-core";
 import { isbn13To10 } from "./isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
-import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser, getPage } from "./scrape";
+import { doScrape, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
+import { init } from "./setup";
+import readline from "readline";
 
-export const syncBook = async ({ id }) => {
-  console.log("Id sent", id);
-  const book = await getBook(id);
+const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-  console.log("book found", { book });
-  if (book) {
-    try {
-      await doSync(book);
-      console.log("Done with sync");
-    } catch (er) {
-      console.log("Error", er);
-    }
-  }
-};
+function waitForKeypress() {
+  return new Promise(resolve => {
+    readline.emitKeypressEvents(process.stdin);
+    process.stdin.setRawMode(true);
+    process.stdin.resume();
+    process.stdin.once("data", () => {
+      process.stdin.setRawMode(false);
+      process.stdin.pause();
+      resolve(null);
+    });
+  });
+}
 
 export const localSync = async () => {
   console.log("Starting sync");
-  let browser: any;
-  let page: Page;
   let captchaDone = true;
   try {
-    let book;
-    book = { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" };
-    // book = await getNextBookToSync();
-
-    if (!book) {
-      return;
-    }
-
-    browser = await getBrowser();
+    let books = [
+      { id: 1, title: "The Forging of the Union, 1781-1789 (New American Nation Series)", isbn: "9780060914240" },
+      { id: 2, title: "Building Microservices: Designing Fine-Grained Systems", isbn: "1492034029" },
+      {
+        id: 3,
+        title: "Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems",
+        isbn: "1449373321"
+      },
+      { id: 4, title: "Fundamentals of Data Engineering: Plan and Build Robust Data Systems", isbn: "1098108302" }
+    ];
 
     console.log("Got browser");
 
-    page = await getPage(browser);
-
-    while (book) {
+    const { page, dispose } = await init("playwright");
+    for (const book of books) {
       await doSync(book, page, captchaDone);
-      await new Promise(res => setTimeout(res, 4000));
-      book = null;
-      // book = await getNextBookToSync();
+      await new Promise(res => setTimeout(res, 2000));
+
       captchaDone = true;
+
+      // console.log("Press any key to continue");
+      // await waitForKeypress();
+      await wait(5000);
     }
-  } catch (er) {
-    console.log("Error: ", er);
-  } finally {
-    try {
-      await page?.close();
-    } catch (er) {}
-    try {
-      await browser?.close();
-    } catch (er) {}
-  }
-};
-
-export const syncNextBook = async () => {
-  try {
-    const book = await getNextBookToSync();
-
-    if (!book) {
-      console.log("No books pending sync found");
-      return;
-    }
-
-    await doSync(book);
+    await dispose();
   } catch (er) {
     console.log("Error: ", er);
   }
 };
 
-async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
+async function doSync(book: any, page: Page, captchaDone: boolean = false) {
   // const mySqlConnection = await getMySqlConnection();
 
   let { id, title, isbn } = book;
@@ -93,76 +75,22 @@ async function doSync(book: any, page?: Page, captchaDone: boolean = false) {
       await new Promise(res => setTimeout(res, 10000));
     }
     // this is absolutely awful but I don't have time to make it less so
-    const allResults = page ? await doScrape(page, isbn, title, captchaDone) : await getBookRelatedItems(isbn, title);
+    const allResults = await getBookRelatedItems(page, isbn, title);
+    const { averageRating, reviewCount, similarItems } = allResults;
 
-    if (!allResults || !allResults.length) {
+    if (!similarItems || !similarItems.length) {
       // await bookSyncFailure(mySqlConnection, id, "No results");
       console.log("Sync complete for", id, title, "No results found");
       return;
     } else {
       // await bookSyncSuccess(mySqlConnection, id, allResults);
     }
-    console.log(
-      "Sync complete for",
-      id,
-      title,
-      "similar books found",
-      allResults.map(b => b.title)
-    );
+    console.log("Sync complete for", id, title, { averageRating, reviewCount, similarItems: similarItems.map(b => b.title) });
     return allResults;
   } catch (err) {
     console.log("Error", err);
     // await bookSyncFailure(mySqlConnection, id, `Error: ${err}`);
   } finally {
     // mySqlConnection?.end();
-  }
-}
-
-export async function doSyncAuthor() {
-  const mySqlConnection = await getMySqlConnection();
-  const [book] = await query<any>(
-    mySqlConnection,
-    `
-    SELECT id, isbn, title 
-    FROM similar_books
-    WHERE 
-      (authorsLastManualSync IS NULL OR DATEDIFF(NOW(), authorsLastManualSync) > 60) 
-      AND 
-      (authors IS NULL OR (json_contains(authors, json_array(), '$') AND json_length(authors, '$') = 0)) 
-    ORDER BY id 
-    LIMIT 1
-  `
-  );
-
-  let { id, isbn, title } = book;
-  console.log({ id, isbn, title });
-  try {
-    if (isbn.length === 13) {
-      isbn = isbn13To10(isbn);
-      if (isbn == null) {
-        console.log("Bad isbn");
-        return;
-      }
-    }
-
-    const author = await getAuthorFromBookPage(isbn);
-
-    try {
-      await query<any>(
-        mySqlConnection,
-        `
-          UPDATE similar_books
-          SET authors = ?, authorsLastManualSync = ?
-          WHERE id = ?
-          `,
-        [JSON.stringify([author || "<>"]), new Date(), id]
-      );
-      console.log("Updated", id, " - ", title, "with", author);
-    } catch (er) {
-      console.log("Error", er);
-    }
-  } catch (err) {
-  } finally {
-    mySqlConnection?.end();
   }
 }
