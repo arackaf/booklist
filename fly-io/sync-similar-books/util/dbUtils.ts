@@ -17,5 +17,10 @@ export function initializePostgres() {
     process.exit(-1);
   });
 
-  return drizzlePg({ schema, client: pool });
+  const db = drizzlePg({ schema, client: pool });
+  const dispose = () => {
+    pool.end();
+  };
+
+  return { db, dispose };
 }
