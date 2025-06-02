@@ -1,5 +1,5 @@
 import { Browser, Page } from "puppeteer-core";
-import { isbn13To10 } from "./isbn13to10";
+import { isbn13To10 } from "./util/isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
 import { doScrape, getBookRelatedItems } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
