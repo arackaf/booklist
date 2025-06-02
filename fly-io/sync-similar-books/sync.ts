@@ -1,5 +1,5 @@
 import { Page } from "playwright-core";
-import { isbn13To10 } from "./isbn13to10";
+import { isbn13To10 } from "./util/isbn13to10";
 import { query, getMySqlConnection, getNextBookToSync, getBook } from "./mySqlUtil";
 import { doScrape, getAuthorFromBookPage, getBookRelatedItems, getBrowser, getPage } from "./scrape";
 import { bookSyncFailure, bookSyncSuccess } from "./updateBook";
