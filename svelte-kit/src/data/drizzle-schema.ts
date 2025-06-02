@@ -1,4 +1,4 @@
-import { integer, serial, timestamp, boolean, json, pgTable, varchar, text } from "drizzle-orm/pg-core";
+import { integer, serial, timestamp, boolean, json, pgTable, varchar, numeric, date, text } from "drizzle-orm/pg-core";
 import type { EditorialReview, PreviewPacket } from "./types";
 
 export const books = pgTable("books", {
@@ -12,9 +12,6 @@ export const books = pgTable("books", {
   isRead: boolean("is_read").notNull(),
 
   similarBooks: json("similar_books").$type<string[] | null>(),
-  similarBooksLastSync: timestamp("similar_books_last_sync"),
-  similarBooksLastSyncSuccess: boolean("similar_books_last_sync_success"),
-  similarBooksLastSyncFailureReason: text("similar_books_last_sync_failure_reason"),
   mobileImage: varchar("mobile_image", { length: 250 }),
   mobileImagePreview: json("mobile_image_preview").$type<string | PreviewPacket | null>(),
   smallImage: varchar("small_image", { length: 250 }),
@@ -23,7 +20,13 @@ export const books = pgTable("books", {
   mediumImagePreview: json("medium_image_preview").$type<string | PreviewPacket | null>(),
   publicationDate: varchar("publication_date", { length: 30 }),
   publisher: varchar("publisher", { length: 100 }),
-  editorialReviews: json("editorial_reviews").$type<EditorialReview[]>()
+  editorialReviews: json("editorial_reviews").$type<EditorialReview[]>(),
+  averageReview: numeric("average_review", { precision: 2, scale: 1 }),
+  numberReviews: integer("number_reviews"),
+  amazonSyncEligible: boolean("amazon_sync_eligible"),
+  lastAmazonSync: date("last_amazon_sync"),
+  lastAmazonSyncSuccess: boolean("last_amazon_sync_success"),
+  lastAmazonSyncError: text("last_amazon_sync_error")
 });
 
 export const similarBooks = pgTable("similar_books", {
@@ -36,7 +39,8 @@ export const similarBooks = pgTable("similar_books", {
   mobileImage: varchar("mobile_image", { length: 250 }),
   mobileImagePreview: json("mobile_image_preview").$type<string | PreviewPacket | null>(),
   smallImage: varchar("small_image", { length: 250 }),
-  smallImagePreview: json("small_image_preview").$type<string | PreviewPacket | null>()
+  smallImagePreview: json("small_image_preview").$type<string | PreviewPacket | null>(),
+  unprocessedImage: text("unprocessed_image")
 });
 
 export const tags = pgTable("tags", {

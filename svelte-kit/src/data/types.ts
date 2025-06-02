@@ -127,7 +127,7 @@ export type BookWithSimilarItems = {
   isbn: string;
   authors: string[] | null;
   similarBooks: string[] | null;
-  similarBooksLastSync: string;
+  lastAmazonSync: string | null;
   similarBooksLastSyncDisplay: string;
 } & Partial<BookImages>;
 
