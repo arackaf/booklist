@@ -1,7 +1,8 @@
 import "./util/config";
-import { desc, eq, isNull, lt, or, InferSelectModel } from "drizzle-orm";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
+
 import { addMonths, format } from "date-fns";
+import { desc, eq, isNull, lt, or, InferSelectModel, Update } from "drizzle-orm";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 import { initializePostgres } from "./util/dbUtils";
 import * as schema from "./drizzle/drizzle-schema";
@@ -33,6 +34,12 @@ async function failSync(db: NodePgDatabase<typeof schema>, book: Book, message: 
     .update(booksTable)
     .set({ lastAmazonSync: new Date().toISOString(), lastAmazonSyncSuccess: false, lastAmazonSyncError: message })
     .where(eq(booksTable.id, book.id));
+}
+
+async function syncComplete(db: NodePgDatabase<typeof schema>, book: Book) {
+  type Updates = Partial<Book>;
+
+  let updates: Updates = {};
 }
 
 async function syncBook(db: NodePgDatabase<typeof schema>, book: Book) {
