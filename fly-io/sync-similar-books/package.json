@@ -9,7 +9,6 @@
     "tsc": "rm -rf build && tsc",
     "tscw": "rm -rf build && tsc -w",
     "run-local": "npm run tsc && node ./build/sync-similar-books/local",
-    "local": "npm run tsc && node ./build/sync-similar-books/local",
     "playwright": "npx playwright install && npx playwright install-deps",
     "playwright-x": "npx -y playwright@1.52.0 install --with-deps"
   },
@@ -26,6 +25,8 @@
     "npx": "^10.2.2",
     "pg": "^8.16.0",
     "playwright": "^1.52.0",
+    "puppeteer-core": "^24.9.0",
+    "readline": "^1.3.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.2"
   },
