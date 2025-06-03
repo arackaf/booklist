@@ -1,15 +1,6 @@
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
-import playwright from "playwright";
-import puppeteer, { Page, type Browser, type ElementHandle } from "puppeteer-core";
-
-// aws runtime arn:aws:lambda:us-east-1::runtime:0cdcfbdefbc5e7d3343f73c2e2dd3cba17d61dea0686b404502a0c9ce83931b9
-// https://www.amazon.com/Programming-TypeScript-Making-JavaScript-Applications/dp/1492037656/ref=sr_1_5?crid=1EYSNI5TQD8HI&keywords=typescript&qid=1655178647&sprefix=ty%2Caps%2C517&sr=8-5
-
-const BD_ZONE = process.env.BRIGHT_DATA_ZONE;
-const BD_KEY = process.env.BRIGHT_DATA_KEY;
-
-const BRIGHT_DATA_URL = `wss://${BD_ZONE}:${BD_KEY}@brd.superproxy.io:9222`;
+import { Page, type ElementHandle } from "puppeteer-core";
 
 const client = new LambdaClient({
   region: "us-east-1"

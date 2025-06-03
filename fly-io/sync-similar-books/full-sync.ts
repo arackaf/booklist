@@ -15,7 +15,6 @@ async function getNextBook(db: NodePgDatabase<typeof schema>) {
   const today = new Date();
   const cutoff = addMonths(today, -3);
   const cutoffString = format(cutoff, "yyyy-MM-dd");
-  const { id, title, lastAmazonSync } = booksTable;
 
   const books = await db
     .select()
@@ -23,7 +22,6 @@ async function getNextBook(db: NodePgDatabase<typeof schema>) {
     .where(or(isNull(booksTable.lastAmazonSync), lt(booksTable.lastAmazonSync, cutoffString)))
     .orderBy(desc(booksTable.id))
     .limit(1);
-  const x = books[0];
 
   return books[0] as Book;
 }
