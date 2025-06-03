@@ -56,15 +56,12 @@ export const localSync = async () => {
 };
 
 async function doSync(book: any, page: Page, captchaDone: boolean = false) {
-  // const mySqlConnection = await getMySqlConnection();
-
   let { id, title, isbn } = book;
   try {
     if (isbn.length === 13) {
       isbn = isbn13To10(isbn);
       if (isbn == null) {
         console.log("13 digit ISBN that can't be converted to 10 digit");
-        // await bookSyncFailure(mySqlConnection, id, "13 digit ISBN that can't be converted to 10 digit");
         return;
       }
     }

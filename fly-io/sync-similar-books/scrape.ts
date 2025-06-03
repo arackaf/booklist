@@ -1,10 +1,4 @@
-import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
-import { toUtf8, fromUtf8 } from "@aws-sdk/util-utf8";
 import { Page, type ElementHandle } from "puppeteer-core";
-
-const client = new LambdaClient({
-  region: "us-east-1"
-});
 
 export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: string) {
   try {
@@ -18,6 +12,11 @@ export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: s
 function wait(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+type RatingInfo = {
+  averageRating: string | number;
+  reviewCount: string | number;
+};
 
 export async function doScrape(page: Page, isbn: string, bookTitle: string, capctaDone: boolean = false) {
   const titleForUrl = bookTitle
@@ -47,7 +46,14 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
     return null;
   }
 
-  let averageRating: string | number = "";
+  const { averageRating, reviewCount } = await getRatingInfo(page);
+  const similarItems = await getSimilarItems(page);
+
+  return { similarItems, averageRating, reviewCount };
+}
+
+export async function getRatingInfo(page: Page): Promise<RatingInfo> {
+  let averageRating: string = "";
   let reviewCount: string | number = "";
 
   const ratingsElement = await page.$("#averageCustomerReviews");
@@ -56,7 +62,7 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
     if (reviewAverageParentEl) {
       const reviewAverageEl = await reviewAverageParentEl.$(":scope > span");
       if (reviewAverageEl) {
-        averageRating = await reviewAverageEl.evaluate(el => el.textContent);
+        averageRating = await reviewAverageEl.evaluate(el => el.textContent.trim());
         const reviewCountEl = await ratingsElement.$("#acrCustomerReviewLink > span");
         if (reviewCountEl) {
           reviewCount = await reviewCountEl.evaluate(el => el.textContent.replace(/\(|\)/g, "").trim());
@@ -66,10 +72,13 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
   }
 
   if (averageRating && reviewCount) {
-    averageRating = parseFloat(averageRating);
     reviewCount = parseInt(reviewCount);
   }
 
+  return { averageRating, reviewCount };
+}
+
+export async function getSimilarItems(page: Page) {
   for (let i = 1; i <= 15; i++) {
     try {
       const scrollAmount = i * 300;
@@ -95,8 +104,7 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
       console.log("Second attempt found:", allCarousels.length, "carousels");
 
       if (!allCarousels.length) {
-        console.log("Entire page:\n");
-        console.log(entireHtml);
+        console.log("No carousels found:\n");
       }
     } catch (er) {
       console.log("Second attemt failed");
@@ -130,37 +138,10 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
     }
   }
 
-  const similarItems = [...allBookResults.values()];
-  //await processImages(allResults);
-
-  return { similarItems, averageRating, reviewCount };
+  return [...allBookResults.values()];
 }
 
-async function processImages(books: any[]) {
-  for (const book of books) {
-    const command = new InvokeCommand({
-      FunctionName: "process-book-cover-live-processCover",
-      Payload: fromUtf8(JSON.stringify({ url: book.img, userId: "similar-books" }))
-    });
-    const response = await client.send(command);
-
-    if (response.Payload) {
-      try {
-        const respJson = JSON.parse(toUtf8(response.Payload));
-
-        delete book.img;
-        book.smallImage = respJson.smallImage;
-        book.smallImagePreview = respJson.smallImagePreview;
-        book.mobileImage = respJson.mobileImage;
-        book.mobileImagePreview = respJson.mobileImagePreview;
-      } catch (er) {
-        console.log("Error syncing book cover");
-      }
-    } else {
-      console.log("can't process");
-    }
-  }
-}
+const CAROUSEL_PAGE_LIMIT = 4;
 
 async function processCarousel(carousel: ElementHandle<Element>) {
   let page = 1;
@@ -187,7 +168,7 @@ async function processCarousel(carousel: ElementHandle<Element>) {
     } catch (er) {
       console.log("Error clicking to next page", er);
     }
-  } while (page <= 6);
+  } while (page < CAROUSEL_PAGE_LIMIT);
 
   return results;
 }
