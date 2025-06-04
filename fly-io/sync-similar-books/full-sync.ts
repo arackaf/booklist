@@ -16,7 +16,6 @@ async function main() {
       console.log("Syncing book", bookNumber, book.title, book.isbn);
 
       await wait(bookNumber++ === 1 ? 10000 : 3000);
-
       await syncBook(db, page, book);
     }
   } catch (err) {

@@ -13,7 +13,14 @@ function wait(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-type RatingInfo = {
+export type SimilarBookResult = {
+  isbn: string;
+  title: string;
+  img: string;
+  authors: string[];
+};
+
+export type RatingInfo = {
   averageReview: string | null;
   numberReviews: number | null;
 };
@@ -47,9 +54,9 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
   }
 
   const { averageReview, numberReviews } = await getRatingInfo(page);
-  const similarItems = await getSimilarItems(page);
+  const similarBooks = await getSimilarItems(page);
 
-  return { similarItems, averageReview, numberReviews };
+  return { similarBooks, averageReview, numberReviews };
 }
 
 export async function getRatingInfo(page: Page): Promise<RatingInfo> {
@@ -75,7 +82,7 @@ export async function getRatingInfo(page: Page): Promise<RatingInfo> {
   return { averageReview, numberReviews };
 }
 
-export async function getSimilarItems(page: Page) {
+export async function getSimilarItems(page: Page): Promise<SimilarBookResult[]> {
   for (let i = 1; i <= 15; i++) {
     try {
       const scrollAmount = i * 300;
@@ -151,9 +158,9 @@ export async function getSimilarItems(page: Page) {
 
 const CAROUSEL_PAGE_LIMIT = 4;
 
-async function processCarousel(carousel: ElementHandle<Element>) {
+async function processCarousel(carousel: ElementHandle<Element>): Promise<SimilarBookResult[]> {
   let page = 1;
-  let results = [];
+  let results: SimilarBookResult[] = [];
   do {
     let currentPage = await getResults(carousel);
     if (!currentPage.length) {
@@ -181,8 +188,8 @@ async function processCarousel(carousel: ElementHandle<Element>) {
   return results;
 }
 
-async function getResults(carousel: ElementHandle<Element>) {
-  const resultsMap = new Map();
+async function getResults(carousel: ElementHandle<Element>): Promise<SimilarBookResult[]> {
+  const resultsMap = new Map<string, SimilarBookResult>();
 
   let cards: any[];
   do {
@@ -199,14 +206,14 @@ async function getResults(carousel: ElementHandle<Element>) {
   return [...resultsMap.values()];
 }
 
-async function getBookInfo(card: ElementHandle<HTMLLIElement>) {
+async function getBookInfo(card: ElementHandle<HTMLLIElement>): Promise<SimilarBookResult | null> {
   const coreBookData = await getCoreData(card);
   if (!coreBookData) {
     return null;
   } else {
-    const author = await getAuthor(card);
-    if (author) {
-      return { ...coreBookData, author };
+    const authors = await getAuthor(card);
+    if (authors.length) {
+      return { ...coreBookData, authors };
     } else {
       console.log("No author found");
       return null;
@@ -214,7 +221,12 @@ async function getBookInfo(card: ElementHandle<HTMLLIElement>) {
   }
 }
 
-async function getCoreData(card: ElementHandle<HTMLLIElement>) {
+type CoreBookData = {
+  isbn: string;
+  title: string;
+  img: string;
+};
+async function getCoreData(card: ElementHandle<HTMLLIElement>): Promise<CoreBookData | null> {
   let isbn = "";
   let img = "";
   let title = "";
@@ -289,13 +301,16 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>) {
       console.log("No image source found in sponsored data");
     }
     console.log("Found", isbn, " - ", title);
-    return { isbn: isbn.toUpperCase(), title: title.trim(), img };
+    return { isbn: isbn.toUpperCase(), title: title.trim(), img: src };
   }
 }
 
 async function getAuthor(card: ElementHandle<HTMLLIElement>) {
   const author = await card.$$(".a-size-small");
+  const reuslt: string[] = [];
   for (const a of author) {
-    return a.evaluate(el => el.textContent.trim());
+    reuslt.push(await a.evaluate(el => el.textContent.trim()));
   }
+
+  return reuslt;
 }

@@ -1,11 +1,11 @@
 import { addMonths, format } from "date-fns";
-import { desc, eq, isNull, lt, or, InferSelectModel, Update } from "drizzle-orm";
+import { desc, eq, isNull, lt, or, InferSelectModel, InferInsertModel, Update, inArray } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 import * as schema from "../drizzle/drizzle-schema";
 import { books as booksTable } from "../drizzle/drizzle-schema";
 import { isbn13To10 } from "../util/isbn13to10";
-import { doScrape } from "./scrape";
+import { doScrape, SimilarBookResult } from "./scrape";
 import { Page } from "puppeteer-core";
 
 type Book = InferSelectModel<typeof booksTable>;
@@ -24,27 +24,31 @@ export async function getNextBooks(db: NodePgDatabase<typeof schema>, count: num
 }
 
 export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, book: Book) {
-  let isbn = book.isbn;
-
-  if (!isbn || (isbn.length !== 10 && isbn.length !== 13)) {
-    const message = !isbn ? "No ISBN" : "ISBN has an invalid length";
-    await failSync(db, book, message);
-    return;
-  }
-
-  if (isbn.length === 13) {
-    isbn = isbn13To10(isbn);
-  }
-  if (isbn == null) {
-    await failSync(db, book, "Could not convert to an ISBN-10");
-    return;
-  }
-
   try {
-    const { similarItems, averageReview, numberReviews } = await doScrape(page, isbn, book.title);
-    if (similarItems?.length || (averageReview && numberReviews)) {
+    let isbn = book.isbn;
+
+    if (!isbn || (isbn.length !== 10 && isbn.length !== 13)) {
+      const message = !isbn ? "No ISBN" : "ISBN has an invalid length";
+      await failSync(db, book, message);
+      return;
+    }
+
+    if (isbn.length === 13) {
+      isbn = isbn13To10(isbn);
+    }
+    if (isbn == null) {
+      await failSync(db, book, "Could not convert to an ISBN-10");
+      return;
+    }
+
+    const { similarBooks, averageReview, numberReviews } = await doScrape(page, isbn, book.title);
+    if (similarBooks?.length || (averageReview && numberReviews)) {
+      similarBooks?.forEach(b => {
+        b.isbn = b.isbn.toUpperCase();
+      });
+
       await syncComplete(db, book, {
-        similarItems,
+        similarBooks,
         averageReview,
         numberReviews
       });
@@ -54,24 +58,35 @@ export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, bo
   }
 }
 
+type SimilarBookInsert = typeof schema.similarBooks.$inferInsert;
+
 type Updates = {
-  similarItems?: any[];
+  similarBooks?: SimilarBookResult[];
   averageReview: string;
   numberReviews: number;
 };
 export async function syncComplete(db: NodePgDatabase<typeof schema>, book: Book, updates: Updates) {
   const dbUpdates: Partial<Book> = {};
 
-  if (updates.similarItems?.length) {
-    const existingBooks = new Set(book.similarBooks);
-    const booksToAdd = updates.similarItems.filter(b => !existingBooks.has(b.isbn)).map(b => b.isbn);
+  if (updates.similarBooks?.length) {
+    const existingBooks = new Set(book.similarBooks.map(isbn => isbn));
+    const booksToAdd = updates.similarBooks.filter(b => !existingBooks.has(b.isbn)).map(b => b.isbn);
 
-    dbUpdates.similarBooks = updates.similarItems.concat(booksToAdd);
-  }
+    dbUpdates.similarBooks = book.similarBooks.concat(booksToAdd);
 
-  if (updates.averageReview && updates.numberReviews) {
-    dbUpdates.averageReview = updates.averageReview;
-    dbUpdates.numberReviews = updates.numberReviews;
+    const existingSimilarBooks = await db
+      .select({ isbn: schema.similarBooks.isbn })
+      .from(schema.similarBooks)
+      .where(inArray(schema.similarBooks.isbn, dbUpdates.similarBooks ?? []));
+
+    const existingSimilarBooksSet = new Set(existingSimilarBooks.map(b => b.isbn));
+    const similarBooksToAdd = updates.similarBooks.filter(b => !existingSimilarBooksSet.has(b.isbn));
+
+    const similarBooksToInsert = similarBooksToAdd.map(book => {
+      return { isbn: book.isbn, title: book.title, unprocessedImage: book.img, authors: book.authors } satisfies SimilarBookInsert;
+    });
+
+    await db.insert(schema.similarBooks).values(similarBooksToInsert);
   }
 
   if (updates.averageReview && updates.numberReviews) {
