@@ -94,6 +94,17 @@ export async function getSimilarItems(page: Page) {
     }
   }
 
+  console.log("Removing iframes");
+  await wait(1000);
+  const iframes = await page.$$("iframe");
+  for (const iframe of iframes) {
+    try {
+      await iframe.evaluate(el => el.remove());
+    } catch (er) {
+      console.log("Error removing iframe", er);
+    }
+  }
+
   let allCarousels = await page.$$("[data-a-carousel-options]");
   console.log("Found", allCarousels.length, "carousels");
   if (!allCarousels.length) {
