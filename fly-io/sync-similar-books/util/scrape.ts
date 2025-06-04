@@ -14,8 +14,8 @@ function wait(ms: number) {
 }
 
 type RatingInfo = {
-  averageRating: string | number;
-  reviewCount: string | number;
+  averageReview: string | null;
+  numberReviews: number | null;
 };
 
 export async function doScrape(page: Page, isbn: string, bookTitle: string, capctaDone: boolean = false) {
@@ -46,15 +46,15 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
     return null;
   }
 
-  const { averageRating, reviewCount } = await getRatingInfo(page);
+  const { averageReview, numberReviews } = await getRatingInfo(page);
   const similarItems = await getSimilarItems(page);
 
-  return { similarItems, averageRating, reviewCount };
+  return { similarItems, averageReview, numberReviews };
 }
 
 export async function getRatingInfo(page: Page): Promise<RatingInfo> {
-  let averageRating: string = "";
-  let reviewCount: string | number = "";
+  let averageReview: string | null = null;
+  let numberReviews: number | null = null;
 
   const ratingsElement = await page.$("#averageCustomerReviews");
   if (ratingsElement) {
@@ -62,20 +62,17 @@ export async function getRatingInfo(page: Page): Promise<RatingInfo> {
     if (reviewAverageParentEl) {
       const reviewAverageEl = await reviewAverageParentEl.$(":scope > span");
       if (reviewAverageEl) {
-        averageRating = await reviewAverageEl.evaluate(el => el.textContent.trim());
+        averageReview = await reviewAverageEl.evaluate(el => el.textContent.trim());
         const reviewCountEl = await ratingsElement.$("#acrCustomerReviewLink > span");
         if (reviewCountEl) {
-          reviewCount = await reviewCountEl.evaluate(el => el.textContent.replace(/\(|\)/g, "").trim());
+          let reviewCountStr = await reviewCountEl.evaluate(el => el.textContent.replace(/\(|\)/g, "").trim());
+          numberReviews = parseInt(reviewCountStr, 10);
         }
       }
     }
   }
 
-  if (averageRating && reviewCount) {
-    reviewCount = parseInt(reviewCount);
-  }
-
-  return { averageRating, reviewCount };
+  return { averageReview, numberReviews };
 }
 
 export async function getSimilarItems(page: Page) {
