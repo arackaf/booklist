@@ -1,5 +1,7 @@
 import { Page, type ElementHandle } from "puppeteer-core";
 
+const CAROUSEL_PAGE_LIMIT = 4;
+
 export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: string) {
   try {
     //const page = await getPage(browser);
@@ -155,8 +157,6 @@ export async function getSimilarItems(page: Page): Promise<SimilarBookResult[]> 
 
   return [...allBookResults.values()];
 }
-
-const CAROUSEL_PAGE_LIMIT = 4;
 
 async function processCarousel(carousel: ElementHandle<Element>): Promise<SimilarBookResult[]> {
   let page = 1;
