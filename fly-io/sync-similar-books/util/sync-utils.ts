@@ -42,17 +42,17 @@ export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, bo
     }
 
     const { similarBooks, averageReview, numberReviews } = await doScrape(page, isbn, book.title);
-    if (similarBooks?.length || (averageReview && numberReviews)) {
+    if (similarBooks?.length) {
       similarBooks?.forEach(b => {
         b.isbn = b.isbn.toUpperCase();
       });
-
-      await syncComplete(db, book, {
-        similarBooks,
-        averageReview,
-        numberReviews
-      });
     }
+
+    await syncComplete(db, book, {
+      similarBooks,
+      averageReview,
+      numberReviews
+    });
   } catch (er) {
     console.log("Error syncing book", er);
     await failSync(db, book, "Error syncing book");
@@ -69,6 +69,13 @@ type Updates = {
 export async function syncComplete(db: NodePgDatabase<typeof schema>, book: Book, updates: Updates) {
   const dbUpdates: Partial<Book> = {};
   console.log("Sync data found", updates);
+
+  if (!updates.averageReview && !updates.numberReviews) {
+    if (book.averageReview || book.numberReviews) {
+      console.log("No data found, but book has reviews, skipping");
+      return;
+    }
+  }
 
   if (updates.similarBooks?.length) {
     const existingBooks = new Set(book.similarBooks?.map(isbn => isbn));
