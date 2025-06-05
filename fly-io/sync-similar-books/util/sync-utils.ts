@@ -54,6 +54,7 @@ export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, bo
       });
     }
   } catch (er) {
+    console.log("Error syncing book", er);
     await failSync(db, book, "Error syncing book");
   }
 }
@@ -67,12 +68,13 @@ type Updates = {
 };
 export async function syncComplete(db: NodePgDatabase<typeof schema>, book: Book, updates: Updates) {
   const dbUpdates: Partial<Book> = {};
+  console.log("Sync data found", updates);
 
   if (updates.similarBooks?.length) {
-    const existingBooks = new Set(book.similarBooks.map(isbn => isbn));
-    const booksToAdd = updates.similarBooks.filter(b => !existingBooks.has(b.isbn)).map(b => b.isbn);
+    const existingBooks = new Set(book.similarBooks?.map(isbn => isbn));
+    const booksToAdd = updates.similarBooks.filter(b => !existingBooks?.has(b.isbn)).map(b => b.isbn);
 
-    dbUpdates.similarBooks = book.similarBooks.concat(booksToAdd);
+    dbUpdates.similarBooks = (book.similarBooks ?? []).concat(booksToAdd);
 
     const existingSimilarBooks = await db
       .select({ isbn: schema.similarBooks.isbn })
@@ -86,7 +88,9 @@ export async function syncComplete(db: NodePgDatabase<typeof schema>, book: Book
       return { isbn: book.isbn, title: book.title, unprocessedImage: book.img, authors: book.authors } satisfies SimilarBookInsert;
     });
 
-    await db.insert(schema.similarBooks).values(similarBooksToInsert);
+    if (similarBooksToInsert.length) {
+      await db.insert(schema.similarBooks).values(similarBooksToInsert);
+    }
   }
 
   if (updates.averageReview && updates.numberReviews) {
@@ -94,7 +98,16 @@ export async function syncComplete(db: NodePgDatabase<typeof schema>, book: Book
     dbUpdates.numberReviews = updates.numberReviews;
   }
 
-  await db.update(booksTable).set(dbUpdates).where(eq(booksTable.id, book.id));
+  await db
+    .update(booksTable)
+    .set({
+      ...dbUpdates,
+      // reset last sync'd info
+      lastAmazonSync: new Date().toISOString(),
+      lastAmazonSyncSuccess: true,
+      lastAmazonSyncError: null
+    })
+    .where(eq(booksTable.id, book.id));
 }
 
 export async function failSync(db: NodePgDatabase<typeof schema>, book: Book, message: string) {

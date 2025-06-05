@@ -11,7 +11,7 @@ async function main() {
   let bookNumber = 1;
 
   try {
-    const books = await getNextBooks(db);
+    const books = await getNextBooks(db, 50);
     for (const book of books) {
       console.log("Syncing book", bookNumber, book.title, book.isbn);
 

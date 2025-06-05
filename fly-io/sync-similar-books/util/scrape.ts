@@ -262,7 +262,11 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>): Promise<CoreBook
       }
     }
   }
-  if (isbn && title && img && title != "Shop the Store on Amazon") {
+  if (title?.indexOf("Shop the Store") !== -1) {
+    console.log("skipping");
+    return null;
+  }
+  if (isbn && title && img) {
     console.log("Found", isbn, " - ", title);
     return { isbn: isbn.toUpperCase(), title: title.trim(), img };
   }
@@ -295,6 +299,10 @@ async function getCoreData(card: ElementHandle<HTMLLIElement>): Promise<CoreBook
     }
     if (!title) {
       title = await img.evaluate(el => el.getAttribute("alt"));
+    }
+    if (title?.indexOf("Shop the Store") !== -1) {
+      console.log("skipping");
+      return null;
     }
     const src = await img.evaluate(el => el.getAttribute("src"));
     if (!src) {
