@@ -8,10 +8,10 @@
 
   let { averageReview: _averageReview, numberReviews }: Props = $props();
 
-  const averageReview = $derived(typeof _averageReview === "number" ? _averageReview : parseFloat(_averageReview));
-  const fullStars = $derived(Math.floor(averageReview));
-  const partialStarWidth = $derived(averageReview - fullStars);
-  const emptyStars = $derived(5 - fullStars - (partialStarWidth > 0 ? 1 : 0));
+  let averageReview = $derived(typeof _averageReview === "number" ? _averageReview : parseFloat(_averageReview));
+  let fullStars = $derived(Math.floor(averageReview));
+  let partialStarWidth = $derived(averageReview - fullStars);
+  let emptyStars = $derived(5 - fullStars - (partialStarWidth > 0 ? 1 : 0));
 </script>
 
 {#if averageReview && numberReviews}
