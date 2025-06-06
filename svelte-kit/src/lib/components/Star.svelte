@@ -4,7 +4,6 @@
   type Props = {
     class?: string | undefined;
     filled?: boolean | undefined;
-    pathClass?: string | undefined;
     fillPercentage?: number | undefined;
   };
 
