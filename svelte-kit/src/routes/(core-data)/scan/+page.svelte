@@ -9,6 +9,7 @@
   import Input from "$lib/components/ui/input/input.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
+  import BookRating from "$lib/components/BookRating.svelte";
 
   let { data } = $props();
   let { subjects: allSubjects, tags } = $derived(data);
@@ -86,6 +87,7 @@
 <section class="flush-bottom flex flex-col gap-8">
   <div class="pt-4">
     <div class="flex flex-col gap-4">
+      <BookRating averageReview="4.5" numberReviews={10} />
       <h1 class="text-lg font-bold">Add Books</h1>
 
       <div class="flex items-start gap-3">
