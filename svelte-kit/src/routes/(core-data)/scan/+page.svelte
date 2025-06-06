@@ -9,7 +9,6 @@
   import Input from "$lib/components/ui/input/input.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import EditBookModal from "$lib/components/editBook/EditBookModal.svelte";
-  import BookRating from "$lib/components/BookRating.svelte";
 
   let { data } = $props();
   let { subjects: allSubjects, tags } = $derived(data);
