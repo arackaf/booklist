@@ -1,6 +1,5 @@
 <script lang="ts">
   import Star from "./Star.svelte";
-  import { Star as LucideStar } from "lucide-svelte";
 
   type Props = {
     averageReview: string | number;
