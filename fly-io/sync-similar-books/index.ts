@@ -1,4 +1,4 @@
-import "./config";
+import "./util/config";
 import { localSync } from "./sync";
 
 Promise.resolve(localSync()).then(() => {
