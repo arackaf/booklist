@@ -74,7 +74,7 @@ export async function getRatingInfo(page: Page): Promise<RatingInfo> {
         averageReview = await reviewAverageEl.evaluate(el => el.textContent.trim());
         const reviewCountEl = await ratingsElement.$("#acrCustomerReviewLink > span");
         if (reviewCountEl) {
-          let reviewCountStr = await reviewCountEl.evaluate(el => el.textContent.replace(/\(|\)/g, "").trim());
+          let reviewCountStr = await reviewCountEl.evaluate(el => el.textContent.replace(/\(|\)/g, "").replace(/,/g, "").trim());
           numberReviews = parseInt(reviewCountStr, 10);
         }
       }
