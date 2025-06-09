@@ -30,7 +30,9 @@ const defaultBookFields = {
   smallImage: booksTable.smallImage,
   smallImagePreview: booksTable.smallImagePreview,
   mediumImage: booksTable.mediumImage,
-  mediumImagePreview: booksTable.mediumImagePreview
+  mediumImagePreview: booksTable.mediumImagePreview,
+  averageReview: booksTable.averageReview,
+  numberReviews: booksTable.numberReviews
 };
 
 const compactBookFields = {

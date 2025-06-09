@@ -2,13 +2,13 @@
   import Star from "./Star.svelte";
 
   type Props = {
-    averageReview: string | number;
+    averageReview: string;
     numberReviews: number;
   };
 
   let { averageReview: _averageReview, numberReviews }: Props = $props();
 
-  let averageReview = $derived(typeof _averageReview === "number" ? _averageReview : parseFloat(_averageReview));
+  let averageReview = $derived(parseFloat(_averageReview));
   let fullStars = $derived(Math.floor(averageReview));
   let partialStarWidth = $derived(averageReview - fullStars);
   let emptyStars = $derived(5 - fullStars - (partialStarWidth > 0 ? 1 : 0));

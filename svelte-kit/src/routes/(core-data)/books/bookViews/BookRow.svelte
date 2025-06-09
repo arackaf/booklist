@@ -25,6 +25,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { afterDelete } from "../state/onDelete";
   import AmazonIcon from "$lib/svg/AmazonIcon.svelte";
+  import BookRating from "$lib/components/BookRating.svelte";
 
   type Props = {
     isPublic: boolean;
@@ -157,29 +158,36 @@
   <td class="pt-2">
     <div>
       {#if !isPublic}
-        <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
-          <Button
-            type="submit"
-            variant="outline"
-            disabled={readSaving || multiReadSaving}
-            class={cn("h-5 px-2 text-xs mt-0 flex", {
-              "bg-green-600": book.isRead,
-              "border-green-600": book.isRead,
-              "hover:bg-green-700": book.isRead,
-              "hover:border-green-700": book.isRead,
-              "text-muted-foreground": !book.isRead,
-              "text-background": book.isRead,
-              "hover:text-background": book.isRead
-            })}
-          >
-            <span>
-              {book.isRead ? "Read" : "Set read"}
-            </span>
-            {#if book.isRead}
-              <CheckIcon />
-            {/if}
-          </Button>
-        </BookReadSetter>
+        <div class="flex flex-col">
+          <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
+            <Button
+              type="submit"
+              variant="outline"
+              disabled={readSaving || multiReadSaving}
+              class={cn("h-5 px-2 text-xs mt-0 flex", {
+                "bg-green-600": book.isRead,
+                "border-green-600": book.isRead,
+                "hover:bg-green-700": book.isRead,
+                "hover:border-green-700": book.isRead,
+                "text-muted-foreground": !book.isRead,
+                "text-background": book.isRead,
+                "hover:text-background": book.isRead
+              })}
+            >
+              <span>
+                {book.isRead ? "Read" : "Set read"}
+              </span>
+              {#if book.isRead}
+                <CheckIcon />
+              {/if}
+            </Button>
+          </BookReadSetter>
+          {#if book.averageReview}
+            <div>
+              <BookRating averageReview={book.averageReview} numberReviews={book.numberReviews} />
+            </div>
+          {/if}
+        </div>
       {:else if book.isRead}
         <Badge class="inline-flex gap-1" variant="outline">Read <CheckIcon size={14} /></Badge>
       {/if}

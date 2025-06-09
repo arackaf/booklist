@@ -53,6 +53,8 @@ export type Book = {
   dateAdded: string;
   userId: string;
   editorialReviews: any;
+  averageReview: string | null;
+  numberReviews: number;
 } & BookImages;
 
 export type BookCoversEdits = Partial<
