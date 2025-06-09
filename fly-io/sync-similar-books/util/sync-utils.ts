@@ -5,7 +5,7 @@ import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../drizzle/drizzle-schema";
 import { books as booksTable } from "../drizzle/drizzle-schema";
 import { isbn13To10 } from "../util/isbn13to10";
-import { doScrape, SimilarBookResult } from "./scrape";
+import { doScrape, ScrapeOptions, SimilarBookResult } from "./scrape";
 import { Page } from "puppeteer-core";
 
 type Book = InferSelectModel<typeof booksTable>;
@@ -23,7 +23,7 @@ export async function getNextBooks(db: NodePgDatabase<typeof schema>, count: num
     .limit(count);
 }
 
-export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, book: Book) {
+export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, book: Book, captchaDone: boolean = false, options: ScrapeOptions) {
   try {
     let isbn = book.isbn;
 
@@ -41,7 +41,11 @@ export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, bo
       return;
     }
 
-    const { similarBooks, averageReview, numberReviews } = await doScrape(page, { isbn, title: book.title });
+    const bookPayload = {
+      isbn,
+      title: book.title
+    };
+    const { similarBooks, averageReview, numberReviews } = await doScrape(page, bookPayload, captchaDone, options);
     if (similarBooks?.length) {
       similarBooks?.forEach(b => {
         b.isbn = b.isbn.toUpperCase();

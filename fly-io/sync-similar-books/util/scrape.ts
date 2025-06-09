@@ -18,11 +18,11 @@ export type RatingInfo = {
   numberReviews: number | null;
 };
 
-type BookInfo = {
+export type BookInfo = {
   isbn: string;
   title: string;
 };
-type ScrapeOptions = {
+export type ScrapeOptions = {
   scrapeSimilarBooks: boolean;
   scrapeReviewData: boolean;
 };
