@@ -63,7 +63,7 @@ const getSort = (sortPack: any = { id: -1 }) => {
   }
 
   const field = rawField === "title" ? booksTable.title : booksTable.pages;
-  return rawDir === -1 ? [desc(field)] : [asc(field)];
+  return rawDir === -1 ? [sql`${desc(field)} NULLS LAST`] : [sql`${asc(field)} NULLS LAST`];
 };
 
 export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
