@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "rm -rf build && tsc && sls deploy",
-    "tsc": "rm -rf build && tsc",
-    "tscw": "rm -rf build && tsc -w",
+    "tsc": "tsc",
     "run-local": "npm run tsc && node ./build/sync-similar-books/local",
     "playwright": "npx playwright install && npx playwright install-deps",
     "playwright-x": "npx -y playwright@1.52.0 install --with-deps"

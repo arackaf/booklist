@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "outDir": "./build/",
+    "noEmit": true,
     "module": "CommonJS",
     "target": "ES2015",
     "allowJs": true,

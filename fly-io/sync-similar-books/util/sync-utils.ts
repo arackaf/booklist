@@ -41,7 +41,7 @@ export async function syncBook(db: NodePgDatabase<typeof schema>, page: Page, bo
       return;
     }
 
-    const { similarBooks, averageReview, numberReviews } = await doScrape(page, isbn, book.title);
+    const { similarBooks, averageReview, numberReviews } = await doScrape(page, { isbn, title: book.title });
     if (similarBooks?.length) {
       similarBooks?.forEach(b => {
         b.isbn = b.isbn.toUpperCase();

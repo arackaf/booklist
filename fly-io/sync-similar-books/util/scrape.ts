@@ -2,15 +2,6 @@ import { Page, type ElementHandle } from "puppeteer-core";
 
 const CAROUSEL_PAGE_LIMIT = 4;
 
-export async function getBookRelatedItems(page: Page, isbn: string, bookTitle: string) {
-  try {
-    //const page = await getPage(browser);
-    return await doScrape(page, isbn, bookTitle);
-  } catch (er) {
-    console.log("Error", er);
-  }
-}
-
 function wait(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -27,8 +18,24 @@ export type RatingInfo = {
   numberReviews: number | null;
 };
 
-export async function doScrape(page: Page, isbn: string, bookTitle: string, capctaDone: boolean = false) {
-  const titleForUrl = bookTitle
+type BookInfo = {
+  isbn: string;
+  title: string;
+};
+type ScrapeOptions = {
+  scrapeSimilarBooks: boolean;
+  scrapeReviewData: boolean;
+};
+export async function doScrape(
+  page: Page,
+  book: BookInfo,
+  capctaDone: boolean = false,
+  options: ScrapeOptions = { scrapeSimilarBooks: true, scrapeReviewData: true }
+) {
+  const { isbn, title } = book;
+  const { scrapeSimilarBooks, scrapeReviewData } = options;
+
+  const titleForUrl = title
     .replace(/\//g, "")
     .replace(/\s+/g, "-")
     .replace(/[^(\w-)]/g, "");
@@ -40,7 +47,7 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
 
   await wait(100);
 
-  if (!process.env.stage && !capctaDone) {
+  if (!capctaDone) {
     await wait(15000);
   } else {
     await wait(4000 * Math.random());
@@ -48,15 +55,23 @@ export async function doScrape(page: Page, isbn: string, bookTitle: string, capc
 
   const entireHtml = await page.content();
 
-  const title = await page.title();
-  if (/page not found/i.test(title)) {
+  const pageTitle = await page.title();
+  if (/page not found/i.test(pageTitle)) {
     console.log("Page not found when syncing related items");
     console.log("Entire HTML\n\n", entireHtml, "\n\n");
     return null;
   }
 
-  const { averageReview, numberReviews } = await getRatingInfo(page);
-  const similarBooks = await getSimilarItems(page);
+  let averageReview: string | null = null;
+  let numberReviews: number | null = null;
+
+  if (scrapeReviewData) {
+    ({ averageReview, numberReviews } = await getRatingInfo(page));
+  }
+  let similarBooks: SimilarBookResult[] = [];
+  if (scrapeSimilarBooks) {
+    similarBooks = await getSimilarItems(page);
+  }
 
   return { similarBooks, averageReview, numberReviews };
 }
