@@ -158,7 +158,7 @@
   <td class="pt-2">
     <div>
       {#if !isPublic}
-        <div class="flex flex-col">
+        <div class="flex flex-col items-center">
           <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
             <Button
               type="submit"
@@ -183,7 +183,7 @@
             </Button>
           </BookReadSetter>
           {#if book.averageReview}
-            <div>
+            <div class="mt-3">
               <BookRating averageReview={book.averageReview} numberReviews={book.numberReviews} />
             </div>
           {/if}

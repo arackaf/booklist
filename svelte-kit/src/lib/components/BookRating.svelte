@@ -15,7 +15,7 @@
 </script>
 
 {#if averageReview && numberReviews}
-  <div class="inline-flex items-center gap-0 [&>:not(:last-child)]:mr-[-2px]">
+  <div class="inline-flex items-center gap-0 [&>:not(:last-child)]:mr-[-1px]">
     {#each Array.from({ length: fullStars })}
       <Star filled={true} />
     {/each}
