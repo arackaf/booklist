@@ -1,19 +1,22 @@
 import { page } from "$app/state";
+import type { BookSortKeys } from "$data/types";
 import { toHash } from "$lib/state/helpers";
 
-type SortValue = keyof typeof sortDisplayLookup;
-export const sortDisplayLookup = {
+export const sortDisplayLookup: Record<`${BookSortKeys}-${"asc" | "desc"}`, string> = {
   "title-asc": "Title A-Z",
   "title-desc": "Title Z-A",
-  "pages-asc": "Pages, Low",
+  "rating-desc": "Rating, Highest",
+  "rating-asc": "Rating, Lowest",
+  "added-desc": "Added, Most Recent",
+  "added-asc": "Added, Earliest",
   "pages-desc": "Pages, High",
-  "id-asc": "Added, Earliest",
-  "id-desc": "Added, Most Recent"
+  "pages-asc": "Pages, Low"
 };
+export type SortValue = keyof typeof sortDisplayLookup;
 
 export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal];
 
-const DEFAULT_SORT = "id-desc";
+const DEFAULT_SORT: SortValue = "added-desc";
 
 export const publicUser = new (class {
   value = $derived.by(() => {
@@ -31,9 +34,9 @@ export class SearchState {
     const childSubjects = searchParams.get("child-subjects");
     const noSubjects = searchParams.get("no-subjects") === "true";
 
-    const sort = searchParams.get("sort");
+    const sort = searchParams.get("sort") as SortValue | undefined;
     const sortString = sort ?? DEFAULT_SORT;
-    const [sortField, sortDirection] = sortString.split("-");
+    const [sortField, sortDirection] = sortString.split("-") as [BookSortKeys, "asc" | "desc"];
 
     const subjectHash = toHash<{ id: number; name: string }>(page.data.subjects);
     const subjectsObjects = subjects.map(id => subjectHash[id]).filter(s => s);
@@ -106,14 +109,18 @@ export class ChangeFilters {
   withoutFilters = $derived(`/books${this.userId ? `?userId=${this.userId}` : ""}`);
   pageTo = (val: number, totalPages?: number) => this.getPageToUrl(val, totalPages);
 
-  withSort(field: string) {
+  withSort(field: BookSortKeys) {
     const [sortField, sortDirection] = (this.url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
 
-    let direction = "asc";
+    let direction: "asc" | "desc" = "asc";
     if (field === sortField && sortDirection === "asc") {
       direction = "desc";
     }
-    return urlWithFilter(this.url, "sort", `${field}-${direction}`);
+    const newField: SortValue = `${field}-${direction}`;
+    if (newField === DEFAULT_SORT) {
+      return urlWithoutFilter(this.url, "sort");
+    }
+    return urlWithFilter(this.url, "sort", newField);
   }
 
   addSubject(id: number) {

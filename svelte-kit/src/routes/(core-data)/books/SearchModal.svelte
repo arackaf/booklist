@@ -16,7 +16,7 @@
   import DisplaySelectedSubjects from "$lib/components/subjectsAndTags/subjects/DisplaySelectedSubjects.svelte";
   import SelectAndDisplayContainer from "$lib/components/subjectsAndTags/SelectAndDisplayContainer.svelte";
 
-  import { SearchState, publicUser, sortDisplayLookup } from "./state/searchState.svelte";
+  import { SearchState, publicUser, sortDisplayLookup, type SortValue } from "./state/searchState.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
 
   type Props = {
@@ -32,7 +32,7 @@
 
   let titleEl = $state<HTMLInputElement | null>(null);
   let localSearchValues = $state<(typeof searchState)["value"]>({} as any);
-  let selectedSortValue = $state("id-desc");
+  let selectedSortValue = $state<SortValue>("added-desc");
   let localSubjects = $state<any[]>([]);
   let localTags = $state<any[]>([]);
   let noSubjects = $state(false);
@@ -55,7 +55,7 @@
 
   function syncSearchState() {
     localSearchValues = searchState.value;
-    selectedSortValue = localSearchValues.sort || "id-desc";
+    selectedSortValue = localSearchValues.sort || "added-desc";
     localSubjects = localSearchValues.subjects;
     localTags = localSearchValues.tags;
     noSubjects = localSearchValues.noSubjects;
@@ -70,7 +70,7 @@
   const onFormData = (evt: any) => {
     const searchParams: URLSearchParams = evt.formData;
 
-    if (searchParams.get("sort") === "id-desc") {
+    if (searchParams.get("sort") === "added-desc") {
       searchParams.delete("sort");
     }
 

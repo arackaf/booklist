@@ -63,7 +63,18 @@
         </a>
       </th>
       <th class="p-0 min-w-32">Subjects & Tags</th>
-      <th class="p-0 min-w-20"></th>
+      <th class="p-0 min-w-20">
+        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("rating")}>
+          Rating
+          {#if searchState.value.sortField == "rating"}
+            {#if searchState.value.sortDirection == "asc"}
+              <ChevronUpIcon />
+            {:else}
+              <ChevronDownIcon />
+            {/if}
+          {/if}
+        </a>
+      </th>
       <th class="p-0"></th>
       <th class="p-0 min-w-20">
         <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("pages")}>
@@ -78,9 +89,9 @@
         </a>
       </th>
       <th class="p-0">
-        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("id")}>
+        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("added")}>
           Added
-          {#if searchState.value.sortField == "id"}
+          {#if searchState.value.sortField == "added"}
             {#if searchState.value.sortDirection == "asc"}
               <ChevronUpIcon />
             {:else}
