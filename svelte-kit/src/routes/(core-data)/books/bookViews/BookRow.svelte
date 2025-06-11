@@ -159,6 +159,18 @@
     <div>
       {#if !isPublic}
         <div class="flex flex-col items-center">
+          <div class="min-h-9">
+            {#if book.averageReview}
+              <div class="flex flex-col items-center gap-0">
+                <BookRating averageReview={book.averageReview} numberReviews={book.numberReviews} />
+                <div class="text-xs text-neutral-500">
+                  <span>{book.averageReview} / ({book.numberReviews.toLocaleString()})</span>
+                </div>
+              </div>
+            {:else}
+              <div class="text-xs text-neutral-500">No reviews</div>
+            {/if}
+          </div>
           <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
             <Button
               type="submit"
@@ -182,11 +194,6 @@
               {/if}
             </Button>
           </BookReadSetter>
-          {#if book.averageReview}
-            <div class="mt-3">
-              <BookRating averageReview={book.averageReview} numberReviews={book.numberReviews} />
-            </div>
-          {/if}
         </div>
       {:else if book.isRead}
         <Badge class="inline-flex gap-1" variant="outline">Read <CheckIcon size={14} /></Badge>
