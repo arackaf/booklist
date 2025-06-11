@@ -5,12 +5,12 @@ import { toHash } from "$lib/state/helpers";
 export const sortDisplayLookup: Record<`${BookSortKeys}-${"asc" | "desc"}`, string> = {
   "title-asc": "Title A-Z",
   "title-desc": "Title Z-A",
-  "pages-asc": "Pages, Low",
-  "pages-desc": "Pages, High",
-  "added-asc": "Added, Earliest",
-  "added-desc": "Added, Most Recent",
+  "rating-desc": "Rating, Highest",
   "rating-asc": "Rating, Lowest",
-  "rating-desc": "Rating, Highest"
+  "added-desc": "Added, Most Recent",
+  "added-asc": "Added, Earliest",
+  "pages-desc": "Pages, High",
+  "pages-asc": "Pages, Low"
 };
 export type SortValue = keyof typeof sortDisplayLookup;
 
