@@ -78,9 +78,9 @@
         </a>
       </th>
       <th class="p-0">
-        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("id")}>
+        <a class="flex gap-1 justify-self-start" href={changeFilter.withSort("added")}>
           Added
-          {#if searchState.value.sortField == "id"}
+          {#if searchState.value.sortField == "added"}
             {#if searchState.value.sortDirection == "asc"}
               <ChevronUpIcon />
             {:else}

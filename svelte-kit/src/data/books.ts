@@ -1,7 +1,7 @@
 import { type SQLWrapper, and, or, not, eq, sql, isNotNull, like, ilike, exists, inArray, desc, asc } from "drizzle-orm";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 
-import type { Book, BookDetails, BookImages, BookSearch } from "./types";
+import type { Book, BookDetails, BookImages, BookSearch, BookSortKeys, BookSortValue } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "./constants";
 import { db, executeDrizzle } from "./dbUtils";
 import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable, books } from "./drizzle-schema";
@@ -57,11 +57,17 @@ const iosBookFields = {
   mediumImagePreview: booksTable.mediumImagePreview
 };
 
-const getSort = (sortPack: any = { id: -1 }) => {
-  const [rawField, rawDir] = Object.entries(sortPack)[0];
+const getSort = (sortPack: BookSortValue = { added: -1 }) => {
+  const [rawField, rawDir] = Object.entries(sortPack)[0] as [BookSortKeys, 1 | -1];
 
-  if (rawField == "id") {
+  if (rawField == "added") {
     return rawDir === -1 ? [desc(booksTable.dateAdded), desc(booksTable.id)] : [asc(booksTable.dateAdded), asc(booksTable.id)];
+  }
+
+  if (rawField == "rating") {
+    return rawDir === -1
+      ? [sql`${desc(booksTable.averageReview)} NULLS LAST`, sql`${desc(booksTable.numberReviews)} NULLS LAST`]
+      : [sql`${asc(booksTable.averageReview)} NULLS LAST`, sql`${asc(booksTable.numberReviews)} NULLS LAST`];
   }
 
   const field = rawField === "title" ? booksTable.title : booksTable.pages;

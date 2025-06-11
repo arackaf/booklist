@@ -66,10 +66,11 @@ export type BookDisplay = Book & {
   tagObjects: any[];
 };
 
-type BookSortKeys = "dateAdded" | "title" | "pages";
-type BookSortValue = Partial<{
-  [k in BookSortKeys]: number;
-}>;
+export type BookSortKeys = "added" | "title" | "pages" | "rating";
+
+export type BookSortValue = {
+  [K in BookSortKeys]: { [X in K]: 1 | -1 };
+}[BookSortKeys];
 
 export type BookSearch = {
   publicUser?: string;

@@ -70,7 +70,7 @@
   const onFormData = (evt: any) => {
     const searchParams: URLSearchParams = evt.formData;
 
-    if (searchParams.get("sort") === "id-desc") {
+    if (searchParams.get("sort") === "added-desc") {
       searchParams.delete("sort");
     }
 
