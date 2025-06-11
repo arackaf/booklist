@@ -12,11 +12,11 @@ export const sortDisplayLookup: Record<`${BookSortKeys}-${"asc" | "desc"}`, stri
   "rating-asc": "Rating, Lowest",
   "rating-desc": "Rating, Highest"
 };
-type SortValue = keyof typeof sortDisplayLookup;
+export type SortValue = keyof typeof sortDisplayLookup;
 
 export const getSortDisplay = (sortVal: SortValue) => sortDisplayLookup[sortVal];
 
-const DEFAULT_SORT = "id-desc";
+const DEFAULT_SORT: SortValue = "added-desc";
 
 export const publicUser = new (class {
   value = $derived.by(() => {
@@ -112,11 +112,15 @@ export class ChangeFilters {
   withSort(field: BookSortKeys) {
     const [sortField, sortDirection] = (this.url.searchParams.get("sort") ?? DEFAULT_SORT).split("-");
 
-    let direction = "asc";
+    let direction: "asc" | "desc" = "asc";
     if (field === sortField && sortDirection === "asc") {
       direction = "desc";
     }
-    return urlWithFilter(this.url, "sort", `${field}-${direction}`);
+    const newField: SortValue = `${field}-${direction}`;
+    if (newField === DEFAULT_SORT) {
+      return urlWithoutFilter(this.url, "sort");
+    }
+    return urlWithFilter(this.url, "sort", newField);
   }
 
   addSubject(id: number) {
