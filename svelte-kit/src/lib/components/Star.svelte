@@ -5,17 +5,18 @@
     class?: string | undefined;
     filled?: boolean | undefined;
     fillPercentage?: number | undefined;
+    starSize?: number;
   };
 
   const maskId = uuid();
-  let { class: className = "", filled, fillPercentage = 0 }: Props = $props();
+  let { class: className = "", filled, fillPercentage = 0, starSize = 12 }: Props = $props();
 
   const maskX = 1.9981999397277832;
   const maskWidth = 20.00180435180664;
   // other star color #D17E38
 </script>
 
-<svg fill="none" class={className} viewBox="0 0 24 24" width="12" height="12" xmlns="http://www.w3.org/2000/svg">
+<svg fill="none" class={className} viewBox="0 0 24 24" width={starSize} height={starSize} xmlns="http://www.w3.org/2000/svg">
   <path
     mask={fillPercentage ? `url(#star-mask-${maskId})` : null}
     class="stroke-[#D96E1E] stroke-1 {filled ? ' fill-[#D96E1E] ' : ''} {className || ''}"

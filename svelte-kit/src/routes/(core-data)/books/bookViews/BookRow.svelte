@@ -162,7 +162,7 @@
           <div class="min-h-9">
             {#if book.averageReview}
               <div class="flex flex-col items-center gap-0">
-                <BookRating averageReview={book.averageReview} numberReviews={book.numberReviews} />
+                <BookRating starSize={14} averageReview={book.averageReview} numberReviews={book.numberReviews} />
                 <div class="text-xs text-neutral-500">
                   <span>{book.averageReview} / ({book.numberReviews.toLocaleString()})</span>
                 </div>
@@ -171,29 +171,6 @@
               <div class="text-xs text-neutral-500">No reviews</div>
             {/if}
           </div>
-          <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
-            <Button
-              type="submit"
-              variant="outline"
-              disabled={readSaving || multiReadSaving}
-              class={cn("h-5 px-2 text-xs mt-0 flex", {
-                "bg-green-600": book.isRead,
-                "border-green-600": book.isRead,
-                "hover:bg-green-700": book.isRead,
-                "hover:border-green-700": book.isRead,
-                "text-muted-foreground": !book.isRead,
-                "text-background": book.isRead,
-                "hover:text-background": book.isRead
-              })}
-            >
-              <span>
-                {book.isRead ? "Read" : "Set read"}
-              </span>
-              {#if book.isRead}
-                <CheckIcon />
-              {/if}
-            </Button>
-          </BookReadSetter>
         </div>
       {:else if book.isRead}
         <Badge class="inline-flex gap-1" variant="outline">Read <CheckIcon size={14} /></Badge>
@@ -217,8 +194,33 @@
     </span>
   </td>
   <td>
-    <span class="text-sm">
-      {getDisplayDate(addedDate)}
-    </span>
+    <div class="flex flex-col">
+      <span class="min-h-10 text-sm">
+        {getDisplayDate(addedDate)}
+      </span>
+      <BookReadSetter ids={[id]} value={!book.isRead} bind:saving={readSaving}>
+        <Button
+          type="submit"
+          variant="outline"
+          disabled={readSaving || multiReadSaving}
+          class={cn("h-5 px-2 text-xs mt-0 flex", {
+            "bg-green-600": book.isRead,
+            "border-green-600": book.isRead,
+            "hover:bg-green-700": book.isRead,
+            "hover:border-green-700": book.isRead,
+            "text-muted-foreground": !book.isRead,
+            "text-background": book.isRead,
+            "hover:text-background": book.isRead
+          })}
+        >
+          <span>
+            {book.isRead ? "Read" : "Set read"}
+          </span>
+          {#if book.isRead}
+            <CheckIcon />
+          {/if}
+        </Button>
+      </BookReadSetter>
+    </div>
   </td>
 </tr>
