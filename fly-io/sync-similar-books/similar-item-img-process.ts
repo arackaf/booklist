@@ -11,7 +11,7 @@ async function main() {
   let bookNumber = 1;
 
   try {
-    const similarBooks = await getSimilarBooksWithoutImages(db, 3);
+    const similarBooks = await getSimilarBooksWithoutImages(db, 5);
 
     for (const book of similarBooks) {
       let index = bookNumber++;
