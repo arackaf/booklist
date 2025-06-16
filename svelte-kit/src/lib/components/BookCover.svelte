@@ -36,23 +36,19 @@
 
   let previewString = $derived(previewToUse == null ? "" : typeof previewToUse === "string" ? previewToUse : previewToUse.b64);
   let sizingStyle = $derived(previewToUse != null && typeof previewToUse === "object" ? `width:${previewToUse.w}px;height:${previewToUse.h}px` : "");
-  let urlToUse = $derived(getUrlToUse(book, size, url, sizingStyle));
+  let urlToUse = $derived(getUrlToUse(book, size, url));
 
-  function getUrlToUse(book: BookImagesPassed | null, size: Sizes, url: string | null, sizingStyle: string) {
+  function getUrlToUse(book: BookImagesPassed | null, size: Sizes, url: string | null) {
     if (!book) {
       return url;
     }
-    // we know the exact size
-    if (sizingStyle) {
-      return book.mediumImage || book.smallImage || book.mobileImage;
+
+    if (size === "medium") {
+      return book.mediumImage;
+    } else if (size === "small") {
+      return book.smallImage;
     } else {
-      if (size === "medium") {
-        return book.mediumImage;
-      } else if (size === "small") {
-        return book.smallImage;
-      } else {
-        return book.mobileImage;
-      }
+      return book.mobileImage;
     }
   }
 
