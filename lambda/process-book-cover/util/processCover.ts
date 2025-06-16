@@ -29,12 +29,6 @@ const SIZE_WIDTHS: { [k in Sizes]: number } = {
   medium: 106
 };
 
-const QUALITIES: { [k in Sizes]: number } = {
-  mobile: 80,
-  small: 80,
-  medium: 90
-};
-
 export async function processCover(url, userId) {
   const result = await sharpDownload(url);
   if (result.error) {
@@ -50,43 +44,38 @@ export async function processCover(url, userId) {
 
   const uploadPath = (size: Sizes) => `${size}-covers/${userId}/${uuid()}${extension}`;
 
-  if (metadata.width >= SIZE_WIDTHS.medium) {
-    return uploadAndGeneratePreviews(img, uploadPath("medium"), "medium", "small", "mobile");
-  } else if (metadata.width >= SIZE_WIDTHS.small) {
-    return uploadAndGeneratePreviews(img, uploadPath("small"), "small", "mobile");
-  } else if (metadata.width >= SIZE_WIDTHS.mobile) {
-    return uploadAndGeneratePreviews(img, uploadPath("mobile"), "mobile");
+  if (metadata.width >= SIZE_WIDTHS.medium * 2) {
+    return uploadAndGeneratePreviews(img, uploadPath, "medium", "small", "mobile");
+  } else if (metadata.width >= SIZE_WIDTHS.small * 2) {
+    return uploadAndGeneratePreviews(img, uploadPath, "small", "mobile");
   }
 
   return null;
 }
 
-async function uploadAndGeneratePreviews(originalImage: Sharp, uploadPath: string, ...sizes: Sizes[]) {
+async function uploadAndGeneratePreviews(originalImage: Sharp, getUloadPath: (size: string) => string, ...sizes: Sizes[]) {
   const [currentSize, ...otherSizes] = sizes;
 
-  const sizedImage = await sizeImage(originalImage, currentSize);
-
   try {
-    const buffer = await sizedImage.toBuffer();
-    const s3Result = await uploadToS3(uploadPath, buffer);
-
-    if (!s3Result.success) {
-      console.log("Upload to S3 failed");
+    const mainSizeResult = await processSize(originalImage, currentSize, getUloadPath);
+    if (!mainSizeResult) {
       return null;
     }
-    console.log("Image upload to S3 succeeded");
 
-    const { url } = s3Result;
-    const { base64 } = await getPreview(url);
-    const metaData = await sizedImage.metadata();
-
+    const { url, base64, metaData } = mainSizeResult;
     const result: Partial<ImageData> = {};
 
     fillImageData(currentSize, result, url, base64, metaData);
 
     for (const size of otherSizes) {
-      const sizedMetadata = await getSizeMetadata(sizedImage, size);
-      fillImageData(size, result, url, base64, sizedMetadata);
+      const nextSizeResult = await processSize(originalImage, size, getUloadPath);
+
+      if (!nextSizeResult) {
+        continue;
+      }
+
+      const { url, base64, metaData } = nextSizeResult;
+      fillImageData(size, result, url, base64, metaData);
     }
 
     return result;
@@ -94,6 +83,26 @@ async function uploadAndGeneratePreviews(originalImage: Sharp, uploadPath: strin
     console.log("Error sizing and previewing", er);
     return null;
   }
+}
+
+async function processSize(image: Sharp, size: Sizes, getUloadPath: (size: string) => string) {
+  const sizedImage = await sizeImage(image, SIZE_WIDTHS[size] * 2);
+
+  const buffer = await sizedImage.toBuffer();
+  const uploadPath = getUloadPath(size);
+  const s3Result = await uploadToS3(uploadPath, buffer);
+
+  if (!s3Result.success) {
+    console.log("Upload to S3 failed");
+    return null;
+  }
+  console.log("Image upload to S3 succeeded");
+
+  const { url } = s3Result;
+  const { base64 } = await getPreview(url);
+  const metaData = await getSizeMetadata(sizedImage, size);
+
+  return { url, base64, metaData };
 }
 
 function fillImageData(size: Sizes, imgData: Partial<ImageData>, url: string, base64Preview: string, imgMetaData: Metadata) {
@@ -113,8 +122,8 @@ function fillImageData(size: Sizes, imgData: Partial<ImageData>, url: string, ba
   }
 }
 
-async function sizeImage(img: Sharp, size: Sizes) {
-  const sizedImageBuffer = await img.resize(SIZE_WIDTHS[size]).jpeg({ quality: 95 }).toBuffer();
+async function sizeImage(img: Sharp, width: number) {
+  const sizedImageBuffer = await img.resize(width).jpeg({ quality: 95 }).toBuffer();
   return sharp(sizedImageBuffer);
 }
 
@@ -123,7 +132,7 @@ async function getPreview(url: string) {
 }
 
 async function getSizeMetadata(sharpImage: Sharp, size: Sizes) {
-  const sizedImage = await sizeImage(sharpImage, size);
+  const sizedImage = await sizeImage(sharpImage, SIZE_WIDTHS[size]);
 
   return sizedImage.metadata();
 }
