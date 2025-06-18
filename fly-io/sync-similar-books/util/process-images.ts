@@ -6,6 +6,8 @@ const client = new LambdaClient({
 });
 
 export type ProcessImagesResponse = {
+  mediumImage: string;
+  mediumImagePreview: any;
   smallImage: string;
   smallImagePreview: any;
   mobileImage: string;

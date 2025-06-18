@@ -3,11 +3,12 @@ import { desc, eq, isNull, lt, or, InferSelectModel, InferInsertModel, Update, i
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
 import * as schema from "../drizzle/drizzle-schema";
-import { books as booksTable } from "../drizzle/drizzle-schema";
+
 import { isbn13To10 } from "../util/isbn13to10";
 import { doScrape, ScrapeOptions, SimilarBookResult } from "./scrape";
 import { Page } from "puppeteer-core";
 
+const booksTable = schema.books;
 type Book = InferSelectModel<typeof booksTable>;
 
 export async function getNextBooks(db: NodePgDatabase<typeof schema>, count: number = 10): Promise<Book[]> {
