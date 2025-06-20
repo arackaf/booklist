@@ -1,6 +1,6 @@
 import "./util/config";
 
-import { and, desc, eq, InferSelectModel, like } from "drizzle-orm";
+import { and, desc, eq, like } from "drizzle-orm";
 import { initializePostgres } from "./util/dbUtils";
 
 import * as schema from "./drizzle/drizzle-schema";
