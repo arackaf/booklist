@@ -44,6 +44,7 @@ async function main() {
 
       if (imageUrl) {
         const newImageData = await processImages(imageUrl);
+        console.log("newImageData", newImageData);
         if (newImageData.mediumImage && newImageData.smallImage) {
           console.log("Updating book", book.title);
           await db.update(booksTable).set(newImageData).where(eq(booksTable.id, book.id));
