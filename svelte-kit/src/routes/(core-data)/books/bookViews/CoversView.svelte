@@ -11,7 +11,7 @@
 
   let { books, isPublic }: Props = $props();
 
-  let { subjects, tags } = $derived($page.data);
+  let { subjects, tags, isAdminUser } = $derived($page.data);
 
   let previewing = $state(false);
   let bookPreviewing = $state<Book | null>(null);
@@ -36,7 +36,7 @@
               <BookCover imgClasses="max-w-full" size="medium" {book} />
             </div>
             <figcaption class="whitespace-nowrap overflow-hidden text-ellipsis text-xs font-bold mt-auto p-[2px]">
-              {book.title}
+              {isAdminUser ? book.id + " " : ""}{book.title}
             </figcaption>
           </figure>
         </button>
