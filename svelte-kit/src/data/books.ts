@@ -61,7 +61,9 @@ const getSort = (sortPack: BookSortValue = { added: -1 }) => {
   const [rawField, rawDir] = Object.entries(sortPack)[0] as [BookSortKeys, 1 | -1];
 
   if (rawField == "added") {
-    return rawDir === -1 ? [desc(booksTable.dateAdded), desc(booksTable.id)] : [asc(booksTable.dateAdded), asc(booksTable.id)];
+    return rawDir === -1
+      ? [desc(sql`${booksTable.dateAdded}::date`), desc(booksTable.id)]
+      : [asc(sql`${booksTable.dateAdded}::date`), asc(booksTable.id)];
   }
 
   if (rawField == "rating") {
@@ -194,6 +196,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       .from(booksTable)
       .where(and(...conditions));
 
+    console.log("\nQuery:\n", booksReq.toSQL(), "\n");
     const [books, countResp] = await Promise.all([booksReq, booksCount]);
     const end = +new Date();
 
