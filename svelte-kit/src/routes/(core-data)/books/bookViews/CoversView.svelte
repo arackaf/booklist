@@ -24,7 +24,7 @@
 
 <BookDetailsModal isOpen={previewing} onHide={() => (previewing = false)} viewingBook={bookPreviewing} {subjects} {tags} {isPublic} />
 
-<div class="pt-2">
+<div class="pt-2 mb-10">
   <div class="flex flex-col items-center mt-4">
     <div style="border: 0" class="flex gap-2 md:gap-3 lg:gap-4 justify-center flex-wrap m-[-15px] w-full max-w-7xl">
       {#each books as book}
