@@ -1,6 +1,6 @@
 import "./util/config";
 
-import { and, desc, eq, like } from "drizzle-orm";
+import { and, desc, eq, gte, like, lte, sql } from "drizzle-orm";
 import { initializePostgres } from "./util/dbUtils";
 
 import * as schema from "./drizzle/drizzle-schema";
@@ -9,8 +9,8 @@ import { getBookInfo } from "./util/bright-data";
 import { processImages } from "./util/process-images";
 const booksTable = schema.books;
 
-const userId_live = "573d1b97120426ef0078aa92";
-const userId = "60a93babcc3928454b5d1cc6";
+const userId = "573d1b97120426ef0078aa92";
+const userId_dev = "60a93babcc3928454b5d1cc6";
 
 async function main() {
   const { db, dispose: disposeDb } = initializePostgres();
@@ -19,9 +19,12 @@ async function main() {
     const books = await db
       .select()
       .from(booksTable)
-      .where(and(eq(booksTable.userId, userId), like(booksTable.smallImage, "%/medium-covers/%")))
-      .orderBy(desc(booksTable.id))
-      .limit(5);
+      .where(eq(booksTable.userId, "573d1b97120426ef0078aa92"))
+      // .where(and(eq(booksTable.userId, userId), like(booksTable.smallImage, "%/medium-covers/%")))
+      .orderBy(desc(sql`${booksTable.dateAdded}::date`), desc(booksTable.id))
+      // admiral new century
+      .offset(200)
+      .limit(50);
 
     for (const book of books) {
       const { isbn: isbnOriginal, title } = book;

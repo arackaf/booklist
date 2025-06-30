@@ -16,9 +16,9 @@ export async function getBookInfo(url: string) {
 
   const snapshotId = resp.snapshot_id;
   if (snapshotId) {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       console.log("Wait", i);
-      await wait(i === 0 ? 15000 : 5000);
+      await wait(i === 0 ? 15000 : i < 5 ? 7000 : 15000);
       const resp = await fetch(`https://api.brightdata.com/datasets/v3/progress/${snapshotId}`, {
         method: "GET",
         headers: {
