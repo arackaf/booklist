@@ -20,6 +20,19 @@
 
   onMount(() => {
     inputEl?.focus();
+
+    const x = ~~(Math.random() * 10);
+
+    const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    (async function () {
+      for (;;) {
+        const x = ~~(Math.random() * 10);
+        fetch("/api/cache-test?x=" + x);
+
+        await wait(300);
+        break;
+      }
+    })();
   });
 
   const defaultEmptyBook = () =>
