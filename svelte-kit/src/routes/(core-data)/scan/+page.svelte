@@ -26,10 +26,10 @@
     const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     (async function () {
       for (;;) {
-        const x = ~~(Math.random() * 10);
-        fetch("/api/cache-test?x=" + x);
-
         await wait(300);
+        const x = 5; // ~~(Math.random() * 10);
+        fetch("/api/cache-test?x=" + (window as any).x);
+
         break;
       }
     })();
