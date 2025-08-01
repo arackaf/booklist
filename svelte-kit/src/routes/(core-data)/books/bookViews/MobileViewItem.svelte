@@ -3,6 +3,7 @@
 
   import BookCover from "$lib/components/BookCover.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
+  import { CheckIcon } from "lucide-svelte";
 
   type Props = {
     book: Book;
@@ -27,6 +28,11 @@
       <div class="flex flex-col h-full overflow-hidden">
         <span class="text-sm leading-[normal] truncate">{book.title}</span>
         <SubTitleText>{book.authors.length ? book.authors.join(", ") : ""}</SubTitleText>
+        {#if book.isRead}
+          <div class="mt-auto" title="Read">
+            <CheckIcon class="text-green-600 w-4 h-4" />
+          </div>
+        {/if}
       </div>
     </div>
   </div>
