@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 
-import type { BookSearch } from "$data/types";
+import type { BookSearch, BookSortKeys, BookSortValue } from "$data/types";
 import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "$data/constants";
 import { getUserIdFromToken } from "$lib/util/fireBaseAuth.js";
@@ -53,7 +53,7 @@ export async function POST({ request, url, setHeaders }) {
     const [field, dir] = sortString.split("-");
     packet.sort = {
       [field]: dir === "desc" ? -1 : 1
-    };
+    } as BookSortValue;
   }
 
   const booksPacket = await searchBooks(userId!, packet);

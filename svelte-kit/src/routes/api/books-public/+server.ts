@@ -1,6 +1,6 @@
 import { json } from "@sveltejs/kit";
 
-import type { BookSearch } from "$data/types";
+import type { BookSearch, BookSortValue } from "$data/types";
 import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE } from "$data/constants";
 
@@ -39,7 +39,7 @@ export async function GET({ url }) {
     const [field, dir] = sortString.split("-");
     packet.sort = {
       [field]: dir === "desc" ? -1 : 1
-    };
+    } as BookSortValue;
   }
 
   const booksPacket = await searchBooks(userId!, packet);
