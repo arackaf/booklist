@@ -65,7 +65,7 @@
     {/snippet}
   </Popover.Trigger>
 
-  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0 {popoverClass}" onanimationend={closeAnimationEnd}>
+  <Popover.Content align="start" side="bottom" class="w-[200px] p-0 {popoverClass}" onanimationend={closeAnimationEnd}>
     <div>
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search" />
