@@ -38,45 +38,12 @@
       search = "";
     }
   }
-
-  let popoverTriggerRef = $state<HTMLButtonElement | null>(null);
-  let popoverContentRef = $state<HTMLDivElement | null>(null);
-  let popoverDirection = $state<"bottom" | "top">("bottom");
-
-  function updatePopoverDirection() {
-    if (!popoverTriggerRef || !popoverContentRef || !open) {
-      return;
-    }
-
-    const triggerBottom = popoverTriggerRef.getBoundingClientRect().bottom;
-    const height = window.innerHeight;
-    const deltaBottom = height - triggerBottom;
-    const deltaTop = popoverTriggerRef.getBoundingClientRect().top;
-    const contentHeight = popoverContentRef?.offsetHeight;
-
-    if (deltaBottom > contentHeight) {
-      popoverDirection = "bottom";
-    } else {
-      popoverDirection = deltaTop > deltaBottom ? "top" : "bottom";
-    }
-  }
-
-  $effect(() => {
-    window.addEventListener("scroll", updatePopoverDirection, { capture: true, passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", updatePopoverDirection, { capture: true });
-    };
-  });
-
-  $effect(updatePopoverDirection);
 </script>
 
 <Popover.Root {open} onOpenChange={newVal => (open = newVal)}>
   <Popover.Trigger {disabled}>
     {#snippet child({ props })}
       <Button
-        bind:ref={popoverTriggerRef}
         size="sm"
         variant="outline"
         role="combobox"
@@ -98,13 +65,7 @@
     {/snippet}
   </Popover.Trigger>
 
-  <Popover.Content
-    bind:ref={popoverContentRef}
-    avoidCollisions={false}
-    side={popoverDirection}
-    class="w-[200px] p-0 {popoverClass}"
-    onanimationend={closeAnimationEnd}
-  >
+  <Popover.Content avoidCollisions={false} side="bottom" class="w-[200px] p-0 {popoverClass}" onanimationend={closeAnimationEnd}>
     <div>
       <Command.Root shouldFilter={false}>
         <Command.Input bind:value={search} placeholder="Search" />
