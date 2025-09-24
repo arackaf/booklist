@@ -1,8 +1,10 @@
 {
   "name": "remove-auth-legacy-ids",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
+    "dev": "node --loader ts-node/esm index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -13,5 +15,9 @@
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.5",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
