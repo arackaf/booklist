@@ -25,4 +25,4 @@ const dispose = () => {
   pool.end();
 };
 
-export { db, dispose };
+export { db as postgresDb, dispose };
