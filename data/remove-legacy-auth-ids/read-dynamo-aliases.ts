@@ -13,14 +13,17 @@ const dynamoConfig: DynamoDBClientConfig = {
 
 export const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
 
-const getUserAliasKey = (userId: string) => `UserAlias#${userId}`;
-
-export async function getUserSync(userId: string): Promise<string | null> {
+export async function getUserAliases(): Promise<any> {
   try {
-    const syncEntry = await dynamo.scan({
+    const allAliases = await dynamo.scan({
       TableName: ENV.DYNAMO_TABLE!,
-      FilterExpression: "pk = :key"
+      FilterExpression: "begins_with(pk, :prefix)",
+      ExpressionAttributeValues: {
+        ":prefix": "UserAlias#"
+      }
     });
+
+    return allAliases.Items;
   } catch (er) {
     console.log("Error getting user sync", er);
     return null;
