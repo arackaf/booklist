@@ -5,8 +5,6 @@ import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle-schema.js";
 import { ENV } from "../config/env.js";
 
-console.log({ CONN: ENV.FLY_DB });
-
 const POSTGRES_CONNECTION_STRING = ENV.FLY_DB;
 
 const { Pool } = pg;
