@@ -26,3 +26,4 @@ const dispose = () => {
 };
 
 export { db as postgresDb, dispose };
+export { pool };
