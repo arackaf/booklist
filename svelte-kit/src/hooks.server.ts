@@ -80,12 +80,6 @@ const auth = SvelteKitAuth({
         return false;
       }
 
-      const userSync = await getUserSync(account.providerAccountId);
-
-      if (userSync) {
-        (account as any).syncdId = userSync;
-      }
-
       return true;
     },
     async jwt({ token, account }) {
