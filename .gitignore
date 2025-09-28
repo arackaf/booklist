@@ -33,3 +33,4 @@ lambda/my-library-pg-backup/secrets.yml
 lambda/sync-similar-books/.env.local
 lambda/sync-similar-books/.env.prod
 .env.*
+data/remove-legacy-auth-ids/backup.sql
