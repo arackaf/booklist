@@ -80,15 +80,12 @@ const auth = SvelteKitAuth({
         return false;
       }
 
-      const userSync = await getUserSync(account.providerAccountId);
-
-      if (userSync) {
-        (account as any).syncdId = userSync;
-      }
-
       return true;
     },
     async jwt({ token, account }) {
+      if (account) {
+        token.ver = "2";
+      }
       token.userId ??= account?.syncdId || account?.providerAccountId;
       if (account?.syncdId) {
         token.legacySync = true;
@@ -107,6 +104,7 @@ const auth = SvelteKitAuth({
       if (token.provider) {
         session.provider = token.provider as string;
       }
+      session.ver = token.ver;
 
       return session;
     }
