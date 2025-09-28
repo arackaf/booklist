@@ -196,7 +196,6 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       .from(booksTable)
       .where(and(...conditions));
 
-    console.log("\nQuery:\n", booksReq.toSQL(), "\n");
     const [books, countResp] = await Promise.all([booksReq, booksCount]);
     const end = +new Date();
 
