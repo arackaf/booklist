@@ -1,5 +1,6 @@
 <script lang="ts">
   import { mount, onMount } from "svelte";
+  import { signOut } from "@auth/sveltekit/client";
 
   import Toastify from "toastify-js";
 
@@ -8,7 +9,7 @@
   import ScanToasterSuccessContent from "$lib/components/ScanToasterResultContent.svelte";
 
   let { data, children } = $props();
-  let { loggedIn, userId } = $derived(data);
+  let { loggedIn, userId, forceLogout } = $derived(data);
 
   function startWebSocket() {
     if (window.ws) {
@@ -77,6 +78,10 @@
   }
 
   onMount(() => {
+    if (forceLogout) {
+      signOut();
+    }
+
     if (loggedIn) {
       checkPendingCount();
     }

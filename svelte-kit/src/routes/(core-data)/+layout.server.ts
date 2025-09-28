@@ -20,6 +20,7 @@ export async function load({ locals, request, fetch }: any) {
 
   let tags: Promise<Tag[]> | Tag[] = allTags(activeUserId);
   let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
+  let forceLogout = !!session.userId && session?.ver !== "2";
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
   if (publicUserId) {
@@ -36,6 +37,7 @@ export async function load({ locals, request, fetch }: any) {
   return {
     isAdminUser,
     isPublic,
+    forceLogout,
     hasPublicId: !!publicUserId,
     publicUser,
     colors: await colors,
