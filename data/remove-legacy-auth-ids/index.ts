@@ -60,8 +60,6 @@ async function main() {
             userId: accountId
           })
           .where(eq(userInfoCache.userId, existingUserId));
-
-        await tx.rollback();
       });
     } catch (error) {
       console.error("Error updating user", existingUserId, "to", accountId, error);
