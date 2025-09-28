@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { MessageCircleWarningIcon, TerminalIcon } from "lucide-svelte";
+  import { MessageCircleWarningIcon, TerminalIcon, TriangleAlertIcon } from "lucide-svelte";
 
   import type { Book } from "$data/types";
 
@@ -108,11 +108,19 @@
         {#if !books.length}
           <div>
             {#if !hasPublicId && searchState.value.activeFilterCount === 0}
-              <Alert.Root>
+              <Alert.Root class="mt-2">
                 <TerminalIcon class="size-4" />
                 <Alert.Title>Hi there!</Alert.Title>
                 <Alert.Description>
                   It looks like there's nothing to show. Once you add some books to your library they'll show up here.
+                </Alert.Description>
+              </Alert.Root>
+              <Alert.Root class="mt-2">
+                <TriangleAlertIcon class="size-4" />
+                <Alert.Title>Heads up!</Alert.Title>
+                <Alert.Description>
+                  There's been an update to this app's auth (and forcing a logout is apparently tricky) - you may need to logout, and log back in to
+                  get all your books back.
                 </Alert.Description>
               </Alert.Root>
             {:else}
