@@ -13,7 +13,7 @@ const redirectLookup = {
   "573d1b97120426ef0078aa92": "106394015208813116232"
 };
 
-export async function load({ locals, request, fetch, url }: any) {
+export async function load({ locals, request, fetch }: any) {
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
@@ -39,7 +39,7 @@ export async function load({ locals, request, fetch, url }: any) {
 
       const lookupRedirectUserId = redirectLookup[publicUserId];
       if (lookupRedirectUserId) {
-        const newUrl = new URL(url);
+        const newUrl = new URL(request.url);
         newUrl.searchParams.set("user", lookupRedirectUserId);
         return redirect(308, newUrl.toString());
       }
