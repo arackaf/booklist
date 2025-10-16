@@ -6,9 +6,14 @@ import { getUser } from "$data/user";
 import { getPublicId } from "$lib/util/getPublicId";
 
 import { env } from "$env/dynamic/private";
+import { redirect } from "@sveltejs/kit";
 const { ADMIN_USER } = env;
 
-export async function load({ locals, request, fetch }: any) {
+const redirectLookup = {
+  "573d1b97120426ef0078aa92": "106394015208813116232"
+};
+
+export async function load({ locals, request, fetch, url }: any) {
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
@@ -31,6 +36,13 @@ export async function load({ locals, request, fetch }: any) {
       subjects = [];
     } else {
       isPublic = true;
+
+      const lookupRedirectUserId = redirectLookup[publicUserId];
+      if (lookupRedirectUserId) {
+        const newUrl = new URL(url);
+        newUrl.searchParams.set("user", lookupRedirectUserId);
+        return redirect(308, newUrl.toString());
+      }
     }
   }
 
