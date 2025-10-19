@@ -86,9 +86,6 @@ const auth = SvelteKitAuth({
         token.ver = "2";
       }
       token.userId ??= account?.syncdId || account?.providerAccountId;
-      if (account?.syncdId) {
-        token.legacySync = true;
-      }
       if (account?.provider) {
         token.provider = account?.provider;
       }
@@ -97,9 +94,6 @@ const auth = SvelteKitAuth({
     },
     async session({ session, token }: any) {
       session.userId = token.userId as string;
-      if (token.legacySync) {
-        session.legacySync = true;
-      }
       if (token.provider) {
         session.provider = token.provider as string;
       }

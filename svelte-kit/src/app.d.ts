@@ -6,7 +6,6 @@ declare module "@auth/core/types" {
   interface Session {
     userId: string;
     provider: string;
-    legacySync: boolean;
   }
 }
 
