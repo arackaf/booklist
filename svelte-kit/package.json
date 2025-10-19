@@ -59,7 +59,6 @@
     "drizzle-kit": "^0.30.4",
     "drizzle-orm": "^0.39.2",
     "escape-string-regexp": "^5.0.0",
-    "firebase-admin": "^11.5.0",
     "formsnap": "^2.0.1",
     "lodash.debounce": "^4.0.8",
     "lodash.orderby": "^4.6.0",

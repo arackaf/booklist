@@ -21,7 +21,6 @@ const {
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBAdapter } from "@next-auth/dynamodb-adapter";
-import { getUserSync } from "$data/legacyUser";
 import { initializePostgres } from "$data/dbUtils";
 import { initializeDynamo } from "$data/dynamoHelpers";
 
