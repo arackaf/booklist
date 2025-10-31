@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../data/dbUtils"; // your drizzle instance
 
 import { env } from "$env/dynamic/private";
-import { account, session, user, verification } from "$data/auth-schema";
+import { account } from "$data/auth-schema";
 import { eq } from "drizzle-orm";
 
 const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, BETTER_AUTH_BASE_URL } = env;
@@ -12,15 +12,7 @@ export let auth: ReturnType<typeof betterAuth> = null as any;
 
 export const initializeAuth = () => {
   auth = betterAuth({
-    database: drizzleAdapter(db, {
-      provider: "pg",
-      schema: {
-        user,
-        session,
-        account,
-        verification
-      }
-    }),
+    database: drizzleAdapter(db, { provider: "pg" }),
     socialProviders: {
       google: {
         clientId: GOOGLE_AUTH_CLIENT_ID,
