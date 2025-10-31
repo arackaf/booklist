@@ -9,7 +9,7 @@
   import ScanToasterSuccessContent from "$lib/components/ScanToasterResultContent.svelte";
 
   let { data, children } = $props();
-  let { loggedIn, userId, forceLogout } = $derived(data);
+  let { loggedIn, userId } = $derived(data);
 
   function startWebSocket() {
     if (window.ws) {
@@ -78,10 +78,6 @@
   }
 
   onMount(() => {
-    if (forceLogout) {
-      authClient.signOut();
-    }
-
     if (loggedIn) {
       checkPendingCount();
     }
