@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET } = env;
 
 export let auth: ReturnType<typeof betterAuth> = null as any;
-console.log({ GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET });
+
 export const initializeAuth = () => {
   auth = betterAuth({
     database: drizzleAdapter(db, { provider: "pg" }),
