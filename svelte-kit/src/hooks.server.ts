@@ -3,7 +3,7 @@ import { SvelteKitAuth } from "@auth/sveltekit";
 import GoogleProvider from "@auth/core/providers/google";
 import GithubProvider from "@auth/core/providers/github";
 
-import { auth, initializeAuth } from "$lib/auth"; // path to your auth file
+import { auth, getProviderId, initializeAuth } from "$lib/auth"; // path to your auth file
 import { svelteKitHandler } from "better-auth/svelte-kit";
 
 import { env } from "$env/dynamic/private";
@@ -111,13 +111,14 @@ const old_auth = SvelteKitAuth({
 const PRELOAD = new Set(["font", "js", "css"]);
 
 export async function handle({ event, resolve }: any) {
-  // Fetch current session from Better Auth
-  const session = await auth.api.getSession({
+  const sessionPayload = await auth.api.getSession({
     headers: event.request.headers
   });
 
-  console.log("HOOK", { session });
-  event.locals.getSession = () => session;
+  if (sessionPayload && sessionPayload.session) {
+    const providerId = await getProviderId(sessionPayload.session.userId);
+  }
+  event.locals.getSession = () => sessionPayload?.session || null;
 
   return svelteKitHandler({ event, resolve, auth, building });
 }

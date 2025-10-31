@@ -3,6 +3,8 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../data/dbUtils"; // your drizzle instance
 
 import { env } from "$env/dynamic/private";
+import { account } from "$data/auth-schema";
+import { eq } from "drizzle-orm";
 
 const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET } = env;
 
@@ -19,4 +21,20 @@ export const initializeAuth = () => {
       }
     }
   });
+};
+
+const providerIdMap = new Map<string, string>();
+
+export const getProviderId = async (userId: string) => {
+  if (providerIdMap.has(userId)) {
+    return providerIdMap.get(userId);
+  }
+
+  const [user] = await db.select().from(account).where(eq(account.userId, userId));
+  console.log("FOUND:", { user });
+
+  const providerId = user?.providerId;
+  providerIdMap.set(userId, providerId);
+
+  return providerId;
 };
