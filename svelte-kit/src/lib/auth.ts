@@ -34,7 +34,6 @@ export const getProviderId = async (userId: string) => {
   }
 
   const [user] = await db.select().from(account).where(eq(account.userId, userId));
-  console.log("FOUND:", { user });
 
   const providerId = user!.accountId;
   providerIdMap.set(userId, providerId);
