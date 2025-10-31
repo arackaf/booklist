@@ -6,7 +6,7 @@ import { env } from "$env/dynamic/private";
 import { account } from "$data/auth-schema";
 import { eq } from "drizzle-orm";
 
-const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET } = env;
+const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, BETTER_AUTH_BASE_URL } = env;
 
 export let auth: ReturnType<typeof betterAuth> = null as any;
 
@@ -21,6 +21,15 @@ export const initializeAuth = () => {
       github: {
         clientId: GITHUB_AUTH_CLIENT_ID,
         clientSecret: GITHUB_AUTH_CLIENT_SECRET
+      }
+    },
+    baseURL: BETTER_AUTH_BASE_URL,
+    session: {
+      expiresIn: 60 * 60 * 24 * 7, // 7 days
+      updateAge: 60 * 60 * 24, // Update session every 1 day
+      cookieCache: {
+        enabled: true,
+        maxAge: 60 * 60 * 24 * 120 // 5 minutes
       }
     }
   });
