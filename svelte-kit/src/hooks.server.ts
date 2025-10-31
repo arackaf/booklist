@@ -110,16 +110,14 @@ const old_auth = SvelteKitAuth({
 
 const PRELOAD = new Set(["font", "js", "css"]);
 
-async function handleFn({ event, resolve }: any) {
-  const response = await resolve(event, {
-    preload: ({ type }: any) => PRELOAD.has(type)
+export async function handle({ event, resolve }: any) {
+  // Fetch current session from Better Auth
+  const session = await auth.api.getSession({
+    headers: event.request.headers
   });
 
-  return response;
-}
+  console.log("HOOK", { session });
+  event.locals.getSession = () => session;
 
-async function svelteKitAuth({ event, resolve }) {
-  return svelteKitHandler({ event, resolve, auth });
+  return svelteKitHandler({ event, resolve, auth, building });
 }
-
-export const handle = sequence(handleFn, svelteKitAuth);

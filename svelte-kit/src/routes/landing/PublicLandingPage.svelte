@@ -45,15 +45,6 @@
               >
                 Login or create an account
               </Button>
-              <Button
-                class="self-start"
-                theme="primary"
-                onclick={() => {
-                  authClient.signOut();
-                }}
-              >
-                Logout
-              </Button>
             {:else}
               <Button class="self-start" variant="default" href="/books">Go to your library</Button>
             {/if}
