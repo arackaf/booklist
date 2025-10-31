@@ -38,10 +38,9 @@
                 variant="outline"
                 onclick={() => {
                   authClient.signIn.social({
-                    // provider: "google",
                     provider: "google",
                     callbackURL: "/books"
-                  }); //("", { callbackUrl: "/books" });
+                  });
                 }}
               >
                 <GoogleIcon className="w-[16px]! h-[16px]!" /> Login with Google
@@ -51,10 +50,9 @@
                 variant="outline"
                 onclick={() => {
                   authClient.signIn.social({
-                    // provider: "google",
                     provider: "github",
                     callbackURL: "/books"
-                  }); //("", { callbackUrl: "/books" });
+                  });
                 }}
               >
                 <GithubIcon className="w-[18px]! h-[18px]!" /> Login with GitHub
