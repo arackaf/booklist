@@ -2,6 +2,8 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import { page } from "$app/stores";
   import { authClient } from "$lib/auth-client";
+  import GithubIcon from "$lib/svg/GithubIcon.svelte";
+  import GoogleIcon from "$lib/svg/GoogleIcon.svelte";
 
   let { loggedIn } = $derived($page.data);
 </script>
@@ -33,7 +35,20 @@
             {#if !loggedIn}
               <Button
                 class="self-start"
-                variant="default"
+                variant="outline"
+                onclick={() => {
+                  authClient.signIn.social({
+                    // provider: "google",
+                    provider: "google",
+                    callbackURL: "/books"
+                  }); //("", { callbackUrl: "/books" });
+                }}
+              >
+                <GoogleIcon className="w-[16px]! h-[16px]!" /> Login with Google
+              </Button>
+              <Button
+                class="self-start"
+                variant="outline"
                 onclick={() => {
                   authClient.signIn.social({
                     // provider: "google",
@@ -42,7 +57,7 @@
                   }); //("", { callbackUrl: "/books" });
                 }}
               >
-                Login or create an account
+                <GithubIcon className="w-[18px]! h-[18px]!" /> Login with GitHub
               </Button>
             {:else}
               <Button class="self-start" variant="default" href="/books">Go to your library</Button>
