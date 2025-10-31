@@ -27,14 +27,17 @@ const providerIdMap = new Map<string, string>();
 
 export const getProviderId = async (userId: string) => {
   if (providerIdMap.has(userId)) {
-    return providerIdMap.get(userId);
+    return providerIdMap.get(userId)!;
   }
 
   const [user] = await db.select().from(account).where(eq(account.userId, userId));
   console.log("FOUND:", { user });
 
-  const providerId = user?.providerId;
+  const providerId = user!.accountId;
   providerIdMap.set(userId, providerId);
 
+  if (!providerId) {
+    throw new Error("Provider ID not found");
+  }
   return providerId;
 };

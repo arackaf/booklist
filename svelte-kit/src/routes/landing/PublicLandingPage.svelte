@@ -1,6 +1,4 @@
 <script lang="ts">
-  //import { signIn } from "@auth/sveltekit/client";
-
   import Button from "$lib/components/ui/button/button.svelte";
   import { page } from "$app/stores";
   import { authClient } from "$lib/auth-client";

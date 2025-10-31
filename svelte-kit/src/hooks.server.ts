@@ -111,14 +111,20 @@ const old_auth = SvelteKitAuth({
 const PRELOAD = new Set(["font", "js", "css"]);
 
 export async function handle({ event, resolve }: any) {
+  if (event.url.pathname.includes("/.well-known/appspecific/com.chrome.devtools")) {
+    return new Response(null, { status: 204 }); // Return empty response with 204 No Content
+  }
+
   const sessionPayload = await auth.api.getSession({
     headers: event.request.headers
   });
 
   if (sessionPayload && sessionPayload.session) {
     const providerId = await getProviderId(sessionPayload.session.userId);
+    (sessionPayload as any).userId = providerId;
+    sessionPayload.session.userId = providerId;
   }
-  event.locals.getSession = () => sessionPayload?.session || null;
+  event.locals.getSession = () => sessionPayload;
 
   return svelteKitHandler({ event, resolve, auth, building });
 }
