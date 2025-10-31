@@ -1,6 +1,6 @@
 <script lang="ts">
   import { LoaderCircleIcon } from "lucide-svelte";
-  import { signOut } from "@auth/sveltekit/client";
+  import { authClient } from "$lib/auth-client";
 
   import { page } from "$app/stores";
   import type { UserSummary } from "$data/user-summary";
@@ -71,7 +71,7 @@
         <span class="break-words">{loggedInUser.email}</span>
       </div>
       <span>
-        <Button variant="outline" size="sm" onclick={() => signOut().then(() => invalidateAll())}>Logout</Button>
+        <Button variant="outline" size="sm" onclick={() => authClient.signOut().then(() => invalidateAll())}>Logout</Button>
       </span>
     </div>
   </div>
