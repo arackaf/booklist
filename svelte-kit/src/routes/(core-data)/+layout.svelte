@@ -1,6 +1,6 @@
 <script lang="ts">
   import { mount, onMount } from "svelte";
-  import { signOut } from "@auth/sveltekit/client";
+  import { authClient } from "$lib/auth-client";
 
   import Toastify from "toastify-js";
 
@@ -79,7 +79,7 @@
 
   onMount(() => {
     if (forceLogout) {
-      signOut();
+      authClient.signOut();
     }
 
     if (loggedIn) {
