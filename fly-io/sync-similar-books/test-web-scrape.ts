@@ -3,27 +3,32 @@ import "./util/config";
 const { BRIGHT_DATA_ZONE, BRIGHT_DATA_KEY, BRIGHT_DATA_API_KEY } = process.env;
 
 async function main() {
-  // const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
-  //   method: "POST",
-  //   body: JSON.stringify([
-  //     { url: "https://www.amazon.com/Building-Microservices-Designing-Fine-Grained-Systems/dp/1492034029/" },
-  //     { url: "https://www.amazon.com/Site-Reliability-Engineering-Production-Systems/dp/149192912X" },
-  //     { url: "https://www.amazon.com/Monolith-Microservices-Evolutionary-Patterns-Transform/dp/1492047848" },
-  //     { url: "https://www.amazon.com/Deciphering-Data-Architectures-Warehouse-Lakehouse/dp/1098150767" },
-  //     { url: "https://www.amazon.com/Philosophy-Software-Design-2nd/dp/173210221X" }
-  //   ]),
-  //   headers: {
-  //     Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
-  //     "Content-Type": "application/json"
-  //   }
-  // })
-  //   .then(res => {
-  //     return res.json();
-  //   })
-  //   .catch(err => console.log({ err }));
+  const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
+    method: "POST",
+    body: JSON.stringify([
+      { url: "https://www.amazon.com/Building-Microservices-Designing-Fine-Grained-Systems/dp/1492034029/" },
+      { url: "https://www.amazon.com/Site-Reliability-Engineering-Production-Systems/dp/149192912X" },
+      { url: "https://www.amazon.com/Monolith-Microservices-Evolutionary-Patterns-Transform/dp/1492047848" },
+      { url: "https://www.amazon.com/Deciphering-Data-Architectures-Warehouse-Lakehouse/dp/1098150767" },
+      { url: "https://www.amazon.com/Philosophy-Software-Design-2nd/dp/173210221X" },
+      { url: "https://www.amazon.com/Domain-Driven-Refactoring-hands-transforming-microservices/dp/1835889107" },
+      { url: "https://www.amazon.com/dp/0137353480" },
+      { url: "https://www.amazon.com/dp/1098116909" },
+      { url: "https://www.amazon.com/Observability-Engineering-Achieving-Production-Excellence/dp/1492076449" },
+      { url: "https://www.amazon.com/Modern-Design-Generic-Programming-Patterns/dp/0201704315" }
+    ]),
+    headers: {
+      Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
+      "Content-Type": "application/json"
+    }
+  })
+    .then(res => {
+      return res.json();
+    })
+    .catch(err => console.log({ err }));
 
-  //console.log(resp);
-  //return;
+  console.log(resp);
+  return;
 
   const snapshotId = "s_mbo4x8cs1ebt8oth57";
   console.log({ snapshotId });
