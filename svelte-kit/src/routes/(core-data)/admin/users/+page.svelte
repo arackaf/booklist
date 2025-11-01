@@ -4,18 +4,8 @@
 
   let { data } = $props();
 
-  let { userUsageInfo, missingUserInfo } = $derived(data);
+  let { userUsageInfo } = $derived(data);
   let lookup = $state<Record<string, StoredUserInfo | null>>({});
-
-  $effect(() => {
-    Promise.resolve(missingUserInfo).then(val => {
-      if (typeof window === "object") {
-        val.forEach(user => {
-          lookup[user.userId] = user ?? null;
-        });
-      }
-    });
-  });
 </script>
 
 <div class="flex flex-col gap-5">
