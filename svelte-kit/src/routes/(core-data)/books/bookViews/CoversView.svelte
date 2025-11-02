@@ -36,7 +36,7 @@
               <BookCover imgClasses="max-w-full" size="medium" {book} />
             </div>
             <figcaption class="whitespace-nowrap overflow-hidden text-ellipsis text-xs font-bold mt-auto p-[2px]">
-              {isAdminUser ? book.id + " " : ""}{book.title}
+              {book.title}
             </figcaption>
           </figure>
         </button>
