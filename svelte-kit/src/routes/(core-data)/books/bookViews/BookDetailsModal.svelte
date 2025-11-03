@@ -101,11 +101,7 @@
             <div class="grid grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0.5 mb-2">
               {#if book.publisher}
                 <span class="self-center">Publisher:</span>
-                <span>{book.publisher}</span>
-              {/if}
-              {#if book.publicationDate}
-                <span class="self-center">Published:</span>
-                <span>{book.publicationDate}</span>
+                <span>{book.publisher}{book.publisher && book.publicationDate ? " - " : ""}{book.publicationDate}</span>
               {/if}
               {#if book.isbn}
                 <span class="self-center">ISBN:</span>
