@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
+  import { CheckIcon, ChevronsDownIcon, ChevronsUpIcon, PencilIcon } from "lucide-svelte";
   import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/ui/button/button.svelte";
@@ -16,7 +17,6 @@
   import SlideAnimate from "$lib/util/SlideAnimate.svelte";
 
   import { afterDelete as updateStateAfterDelete } from "../state/onDelete";
-  import { ChevronsDownIcon, ChevronsUpIcon, PencilIcon } from "lucide-svelte";
   import AmazonIcon from "$lib/svg/AmazonIcon.svelte";
   import GoodreadsIcon from "$lib/svg/GoodreadsIcon.svelte";
 
@@ -123,6 +123,14 @@
                   <DisplaySelectedSubjects {subjects} currentlySelected={book.subjects || []} />
                 {:else}
                   <span style="fontStyle: italic">None</span>
+                {/if}
+              </div>
+              <span class="self-center">Is read:</span>
+              <div class="self-center">
+                {#if book.isRead}
+                  <CheckIcon class="text-green-600 w-5 h-5" />
+                {:else}
+                  <span>No</span>
                 {/if}
               </div>
             </div>
