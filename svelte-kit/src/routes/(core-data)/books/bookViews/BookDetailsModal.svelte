@@ -85,7 +85,7 @@
   };
 </script>
 
-<Modal {isOpen} {onHide} standardFooter={false} headerCaption={book.title}>
+<Modal {isOpen} {onHide} onHidden={() => (editing = false)} standardFooter={false} headerCaption={book.title}>
   {#if editing}
     <EditBook {book} {subjects} {tags} {syncUpdates} onCancel={() => (editing = false)} {afterDelete} />
   {:else}

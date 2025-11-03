@@ -8,6 +8,7 @@
   type Props = {
     isOpen: boolean;
     onHide: () => void;
+    onHidden?: () => void;
     headerCaption?: string;
     standardFooter?: boolean;
     smallerHeader?: boolean;
@@ -15,11 +16,16 @@
     children: Snippet;
   };
 
-  let { isOpen, onHide, headerCaption = "", standardFooter = true, smallerHeader = false, openFocus = null, children }: Props = $props();
+  let { isOpen, onHide, onHidden, headerCaption = "", standardFooter = true, smallerHeader = false, openFocus = null, children }: Props = $props();
 </script>
 
 <Dialog.Root
   bind:open={isOpen}
+  onOpenChangeComplete={() => {
+    if (!isOpen) {
+      onHidden?.();
+    }
+  }}
   onOpenChange={open => {
     console.log({ open });
     if (!open) {
