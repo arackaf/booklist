@@ -1,4 +1,8 @@
 import { v4 as uuid } from "uuid";
+import pg from "pg";
+import { InferInsertModel } from "drizzle-orm";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import * as schema from "../drizzle/drizzle-schema";
 
 import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "./dynamoHelpers";
 
@@ -7,7 +11,8 @@ import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { getSecrets } from "./getSecrets";
-import { syncWithFly } from "./fly-sync";
+
+type PostgresBookObject = InferInsertModel<typeof schema.books>;
 
 type BookLookupPacket = {
   pk: string;
@@ -15,9 +20,23 @@ type BookLookupPacket = {
   scanItems: ScanItem[];
 };
 
-const getNewScanKeyPacket = () => {
-  return ["#NewBookScanned", uuid()];
-};
+export async function initializePostgres() {
+  const secrets = await getSecrets();
+  const POSTGRES_CONNECTION_STRING = secrets["pscale-pg-connection"];
+
+  const { Pool } = pg;
+
+  const pool = new Pool({
+    connectionString: POSTGRES_CONNECTION_STRING
+  });
+
+  pool.on("error", (err, client) => {
+    console.error("Unexpected error on idle client", err);
+    return;
+  });
+
+  return drizzlePg({ schema, client: pool });
+}
 
 export const runBookLookupIfAvailable = async () => {
   const key = `BookLookup#${uuid()}`;
@@ -151,12 +170,13 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
 
     console.log("Book lookup results", JSON.stringify(scanItems));
 
+    const booksToInsert: PostgresBookObject[] = [];
     for (const newBookMaybe of scanItems) {
       const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
 
       if (!newBookMaybe.pk) {
         const bookToInsert = newBookMaybe as any;
-        const book = {
+        const book: PostgresBookObject = {
           title: bookToInsert.title,
           pages: bookToInsert.pages ?? null,
           authors: bookToInsert.authors ?? [],
@@ -174,11 +194,9 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
           userId: bookToInsert.userId,
           dateAdded: new Date()
         };
+        booksToInsert.push(book);
 
         try {
-          const newScanKey = getNewScanKeyPacket();
-          db.put(getPutPacket({ pk: newScanKey[0], sk: newScanKey[1], book: JSON.stringify(book) }));
-
           const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
           userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
           await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, smallImagePreview, expires }));
@@ -192,7 +210,8 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
       }
     }
 
-    await syncWithFly();
+    const postgresDb = await initializePostgres();
+    await postgresDb.insert(schema.books).values(booksToInsert);
 
     console.log("---- FINISHED. ALL SAVED AND SYNCD WITH FLY ----");
 
