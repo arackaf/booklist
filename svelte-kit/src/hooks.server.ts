@@ -11,7 +11,7 @@ import { initializeDynamo } from "$data/dynamoHelpers";
 
 initializePostgres({
   useMockDb: building,
-  connectionString: env.FLY_DB
+  connectionString: env.PSCALE_URL
 });
 initializeDynamo({
   tableName: BOOKLIST_DYNAMO,
