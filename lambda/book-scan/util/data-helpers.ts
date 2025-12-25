@@ -10,7 +10,7 @@ export const getPendingCount = async userId => {
   const pendingCount = await db
     .select({ count: count() })
     .from(bookScans)
-    .where(and(or(eq(bookScans.status, "DONE"), eq(bookScans.status, "FAILED")), eq(bookScans.userId, userId)));
+    .where(and(eq(bookScans.status, "PENDING"), eq(bookScans.userId, userId)));
 
   return pendingCount[0].count;
 };
