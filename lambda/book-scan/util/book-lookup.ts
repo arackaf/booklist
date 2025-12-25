@@ -107,7 +107,7 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
 
   for (const [userId] of Object.entries(userUpdateMap)) {
     console.log("Getting new pending count for", userId);
-    const pendingCount = await getPendingCount(userId, true);
+    const pendingCount = await getPendingCount(userId);
     console.log("Pending count for", userId, pendingCount, "Sending ws message");
     await sendWsMessageToUser(userId, { type: "pendingCountSet", pendingCount });
   }

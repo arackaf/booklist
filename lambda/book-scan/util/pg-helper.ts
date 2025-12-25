@@ -1,10 +1,16 @@
 import pg from "pg";
-import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { drizzle as drizzlePg, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { getSecrets } from "./getSecrets";
 
 import * as schema from "../drizzle/drizzle-schema";
 
+let db: PostgresDb;
+
 export async function initializePostgres() {
+  if (db) {
+    return db;
+  }
+
   const secrets = await getSecrets();
   const POSTGRES_CONNECTION_STRING = secrets["pscale-pg-connection"];
 
@@ -19,5 +25,8 @@ export async function initializePostgres() {
     return;
   });
 
-  return drizzlePg({ schema, client: pool });
+  db = drizzlePg({ schema, client: pool });
+  return db;
 }
+
+export type PostgresDb = Awaited<NodePgDatabase<typeof schema>>;

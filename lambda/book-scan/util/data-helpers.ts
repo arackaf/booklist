@@ -1,10 +1,18 @@
-import { db, getGetPacket, getQueryPacket, getUpdatePacket } from "./dynamoHelpers";
+import { and, count, eq, or } from "drizzle-orm";
+import { bookScans } from "../drizzle/drizzle-schema";
+import { db, getQueryPacket, getUpdatePacket } from "./dynamoHelpers";
 import { getScanItemPk, getUserScanStatusKey } from "./key-helpers";
+import { initializePostgres } from "./pg-helper";
 
-export const getPendingCount = async (userId, consistentRead = false) => {
-  const scanStatusKey = getUserScanStatusKey(userId);
-  const status = await db.get(getGetPacket(scanStatusKey, scanStatusKey, { ConsistentRead: consistentRead }));
-  return status?.pendingCount ?? 0;
+export const getPendingCount = async userId => {
+  const db = await initializePostgres();
+
+  const pendingCount = await db
+    .select({ count: count() })
+    .from(bookScans)
+    .where(and(or(eq(bookScans.status, "DONE"), eq(bookScans.status, "FAILED")), eq(bookScans.userId, userId)));
+
+  return pendingCount[0].count;
 };
 
 export const getStatusCountUpdate = (userId, amount) => {

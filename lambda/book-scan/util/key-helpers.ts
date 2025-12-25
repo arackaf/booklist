@@ -1,7 +1,6 @@
 import { ulid } from "ulid";
 
 export const getScanItemPk = () => "ScanItem";
-export const getScanItemKey = () => [getScanItemPk(), ulid()];
 
 export const getUserScanStatusKey = userId => `UserScanStatus#${userId}`;
 
