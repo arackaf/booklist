@@ -1,4 +1,4 @@
-import { and, count, eq, or } from "drizzle-orm";
+import { and, asc, count, eq, inArray, or } from "drizzle-orm";
 import { bookScans } from "../drizzle/drizzle-schema";
 import { db, getQueryPacket, getUpdatePacket } from "./dynamoHelpers";
 import { getScanItemPk, getUserScanStatusKey } from "./key-helpers";
@@ -36,20 +36,29 @@ const allFree: LookupSlotsFree = {
 };
 
 export type ScanItem = {
-  pk;
-  sk;
-  userId;
-  isbn;
+  id: number;
+  userId: string;
+  isbn: string;
 };
 
-export const getScanItemBatch = async () => {
-  const result = (await db.query(
-    getQueryPacket(` pk = :pk `, {
-      ExpressionAttributeValues: { ":pk": getScanItemPk() },
-      Limit: 10,
-      ConsistentRead: true
-    })
-  )) as ScanItem[];
+export const getScanItemBatch = async (): Promise<ScanItem[]> => {
+  const db = await initializePostgres();
+
+  const result = await db.transaction(async tx => {
+    const result: ScanItem[] = await tx.select().from(bookScans).where(eq(bookScans.status, "PENDING")).orderBy(asc(bookScans.dateAdded)).limit(10);
+
+    await tx
+      .update(bookScans)
+      .set({ status: "RUNNING" })
+      .where(
+        inArray(
+          bookScans.id,
+          result.map(item => item.id)
+        )
+      );
+
+    return result;
+  });
 
   return result;
 };
