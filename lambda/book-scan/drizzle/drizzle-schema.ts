@@ -83,3 +83,11 @@ export const userInfoCache = pgTable("user_info_cache", {
   aliasUserId: varchar("alias_user_id", { length: 50 }),
   lastSync: integer("last_sync").notNull()
 });
+
+export const bookScans = pgTable("book_scans", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id", { length: 255 }).notNull(),
+  isbn: varchar("isbn", { length: 50 }).notNull(),
+  dateAdded: timestamp("date_added").notNull().defaultNow(),
+  status: varchar("status", { length: 50 })
+});

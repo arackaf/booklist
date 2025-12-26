@@ -5,7 +5,7 @@ const { CHECK_SCAN_STATUS_LAMBDA } = env;
 
 import { invokeLambda } from "$lib/lambda-utils.js";
 
-export async function POST({ locals }) {
+export async function POST({ locals }: any) {
   const session = await locals.getSession();
   if (!session) {
     return json({ success: false });

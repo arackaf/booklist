@@ -1,16 +1,16 @@
 import { v4 as uuid } from "uuid";
-import pg from "pg";
-import { InferInsertModel } from "drizzle-orm";
-import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { inArray, InferInsertModel } from "drizzle-orm";
+
 import * as schema from "../drizzle/drizzle-schema";
 
-import { db, getDeletePacket, getPutPacket, TABLE_NAME } from "./dynamoHelpers";
+import { db, getPutPacket } from "./dynamoHelpers";
 
-import { getPendingCount, getScanItemBatch, getStatusCountUpdate, ScanItem } from "./data-helpers";
-import { getBookFromIsbnDbData, isbnDbLookup } from "./isbn-db-utils";
+import { getPendingCount, getScanItemBatch, ScanItem } from "./data-helpers";
+import { finishBookInfo, isbnDbLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
-import { getSecrets } from "./getSecrets";
+import { initializePostgres } from "./pg-helper";
+import { bookScans } from "../drizzle/drizzle-schema";
 
 type PostgresBookObject = InferInsertModel<typeof schema.books>;
 
@@ -20,29 +20,7 @@ type BookLookupPacket = {
   scanItems: ScanItem[];
 };
 
-export async function initializePostgres() {
-  const secrets = await getSecrets();
-  const POSTGRES_CONNECTION_STRING = secrets["pscale-pg-connection"];
-
-  const { Pool } = pg;
-
-  const pool = new Pool({
-    connectionString: POSTGRES_CONNECTION_STRING
-  });
-
-  pool.on("error", (err, client) => {
-    console.error("Unexpected error on idle client", err);
-    return;
-  });
-
-  return drizzlePg({ schema, client: pool });
-}
-
 export const runBookLookupIfAvailable = async () => {
-  const key = `BookLookup#${uuid()}`;
-
-  let scanPacket;
-
   try {
     const scanItems: ScanItem[] = await getScanItemBatch();
 
@@ -53,79 +31,21 @@ export const runBookLookupIfAvailable = async () => {
 
     console.log("Scan items found", scanItems.length, scanItems);
 
-    const timestamp = +new Date();
-
-    scanPacket = {
-      pk: "BookLookup",
-      sk: key,
-      scanItems,
-      expires: Math.round(timestamp / 1000) + 60 * 60 * 24 // 1 day
-    };
-
-    console.log("SCAN PACKET SETUP", scanItems);
-
-    await db.transactWrite(
-      {
-        TransactItems: [
-          ...scanItems.map(({ pk, sk }) => ({
-            Delete: {
-              Key: { pk, sk },
-              TableName: TABLE_NAME,
-              ConditionExpression: "attribute_exists(#sk)",
-              ExpressionAttributeNames: {
-                "#sk": "sk"
-              }
-            }
-          })),
-          {
-            Put: getPutPacket(scanPacket)
-          }
-        ]
-      },
-      3
-    );
-    console.log("Setup success, doing lookup");
-    await doLookup(scanPacket);
+    console.log("Doing lookup");
+    await doLookup(scanItems);
   } catch (err) {
     console.log("Scan packet setup transaction error", err);
   }
 };
 
-export const doLookup = async (scanPacket: BookLookupPacket) => {
-  const secrets = await getSecrets();
+export const doLookup = async (scanItems: ScanItem[]) => {
+  await lookupBooks(scanItems);
 
-  const pgInsertSecret = secrets["pg-save-book-key"];
-  const scanItems: ScanItem[] = scanPacket.scanItems;
+  const users = [...new Set(scanItems.map(item => item.userId))];
 
-  await lookupBooks(scanPacket.scanItems, pgInsertSecret);
-
-  const userUpdateMap = scanItems.reduce((hash, { userId }) => {
-    if (!hash.hasOwnProperty(userId)) {
-      hash[userId] = 0;
-    }
-    hash[userId]--;
-    return hash;
-  }, {});
-
-  console.log("Post lookup - Updating status counts", JSON.stringify(userUpdateMap));
-
-  await db.transactWrite({
-    TransactItems: [
-      {
-        Delete: getDeletePacket({ pk: scanPacket.pk, sk: scanPacket.sk })
-      },
-      ...Object.entries(userUpdateMap).map(([userId, amount]) => {
-        return {
-          Update: getStatusCountUpdate(userId, amount)
-        };
-      })
-    ]
-  });
-  console.log("Post lookup - Updating status counts Complete", JSON.stringify(userUpdateMap));
-
-  for (const [userId] of Object.entries(userUpdateMap)) {
+  for (const [userId] of users) {
     console.log("Getting new pending count for", userId);
-    const pendingCount = await getPendingCount(userId, true);
+    const pendingCount = await getPendingCount(userId);
     console.log("Pending count for", userId, pendingCount, "Sending ws message");
     await sendWsMessageToUser(userId, { type: "pendingCountSet", pendingCount });
   }
@@ -133,7 +53,7 @@ export const doLookup = async (scanPacket: BookLookupPacket) => {
 
 const wait = ms => new Promise(res => setTimeout(res, ms));
 
-export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string) => {
+export const lookupBooks = async (scanItems: ScanItem[]) => {
   try {
     const startTime = +new Date();
     const userIds = [...new Set(scanItems.map(entry => entry.userId))];
@@ -141,19 +61,25 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
     const allResults = await isbnDbLookup(scanItems);
     const allBookDownloads = [];
 
+    const scanItemResults = scanItems.map(item => {
+      return {
+        ...item,
+        success: false,
+        book: null as any
+      };
+    });
+
     for (const book of allResults) {
-      for (const scanInput of scanItems) {
-        if (scanInput.pk && (scanInput.isbn === book.isbn13 || scanInput.isbn === book.isbn)) {
+      for (const scanInput of scanItemResults) {
+        if (!scanInput.success && (scanInput.isbn === book.isbn13 || scanInput.isbn === book.isbn)) {
           allBookDownloads.push(
             (async function () {
               try {
-                const newBook = await getBookFromIsbnDbData(book, scanInput.userId);
-                const idx = scanItems.indexOf(scanInput);
+                const newBook = await finishBookInfo(book, scanInput.userId);
+                const idx = scanItemResults.indexOf(scanInput);
 
-                delete (newBook as any).pk;
-                // make certain there's no pk field sent back from isbndb for the check below
-                // very ugly and hacky but good enough for now
-                (scanItems as any)[idx] = newBook;
+                scanItemResults[idx].success = true;
+                scanItemResults[idx].book = newBook;
               } catch (er) {}
             })()
           );
@@ -168,14 +94,14 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
       return hash;
     }, {});
 
-    console.log("Book lookup results", JSON.stringify(scanItems));
+    console.log("Book lookup results", JSON.stringify(scanItemResults));
 
     const booksToInsert: PostgresBookObject[] = [];
-    for (const newBookMaybe of scanItems) {
-      const [pk, sk, expires] = getScanResultKey(newBookMaybe.userId);
+    for (const item of scanItemResults) {
+      const [pk, sk, expires] = getScanResultKey(item.userId);
 
-      if (!newBookMaybe.pk) {
-        const bookToInsert = newBookMaybe as any;
+      if (item.success) {
+        const bookToInsert = item.book as any;
         const book: PostgresBookObject = {
           title: bookToInsert.title,
           pages: bookToInsert.pages ?? null,
@@ -197,21 +123,44 @@ export const lookupBooks = async (scanItems: ScanItem[], pgInsertSecret: string)
         booksToInsert.push(book);
 
         try {
-          const { title, authors, smallImage, smallImagePreview } = newBookMaybe as any;
-          userMessages[newBookMaybe.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
+          const { title, authors, smallImage, smallImagePreview } = item.book as any;
+          userMessages[item.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
           await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, smallImagePreview, expires }));
         } catch (err) {
-          userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Error saving ${newBookMaybe.isbn}` } });
-          await db.put(getPutPacket({ pk, sk, success: false, title: "Error saving to pg", isbn: newBookMaybe.isbn, expires }));
+          userMessages[item.userId].results.push({ success: false, item: { _id: uuid(), title: `Error saving ${item.isbn}` } });
+          await db.put(getPutPacket({ pk, sk, success: false, title: "Error saving to pg", isbn: item.isbn, expires }));
         }
       } else {
-        userMessages[newBookMaybe.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${newBookMaybe.isbn}` } });
-        await db.put(getPutPacket({ pk, sk, success: false, isbn: newBookMaybe.isbn, expires }));
+        userMessages[item.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${item.isbn}` } });
+        await db.put(getPutPacket({ pk, sk, success: false, isbn: item.isbn, expires }));
       }
     }
 
     const postgresDb = await initializePostgres();
-    await postgresDb.insert(schema.books).values(booksToInsert);
+
+    postgresDb.transaction(async tx => {
+      await tx
+        .update(schema.bookScans)
+        .set({ status: "SUCCESS" })
+        .where(
+          inArray(
+            bookScans.id,
+            scanItemResults.filter(item => item.success).map(item => item.id)
+          )
+        );
+
+      await tx
+        .update(schema.bookScans)
+        .set({ status: "FAILURE" })
+        .where(
+          inArray(
+            bookScans.id,
+            scanItemResults.filter(item => !item.success).map(item => item.id)
+          )
+        );
+
+      await tx.insert(schema.books).values(booksToInsert);
+    });
 
     console.log("---- FINISHED. ALL SAVED AND SYNCD WITH FLY ----");
 

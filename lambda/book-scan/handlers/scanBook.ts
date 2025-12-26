@@ -1,26 +1,18 @@
-import { getPendingCount, getStatusCountUpdate } from "../util/data-helpers";
-import { getScanItemKey } from "../util/key-helpers";
+import { getPendingCount } from "../util/data-helpers";
 import { sendWsMessageToUser } from "../util/ws-helpers";
 
 import { db, getPutPacket } from "../util/dynamoHelpers";
+import { bookScans } from "../drizzle/drizzle-schema";
+import { initializePostgres } from "../util/pg-helper";
 
 export const handler = async event => {
   try {
     const { userId = "", isbn } = event;
-    const [pk, sk] = getScanItemKey();
 
-    await db.transactWrite({
-      TransactItems: [
-        {
-          Put: getPutPacket({ pk, sk, isbn, userId })
-        },
-        {
-          Update: getStatusCountUpdate(userId, 1)
-        }
-      ]
-    });
+    const db = await initializePostgres();
+    await db.insert(bookScans).values({ userId, isbn, status: "PENDING" });
 
-    const pendingCount = await getPendingCount(userId, true);
+    const pendingCount = await getPendingCount(userId);
     await sendWsMessageToUser(userId, { type: "bookQueued", pendingCount });
 
     return { success: true, pendingCount };
