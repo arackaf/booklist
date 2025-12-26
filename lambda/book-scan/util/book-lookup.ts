@@ -43,7 +43,7 @@ export const doLookup = async (scanItems: ScanItem[]) => {
 
   const users = [...new Set(scanItems.map(item => item.userId))];
 
-  for (const [userId] of users) {
+  for (const userId of users) {
     console.log("Getting new pending count for", userId);
     const pendingCount = await getPendingCount(userId);
     console.log("Pending count for", userId, pendingCount, "Sending ws message");
