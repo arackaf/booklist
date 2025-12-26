@@ -26,7 +26,7 @@ const getEmptyImageData = (): ImageData => ({
   mediumImagePreview: null
 });
 
-export async function getBookFromIsbnDbData(book, userId) {
+export async function finishBookInfo(book, userId) {
   console.log("Processing:", JSON.stringify(book));
 
   let isbn = book.isbn13 || book.isbn;
