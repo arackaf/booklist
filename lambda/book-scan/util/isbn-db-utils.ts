@@ -82,14 +82,25 @@ export const brightDataLookup = async (scanItems: ScanItem[]): Promise<BookLooku
 
   const { snapshot_id } = resp;
 
+  console.log("Snapshot ID Found:", snapshot_id);
+
+  if (!snapshot_id) {
+    throw new Error("No snapshot ID");
+  }
+
   return pollForSnapshot(snapshot_id, BRIGHT_DATA_API_KEY);
 };
 
 const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
+const getProductDetailData = (type: string, productDetails: { type: string; value: any }[]) => {
+  const productDetail = productDetails.find(detail => detail.type === type);
+  return productDetail ? productDetail.value : null;
+};
+
 const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string): Promise<BookLookupResult[]> => {
   for (let i = 0; i < 20; i++) {
-    await wait(5000);
+    await wait(i < 20 ? 5000 : 10000);
 
     const progress = await fetch(`https://api.brightdata.com/datasets/v3/progress/${snapshotId}`, {
       method: "GET",
@@ -99,7 +110,8 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
       }
     }).then(res => res.json());
 
-    if (progress.status !== "running") {
+    console.log("Snapshot Progress:", progress);
+    if (progress.status === "running") {
       continue;
     }
 
@@ -110,52 +122,64 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
           Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
           "Content-Type": "application/json"
         }
-      }).then(res => res.json());
+      })
+        .then(res => res.json())
+        .then(data => (Array.isArray(data) ? data : []));
 
-      return snapshotData.data.map(book => {
-        let pages = parseInt(book.product_info?.["Print length"], 10) ?? null;
-        if (isNaN(pages)) {
-          pages = null;
-        }
-        const publisher = book.product_info?.Publisher ?? null;
-        const publicationDate = book.product_info?.["Publication date"] ?? null;
+      console.log("Snapshot Data:", snapshotData);
 
-        let isbn10 = book.product_info?.["ISBN-10"] ?? null;
-        let isbn13 = book.product_info?.["ISBN-13"] ?? null;
+      return (
+        snapshotData
+          .filter(item => !item.error)
+          .map(book => {
+            const productDetails = book.product_details ?? [];
 
-        if (isbn10) {
-          isbn10 = isbn10.replace(/-/g, "");
-        }
-        if (isbn13) {
-          isbn13 = isbn13.replace(/-/g, "");
-        }
+            let pages = parseInt(getProductDetailData("Print length", productDetails));
+            if (isNaN(pages)) {
+              pages = null;
+            }
+            const publisher = book.product_details?.Publisher ?? null;
+            const publicationDate = getProductDetailData("Publication date", productDetails);
 
-        const editorialReviews = [];
+            let isbn10 = getProductDetailData("ISBN-10", productDetails);
+            let isbn13 = getProductDetailData("ISBN-13", productDetails);
 
-        if (book.description_html || book.description) {
-          editorialReviews.push({
-            source: "Description",
-            content: book.description_html || book.description
-          });
-        }
+            if (isbn10) {
+              isbn10 = isbn10.replace(/-/g, "");
+            }
+            if (isbn13) {
+              isbn13 = isbn13.replace(/-/g, "");
+            }
 
-        return {
-          title: book.title ?? "",
-          pages,
-          authors: [book.brand],
-          isbn10,
-          isbn13,
-          publisher,
-          publicationDate,
-          image: book.images[0] ?? null,
-          editorialReviews: [],
-          ...getEmptyImageData()
-        } satisfies BookLookupResult;
-      });
+            const editorialReviews = [];
+
+            if (book.description_html || book.description) {
+              editorialReviews.push({
+                source: "Description",
+                content: book.description_html || book.description
+              });
+            }
+
+            return {
+              title: book.title ?? "",
+              pages,
+              authors: [book.brand],
+              isbn10,
+              isbn13,
+              publisher,
+              publicationDate,
+              image: book.images[0] ?? null,
+              editorialReviews: [],
+              ...getEmptyImageData()
+            } satisfies BookLookupResult;
+          }) ?? []
+      );
     }
 
     throw new Error("Snapshot failed with status: " + progress.status);
   }
+
+  throw new Error("Snapshot timed out");
 };
 
 export const isbnDbLookup = async (scanItems: ScanItem[]) => {

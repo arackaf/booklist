@@ -53,6 +53,9 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     const userIds = [...new Set(scanItems.map(entry => entry.userId))];
 
     const allResults = await brightDataLookup(scanItems);
+
+    console.log("Books constructed from Bright Data:", allResults);
+
     const allBookDownloads = [];
 
     const scanItemResults = scanItems.map(item => {
@@ -73,7 +76,10 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
               await finishBookInfo(foundBook, scanInput.userId);
 
               scanInput.success = true;
-              scanInput.book = foundBook;
+              scanInput.book = {
+                ...foundBook,
+                userId: scanInput.userId
+              };
             } catch (er) {}
           })()
         );
@@ -131,28 +137,20 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     const postgresDb = await initializePostgres();
 
+    const successIds = scanItemResults.filter(item => item.success).map(item => item.id);
+    const failureIds = scanItemResults.filter(item => !item.success).map(item => item.id);
+
     postgresDb.transaction(async tx => {
-      await tx
-        .update(schema.bookScans)
-        .set({ status: "SUCCESS" })
-        .where(
-          inArray(
-            bookScans.id,
-            scanItemResults.filter(item => item.success).map(item => item.id)
-          )
-        );
+      if (successIds.length) {
+        await tx.update(schema.bookScans).set({ status: "SUCCESS" }).where(inArray(bookScans.id, successIds));
+      }
+      if (failureIds.length) {
+        await tx.update(schema.bookScans).set({ status: "FAILURE" }).where(inArray(bookScans.id, failureIds));
+      }
 
-      await tx
-        .update(schema.bookScans)
-        .set({ status: "FAILURE" })
-        .where(
-          inArray(
-            bookScans.id,
-            scanItemResults.filter(item => !item.success).map(item => item.id)
-          )
-        );
-
-      await tx.insert(schema.books).values(booksToInsert);
+      if (booksToInsert.length) {
+        await tx.insert(schema.books).values(booksToInsert);
+      }
     });
 
     console.log("---- FINISHED. ALL SAVED AND SYNCD WITH FLY ----");
