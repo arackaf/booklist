@@ -6,6 +6,7 @@ import { invoke } from "./invokeLambda";
 import { getSecrets } from "./getSecrets";
 import { ScanItem } from "./data-helpers";
 import { EditorialReview } from "../drizzle/types";
+import { isbn13To10 } from "./isbn13to10";
 
 const COVER_PROCESSING_LAMBDA = `process-book-cover-${IS_DEV ? "dev" : "live"}-processCover`;
 
@@ -71,7 +72,7 @@ export async function finishBookInfo(book: BookLookupResult, userId: string) {
 export const brightDataLookup = async (scanItems: ScanItem[]): Promise<BookLookupResult[]> => {
   const secrets = await getSecrets();
   const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
-  const isbns = [...new Set(scanItems.map(entry => entry.isbn))];
+  const isbns = [...new Set(scanItems.map(entry => isbn13To10(entry.isbn)))];
 
   const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
     method: "POST",
