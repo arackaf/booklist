@@ -14,12 +14,6 @@ import { bookScans } from "../drizzle/drizzle-schema";
 
 type PostgresBookObject = InferInsertModel<typeof schema.books>;
 
-type BookLookupPacket = {
-  pk: string;
-  sk: string;
-  scanItems: ScanItem[];
-};
-
 export const runBookLookupIfAvailable = async () => {
   try {
     const scanItems: ScanItem[] = await getScanItemBatch();
@@ -31,7 +25,7 @@ export const runBookLookupIfAvailable = async () => {
 
     console.log("Scan items found", scanItems.length, scanItems);
 
-    console.log("Doing lookup");
+    console.log("Doing lookup ...");
     await doLookup(scanItems);
   } catch (err) {
     console.log("Scan packet setup transaction error", err);
