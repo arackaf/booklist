@@ -1,7 +1,6 @@
 import { getPendingCount } from "../util/data-helpers";
 import { sendWsMessageToUser } from "../util/ws-helpers";
 
-import { db, getPutPacket } from "../util/dynamoHelpers";
 import { bookScans } from "../drizzle/drizzle-schema";
 import { initializePostgres } from "../util/pg-helper";
 

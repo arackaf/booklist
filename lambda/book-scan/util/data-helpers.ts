@@ -1,7 +1,6 @@
 import { and, asc, count, eq, inArray, or } from "drizzle-orm";
 import { bookScans } from "../drizzle/drizzle-schema";
-import { db, getQueryPacket, getUpdatePacket } from "./dynamoHelpers";
-import { getScanItemPk, getUserScanStatusKey } from "./key-helpers";
+
 import { initializePostgres } from "./pg-helper";
 
 export const getPendingCount = async userId => {
@@ -13,16 +12,6 @@ export const getPendingCount = async userId => {
     .where(and(eq(bookScans.status, "PENDING"), eq(bookScans.userId, userId)));
 
   return pendingCount[0].count;
-};
-
-export const getStatusCountUpdate = (userId, amount) => {
-  const key = getUserScanStatusKey(userId);
-
-  return getUpdatePacket(key, key, {
-    UpdateExpression: "ADD #pendingCount :amount",
-    ExpressionAttributeValues: { ":amount": amount },
-    ExpressionAttributeNames: { "#pendingCount": "pendingCount" }
-  });
 };
 
 export type LookupSlotsFree = {

@@ -1,14 +1,8 @@
 import { DynamoDB, type DynamoDBClientConfig } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import type {
-  PutCommandInput,
-  GetCommandInput,
-  QueryCommandInput,
-  UpdateCommandInput,
-  DeleteCommandInput,
-  TransactWriteCommandInput
-} from "@aws-sdk/lib-dynamodb";
+import type { PutCommandInput, GetCommandInput, QueryCommandInput, UpdateCommandInput, TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb";
 
+// @ts-ignore
 export const TABLE_NAME = `My_Library_${process.env.STAGE || "live"}`;
 
 export const getGetPacket = (pk, sk, rest = {}): GetCommandInput => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
@@ -24,7 +18,6 @@ type MultiPurposeUpdateCommand = Omit<UpdateCommandInput, "UpdateExpression"> & 
 
 export const getPutPacket = (obj, rest = {}): PutCommandInput => ({ TableName: TABLE_NAME, Item: obj, ...rest });
 export const getUpdatePacket = (pk, sk, rest): MultiPurposeUpdateCommand => ({ TableName: TABLE_NAME, Key: { pk, sk }, ...rest });
-export const getDeletePacket = (key): DeleteCommandInput => ({ TableName: TABLE_NAME, Key: key });
 
 const dynamoConfig: DynamoDBClientConfig = {
   region: "us-east-1"
@@ -68,43 +61,7 @@ export const db = {
     return dynamo.update(packet);
   },
 
-  async transactWrite(packet: TransactWriteCommandInput, attempts = 5) {
-    console.log("ATTEMPTING TRANSACTION", JSON.stringify(packet));
-    try {
-      const result = await attemptExecution(attempts, () => dynamo.transactWrite(packet));
-      console.log("TRANSACTION SUCCESS");
-    } catch (err) {
-      console.log("TRANSACTION FAILED", err);
-      throw err;
-    }
-  },
-
   async deleteItem(pk: string, sk: string) {
     return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } });
   }
 };
-
-async function attemptExecution(times, executor) {
-  let success;
-  let resultOrError;
-
-  for (let i = 1; i <= 5; i++) {
-    [success, resultOrError] = await attemptRun(executor);
-
-    if (success) {
-      return resultOrError;
-    }
-    console.log("Failed on attempt:", i, resultOrError);
-    await wait(150 * i * Math.random());
-  }
-  throw resultOrError;
-}
-
-async function attemptRun(executor) {
-  try {
-    const result = await executor();
-    return [true, result];
-  } catch (err) {
-    return [false, err];
-  }
-}
