@@ -93,6 +93,79 @@ export async function finishBookInfo(book, userId) {
   return newBook;
 }
 
+export const brightDataLookup = async (scanItems: ScanItem[]) => {
+  const secrets = await getSecrets();
+  const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
+  const isbns = [...new Set(scanItems.map(entry => entry.isbn))];
+
+  const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
+    method: "POST",
+    body: JSON.stringify(isbns.map(isbn => ({ url: `https://www.amazon.com/dp/${isbn}` }))),
+    headers: {
+      Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
+      "Content-Type": "application/json"
+    }
+  }).then(res => res.json());
+
+  const { snapshot_id } = resp;
+
+  return pollForSnapshot(snapshot_id, BRIGHT_DATA_API_KEY);
+};
+
+const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string) => {
+  for (let i = 0; i < 20; i++) {
+    await wait(5000);
+
+    const progress = await fetch(`https://api.brightdata.com/datasets/v3/progress/${snapshotId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
+        "Content-Type": "application/json"
+      }
+    }).then(res => res.json());
+
+    if (progress.status !== "running") {
+      continue;
+    }
+
+    if (progress.status === "ready") {
+      const snapshotData = await fetch(`https://api.brightdata.com/datasets/v3/snapshot/${snapshotId}?format=json`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
+          "Content-Type": "application/json"
+        }
+      }).then(res => res.json());
+
+      return snapshotData.data.map(book => {
+        const pages = book.product_info?.pages ?? null;
+        const publisher = book.product_info?.Publisher ?? null;
+        const publicationDate = book.product_info?.["Publication date"] ?? null;
+
+        let isbn = book.product_info?.["ISBN-13"] ?? book.product_info?.["ISBN-10"] ?? null;
+        if (isbn) {
+          isbn = isbn.replace(/-/g, "");
+        }
+
+        return {
+          title: book.title ?? "",
+          pages,
+          authors: [book.brand],
+          isbn,
+          publisher,
+          publicationDate,
+          image: book.image,
+          editorialReviews: []
+        };
+      });
+    }
+
+    throw new Error("Snapshot failed with status: " + progress.status);
+  }
+};
+
 export const isbnDbLookup = async (scanItems: ScanItem[]) => {
   const secrets = await getSecrets();
   const isbnDbKey = secrets["isbn-db-key"];
