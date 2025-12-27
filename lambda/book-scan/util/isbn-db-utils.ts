@@ -5,8 +5,21 @@ import { IS_DEV } from "./environment";
 import { invoke } from "./invokeLambda";
 import { getSecrets } from "./getSecrets";
 import { ScanItem } from "./data-helpers";
+import { EditorialReview } from "../drizzle/types";
 
 const COVER_PROCESSING_LAMBDA = `process-book-cover-${IS_DEV ? "dev" : "live"}-processCover`;
+
+type BookLookupResult = {
+  title: string;
+  pages: number | null;
+  authors: string[];
+  isbn10: string | null;
+  isbn13: string | null;
+  publisher: string | null;
+  publicationDate: string | null;
+  image: string | null;
+  editorialReviews: EditorialReview[];
+} & ImageData;
 
 type ImageData = {
   mobileImage: string;
@@ -26,74 +39,34 @@ const getEmptyImageData = (): ImageData => ({
   mediumImagePreview: null
 });
 
-export async function finishBookInfo(book, userId) {
+export async function finishBookInfo(book: BookLookupResult, userId: string) {
   console.log("Processing:", JSON.stringify(book));
 
-  let isbn = book.isbn13 || book.isbn;
+  let isbn = book.isbn13 || book.isbn10;
 
-  let imageData: ImageData = getEmptyImageData();
   if (book.image) {
     console.log("Processing image");
     try {
       let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
       let bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
-      console.log("Book covers from ISBN DB", bookCoverResults);
+      console.log("Book covers downloaded", bookCoverResults);
 
       if (bookCoverResults == null) {
         console.log("No book covers from ISBN DB");
         let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
         bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
-        console.log("Book covers from OpenLibrary", bookCoverResults);
-      }
-
-      if (bookCoverResults != null) {
-        Object.assign(imageData, bookCoverResults);
+        console.log("Processed ook covers from", bookCoverResults);
+        Object.assign(book, bookCoverResults);
       }
     } catch (err) {
       console.log("Error processing image", err);
     }
   }
-
-  const newBook = {
-    title: book.title || book.title_long,
-    isbn,
-    ean: "",
-    pages: book.pages,
-    ...imageData,
-    publicationDate: book.date_published, // TODO
-    publisher: book.publisher,
-    authors: book.authors || [],
-    editorialReviews: [],
-    subjects: [],
-    userId
-  };
-
-  if (book.synopsys) {
-    newBook.editorialReviews.push({
-      source: "Synopsys",
-      content: book.synopsys
-    });
-  }
-  if (book.synopsis) {
-    newBook.editorialReviews.push({
-      source: "Synopsis",
-      content: book.synopsis
-    });
-  }
-
-  if (book.overview) {
-    newBook.editorialReviews.push({
-      source: "Overview",
-      content: book.overview
-    });
-  }
-
-  return newBook;
 }
 
-export const brightDataLookup = async (scanItems: ScanItem[]) => {
+export const brightDataLookup = async (scanItems: ScanItem[]): Promise<BookLookupResult[]> => {
   const secrets = await getSecrets();
   const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
   const isbns = [...new Set(scanItems.map(entry => entry.isbn))];
@@ -114,7 +87,7 @@ export const brightDataLookup = async (scanItems: ScanItem[]) => {
 
 const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string) => {
+const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string): Promise<BookLookupResult[]> => {
   for (let i = 0; i < 20; i++) {
     await wait(5000);
 
@@ -140,25 +113,44 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string) 
       }).then(res => res.json());
 
       return snapshotData.data.map(book => {
-        const pages = book.product_info?.pages ?? null;
+        let pages = parseInt(book.product_info?.["Print length"], 10) ?? null;
+        if (isNaN(pages)) {
+          pages = null;
+        }
         const publisher = book.product_info?.Publisher ?? null;
         const publicationDate = book.product_info?.["Publication date"] ?? null;
 
-        let isbn = book.product_info?.["ISBN-13"] ?? book.product_info?.["ISBN-10"] ?? null;
-        if (isbn) {
-          isbn = isbn.replace(/-/g, "");
+        let isbn10 = book.product_info?.["ISBN-10"] ?? null;
+        let isbn13 = book.product_info?.["ISBN-13"] ?? null;
+
+        if (isbn10) {
+          isbn10 = isbn10.replace(/-/g, "");
+        }
+        if (isbn13) {
+          isbn13 = isbn13.replace(/-/g, "");
+        }
+
+        const editorialReviews = [];
+
+        if (book.description_html || book.description) {
+          editorialReviews.push({
+            source: "Description",
+            content: book.description_html || book.description
+          });
         }
 
         return {
           title: book.title ?? "",
           pages,
           authors: [book.brand],
-          isbn,
+          isbn10,
+          isbn13,
           publisher,
           publicationDate,
-          image: book.image,
-          editorialReviews: []
-        };
+          image: book.images[0] ?? null,
+          editorialReviews: [],
+          ...getEmptyImageData()
+        } satisfies BookLookupResult;
       });
     }
 

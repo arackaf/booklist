@@ -6,7 +6,7 @@ import * as schema from "../drizzle/drizzle-schema";
 import { db, getPutPacket } from "./dynamoHelpers";
 
 import { getPendingCount, getScanItemBatch, ScanItem } from "./data-helpers";
-import { finishBookInfo, isbnDbLookup } from "./isbn-db-utils";
+import { finishBookInfo, brightDataLookup } from "./isbn-db-utils";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { initializePostgres } from "./pg-helper";
@@ -52,7 +52,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     const startTime = +new Date();
     const userIds = [...new Set(scanItems.map(entry => entry.userId))];
 
-    const allResults = await isbnDbLookup(scanItems);
+    const allResults = await brightDataLookup(scanItems);
     const allBookDownloads = [];
 
     const scanItemResults = scanItems.map(item => {
@@ -63,21 +63,20 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
       };
     });
 
-    for (const book of allResults) {
-      for (const scanInput of scanItemResults) {
-        if (!scanInput.success && (scanInput.isbn === book.isbn13 || scanInput.isbn === book.isbn)) {
-          allBookDownloads.push(
-            (async function () {
-              try {
-                const newBook = await finishBookInfo(book, scanInput.userId);
-                const idx = scanItemResults.indexOf(scanInput);
+    for (const scanInput of scanItemResults) {
+      const foundBook = allResults.find(book => book.isbn13 === scanInput.isbn || book.isbn10 === scanInput.isbn);
 
-                scanItemResults[idx].success = true;
-                scanItemResults[idx].book = newBook;
-              } catch (er) {}
-            })()
-          );
-        }
+      if (foundBook) {
+        allBookDownloads.push(
+          (async function () {
+            try {
+              await finishBookInfo(foundBook, scanInput.userId);
+
+              scanInput.success = true;
+              scanInput.book = foundBook;
+            } catch (er) {}
+          })()
+        );
       }
     }
 
