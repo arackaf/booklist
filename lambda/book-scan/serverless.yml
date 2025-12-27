@@ -77,8 +77,8 @@ functions:
   scanCheck:
     timeout: 500
     handler: handlers/scanCheck.handler
-    events:
-      - schedule: rate(1 minute)
+    # events:
+    #   - schedule: rate(1 minute)
 
 package:
   individually: true
