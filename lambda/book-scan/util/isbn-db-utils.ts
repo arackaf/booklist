@@ -50,14 +50,16 @@ export async function finishBookInfo(book: BookLookupResult, userId: string) {
       let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
       let bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
-      console.log("Book covers downloaded", bookCoverResults);
-
       if (bookCoverResults == null) {
-        console.log("No book covers from ISBN DB");
+        console.log("No book covers from Amazon. Attempting Open Library");
         let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
         bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
+        console.log("Processed book covers from Open Library", bookCoverResults);
+      } else {
+        console.log("Book covers downloaded from Amazon", bookCoverResults);
+      }
 
-        console.log("Processed ook covers from", bookCoverResults);
+      if (bookCoverResults != null) {
         Object.assign(book, bookCoverResults);
       }
     } catch (err) {
