@@ -1,6 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 
-export async function load({ url }: any) {
+export async function load({ url }) {
   const redirectUrl = new URL(url);
   redirectUrl.searchParams.set("user", redirectUrl.searchParams.get("userId") || "");
   redirectUrl.searchParams.delete("userId");
