@@ -1,7 +1,7 @@
 import { ref } from "$lib/state/reactivityHelpers.svelte.js";
 import { ensureLoggedIn } from "$lib/util/authCheck";
 
-export async function load({ url, fetch, parent }) {
+export async function load({ fetch, parent }) {
   await ensureLoggedIn({ parent });
 
   const resp = await fetch(`/api/recent-scans`);
