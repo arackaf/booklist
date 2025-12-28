@@ -25,8 +25,6 @@ const dynamoConfig: DynamoDBClientConfig = {
 
 export const dynamo = DynamoDBDocument.from(new DynamoDB(dynamoConfig));
 
-const wait = ms => new Promise(res => setTimeout(res, ms));
-
 export const db = {
   async put(packet: PutCommandInput) {
     return dynamo.put(packet);
@@ -59,9 +57,5 @@ export const db = {
 
   async update(packet: UpdateCommandInput) {
     return dynamo.update(packet);
-  },
-
-  async deleteItem(pk: string, sk: string) {
-    return dynamo.delete({ TableName: TABLE_NAME, Key: { pk, sk } });
   }
 };
