@@ -4,7 +4,7 @@ import { eq, inArray, InferInsertModel } from "drizzle-orm";
 import * as schema from "../drizzle/drizzle-schema";
 
 import { getPendingCount, getScanItemBatch, ScanItem } from "./data-helpers";
-import { finishBookInfo, brightDataLookup } from "./book-fetch";
+import { finishBookInfo, brightDataLookup, BookLookupResult } from "./book-fetch";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { initializePostgres } from "./pg-helper";
 import { bookScans } from "../drizzle/drizzle-schema";
@@ -59,7 +59,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
       return {
         ...item,
         success: false,
-        book: null as any
+        book: null as (BookLookupResult & { userId: string }) | null
       };
     });
 
@@ -95,7 +95,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
     const booksToInsert: PostgresBookObject[] = [];
     for (const item of scanItemResults) {
       if (item.success) {
-        const bookToInsert = item.book as any;
+        const bookToInsert = item.book;
         const book: PostgresBookObject = {
           title: bookToInsert.title,
           pages: bookToInsert.pages ?? null,

@@ -10,10 +10,11 @@ import { isbn13To10 } from "./isbn13to10";
 
 const COVER_PROCESSING_LAMBDA = `process-book-cover-${IS_DEV ? "dev" : "live"}-processCover`;
 
-type BookLookupResult = {
+export type BookLookupResult = {
   title: string;
   pages: number | null;
   authors: string[];
+  isbn: string | null;
   isbn10: string | null;
   isbn13: string | null;
   publisher: string | null;
@@ -112,7 +113,7 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
             if (isNaN(pages)) {
               pages = null;
             }
-            const publisher = book.product_details?.Publisher ?? null;
+            const publisher = getProductDetailData("Publisher", productDetails);
             const publicationDate = getProductDetailData("Publication date", productDetails);
 
             let isbn10 = getProductDetailData("ISBN-10", productDetails);
@@ -138,6 +139,7 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
               title: book.title ?? "",
               pages,
               authors: [book.brand],
+              isbn: isbn13 || isbn10,
               isbn10,
               isbn13,
               publisher,
