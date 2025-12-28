@@ -31,7 +31,7 @@ export const ensureAnyUser = async ({ locals, parent, request, url }: any) => {
   };
 };
 
-export const ensureLoggedIn = async ({ parent, locals }: any) => {
+export const ensureLoggedIn = async ({ parent, locals }: { parent?: any; locals?: any }) => {
   if (locals) {
     const session = await locals.getSession();
 

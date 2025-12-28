@@ -13,4 +13,10 @@ declare global {
   interface Window {
     ws: ScanWebSocketManage;
   }
+
+  namespace App {
+    interface Locals {
+      getSession: () => Promise<Session | null>;
+    }
+  }
 }

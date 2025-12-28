@@ -13,7 +13,7 @@ const redirectLookup = {
   "573d1b97120426ef0078aa92": "106394015208813116232"
 };
 
-export async function load({ locals, request, fetch }: any) {
+export async function load({ locals, request, fetch }) {
   const publicUserId = getPublicId(request);
 
   let isPublic = false;

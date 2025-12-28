@@ -4,7 +4,7 @@ import { db } from "$data/dbUtils";
 import { bookScans } from "$data/drizzle-schema";
 import { and, desc, eq, or } from "drizzle-orm";
 
-export async function GET({ url, locals }: any) {
+export async function GET({ url, locals }) {
   const session = await locals.getSession();
   if (!session) {
     return json({});

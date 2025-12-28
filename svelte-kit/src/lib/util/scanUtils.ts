@@ -18,7 +18,7 @@ class ScanWebSocketManage {
       initialMessageQueue.length = 0;
     };
 
-    ws.onmessage = ({ data }: any) => {
+    ws.onmessage = ({ data }) => {
       handlerQueue.forEach(handler => handler(data));
     };
   }
