@@ -4,13 +4,12 @@ import { ensureLoggedIn } from "$lib/util/authCheck";
 export async function load({ url, fetch, parent }) {
   await ensureLoggedIn({ parent });
 
-  const resp = await fetch(`/api/recent-scans?${url.searchParams.toString()}`);
+  const resp = await fetch(`/api/recent-scans`);
   const packet = await resp.json();
 
-  const { scans, nextPageKey } = packet;
+  const { scans } = packet;
 
   return {
-    scans: ref(scans),
-    nextPageKey: ref(nextPageKey)
+    scans: ref(scans)
   };
 }

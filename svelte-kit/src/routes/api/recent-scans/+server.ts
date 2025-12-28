@@ -1,36 +1,28 @@
 import { json } from "@sveltejs/kit";
-import { dynamoOperations, getQueryPacket } from "$data/dynamoHelpers";
 
-const getScanResultPk = (userId: string) => `User#${userId}#ScanResult`;
+import { db } from "$data/dbUtils";
+import { bookScans } from "$data/drizzle-schema";
+import { and, desc, eq, or } from "drizzle-orm";
 
-export async function GET({ url, locals }) {
+export async function GET({ url, locals }: any) {
   const session = await locals.getSession();
   if (!session) {
     return json({});
   }
 
   const userId = session.userId;
-  const lastPageKey = url.searchParams.get("next-page-key") || "";
+  let offset = parseInt(url.searchParams.get("offset") || "0", 10);
+  if (isNaN(offset)) {
+    offset = 0;
+  }
 
-  const pk = getScanResultPk(userId);
-  const pageKey = lastPageKey
-    ? {
-        pk,
-        sk: lastPageKey
-      }
-    : null;
+  const scans = await db
+    .select()
+    .from(bookScans)
+    .where(and(eq(bookScans.userId, userId), or(eq(bookScans.status, "SUCCESS"), eq(bookScans.status, "FAILURE"))))
+    .orderBy(desc(bookScans.id))
+    .limit(10)
+    .offset(offset);
 
-  const results = await dynamoOperations.pagedQuery(
-    getQueryPacket(`pk = :pk`, {
-      ExpressionAttributeValues: { ":pk": pk },
-      ExclusiveStartKey: pageKey ?? void 0,
-      ScanIndexForward: false,
-      Limit: 10
-    })
-  );
-
-  const scans: any[] = results?.items ?? [];
-  const nextPageKey: string = results?.lastEvaluatedKey?.sk ?? "";
-
-  return json({ scans, nextPageKey });
+  return json({ scans, nextOffset: offset + 10 });
 }

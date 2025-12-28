@@ -8,40 +8,47 @@
   type Props = {
     data: {
       scans: Ref<any[]>;
-      nextPageKey: Ref<string | null>;
     };
   };
 
   let { data }: Props = $props();
 
-  let { scans, nextPageKey } = $derived(data);
+  let { scans } = $derived(data);
+  let initialPageLength = $derived(scans.value.length);
+  let noResults = $derived(initialPageLength === 0);
+  let lastDynamicPageHasMoreResults = $state(true);
+  let hasMoreResults = $derived(initialPageLength === 10 || lastDynamicPageHasMoreResults);
+  let nextOffset = $state(10);
 
   let loading = $state(false);
 
   function loadNextScans() {
     loading = true;
 
-    fetch(`/api/recent-scans?next-page-key=${nextPageKey.value}`)
+    fetch(`/api/recent-scans?offset=${nextOffset}`)
       .then(resp => resp.json())
       .then(resp => {
-        scans.value = scans.value.concat(resp.scans);
-        nextPageKey.value = resp.nextPageKey;
+        lastDynamicPageHasMoreResults = resp.scans.length === 10;
 
+        scans.value = scans.value.concat(resp.scans);
+        nextOffset = resp.nextOffset;
         loading = false;
       });
   }
-
-  let noResultsMessage = $derived(scans ? "No more recent scans" : "No recent scans");
 </script>
 
-<div>
+<div class="mb-20">
   <div class="overlay-holder">
     <div class="grid grid-cols-[75px_1fr] gap-4">
+      {#if noResults}
+        <div></div>
+        <div>No recent scans</div>
+      {/if}
       {#each scans.value as item}
-        {#if item.success}
-          <BookCover size="small" book={item} />
+        {#if item.status === "SUCCESS"}
+          <BookCover size="small" book={item.bookInfo} />
 
-          <div>{item.title ?? `${item.isbn} Failure`}</div>
+          <div>{item.bookInfo.title || `${item.isbn} Failure`}</div>
         {:else}
           <div></div>
           <div class="text-red-500 font-bold text-base">
@@ -50,17 +57,15 @@
         {/if}
       {/each}
 
-      {#if nextPageKey.value}
+      {#if hasMoreResults}
         <div></div>
         <Button class="w-[40ch]" disabled={loading} onclick={loadNextScans}>Load More</Button>
       {/if}
     </div>
   </div>
-  {#if !nextPageKey.value}
+  {#if !hasMoreResults}
     <div>
-      {#if scans.value.length}
-        <Separator class="my-4 h-[2px]" />
-      {/if}
+      <Separator class="my-4 h-[2px]" />
       <div class="text-lg font-bold">No more recent scans</div>
     </div>
   {/if}

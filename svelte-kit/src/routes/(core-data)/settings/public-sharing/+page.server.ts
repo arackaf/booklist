@@ -2,7 +2,7 @@ import { createUser, getUser, updateUser } from "$data/user";
 import { ensureLoggedIn } from "$lib/util/authCheck";
 import { toJson } from "$lib/util/formDataHelpers";
 
-export const load = async ({ locals, depends, url }) => {
+export const load = async ({ locals, depends, url }: any) => {
   depends("user:settings");
 
   await ensureLoggedIn({ locals });
