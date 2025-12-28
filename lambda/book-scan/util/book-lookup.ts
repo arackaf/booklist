@@ -1,13 +1,10 @@
 import { v4 as uuid } from "uuid";
-import { inArray, InferInsertModel } from "drizzle-orm";
+import { eq, inArray, InferInsertModel } from "drizzle-orm";
 
 import * as schema from "../drizzle/drizzle-schema";
 
-import { db, getPutPacket } from "./dynamoHelpers";
-
 import { getPendingCount, getScanItemBatch, ScanItem } from "./data-helpers";
 import { finishBookInfo, brightDataLookup } from "./book-fetch";
-import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { initializePostgres } from "./pg-helper";
 import { bookScans } from "../drizzle/drizzle-schema";
@@ -97,8 +94,6 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     const booksToInsert: PostgresBookObject[] = [];
     for (const item of scanItemResults) {
-      const [pk, sk, expires] = getScanResultKey(item.userId);
-
       if (item.success) {
         const bookToInsert = item.book as any;
         const book: PostgresBookObject = {
@@ -124,26 +119,35 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
         try {
           const { title, authors, smallImage, smallImagePreview } = item.book as any;
           userMessages[item.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
-          await db.put(getPutPacket({ pk, sk, success: true, title, smallImage, smallImagePreview, expires }));
         } catch (err) {
           userMessages[item.userId].results.push({ success: false, item: { _id: uuid(), title: `Error saving ${item.isbn}` } });
-          await db.put(getPutPacket({ pk, sk, success: false, title: "Error saving to pg", isbn: item.isbn, expires }));
         }
       } else {
         userMessages[item.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${item.isbn}` } });
-        await db.put(getPutPacket({ pk, sk, success: false, isbn: item.isbn, expires }));
       }
     }
 
     const postgresDb = await initializePostgres();
 
-    const successIds = scanItemResults.filter(item => item.success).map(item => item.id);
+    const successPackets = scanItemResults.filter(item => item.success).map(item => ({ id: item.id, book: item.book }));
     const failureIds = scanItemResults.filter(item => !item.success).map(item => item.id);
 
     postgresDb.transaction(async tx => {
-      if (successIds.length) {
-        await tx.update(schema.bookScans).set({ status: "SUCCESS" }).where(inArray(bookScans.id, successIds));
+      for (const packet of successPackets) {
+        await tx
+          .update(schema.bookScans)
+          .set({
+            status: "SUCCESS",
+            bookInfo: {
+              title: packet.book.title,
+              authors: packet.book.authors,
+              smallImage: packet.book.smallImage,
+              smallImagePreview: packet.book.smallImagePreview
+            }
+          })
+          .where(eq(bookScans.id, packet.id));
       }
+
       if (failureIds.length) {
         await tx.update(schema.bookScans).set({ status: "FAILURE" }).where(inArray(bookScans.id, failureIds));
       }
