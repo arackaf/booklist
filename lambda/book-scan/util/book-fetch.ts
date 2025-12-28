@@ -40,35 +40,6 @@ const getEmptyImageData = (): ImageData => ({
   mediumImagePreview: null
 });
 
-export async function finishBookInfo(book: BookLookupResult, userId: string) {
-  console.log("Processing:", JSON.stringify(book));
-
-  let isbn = book.isbn13 || book.isbn10;
-
-  if (book.image) {
-    console.log("Processing image");
-    try {
-      let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
-      let bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
-
-      if (bookCoverResults == null) {
-        console.log("No book covers from Amazon. Attempting Open Library");
-        let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
-        bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
-        console.log("Processed book covers from Open Library", bookCoverResults);
-      } else {
-        console.log("Book covers downloaded from Amazon", bookCoverResults);
-      }
-
-      if (bookCoverResults != null) {
-        Object.assign(book, bookCoverResults);
-      }
-    } catch (err) {
-      console.log("Error processing image", err);
-    }
-  }
-}
-
 export const brightDataLookup = async (scanItems: ScanItem[]): Promise<BookLookupResult[]> => {
   const secrets = await getSecrets();
   const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
@@ -185,25 +156,31 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
   throw new Error("Snapshot timed out");
 };
 
-export const isbnDbLookup = async (scanItems: ScanItem[]) => {
-  const secrets = await getSecrets();
-  const isbnDbKey = secrets["isbn-db-key"];
+export async function finishBookInfo(book: BookLookupResult, userId: string) {
+  console.log("Processing:", JSON.stringify(book));
 
-  const isbns = [...new Set(scanItems.map(entry => entry.isbn))].join(",");
+  let isbn = book.isbn13 || book.isbn10;
 
-  console.log("---- BOOK LOOKUP STARTING ----", isbns);
+  if (book.image) {
+    console.log("Processing image");
+    try {
+      let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
+      let bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
-  const isbnDbResponse = await fetch(`https://api2.isbndb.com/books`, {
-    method: "post",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: isbnDbKey
-    },
-    body: `isbns=${isbns}`
-  });
-  const json: any = await isbnDbResponse.json();
+      if (bookCoverResults == null) {
+        console.log("No book covers from Amazon. Attempting Open Library");
+        let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
+        bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
+        console.log("Processed book covers from Open Library", bookCoverResults);
+      } else {
+        console.log("Book covers downloaded from Amazon", bookCoverResults);
+      }
 
-  const allResults = Array.isArray(json?.data) ? json.data : [];
-  return allResults;
-};
+      if (bookCoverResults != null) {
+        Object.assign(book, bookCoverResults);
+      }
+    } catch (err) {
+      console.log("Error processing image", err);
+    }
+  }
+}

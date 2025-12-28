@@ -6,7 +6,7 @@ import * as schema from "../drizzle/drizzle-schema";
 import { db, getPutPacket } from "./dynamoHelpers";
 
 import { getPendingCount, getScanItemBatch, ScanItem } from "./data-helpers";
-import { finishBookInfo, brightDataLookup } from "./isbn-db-utils";
+import { finishBookInfo, brightDataLookup } from "./book-fetch";
 import { getScanResultKey } from "./key-helpers";
 import { sendWsMessageToUser } from "./ws-helpers";
 import { initializePostgres } from "./pg-helper";
