@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { eq, inArray, InferInsertModel } from "drizzle-orm";
 
 import * as schema from "../drizzle/drizzle-schema";
@@ -120,10 +119,10 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
           const { title, authors, smallImage, smallImagePreview } = item.book as any;
           userMessages[item.userId].results.push({ success: true, item: { title, authors, smallImage, smallImagePreview } });
         } catch (err) {
-          userMessages[item.userId].results.push({ success: false, item: { _id: uuid(), title: `Error saving ${item.isbn}` } });
+          userMessages[item.userId].results.push({ success: false, item: { title: `Error saving ${item.isbn}` } });
         }
       } else {
-        userMessages[item.userId].results.push({ success: false, item: { _id: uuid(), title: `Failed lookup for ${item.isbn}` } });
+        userMessages[item.userId].results.push({ success: false, item: { title: `Failed lookup for ${item.isbn}` } });
       }
     }
 
