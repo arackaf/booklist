@@ -53,8 +53,6 @@ export type Book = {
   dateAdded: string;
   userId: string;
   editorialReviews: any;
-  averageReview: string | null;
-  numberReviews: number;
 } & BookImages;
 
 export type BookCoversEdits = Partial<
@@ -66,11 +64,10 @@ export type BookDisplay = Book & {
   tagObjects: any[];
 };
 
-export type BookSortKeys = "added" | "title" | "pages" | "rating";
-
-export type BookSortValue = {
-  [K in BookSortKeys]: { [X in K]: 1 | -1 };
-}[BookSortKeys];
+type BookSortKeys = "dateAdded" | "title" | "pages";
+type BookSortValue = Partial<{
+  [k in BookSortKeys]: number;
+}>;
 
 export type BookSearch = {
   publicUser?: string;
@@ -115,13 +112,22 @@ export type Color = {
   order: number;
 };
 
+export type DynamoUser = {
+  pk: string;
+  sk: string;
+  userId: string;
+  isPublic: boolean;
+  publicName: string;
+  publicBooksHeader: string;
+};
+
 export type BookWithSimilarItems = {
   id: number;
   title: string;
   isbn: string;
   authors: string[] | null;
   similarBooks: string[] | null;
-  lastAmazonSync: string | null;
+  similarBooksLastSync: string;
   similarBooksLastSyncDisplay: string;
 } & Partial<BookImages>;
 

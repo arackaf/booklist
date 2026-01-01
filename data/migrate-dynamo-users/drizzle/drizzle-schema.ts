@@ -1,8 +1,6 @@
 import { integer, serial, timestamp, boolean, json, pgTable, varchar, numeric, date, text } from "drizzle-orm/pg-core";
 import type { EditorialReview, PreviewPacket } from "./types";
 
-export * from "./auth-schema";
-
 export const books = pgTable("books", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id", { length: 50 }).notNull(),

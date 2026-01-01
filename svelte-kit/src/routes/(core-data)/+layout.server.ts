@@ -1,4 +1,5 @@
-import type { DynamoUser, Subject, Tag } from "$data/types";
+import { type InferSelectModel } from "drizzle-orm";
+import type { Subject, Tag } from "$data/types";
 import { allSubjects } from "$data/subjects";
 import { allTags } from "$data/tags";
 
@@ -7,6 +8,7 @@ import { getPublicId } from "$lib/util/getPublicId";
 
 import { env } from "$env/dynamic/private";
 import { redirect } from "@sveltejs/kit";
+import type { userInfo } from "$data/drizzle-schema.js";
 const { ADMIN_USER } = env;
 
 const redirectLookup = {
@@ -17,7 +19,7 @@ export async function load({ locals, request, fetch }) {
   const publicUserId = getPublicId(request);
 
   let isPublic = false;
-  let publicUser: DynamoUser | null = null;
+  let publicUser: InferSelectModel<typeof userInfo> | null = null;
 
   const session = await locals.getSession();
   let activeUserId = publicUserId || session?.userId;
