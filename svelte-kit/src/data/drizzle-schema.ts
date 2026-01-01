@@ -101,3 +101,11 @@ export const bookScans = pgTable("book_scans", {
   status: varchar("status", { length: 50 }),
   bookInfo: json("book_info").$type<BookInfo | null>()
 });
+
+export const userInfo = pgTable("user_info", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  publicName: text("public_name"),
+  publicBooksHeader: text("public_books_header"),
+  isPublic: boolean("is_public")
+});
