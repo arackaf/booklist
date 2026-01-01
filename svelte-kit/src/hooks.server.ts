@@ -4,8 +4,6 @@ import { svelteKitHandler } from "better-auth/svelte-kit";
 import { env } from "$env/dynamic/private";
 import { building } from "$app/environment";
 
-const { BOOKLIST_DYNAMO, AMAZON_ACCESS_KEY, AMAZON_SECRET_KEY, DYNAMO_AUTH_TABLE } = env;
-
 import { initializePostgres } from "$data/dbUtils";
 
 initializePostgres({
