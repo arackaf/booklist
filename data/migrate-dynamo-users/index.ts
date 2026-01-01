@@ -1,5 +1,4 @@
-import { count } from "drizzle-orm";
-import { books, userInfo } from "./drizzle/drizzle-schema";
+import { userInfo } from "./drizzle/drizzle-schema";
 import { initializePostgres } from "./pg-helper";
 import { scanUsers } from "./dynamoHelpers";
 
