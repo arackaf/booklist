@@ -1,19 +1,21 @@
-import { dynamoOperations, getGetPacket, getPutPacket, getUpdatePacket } from "./dynamoHelpers";
-import type { DynamoUser } from "./types";
+import { eq } from "drizzle-orm";
+import { userInfo } from "./drizzle-schema";
+import { db } from "./dbUtils";
 
 const getUserKey = (userId: string) => `UserId#${userId}`;
 
-export async function getUser(userId: string, consistentRead: boolean = false): Promise<DynamoUser | null> {
+export async function getUser(userId: string, consistentRead: boolean = false) {
   const userKey = getUserKey(userId);
 
   try {
-    let start = +new Date();
-    let userFound: DynamoUser | null = (await dynamoOperations.get(getGetPacket(userKey, userKey, { ConsistentRead: consistentRead }))) as DynamoUser;
-    let end = +new Date();
+    const start = +new Date();
+    const result = await db.select().from(userInfo).where(eq(userInfo.userId, userId));
+    const userFound = result[0] ?? null;
+    const end = +new Date();
 
     console.log("Public user lookup time:", end - start);
 
-    return userFound ?? null;
+    return userFound;
   } catch (loginErr) {
     console.log("Login error", loginErr);
     return null;
@@ -21,27 +23,9 @@ export async function getUser(userId: string, consistentRead: boolean = false): 
 }
 
 export async function createUser(userId: string) {
-  const userKey = getUserKey(userId);
-
-  const userObject = {
-    pk: userKey,
-    sk: userKey,
-    userId,
-    isPublic: false,
-    publicName: "",
-    publicBooksHeader: ""
-  };
-
-  dynamoOperations.put(getPutPacket(userObject));
+  await db.insert(userInfo).values({ userId, isPublic: false, publicName: "", publicBooksHeader: "" });
 }
 
 export async function updateUser(userId: string, isPublic: boolean, publicName: string, publicBooksHeader: string) {
-  const userKey = getUserKey(userId);
-
-  await dynamoOperations.update(
-    getUpdatePacket(userKey, userKey, {
-      UpdateExpression: "SET isPublic = :isPublic, publicName = :publicName, publicBooksHeader = :publicBooksHeader",
-      ExpressionAttributeValues: { ":isPublic": isPublic, ":publicName": publicName, ":publicBooksHeader": publicBooksHeader }
-    })
-  );
+  await db.update(userInfo).set({ isPublic, publicName, publicBooksHeader }).where(eq(userInfo.userId, userId));
 }

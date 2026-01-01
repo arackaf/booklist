@@ -115,15 +115,6 @@ export type Color = {
   order: number;
 };
 
-export type DynamoUser = {
-  pk: string;
-  sk: string;
-  userId: string;
-  isPublic: boolean;
-  publicName: string;
-  publicBooksHeader: string;
-};
-
 export type BookWithSimilarItems = {
   id: number;
   title: string;

@@ -1,7 +1,9 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { invalidate } from "$app/navigation";
-  import type { DynamoUser } from "$data/types";
+  import type { userInfo } from "$data/drizzle-schema";
+
+  import { type InferSelectModel } from "drizzle-orm";
 
   import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
@@ -12,7 +14,7 @@
   import { cn } from "$lib/utils";
 
   type Props = {
-    user: DynamoUser;
+    user: InferSelectModel<typeof userInfo>;
     isPublic: boolean;
     publicLink: string;
   };
