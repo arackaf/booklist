@@ -13,7 +13,7 @@ export async function getUser(userId: string, consistentRead: boolean = false) {
     const userFound = result[0] ?? null;
     const end = +new Date();
 
-    console.log("Public user lookup time:", end - start, "Found:", userFound);
+    console.log("Public user lookup time:", end - start, "Found:", userFound == null ? "null" : userFound.userId);
 
     return userFound;
   } catch (loginErr) {
