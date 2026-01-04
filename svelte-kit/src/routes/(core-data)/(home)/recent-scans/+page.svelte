@@ -16,7 +16,7 @@
   let { scans } = $derived(data);
   let initialPageLength = $derived(scans.value.length);
   let noResults = $derived(initialPageLength === 0);
-  let lastDynamicPageHasMoreResults = $state(true);
+  let lastDynamicPageHasMoreResults = $state(false);
   let hasMoreResults = $derived(initialPageLength === 10 || lastDynamicPageHasMoreResults);
   let nextOffset = $state(10);
 
