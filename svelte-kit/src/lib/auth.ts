@@ -25,7 +25,7 @@ export const initializeAuth = () => {
     },
     baseURL: BETTER_AUTH_URL,
     session: {
-      expiresIn: 60 * 60 * 24 * 7, // 7 days
+      expiresIn: 60 * 60 * 24 * 365, // 365 days
       updateAge: 60 * 60 * 24, // Update session every 1 day
       cookieCache: {
         enabled: true,
