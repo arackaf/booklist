@@ -74,7 +74,7 @@ const getProductDetailData = (type: string, productDetails: { type: string; valu
 };
 
 const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string): Promise<BookLookupResult[]> => {
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 40; i++) {
     await wait(i < 20 ? 5000 : 10000);
 
     const progress = await fetch(`https://api.brightdata.com/datasets/v3/progress/${snapshotId}`, {
