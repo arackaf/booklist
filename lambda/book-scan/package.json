@@ -9,11 +9,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@aws-sdk/client-apigatewaymanagementapi": "^3.264.0",
-    "@aws-sdk/client-dynamodb": "^3.264.0",
-    "@aws-sdk/client-lambda": "^3.264.0",
-    "@aws-sdk/client-s3": "^3.264.0",
-    "@aws-sdk/lib-dynamodb": "^3.264.0",
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.985.0",
+    "@aws-sdk/client-dynamodb": "^3.985.0",
+    "@aws-sdk/client-lambda": "^3.985.0",
+    "@aws-sdk/client-s3": "^3.985.0",
+    "@aws-sdk/lib-dynamodb": "^3.985.0",
     "@aws-sdk/util-utf8-node": "^3.259.0",
     "drizzle-orm": "^0.43.1",
     "pg": "^8.13.0"
