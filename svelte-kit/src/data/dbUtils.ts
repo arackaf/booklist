@@ -1,10 +1,24 @@
 import pg from "pg";
 
-import type { PgDatabase } from "drizzle-orm/pg-core";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle-schema";
 
-export let db: PgDatabase<any, any> = drizzlePg.mock({ schema });
+const getProdDb = (connectionString: string) => {
+  const { Pool } = pg;
+
+  const pool = new Pool({
+    connectionString: connectionString
+  });
+
+  pool.on("error", (err, client) => {
+    console.error("Unexpected error on idle client", err);
+    process.exit(-1);
+  });
+
+  return drizzlePg({ client: pool });
+};
+
+export let db: ReturnType<typeof getProdDb> = drizzlePg.mock({}) as any;
 
 type InitializeProps = {
   useMockDb?: boolean;
@@ -15,7 +29,7 @@ export function initializePostgres(props: InitializeProps) {
   const { useMockDb, connectionString } = props;
 
   if (useMockDb) {
-    db = drizzlePg.mock({ schema });
+    db = drizzlePg.mock({}) as any;
   } else {
     const { Pool } = pg;
 
@@ -28,7 +42,7 @@ export function initializePostgres(props: InitializeProps) {
       process.exit(-1);
     });
 
-    db = drizzlePg({ schema, client: pool });
+    db = drizzlePg({ client: pool });
   }
 }
 
