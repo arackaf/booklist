@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CloudUploadIcon, LoaderCircle } from "lucide-svelte";
+  import { CloudUploadIcon, LoaderCircle } from "@lucide/svelte";
   import Dropzone from "svelte-file-dropzone";
 
   import { cn } from "$lib/utils";

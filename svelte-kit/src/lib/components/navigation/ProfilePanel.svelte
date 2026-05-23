@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LoaderCircleIcon } from "lucide-svelte";
+  import { LoaderCircleIcon } from "@lucide/svelte";
   import { authClient } from "$lib/auth-client";
 
   import { page } from "$app/stores";

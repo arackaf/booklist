@@ -3,7 +3,7 @@
 
   import BookCover from "$lib/components/BookCover.svelte";
   import SubTitleText from "$lib/components/BookDisplay/SubTitleText.svelte";
-  import { CheckIcon } from "lucide-svelte";
+  import { CheckIcon } from "@lucide/svelte";
 
   type Props = {
     book: Book;

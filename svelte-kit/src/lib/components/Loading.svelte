@@ -1,7 +1,7 @@
 <svelte:options runes={true} />
 
 <script lang="ts">
-  import { LoaderCircleIcon } from "lucide-svelte";
+  import { LoaderCircleIcon } from "@lucide/svelte";
   import { fade } from "svelte/transition";
 </script>
 

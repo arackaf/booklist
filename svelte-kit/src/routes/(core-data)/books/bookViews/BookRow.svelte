@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { BookIcon, CheckIcon, PencilIcon, Trash2Icon } from "lucide-svelte";
+  import { BookIcon, CheckIcon, PencilIcon, Trash2Icon } from "@lucide/svelte";
 
   import { enhance } from "$app/forms";
 

@@ -1,6 +1,6 @@
 <script lang="ts">
   import colors from "tailwindcss/colors";
-  import { CheckIcon } from "lucide-svelte";
+  import { CheckIcon } from "@lucide/svelte";
 
   import RemovableLabelDisplay from "$lib/components/subjectsAndTags/RemovableLabelDisplay.svelte";
   import { SearchState, ChangeFilters, getSortDisplay } from "../state/searchState.svelte";

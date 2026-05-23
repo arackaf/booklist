@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { HomeIcon, LibraryBigIcon, TagsIcon, BookPlusIcon, SettingsIcon, CogIcon } from "lucide-svelte";
+  import { HomeIcon, LibraryBigIcon, TagsIcon, BookPlusIcon, SettingsIcon, CogIcon } from "@lucide/svelte";
 
   import { page } from "$app/state";
   import type { UserSummary } from "$data/user-summary";

@@ -8,7 +8,7 @@
   import { isbn13To10 } from "$lib/util/isbn13to10";
 
   import BookDisplay from "./BookDisplay.svelte";
-  import { ChevronsDown, LoaderIcon } from "lucide-svelte";
+  import { ChevronsDown, LoaderIcon } from "@lucide/svelte";
   import { cn } from "$lib/utils";
 
   type Props = {

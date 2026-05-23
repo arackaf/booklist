@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext, untrack } from "svelte";
   import { spring } from "svelte/motion";
-  import { ChartColumnBigIcon, XIcon } from "lucide-svelte";
+  import { ChartColumnBigIcon, XIcon } from "@lucide/svelte";
 
   import Separator from "$lib/components/ui/separator/separator.svelte";
 

@@ -9,7 +9,7 @@
 
   import Self from "./SubjectDisplay.svelte";
   import Button from "$lib/components/ui/button/button.svelte";
-  import { ChevronRightIcon, TagIcon } from "lucide-svelte";
+  import { ChevronRightIcon, TagIcon } from "@lucide/svelte";
 
   type Props = {
     editSubject: (subject: Subject) => void;

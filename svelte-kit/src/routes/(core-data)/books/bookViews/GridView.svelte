@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChevronDownIcon, ChevronUpIcon } from "lucide-svelte";
+  import { ChevronDownIcon, ChevronUpIcon } from "@lucide/svelte";
 
   import type { Book, Subject, Tag } from "$data/types";
   import Checkbox from "$lib/components/ui/checkbox/checkbox.svelte";

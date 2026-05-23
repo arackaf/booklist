@@ -1,7 +1,7 @@
 <script lang="ts">
   import PageWithNavigation from "$lib/components/navigation/PageWithNavigation.svelte";
   import type { NavigationItem } from "$lib/components/navigation/types.js";
-  import { ExternalLinkIcon, PaletteIcon } from "lucide-svelte";
+  import { ExternalLinkIcon, PaletteIcon } from "@lucide/svelte";
 
   let { data, children } = $props();
   let { hasPublicId } = $derived(data);

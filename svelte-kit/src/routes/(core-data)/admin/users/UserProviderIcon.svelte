@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CircleUserRoundIcon } from "lucide-svelte";
+  import { CircleUserRoundIcon } from "@lucide/svelte";
 
   type Props = {
     provider: string;

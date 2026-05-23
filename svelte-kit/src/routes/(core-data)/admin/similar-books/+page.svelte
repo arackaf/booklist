@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChevronFirstIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+  import { ChevronFirstIcon, ChevronLeftIcon, ChevronRightIcon } from "@lucide/svelte";
 
   import { page } from "$app/stores";
 

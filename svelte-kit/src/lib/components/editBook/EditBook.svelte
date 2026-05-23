@@ -13,7 +13,7 @@
   import EditBookCovers from "./EditBookCovers.svelte";
   import EditBookInfo from "./EditBookInfo.svelte";
   import DeleteBook from "./DeleteBook.svelte";
-  import { CircleAlertIcon } from "lucide-svelte";
+  import { CircleAlertIcon } from "@lucide/svelte";
 
   type Props = {
     book: Book;

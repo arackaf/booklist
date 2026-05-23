@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { BookCheckIcon, BookXIcon, FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
+  import { BookCheckIcon, BookXIcon, FilterIcon, RefreshCwIcon, TagIcon } from "@lucide/svelte";
 
   import { page } from "$app/stores";
   import { goto } from "$app/navigation";
