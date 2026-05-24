@@ -53,7 +53,7 @@
     "drizzle-kit": "^0.30.4",
     "drizzle-orm": "^0.39.2",
     "escape-string-regexp": "^5.0.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "pg": "^8.13.0",
     "svelte": "^5.38.7",
     "svelte-file-dropzone": "^2.0.9",
