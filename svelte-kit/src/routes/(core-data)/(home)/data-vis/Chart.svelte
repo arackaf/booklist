@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { ChartColumnBigIcon, ChartPieIcon, MessageCircleWarningIcon, RedoIcon, TerminalIcon } from "lucide-svelte";
+  import { ChartColumnBigIcon, ChartPieIcon, MessageCircleWarningIcon, RedoIcon, TerminalIcon } from "@lucide/svelte";
 
   import { page } from "$app/stores";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";

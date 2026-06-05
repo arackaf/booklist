@@ -5,14 +5,15 @@ import { db } from "../data/dbUtils"; // your drizzle instance
 import { env } from "$env/dynamic/private";
 import { account } from "$data/auth-schema";
 import { eq } from "drizzle-orm";
+import * as schema from "../data/drizzle-schema";
 
 const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, BETTER_AUTH_URL } = env;
 
-export let auth: ReturnType<typeof betterAuth> = null as any;
+export let auth: ReturnType<typeof getBetterAuthObject> = null as any;
 
-export const initializeAuth = () => {
-  auth = betterAuth({
-    database: drizzleAdapter(db, { provider: "pg" }),
+const getBetterAuthObject = () => {
+  return betterAuth({
+    database: drizzleAdapter(db, { provider: "pg", schema }),
     socialProviders: {
       google: {
         clientId: GOOGLE_AUTH_CLIENT_ID,
@@ -33,6 +34,10 @@ export const initializeAuth = () => {
       }
     }
   });
+};
+
+export const initializeAuth = () => {
+  auth = getBetterAuthObject();
 };
 
 const providerIdMap = new Map<string, string>();

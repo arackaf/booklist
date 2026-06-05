@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { UserIcon } from "lucide-svelte";
+  import { UserIcon } from "@lucide/svelte";
   import type { StoredUserInfo } from "$data/types";
   import type { UserUsageEntry } from "$data/user-usage-info";
 

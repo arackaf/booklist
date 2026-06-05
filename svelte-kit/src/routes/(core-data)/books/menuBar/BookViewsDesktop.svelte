@@ -6,7 +6,7 @@
 
   import { BASIC_LIST_VIEW, COVERS_LIST, GRID_VIEW } from "../bookViews/constants";
   import { selectionState } from "../state/selectionState.svelte";
-  import { LayoutGrid, LayoutListIcon, TablePropertiesIcon } from "lucide-svelte";
+  import { LayoutGrid, LayoutListIcon, TablePropertiesIcon } from "@lucide/svelte";
 
   type Props = {
     bookViewToUse: string;

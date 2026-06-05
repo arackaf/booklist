@@ -2,7 +2,7 @@
   import { page as pageStore } from "$app/stores";
 
   import Button from "$lib/components/ui/button/button.svelte";
-  import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+  import { ChevronFirstIcon, ChevronLastIcon, ChevronLeftIcon, ChevronRightIcon } from "@lucide/svelte";
 
   import { ChangeFilters } from "../state/searchState.svelte";
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MessageCircleWarningIcon, SearchIcon } from "lucide-svelte";
+  import { MessageCircleWarningIcon, SearchIcon } from "@lucide/svelte";
 
   import type { Book } from "$data/types";
 

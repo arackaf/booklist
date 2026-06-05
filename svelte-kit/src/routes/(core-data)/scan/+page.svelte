@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { BookCheckIcon, SearchIcon } from "lucide-svelte";
+  import { BookCheckIcon, SearchIcon } from "@lucide/svelte";
 
   import type { Book } from "$data/types";
   import { ajaxUtil } from "$lib/util/ajaxUtil";

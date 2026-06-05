@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LibraryBigIcon } from "lucide-svelte";
+  import { LibraryBigIcon } from "@lucide/svelte";
 
   import { page } from "$app/stores";
   import { invalidate } from "$app/navigation";

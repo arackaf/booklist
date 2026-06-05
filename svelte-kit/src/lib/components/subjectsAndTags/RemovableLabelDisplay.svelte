@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { XIcon } from "lucide-svelte";
+  import { XIcon } from "@lucide/svelte";
 
   import Badge from "$lib/components/ui/badge/badge.svelte";
   import type { Label as LabelType } from "./types";

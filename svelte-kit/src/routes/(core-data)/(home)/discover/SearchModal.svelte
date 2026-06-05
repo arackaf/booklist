@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-svelte";
+  import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "@lucide/svelte";
 
   import type { Book, Subject, Tag } from "$data/types";
 

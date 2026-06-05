@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { CheckIcon, ChevronsDownIcon, ChevronsUpIcon, PencilIcon } from "lucide-svelte";
+  import { CheckIcon, ChevronsDownIcon, ChevronsUpIcon, PencilIcon } from "@lucide/svelte";
   import type { Book, BookDetails, Subject, Tag } from "$data/types";
 
   import Button from "$lib/components/ui/button/button.svelte";

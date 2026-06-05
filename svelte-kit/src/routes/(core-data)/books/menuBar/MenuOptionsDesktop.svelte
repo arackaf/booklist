@@ -9,7 +9,7 @@
   import BookReadSetter from "../BookReadSetter.svelte";
   import { endSaving, startSaving } from "../state/booksReadSavingState.svelte";
   import { selectionState } from "../state/selectionState.svelte";
-  import { BookCheckIcon, BookXIcon, FilterIcon, RefreshCwIcon, TagIcon } from "lucide-svelte";
+  import { BookCheckIcon, BookXIcon, FilterIcon, RefreshCwIcon, TagIcon } from "@lucide/svelte";
   import { cn } from "$lib/utils";
 
   type Props = {

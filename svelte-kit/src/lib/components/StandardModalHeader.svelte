@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XIcon } from "lucide-svelte";
+  import { XIcon } from "@lucide/svelte";
   import Separator from "./ui/separator/separator.svelte";
 
   type Props = {

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { MessageCircleWarningIcon, TerminalIcon, TriangleAlertIcon } from "lucide-svelte";
+  import { MessageCircleWarningIcon, TerminalIcon, TriangleAlertIcon } from "@lucide/svelte";
 
   import type { Book } from "$data/types";
 

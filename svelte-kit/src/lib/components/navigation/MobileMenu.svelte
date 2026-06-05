@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, type Snippet } from "svelte";
-  import { XIcon } from "lucide-svelte";
+  import { XIcon } from "@lucide/svelte";
 
   import Button from "$lib/components/ui/button/button.svelte";
 

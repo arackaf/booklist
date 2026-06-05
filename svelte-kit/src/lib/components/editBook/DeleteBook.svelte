@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash2Icon } from "lucide-svelte";
+  import { Trash2Icon } from "@lucide/svelte";
 
   import { ajaxUtil } from "$lib/util/ajaxUtil";
   import Button from "$lib/components/ui/button/button.svelte";

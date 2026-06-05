@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CircleAlertIcon } from "lucide-svelte";
+  import { CircleAlertIcon } from "@lucide/svelte";
 
   import * as Alert from "$lib/components/ui/alert";
   import EditPublicUserSettings from "./EditPublicUserSettings.svelte";

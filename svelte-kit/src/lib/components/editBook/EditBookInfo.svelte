@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PlusIcon } from "lucide-svelte";
+  import { PlusIcon } from "@lucide/svelte";
 
   import type { Subject, Tag } from "$data/types";
 

@@ -19,8 +19,8 @@ export function createTooltipState() {
     onScreen: false
   });
 
-  let leaveTimeout: NodeJS.Timer | null = null;
-  let showTimeout: NodeJS.Timer | null = null;
+  let leaveTimeout: NodeJS.Timeout | null = null;
+  let showTimeout: NodeJS.Timeout | null = null;
 
   function clearTimeouts() {
     clearTimeout(leaveTimeout!);
