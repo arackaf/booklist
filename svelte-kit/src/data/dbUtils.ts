@@ -1,7 +1,6 @@
 import pg from "pg";
 
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
-import * as schema from "./drizzle-schema";
 
 const getProdDb = (connectionString: string) => {
   const { Pool } = pg;
