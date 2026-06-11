@@ -17,7 +17,8 @@ const getProdDb = (connectionString: string) => {
   return drizzlePg({ client: pool });
 };
 
-export let db: ReturnType<typeof getProdDb> = drizzlePg.mock({}) as any;
+export type DB = ReturnType<typeof getProdDb>;
+export let db: DB = drizzlePg.mock({}) as any;
 
 type InitializeProps = {
   useMockDb?: boolean;
