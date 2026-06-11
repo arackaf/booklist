@@ -3,10 +3,12 @@ import type { PgAsyncTransaction } from "drizzle-orm/pg-core";
 
 import type { Book, BookDetails, BookImages, BookSearch, BookSortKeys, BookSortValue } from "./types";
 import { DEFAULT_BOOKS_PAGE_SIZE, EMPTY_BOOKS_RESULTS } from "./constants";
-import { db, executeDrizzle } from "./dbUtils";
+import { type DB, executeDrizzle } from "./dbUtils";
 import { books as booksTable, booksSubjects, booksTags, subjects as subjectsTable, similarBooks as similarBooksTable, books } from "./drizzle-schema";
 
-const defaultBookFields = {
+type DefaultBookFields = ReturnType<typeof defaultBookFields>;
+
+const defaultBookFields = (db: DB) => ({
   id: booksTable.id,
   tags: sql<number[]>`COALESCE((${db
     .select({ tags: sql<number[]>`json_agg(tag)` })
@@ -33,7 +35,7 @@ const defaultBookFields = {
   mediumImagePreview: booksTable.mediumImagePreview,
   averageReview: booksTable.averageReview,
   numberReviews: booksTable.numberReviews
-};
+});
 
 const compactBookFields = {
   id: booksTable.id,
@@ -76,7 +78,7 @@ const getSort = (sortPack: BookSortValue = { added: -1 }) => {
   return rawDir === -1 ? [sql`${desc(field)} NULLS LAST`] : [sql`${asc(field)} NULLS LAST`];
 };
 
-export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
+export const searchBooks = async (db: DB, userId: string, searchPacket: BookSearch) => {
   if (!userId) {
     return EMPTY_BOOKS_RESULTS;
   }
@@ -182,9 +184,9 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
       );
     }
 
-    const fieldsToSelect = resultSet === "compact" ? compactBookFields : resultSet === "ios" ? iosBookFields : defaultBookFields;
+    const fieldsToSelect = resultSet === "compact" ? compactBookFields : resultSet === "ios" ? iosBookFields : defaultBookFields(db);
     const booksReq = db
-      .select(fieldsToSelect as typeof defaultBookFields)
+      .select(fieldsToSelect as DefaultBookFields)
       .from(booksTable)
       .where(and(...conditions))
       .orderBy(...getSort(sort))
@@ -211,7 +213,7 @@ export const searchBooks = async (userId: string, searchPacket: BookSearch) => {
   }
 };
 
-export const getBookDetails = async (id: string): Promise<BookDetails> => {
+export const getBookDetails = async (db: DB, id: string): Promise<BookDetails> => {
   const editorialReviewsQuery = db
     .select({ editorialReviews: booksTable.editorialReviews })
     .from(booksTable)
@@ -241,7 +243,7 @@ export const getBookDetails = async (id: string): Promise<BookDetails> => {
   return { editorialReviews, similarBooks };
 };
 
-export const aggregateBooksSubjects = async (userId: string) => {
+export const aggregateBooksSubjects = async (db: DB, userId: string) => {
   const aggQuery = db
     .select({ book: booksSubjects.book, subjects: sql<string>`jsonb_agg(${booksSubjects.subject})`.as("agg.subjects") })
     .from(booksSubjects)
@@ -262,7 +264,7 @@ export const aggregateBooksSubjects = async (userId: string) => {
   return results.map(r => ({ ...r, count: +r.count }));
 };
 
-export const insertBook = async (userId: string, book: Partial<Book>) => {
+export const insertBook = async (db: DB, userId: string, book: Partial<Book>) => {
   await executeDrizzle(
     "insert book",
     db.transaction(async tx => {
@@ -299,7 +301,7 @@ export const insertBook = async (userId: string, book: Partial<Book>) => {
   );
 };
 
-export const updateBook = async (userId: string, book: Partial<Book>) => {
+export const updateBook = async (db: DB, userId: string, book: Partial<Book>) => {
   const doImages = Object.hasOwn(book, "mobileImage");
   const imageFields = doImages
     ? {
@@ -361,7 +363,7 @@ type BulkUpdate = {
   remove: number[];
 };
 
-export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) => {
+export const updateBooksSubjects = async (db: DB, userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
   const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId] as const));
@@ -393,7 +395,7 @@ export const updateBooksSubjects = async (userId: string, updates: BulkUpdate) =
   );
 };
 
-export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
+export const updateBooksTags = async (db: DB, userId: string, updates: BulkUpdate) => {
   const { ids, add, remove } = updates;
 
   const addPairs = ids.flatMap(bookId => add.map(addId => [bookId, addId] as const));
@@ -420,7 +422,7 @@ export const updateBooksTags = async (userId: string, updates: BulkUpdate) => {
   );
 };
 
-export const updateBooksRead = async (userId: string, ids: number[], read: boolean) => {
+export const updateBooksRead = async (db: DB, userId: string, ids: number[], read: boolean) => {
   await executeDrizzle(
     "update books read",
     db
@@ -430,7 +432,7 @@ export const updateBooksRead = async (userId: string, ids: number[], read: boole
   );
 };
 
-export const deleteBook = async (userId: string, id: number) => {
+export const deleteBook = async (db: DB, userId: string, id: number) => {
   await executeDrizzle(
     "delete book",
     db.transaction(async tx => {

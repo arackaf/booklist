@@ -4,7 +4,7 @@ import { svelteKitHandler } from "better-auth/svelte-kit";
 import { env } from "$env/dynamic/private";
 import { building } from "$app/environment";
 
-import { initializePostgres } from "$data/dbUtils";
+import { initializePostgres, getDbObject } from "$data/dbUtils";
 
 initializePostgres({
   useMockDb: building,
@@ -13,6 +13,7 @@ initializePostgres({
 
 export async function handle({ event, resolve }: any) {
   const auth = getBetterAuthObject();
+  const db = getDbObject(env.PSCALE_URL);
 
   if (event.url.pathname.includes("/.well-known/appspecific/com.chrome.devtools")) {
     return new Response(null, { status: 204 }); // Return empty response with 204 No Content
@@ -28,6 +29,7 @@ export async function handle({ event, resolve }: any) {
     sessionPayload.session.userId = providerId;
   }
   event.locals.getSession = () => sessionPayload;
+  event.locals.db = db;
 
   return svelteKitHandler({ event, resolve, auth, building });
 }

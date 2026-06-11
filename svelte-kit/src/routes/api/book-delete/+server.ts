@@ -14,7 +14,7 @@ export async function POST({ locals, request, cookies }) {
   const { userId } = session;
 
   try {
-    await deleteBook(userId, id);
+    await deleteBook(locals.db, userId, id);
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return json({ success: true });

@@ -53,7 +53,7 @@ export async function GET({ url, setHeaders, locals }) {
     } as BookSortValue;
   }
 
-  const booksPacket = await searchBooks(userId!, packet);
+  const booksPacket = await searchBooks(locals.db, userId!, packet);
 
   return json(booksPacket);
 }

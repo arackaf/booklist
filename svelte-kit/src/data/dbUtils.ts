@@ -2,7 +2,7 @@ import pg from "pg";
 
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 
-const getProdDb = (connectionString: string) => {
+export const getDbObject = (connectionString: string) => {
   const { Pool } = pg;
 
   const pool = new Pool({
@@ -17,7 +17,7 @@ const getProdDb = (connectionString: string) => {
   return drizzlePg({ client: pool });
 };
 
-export type DB = ReturnType<typeof getProdDb>;
+export type DB = ReturnType<typeof getDbObject>;
 export let db: DB = drizzlePg.mock({}) as any;
 
 type InitializeProps = {
@@ -31,7 +31,7 @@ export function initializePostgres(props: InitializeProps) {
   if (useMockDb) {
     db = drizzlePg.mock({}) as any;
   } else {
-    db = getProdDb(connectionString);
+    db = getDbObject(connectionString);
   }
 }
 

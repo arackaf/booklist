@@ -8,7 +8,7 @@ export async function GET({ url, setHeaders, locals }) {
   }
 
   const id = url.searchParams.get("id") || "";
-  const bookDetails = await getBookDetails(id);
+  const bookDetails = await getBookDetails(locals.db, id);
 
   if (bookDetails.similarBooks?.length) {
     setHeaders({
