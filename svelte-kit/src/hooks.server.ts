@@ -1,4 +1,4 @@
-import { auth, getProviderId, initializeAuth } from "$lib/auth"; // path to your auth file
+import { getBetterAuthObject, getProviderId } from "$lib/auth"; // path to your auth file
 import { svelteKitHandler } from "better-auth/svelte-kit";
 
 import { env } from "$env/dynamic/private";
@@ -10,9 +10,10 @@ initializePostgres({
   useMockDb: building,
   connectionString: env.PSCALE_URL
 });
-initializeAuth();
 
 export async function handle({ event, resolve }: any) {
+  const auth = getBetterAuthObject();
+
   if (event.url.pathname.includes("/.well-known/appspecific/com.chrome.devtools")) {
     return new Response(null, { status: 204 }); // Return empty response with 204 No Content
   }

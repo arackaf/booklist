@@ -30,18 +30,7 @@ export function initializePostgres(props: InitializeProps) {
   if (useMockDb) {
     db = drizzlePg.mock({}) as any;
   } else {
-    const { Pool } = pg;
-
-    const pool = new Pool({
-      connectionString: connectionString
-    });
-
-    pool.on("error", (err, client) => {
-      console.error("Unexpected error on idle client", err);
-      process.exit(-1);
-    });
-
-    db = drizzlePg({ client: pool });
+    db = getProdDb(connectionString);
   }
 }
 

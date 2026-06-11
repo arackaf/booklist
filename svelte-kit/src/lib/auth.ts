@@ -9,9 +9,7 @@ import * as schema from "../data/drizzle-schema";
 
 const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, BETTER_AUTH_URL } = env;
 
-export let auth: ReturnType<typeof getBetterAuthObject> = null as any;
-
-const getBetterAuthObject = () => {
+export const getBetterAuthObject = () => {
   return betterAuth({
     database: drizzleAdapter(db, { provider: "pg", schema }),
     socialProviders: {
@@ -34,10 +32,6 @@ const getBetterAuthObject = () => {
       }
     }
   });
-};
-
-export const initializeAuth = () => {
-  auth = getBetterAuthObject();
 };
 
 const providerIdMap = new Map<string, string>();
