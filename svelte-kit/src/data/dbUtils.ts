@@ -18,22 +18,6 @@ export const getDbObject = (connectionString: string) => {
 };
 
 export type DB = ReturnType<typeof getDbObject>;
-export let db: DB = drizzlePg.mock({}) as any;
-
-type InitializeProps = {
-  useMockDb?: boolean;
-  connectionString: string;
-};
-
-export function initializePostgres(props: InitializeProps) {
-  const { useMockDb, connectionString } = props;
-
-  if (useMockDb) {
-    db = drizzlePg.mock({}) as any;
-  } else {
-    db = getDbObject(connectionString);
-  }
-}
 
 export type SubjectEditFields = {
   name: string;

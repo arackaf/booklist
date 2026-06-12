@@ -4,12 +4,7 @@ import { svelteKitHandler } from "better-auth/svelte-kit";
 import { env } from "$env/dynamic/private";
 import { building } from "$app/environment";
 
-import { initializePostgres, getDbObject } from "$data/dbUtils";
-
-initializePostgres({
-  useMockDb: building,
-  connectionString: env.PSCALE_URL
-});
+import { getDbObject } from "$data/dbUtils";
 
 export async function handle({ event, resolve }: any) {
   const db = getDbObject(env.PSCALE_URL);
