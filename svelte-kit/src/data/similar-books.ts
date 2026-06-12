@@ -36,7 +36,7 @@ export const getBooksWithSimilarBooks = async (db: DB, { page, userId, subjects 
   }
 
   // TODO: remove deprecated function call
-  const { id, title, authors, isbn, smallImage, smallImagePreview, similarBooks, lastAmazonSync } = getTableColumns(booksTable);
+  const { id, title, authors, smallImage, smallImagePreview, similarBooks, lastAmazonSync } = getTableColumns(booksTable);
   const eligibleBooks = await executeDrizzle(
     "books that might have similar books",
     db

@@ -2,11 +2,7 @@ import { eq } from "drizzle-orm";
 import { userInfo } from "./drizzle-schema";
 import { type DB } from "./dbUtils";
 
-const getUserKey = (userId: string) => `UserId#${userId}`;
-
-export async function getUser(db: DB, userId: string, consistentRead: boolean = false) {
-  const userKey = getUserKey(userId);
-
+export async function getUser(db: DB, userId: string) {
   try {
     const start = +new Date();
     const result = await db.select().from(userInfo).where(eq(userInfo.userId, userId));

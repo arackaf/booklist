@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 import { userSummary } from "$data/user-summary.js";
 
-export async function GET({ url, locals }) {
+export async function GET({ locals }) {
   const session = await locals.getSession();
   if (!session) {
     return json({});

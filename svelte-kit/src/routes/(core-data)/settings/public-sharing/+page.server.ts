@@ -15,7 +15,7 @@ export const load = async ({ locals, depends, url }) => {
   if (!user) {
     await createUser(locals.db, userId);
   }
-  user = await getUser(locals.db, userId, true);
+  user = await getUser(locals.db, userId);
   const isPublic = user?.isPublic ?? false;
   const publicLink = isPublic ? `${url.protocol}//${url.host}/books?user=${userId}` : "";
 
