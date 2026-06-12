@@ -25,8 +25,8 @@ export async function load({ locals, request, fetch }) {
   let activeUserId = publicUserId || session?.userId;
   const isAdminUser = session?.userId === ADMIN_USER;
 
-  let tags: Promise<Tag[]> | Tag[] = allTags(activeUserId);
-  let subjects: Promise<Subject[]> | Subject[] = allSubjects(activeUserId);
+  let tags: Promise<Tag[]> | Tag[] = allTags(locals.db, activeUserId);
+  let subjects: Promise<Subject[]> | Subject[] = allSubjects(locals.db, activeUserId);
 
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
