@@ -1,11 +1,13 @@
 <script lang="ts">
   import Button from "$lib/components/ui/button/button.svelte";
   import { page } from "$app/stores";
-  import { authClient } from "$lib/auth-client";
+  import { createAuthClient } from "$lib/auth-client";
   import GithubIcon from "$lib/svg/GithubIcon.svelte";
   import GoogleIcon from "$lib/svg/GoogleIcon.svelte";
 
   let { loggedIn } = $derived($page.data);
+
+  const authClient = createAuthClient();
 </script>
 
 <section>

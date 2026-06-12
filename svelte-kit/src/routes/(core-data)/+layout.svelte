@@ -1,6 +1,5 @@
 <script lang="ts">
   import { mount, onMount } from "svelte";
-  import { authClient } from "$lib/auth-client";
 
   import Toastify from "toastify-js";
 
