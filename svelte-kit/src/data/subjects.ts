@@ -1,9 +1,9 @@
 import { and, eq, exists, like, or, sql } from "drizzle-orm";
 import { booksSubjects, subjects } from "./drizzle-schema";
-import { type SubjectEditFields, executeDrizzle, db } from "./dbUtils";
+import { type SubjectEditFields, executeDrizzle, type DB } from "./dbUtils";
 import type { Subject } from "./types";
 
-export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
+export const allSubjects = async (db: DB, userId: string = ""): Promise<Subject[]> => {
   if (!userId) {
     return [];
   }
@@ -16,14 +16,14 @@ export const allSubjects = async (userId: string = ""): Promise<Subject[]> => {
   }
 };
 
-export const saveSubject = async (userId: string, id: string, subject: SubjectEditFields) => {
+export const saveSubject = async (db: DB, userId: string, id: string, subject: SubjectEditFields) => {
   const { name, originalParentId, parentId, backgroundColor, textColor } = subject;
 
   const originalParentIdToPass = originalParentId && originalParentId != "0" ? parseInt(originalParentId, 10) : null;
 
-  const newPath = await getNewPath(userId, parentId);
+  const newPath = await getNewPath(db, userId, parentId);
   if (id) {
-    return updateSingleSubject(userId, parseInt(id), {
+    return updateSingleSubject(db, userId, parseInt(id), {
       name,
       path: newPath,
       originalParentId: originalParentIdToPass,
@@ -32,11 +32,11 @@ export const saveSubject = async (userId: string, id: string, subject: SubjectEd
       textColor
     });
   } else {
-    return insertSingleSubject(userId, { name, path: newPath, backgroundColor, textColor });
+    return insertSingleSubject(db, userId, { name, path: newPath, backgroundColor, textColor });
   }
 };
 
-const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">) => {
+const insertSingleSubject = async (db: DB, userId: string, subject: Omit<Subject, "id">) => {
   await executeDrizzle(
     "insert subject",
     db.insert(subjects).values({
@@ -50,6 +50,7 @@ const insertSingleSubject = async (userId: string, subject: Omit<Subject, "id">)
 };
 
 const updateSingleSubject = async (
+  db: DB,
   userId: string,
   id: number,
   updates: Omit<SubjectEditFields, "originalParentId"> & { originalParentId: number | null }
@@ -66,7 +67,7 @@ const updateSingleSubject = async (
 
   if (parentChanged) {
     if (updates.parentId) {
-      newParent = await getSubject(updates.parentId, userId);
+      newParent = await getSubject(db, updates.parentId, userId);
       if (!newParent) {
         return null;
       }
@@ -105,7 +106,7 @@ const updateSingleSubject = async (
   }
 };
 
-export const deleteSubject = async (userId: string, id: number) => {
+export const deleteSubject = async (db: DB, userId: string, id: number) => {
   await executeDrizzle(
     "delete subject",
     db.transaction(async tx => {
@@ -132,8 +133,8 @@ export const deleteSubject = async (userId: string, id: number) => {
   );
 };
 
-const getNewPath = async (userId: string, parentId: number | null): Promise<string | null> => {
-  let newParent = parentId ? await getSubject(parentId, userId) : null;
+const getNewPath = async (db: DB, userId: string, parentId: number | null): Promise<string | null> => {
+  let newParent = parentId ? await getSubject(db, parentId, userId) : null;
 
   if (!newParent) {
     return null;
@@ -142,7 +143,7 @@ const getNewPath = async (userId: string, parentId: number | null): Promise<stri
   return `${newParent.path || ","}${newParent.id},`;
 };
 
-const getSubject = async (id: number, userId: string): Promise<Subject> => {
+const getSubject = async (db: DB, id: number, userId: string): Promise<Subject> => {
   const res = await executeDrizzle(
     "get subject",
     db

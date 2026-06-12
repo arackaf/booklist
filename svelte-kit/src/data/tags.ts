@@ -1,9 +1,9 @@
 import { and, eq } from "drizzle-orm";
 import { booksTags, tags } from "./drizzle-schema";
-import { db, executeDrizzle } from "./dbUtils";
+import { type DB, executeDrizzle } from "./dbUtils";
 import type { Tag, TagEditFields } from "./types";
 
-export const allTags = async (userId: string = ""): Promise<Tag[]> => {
+export const allTags = async (db: DB, userId: string = ""): Promise<Tag[]> => {
   if (!userId) {
     return [];
   }
@@ -16,17 +16,17 @@ export const allTags = async (userId: string = ""): Promise<Tag[]> => {
   }
 };
 
-export const saveTag = async (userId: string, id: number, subject: TagEditFields) => {
+export const saveTag = async (db: DB, userId: string, id: number, subject: TagEditFields) => {
   const { name, backgroundColor, textColor } = subject;
 
   if (id) {
-    return updateSingleTag(userId, id, { name, backgroundColor, textColor });
+    return updateSingleTag(db, userId, id, { name, backgroundColor, textColor });
   } else {
-    return insertSingleTag(userId, { name, backgroundColor, textColor });
+    return insertSingleTag(db, userId, { name, backgroundColor, textColor });
   }
 };
 
-const insertSingleTag = async (userId: string, tag: TagEditFields) => {
+const insertSingleTag = async (db: DB, userId: string, tag: TagEditFields) => {
   return executeDrizzle(
     "insert tag",
     db.insert(tags).values({
@@ -38,7 +38,7 @@ const insertSingleTag = async (userId: string, tag: TagEditFields) => {
   );
 };
 
-const updateSingleTag = async (userId: string, id: number, updates: TagEditFields) => {
+const updateSingleTag = async (db: DB, userId: string, id: number, updates: TagEditFields) => {
   return executeDrizzle(
     "update tag",
     db
@@ -52,8 +52,8 @@ const updateSingleTag = async (userId: string, id: number, updates: TagEditField
   );
 };
 
-export const deleteSingleTag = async (userId: string, id: number) => {
-  const tag = await getTag(userId, id);
+export const deleteSingleTag = async (db: DB, userId: string, id: number) => {
+  const tag = await getTag(db, userId, id);
   if (!tag) {
     return;
   }
@@ -66,7 +66,7 @@ export const deleteSingleTag = async (userId: string, id: number) => {
   );
 };
 
-const getTag = async (userId: string, id: number) => {
+const getTag = async (db: DB, userId: string, id: number) => {
   const res = await executeDrizzle(
     "get subject",
     db

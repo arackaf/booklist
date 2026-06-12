@@ -130,7 +130,7 @@ export const actions = {
       strings: ["name", "backgroundColor", "textColor"]
     }) as Tag;
 
-    await saveTag(session.userId, fields.id, fields);
+    await saveTag(locals.db, session.userId, fields.id, fields);
   },
   async deleteTag({ request, locals }) {
     const session = await locals.getSession();
@@ -141,6 +141,6 @@ export const actions = {
     const formData: FormData = await request.formData();
     const id = formData.get("id")!;
 
-    await deleteSingleTag(session.userId, parseInt(id.toString()));
+    await deleteSingleTag(locals.db, session.userId, parseInt(id.toString()));
   }
 };

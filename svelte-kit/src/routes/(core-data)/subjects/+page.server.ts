@@ -16,7 +16,7 @@ export const actions = {
       strings: ["name", "path", "backgroundColor", "textColor", "originalParentId"]
     }) as SubjectEditFields & { id: string };
 
-    await saveSubject(session.userId, fields.id, fields);
+    await saveSubject(locals.db, session.userId, fields.id, fields);
   },
   async deleteSubject({ request, locals }) {
     const session = await locals.getSession();
@@ -27,6 +27,6 @@ export const actions = {
     const formData: FormData = await request.formData();
     const id = parseInt(formData.get("id")!.toString());
 
-    await deleteSubject(session.userId, id);
+    await deleteSubject(locals.db, session.userId, id);
   }
 };
