@@ -1,7 +1,7 @@
 import { SQL, and, eq, notExists, or, sql } from "drizzle-orm";
 import { union } from "drizzle-orm/pg-core";
 import { books, booksSubjects, booksTags, subjects, tags } from "./drizzle-schema";
-import { db, executeDrizzle } from "./dbUtils";
+import { executeDrizzle, type DB } from "./dbUtils";
 
 export type SubjectOrTagSummaryEntry = {
   books: number;
@@ -18,7 +18,7 @@ export type UserSummary = {
   unusedTags: SubjectOrTagSummaryEntry | null;
 };
 
-export const userSummary = async (userId: string): Promise<UserSummary | null> => {
+export const userSummary = async (db: DB, userId: string): Promise<UserSummary | null> => {
   try {
     const tagsCountRank = () =>
       db
