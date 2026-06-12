@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "../data/dbUtils"; // your drizzle instance
+import { type DB } from "../data/dbUtils"; // your drizzle instance
 
 import { env } from "$env/dynamic/private";
 import { account } from "$data/auth-schema";
@@ -9,7 +9,7 @@ import * as schema from "../data/drizzle-schema";
 
 const { GITHUB_AUTH_CLIENT_ID, GITHUB_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET, BETTER_AUTH_URL } = env;
 
-export const getBetterAuthObject = () => {
+export const getBetterAuthObject = (db: DB) => {
   return betterAuth({
     database: drizzleAdapter(db, { provider: "pg", schema }),
     socialProviders: {
@@ -36,7 +36,7 @@ export const getBetterAuthObject = () => {
 
 const providerIdMap = new Map<string, string>();
 
-export const getProviderId = async (userId: string) => {
+export const getProviderId = async (db: DB, userId: string) => {
   if (providerIdMap.has(userId)) {
     return providerIdMap.get(userId)!;
   }

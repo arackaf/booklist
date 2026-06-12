@@ -12,8 +12,8 @@ initializePostgres({
 });
 
 export async function handle({ event, resolve }: any) {
-  const auth = getBetterAuthObject();
   const db = getDbObject(env.PSCALE_URL);
+  const auth = getBetterAuthObject(db);
 
   if (event.url.pathname.includes("/.well-known/appspecific/com.chrome.devtools")) {
     return new Response(null, { status: 204 }); // Return empty response with 204 No Content
@@ -24,7 +24,7 @@ export async function handle({ event, resolve }: any) {
   });
 
   if (sessionPayload && sessionPayload.session) {
-    const providerId = await getProviderId(sessionPayload.session.userId);
+    const providerId = await getProviderId(db, sessionPayload.session.userId);
     (sessionPayload as any).userId = providerId;
     sessionPayload.session.userId = providerId;
   }
