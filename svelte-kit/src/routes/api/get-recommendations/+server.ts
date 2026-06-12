@@ -3,7 +3,7 @@ import { json } from "@sveltejs/kit";
 import orderBy from "lodash/orderBy";
 
 import { getPublicId } from "$lib/util/getPublicId.js";
-import { db, executeDrizzle } from "$data/dbUtils.js";
+import { executeDrizzle } from "$data/dbUtils.js";
 import { books as booksTable, similarBooks } from "$data/drizzle-schema.js";
 import { and, eq, inArray } from "drizzle-orm";
 
@@ -18,6 +18,7 @@ export async function POST({ locals, request }) {
   } else {
     ({ userId } = session);
   }
+  const db = locals.db;
 
   const reqBody = await request.json();
   const { bookIds } = reqBody;
