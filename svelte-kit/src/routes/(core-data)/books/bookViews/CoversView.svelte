@@ -11,7 +11,7 @@
 
   let { books, isPublic }: Props = $props();
 
-  let { subjects, tags, isAdminUser } = $derived($page.data);
+  let { subjects, tags } = $derived($page.data);
 
   let previewing = $state(false);
   let bookPreviewing = $state<Book | null>(null);

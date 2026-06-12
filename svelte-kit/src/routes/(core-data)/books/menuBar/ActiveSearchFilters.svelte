@@ -21,8 +21,6 @@
     backgroundColor: colors.red[500],
     name: "Remove all filters"
   };
-
-  const filterDisplayStyles = "flex: 0 0 auto; align-self: center; margin-right: 5px; margin-top: 4px; margin-bottom: 4px";
 </script>
 
 {#if totalBooks}
