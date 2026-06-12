@@ -10,12 +10,12 @@ export const load = async ({ locals, depends, url }) => {
   const session = (await locals.getSession())!;
   const { userId } = session;
 
-  let user = await getUser(userId);
+  let user = await getUser(locals.db, userId);
 
   if (!user) {
-    await createUser(userId);
+    await createUser(locals.db, userId);
   }
-  user = await getUser(userId, true);
+  user = await getUser(locals.db, userId, true);
   const isPublic = user?.isPublic ?? false;
   const publicLink = isPublic ? `${url.protocol}//${url.host}/books?user=${userId}` : "";
 
@@ -51,6 +51,6 @@ export const actions = {
     const publicName = !isPublic ? "" : values.publicName;
     const publicBooksHeader = !isPublic ? "" : values.publicBooksHeader;
 
-    await updateUser(userId, isPublic, publicName, publicBooksHeader);
+    await updateUser(locals.db, userId, isPublic, publicName, publicBooksHeader);
   }
 };

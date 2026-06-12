@@ -31,7 +31,7 @@ export async function load({ locals, request, fetch }) {
   const colors = fetch("/api/colors").then((resp: any) => resp.json());
 
   if (publicUserId) {
-    publicUser = await getUser(publicUserId);
+    publicUser = await getUser(locals.db, publicUserId);
 
     if (!publicUser || !publicUser.isPublic) {
       tags = [];
