@@ -12,5 +12,11 @@
   "preview_urls": true,
   "observability": {
     "enabled": true
-  }
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "cabc3adcf4c44c03b55e2d17aaef7d99"
+    }
+  ]
 }

@@ -1,13 +1,13 @@
 import { getBetterAuthObject, getProviderId } from "$lib/auth"; // path to your auth file
 import { svelteKitHandler } from "better-auth/svelte-kit";
 
-import { env } from "$env/dynamic/private";
+import { env } from "cloudflare:workers";
 import { building } from "$app/environment";
 
 import { getDbObject } from "$data/dbUtils";
 
 export async function handle({ event, resolve }: any) {
-  const db = getDbObject(env.PSCALE_URL);
+  const db = getDbObject(env.HYPERDRIVE.connectionString);
   const auth = getBetterAuthObject(db);
 
   if (event.url.pathname.includes("/.well-known/appspecific/com.chrome.devtools")) {
