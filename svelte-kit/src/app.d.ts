@@ -1,6 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app for information about these interfaces and what to do when importing types
-
 import type { DB } from "$data/dbUtils";
+
 import type { ScanWebSocketManage } from "$lib/util/scanUtils";
 
 declare module "@auth/core/types" {
@@ -19,6 +19,13 @@ declare global {
     interface Locals {
       getSession: () => Promise<Session | null>;
       db: DB;
+    }
+
+    interface Platform {
+      env: Env;
+      ctx: ExecutionContext;
+      caches: CacheStorage;
+      cf?: IncomingRequestCfProperties;
     }
   }
 }
