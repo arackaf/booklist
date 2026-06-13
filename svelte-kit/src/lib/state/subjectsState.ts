@@ -30,7 +30,7 @@ export const stackAndGetTopLevelSubjects = (allSubjects: Subject[]): FullSubject
     parent.childLevel = !parent.path ? 0 : (parent.path.match(/\,/g) || []).length - 1;
   });
 
-  return subjects.filter(s => s.path == null);
+  return subjects.filter(s => s.path == null).sort(subjectSortCompare);
 };
 
 export const unwindSubjects = (subjects: FullSubject[]): FullSubject[] => {
