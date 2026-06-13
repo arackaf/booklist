@@ -8,7 +8,7 @@ export async function GET({ url, setHeaders, locals }) {
   }
 
   const id = parseInt(url.searchParams.get("id") || "", 10) || 0;
-  const results = await getSimilarBooksForBook(id);
+  const results = await getSimilarBooksForBook(locals.db, id);
 
   setHeaders({
     "cache-control": "max-age=3600"

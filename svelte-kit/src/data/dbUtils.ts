@@ -2,14 +2,14 @@ import pg from "pg";
 
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 
-const getProdDb = (connectionString: string) => {
+export const getDbObject = (connectionString: string) => {
   const { Pool } = pg;
 
   const pool = new Pool({
     connectionString: connectionString
   });
 
-  pool.on("error", (err, client) => {
+  pool.on("error", err => {
     console.error("Unexpected error on idle client", err);
     process.exit(-1);
   });
@@ -17,23 +17,7 @@ const getProdDb = (connectionString: string) => {
   return drizzlePg({ client: pool });
 };
 
-export type DB = ReturnType<typeof getProdDb>;
-export let db: DB = drizzlePg.mock({}) as any;
-
-type InitializeProps = {
-  useMockDb?: boolean;
-  connectionString: string;
-};
-
-export function initializePostgres(props: InitializeProps) {
-  const { useMockDb, connectionString } = props;
-
-  if (useMockDb) {
-    db = drizzlePg.mock({}) as any;
-  } else {
-    db = getProdDb(connectionString);
-  }
-}
+export type DB = ReturnType<typeof getDbObject>;
 
 export type SubjectEditFields = {
   name: string;

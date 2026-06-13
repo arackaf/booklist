@@ -1,10 +1,10 @@
 import { eq, max, count, desc } from "drizzle-orm";
-import { db, executeDrizzle } from "./dbUtils";
+import { type DB, executeDrizzle } from "./dbUtils";
 import { books, userInfoCache } from "./drizzle-schema";
 
 export type UserUsageEntry = Awaited<ReturnType<typeof getUserUsageInfo>>[0];
 
-export const getUserUsageInfo = () => {
+export const getUserUsageInfo = (db: DB) => {
   const subQuery = db
     .select({ userId: books.userId, books: count().as("books"), latest: max(books.dateAdded).as("latest") })
     .from(books)

@@ -2,7 +2,6 @@
   import { onMount } from "svelte";
   import { ChartColumnBigIcon, ChartPieIcon, MessageCircleWarningIcon, RedoIcon, TerminalIcon } from "@lucide/svelte";
 
-  import { page } from "$app/stores";
   import type { BookSubjectStack, Hash, Subject } from "$data/types";
 
   import { cn } from "$lib/utils";
@@ -50,8 +49,6 @@
   let subjectIds = $derived(subjects.map(s => s.id));
 
   let graphData = $derived(stackGraphData(subjectHash, subjectIds, books, chartIndex > 0));
-
-  let { hasPublicId } = $derived($page.data);
 
   let excluding = $state({});
   let excludedCount = $derived(Object.keys(excluding).filter(k => excluding[k]).length);

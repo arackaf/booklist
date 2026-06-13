@@ -1,6 +1,6 @@
 <script lang="ts">
   import { LoaderCircleIcon } from "@lucide/svelte";
-  import { authClient } from "$lib/auth-client";
+  import { createAuthClient } from "$lib/auth-client";
 
   import { page } from "$app/stores";
   import type { UserSummary } from "$data/user-summary";
@@ -19,6 +19,8 @@
 
   let { loggedInUser, userSummary }: Props = $props();
   let { tags, subjects } = $derived($page.data);
+
+  const authClient = createAuthClient();
 </script>
 
 <div class="h-full overflow-auto">

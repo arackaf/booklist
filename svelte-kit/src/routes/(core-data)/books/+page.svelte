@@ -77,8 +77,6 @@
     runUpdate(books, id, updates);
   };
 
-  function f() {}
-
   let booksSubjectsModalOpen = $state(false);
 
   let booksEditing = $derived(books.filter(b => selectionState.selectedBooksLookup[b.id]));

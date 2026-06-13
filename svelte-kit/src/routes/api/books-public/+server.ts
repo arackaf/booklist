@@ -4,7 +4,7 @@ import type { BookSearch, BookSortValue } from "$data/types";
 import { searchBooks } from "$data/books";
 import { DEFAULT_BOOKS_PAGE_SIZE } from "$data/constants";
 
-export async function GET({ url }) {
+export async function GET({ url, locals }) {
   const userId = "573d1b97120426ef0078aa92";
 
   const publicUser = url.searchParams.get("user") || "";
@@ -42,7 +42,7 @@ export async function GET({ url }) {
     } as BookSortValue;
   }
 
-  const booksPacket = await searchBooks(userId!, packet);
+  const booksPacket = await searchBooks(locals.db, userId!, packet);
 
   return json(booksPacket);
 }

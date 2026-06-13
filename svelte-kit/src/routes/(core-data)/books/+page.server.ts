@@ -36,9 +36,9 @@ export const actions = {
     fields.authors = fields.authors.filter(a => a);
 
     if (fields.id) {
-      await updateBook(session.userId, fields);
+      await updateBook(locals.db, session.userId, fields);
     } else {
-      await insertBook(session.userId, fields);
+      await insertBook(locals.db, session.userId, fields);
     }
 
     updateCacheCookie(cookies, BOOKS_CACHE);
@@ -59,7 +59,7 @@ export const actions = {
       })
     );
 
-    await updateBook(session.userId, fields);
+    await updateBook(locals.db, session.userId, fields);
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: fields } };
@@ -77,8 +77,8 @@ export const actions = {
     }) as any;
 
     await Promise.all([
-      updateBooksSubjects(session.userId, { ...fields, add: fields["subjects-add"], remove: fields["subjects-remove"] }),
-      updateBooksTags(session.userId, { ...fields, add: fields["tags-add"], remove: fields["tags-remove"] })
+      updateBooksSubjects(locals.db, session.userId, { ...fields, add: fields["subjects-add"], remove: fields["subjects-remove"] }),
+      updateBooksTags(locals.db, session.userId, { ...fields, add: fields["tags-add"], remove: fields["tags-remove"] })
     ]);
     updateCacheCookie(cookies, BOOKS_CACHE);
 
@@ -98,7 +98,7 @@ export const actions = {
     }) as any;
 
     const setRead = fields.read === "true";
-    await updateBooksRead(session.userId, fields.ids, fields.read === "true");
+    await updateBooksRead(locals.db, session.userId, fields.ids, fields.read === "true");
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true, updates: { fieldsSet: { isRead: setRead } } };
@@ -112,7 +112,7 @@ export const actions = {
     const formData: FormData = await request.formData();
     const id = parseInt(formData.get("id")!.toString());
 
-    await deleteBook(session.userId, id);
+    await deleteBook(locals.db, session.userId, id);
     updateCacheCookie(cookies, BOOKS_CACHE);
 
     return { success: true };
@@ -130,7 +130,7 @@ export const actions = {
       strings: ["name", "backgroundColor", "textColor"]
     }) as Tag;
 
-    await saveTag(session.userId, fields.id, fields);
+    await saveTag(locals.db, session.userId, fields.id, fields);
   },
   async deleteTag({ request, locals }) {
     const session = await locals.getSession();
@@ -141,6 +141,6 @@ export const actions = {
     const formData: FormData = await request.formData();
     const id = formData.get("id")!;
 
-    await deleteSingleTag(session.userId, parseInt(id.toString()));
+    await deleteSingleTag(locals.db, session.userId, parseInt(id.toString()));
   }
 };

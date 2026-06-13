@@ -37,11 +37,9 @@
   let selectedBooksCount = $derived(selectedBooksIds.length);
 
   const booksModuleContext: any = getContext("books-module-context");
-  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags, editBooksTags } = booksModuleContext;
+  const { openFilterModal, editSubjectsAndTags, editBooksSubjectsTags } = booksModuleContext;
 
   const getSelectedBooksIds = () => selectedBooksIds;
-
-  const editTagsForSelectedBooks = () => editBooksTags();
 
   const mobileHandler = (fn: () => unknown) => () => {
     setTimeout(() => {

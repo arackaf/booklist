@@ -1,3 +1,3 @@
-import { createAuthClient } from "better-auth/svelte";
+import { createAuthClient as createAuthClientOriginal } from "better-auth/svelte";
 
-export const authClient = createAuthClient({});
+export const createAuthClient = () => createAuthClientOriginal({});

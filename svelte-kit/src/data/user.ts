@@ -1,12 +1,8 @@
 import { eq } from "drizzle-orm";
 import { userInfo } from "./drizzle-schema";
-import { db } from "./dbUtils";
+import { type DB } from "./dbUtils";
 
-const getUserKey = (userId: string) => `UserId#${userId}`;
-
-export async function getUser(userId: string, consistentRead: boolean = false) {
-  const userKey = getUserKey(userId);
-
+export async function getUser(db: DB, userId: string) {
   try {
     const start = +new Date();
     const result = await db.select().from(userInfo).where(eq(userInfo.userId, userId));
@@ -22,10 +18,10 @@ export async function getUser(userId: string, consistentRead: boolean = false) {
   }
 }
 
-export async function createUser(userId: string) {
+export async function createUser(db: DB, userId: string) {
   await db.insert(userInfo).values({ userId, isPublic: false, publicName: "", publicBooksHeader: "" });
 }
 
-export async function updateUser(userId: string, isPublic: boolean, publicName: string, publicBooksHeader: string) {
+export async function updateUser(db: DB, userId: string, isPublic: boolean, publicName: string, publicBooksHeader: string) {
   await db.update(userInfo).set({ isPublic, publicName, publicBooksHeader }).where(eq(userInfo.userId, userId));
 }

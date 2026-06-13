@@ -92,10 +92,7 @@
 
   let c = $state<SVGElement>(null as any);
 
-  let hovering = $state(false);
-
   function mouseOver() {
-    hovering = true;
     if (sizing || !(mainArc && containerSize !== "UNKNOWN")) {
       return;
     }
@@ -109,8 +106,7 @@
     tooltipState.onHover(c, { position, data, drilldown: doDrilldown, remove });
   }
 
-  function mouseLeave(e: Event) {
-    hovering = false;
+  function mouseLeave() {
     tooltipState.onMouseLeave();
   }
 
@@ -136,7 +132,7 @@
 >
   <SlicePath {sliceSpring} segmentChunk={segment.chunks[0]} color="#FFFFFF" />
   <g role="banner" style="transform: translate({$sliceAnimateSpring.x}px, {$sliceAnimateSpring.y}px)">
-    {#each segment.chunks as chunk, i}
+    {#each segment.chunks as chunk}
       <SlicePath {sliceSpring} segmentChunk={chunk} />
     {/each}
   </g>

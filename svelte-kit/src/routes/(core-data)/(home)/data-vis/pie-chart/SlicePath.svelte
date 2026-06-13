@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { spring, type Spring } from "svelte/motion";
+  import { type Spring } from "svelte/motion";
   import { arc } from "d3-shape";
 
   type ChunkType = {

@@ -1,6 +1,5 @@
 import { json } from "@sveltejs/kit";
 
-import { db } from "$data/dbUtils";
 import { bookScans } from "$data/drizzle-schema";
 import { and, desc, eq, or } from "drizzle-orm";
 
@@ -9,6 +8,7 @@ export async function GET({ url, locals }) {
   if (!session) {
     return json({});
   }
+  const db = locals.db;
 
   const userId = session.userId;
   let offset = parseInt(url.searchParams.get("offset") || "0", 10);
