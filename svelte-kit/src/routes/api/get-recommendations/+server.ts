@@ -20,7 +20,7 @@ export async function POST({ locals, request }) {
   }
   const db = locals.db;
 
-  const reqBody = await request.json();
+  const reqBody = (await request.json()) as any;
   const { bookIds } = reqBody;
 
   const userIdToUse = userId || publicUserId;

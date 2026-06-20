@@ -8,7 +8,7 @@ export async function POST({ locals, request, cookies }) {
     return json({ success: false });
   }
 
-  const reqBody = await request.json();
+  const reqBody = (await request.json()) as any;
 
   const { id } = reqBody;
   const { userId } = session;

@@ -27,7 +27,7 @@
 
     fetch(`/api/recent-scans?offset=${nextOffset}`)
       .then(resp => resp.json())
-      .then(resp => {
+      .then((resp: any) => {
         lastDynamicPageHasMoreResults = resp.scans.length === 10;
 
         scans.value = scans.value.concat(resp.scans);

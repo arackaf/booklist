@@ -11,7 +11,7 @@ export async function POST({ locals, request }) {
     return json({ success: false });
   }
 
-  const reqBody = await request.json();
+  const reqBody = (await request.json()) as any;
 
   const { isbn } = reqBody;
   const { userId } = session;

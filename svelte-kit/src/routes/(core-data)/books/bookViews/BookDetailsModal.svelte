@@ -70,7 +70,7 @@
         detailsLoading = true;
         fetch("/api/book-details?id=" + book.id)
           .then(resp => resp.json())
-          .then(details => {
+          .then((details: any) => {
             bookDetails = details;
             detailsLoading = false;
             expanded = true;

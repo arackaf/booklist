@@ -50,7 +50,7 @@ export const getScanWebSocket = () => new ScanWebSocketManage();
 export type { ScanWebSocketManage };
 
 export async function checkPendingCount() {
-  const pendingCountResult = await ajaxUtil.post("/api/check-scan-status", {});
+  const pendingCountResult = (await ajaxUtil.post("/api/check-scan-status", {})) as any;
   if (pendingCountResult?.pendingCount == null) {
     return;
   }

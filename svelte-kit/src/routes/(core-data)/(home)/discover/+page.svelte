@@ -43,7 +43,7 @@
   const getRecommendations = async () => {
     recommendationsLoading = true;
 
-    const result = await ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] });
+    const result = (await ajaxUtil.post("/api/get-recommendations", { bookIds: [...selectedBooksSet] })) as any;
     recommendations = result?.results ?? [];
     recommendationsLoading = false;
     recommendationsLoaded = true;

@@ -35,7 +35,7 @@
     } else {
       loading = true;
       const resultsResp = await fetch("/api/similar-books?id=" + book.id);
-      const similarBooksFound = await resultsResp.json();
+      const similarBooksFound = (await resultsResp.json()) as any;
 
       similarBooks = similarBooksFound;
       expanded = true;

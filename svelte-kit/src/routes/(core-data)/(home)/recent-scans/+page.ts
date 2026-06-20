@@ -5,7 +5,7 @@ export async function load({ fetch, parent }) {
   await ensureLoggedIn({ parent });
 
   const resp = await fetch(`/api/recent-scans`);
-  const packet = await resp.json();
+  const packet = (await resp.json()) as any;
 
   const { scans } = packet;
 

@@ -16,7 +16,7 @@
   const deleteBook = async () => {
     deleting = true;
 
-    const result = await ajaxUtil.post("/api/book-delete", { id });
+    const result = (await ajaxUtil.post("/api/book-delete", { id })) as any;
 
     if (result.success) {
       afterDelete(id);

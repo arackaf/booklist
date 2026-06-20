@@ -46,7 +46,7 @@
 
     fetch("/api/user-summary")
       .then(resp => resp.json())
-      .then(userSummaryData => {
+      .then((userSummaryData: any) => {
         userSummary = userSummaryData;
       });
   }

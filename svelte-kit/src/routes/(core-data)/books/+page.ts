@@ -24,7 +24,7 @@ export async function load({ url, parent, fetch, depends }) {
   }
 
   const resp = await fetch(`/api/books?${url.searchParams.toString()}&cache=${cache}&is-mobile=${isMobile}`);
-  const { books, totalBooks, page, totalPages } = await resp.json();
+  const { books, totalBooks, page, totalPages } = (await resp.json()) as any;
 
   return {
     defaultBookView,
