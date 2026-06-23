@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.812.0",
+    "@aws-sdk/client-lambda": "^3.981.0",
     "@aws-sdk/util-utf8": "^3.374.0",
     "@types/pg": "^8.15.4",
     "date-fns": "^4.1.0",
