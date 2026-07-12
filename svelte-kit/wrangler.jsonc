@@ -1,25 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "booklist-svelte-kit",
-  "secrets": {
-    "required": [
-      "PROCESS_COVER_LAMBDA",
-      "CHECK_SCAN_STATUS_LAMBDA",
-      "SCAN_BOOK_LAMBDA",
-      "SYNC_BOOK_RECOMMENDATIONS_LAMBDA",
-      "GOOGLE_AUTH_CLIENT_ID",
-      "GOOGLE_AUTH_SECRET",
-      "GITHUB_AUTH_CLIENT_ID",
-      "GITHUB_AUTH_CLIENT_SECRET",
-      "AMAZON_ACCESS_KEY",
-      "AMAZON_SECRET_KEY",
-      "PUBLIC_SCAN_WS",
-      "ADMIN_USER",
-      "BETTER_AUTH_SECRET",
-      "BETTER_AUTH_URL",
-      "PSCALE_URL"
-    ]
-  },
   "compatibility_date": "2026-06-13",
   "compatibility_flags": ["nodejs_compat"],
   "main": ".svelte-kit/cloudflare/_worker.js",
