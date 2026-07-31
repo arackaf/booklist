@@ -20,11 +20,11 @@ export const load = async ({ parent, url, locals }) => {
 
   const now = new Date(new Date().toISOString());
   books.forEach(book => {
-    if (!book.lastAmazonSync) {
-      book.lastAmazonSync = "";
+    if (!book.lastSimilarItemsSync) {
+      book.lastSimilarItemsSync = "";
       return;
     }
-    const lastSync = new Date(book.lastAmazonSync);
+    const lastSync = new Date(book.lastSimilarItemsSync);
     const months = differenceInCalendarMonths(now, lastSync);
     const years = differenceInCalendarYears(now, lastSync);
     const days = differenceInCalendarDays(now, lastSync);

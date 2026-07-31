@@ -36,7 +36,7 @@ export const getBooksWithSimilarBooks = async (db: DB, { page, userId, subjects 
   }
 
   // TODO: remove deprecated function call
-  const { id, title, authors, smallImage, smallImagePreview, similarBooks, lastAmazonSync } = getTableColumns(booksTable);
+  const { id, title, authors, smallImage, smallImagePreview, similarBooks, lastSimilarItemsSync } = getTableColumns(booksTable);
   const eligibleBooks = await executeDrizzle(
     "books that might have similar books",
     db
@@ -48,8 +48,8 @@ export const getBooksWithSimilarBooks = async (db: DB, { page, userId, subjects 
         smallImage,
         smallImagePreview,
         similarBooks,
-        lastAmazonSync,
-        similarBooksLastSyncDisplay: sql<string>`''`
+        similarBooksLastSyncDisplay: sql<string>`''`,
+        lastSimilarItemsSync
       })
       .from(booksTable)
       .where(
@@ -69,7 +69,7 @@ export const getBooksWithSimilarBooks = async (db: DB, { page, userId, subjects 
 };
 
 export const clearSync = async (db: DB, id: number) => {
-  await executeDrizzle("clear sync", db.update(booksTable).set({ lastAmazonSync: null }).where(eq(booksTable.id, id)));
+  await executeDrizzle("clear sync", db.update(booksTable).set({ lastSimilarItemsSync: null }).where(eq(booksTable.id, id)));
 };
 
 export const getSimilarBooksForBook = async (db: DB, id: number) => {
