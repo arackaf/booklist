@@ -11,8 +11,9 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check .",
     "format": "prettier --plugin-search-dir . --write .",
-    "pg": "docker container run -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -p 5432:5432 -v ~/Documents/pg-data:/var/lib/postgresql postgres:18.2-alpine3.23",
+    "pg": "docker container run -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -p 5432:5432 -v ~/Documents/pg-data-booklist:/var/lib/postgresql postgres:18.2-alpine3.23",
     "pg-raw": "docker container run -e POSTGRES_USER=docker -e POSTGRES_PASSWORD=docker -p 5432:5432 postgres:18.2-alpine3.23",
+    "pg-clear": "rm -rf ~/Documents/pg-data-booklist",
     "gen": "wrangler types",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types"
