@@ -26,6 +26,7 @@
     "@types/d3-array": "^3.2.1",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-shape": "^3.1.6",
+    "@types/node": "^26.1.2",
     "@types/pg": "^8.11.10",
     "@types/uuid": "^9.0.0",
     "autoprefixer": "^10.4.14",
