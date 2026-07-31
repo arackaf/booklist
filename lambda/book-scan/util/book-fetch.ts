@@ -19,6 +19,8 @@ export type BookLookupResult = {
   isbn13: string | null;
   publisher: string | null;
   publicationDate: string | null;
+  averageReview: number | null;
+  reviewsCount: number | null;
   image: string | null;
   editorialReviews: EditorialReview[];
 } & ImageData;
@@ -109,7 +111,7 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
           .map(book => {
             const productDetails = book.product_details ?? [];
 
-            let pages = parseInt(getProductDetailData("Print length", productDetails));
+            let pages: number | null = parseInt(getProductDetailData("Print length", productDetails));
             if (isNaN(pages)) {
               pages = null;
             }
@@ -126,13 +128,25 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
               isbn13 = isbn13.replace(/-/g, "");
             }
 
-            const editorialReviews = [];
+            const editorialReviews: EditorialReview[] = [];
 
             if (book.description_html || book.description) {
               editorialReviews.push({
                 source: "Description",
                 content: book.description_html || book.description
               });
+            }
+
+            let reviewsCount: number | null = parseFloat(book.reviews_count);
+            let averageReview: number | null = null;
+            if (!reviewsCount) {
+              reviewsCount = null;
+            } else {
+              averageReview = parseFloat(book.rating);
+              if (!averageReview) {
+                reviewsCount = null;
+                averageReview = null;
+              }
             }
 
             return {
@@ -146,6 +160,8 @@ const pollForSnapshot = async (snapshotId: string, BRIGHT_DATA_API_KEY: string):
               publicationDate,
               image: book.images[0] ?? null,
               editorialReviews: [],
+              averageReview,
+              reviewsCount,
               ...getEmptyImageData()
             } satisfies BookLookupResult;
           }) ?? []
@@ -167,11 +183,18 @@ export async function finishBookInfo(book: BookLookupResult, userId: string) {
     console.log("Processing image");
     try {
       let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: book.image, userId });
+      if (!lambdaResult || !lambdaResult.Payload) {
+        return;
+      }
       let bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
 
       if (bookCoverResults == null) {
         console.log("No book covers from Amazon. Attempting Open Library");
         let lambdaResult = await invoke(COVER_PROCESSING_LAMBDA, { url: getOpenLibraryCoverUri(isbn), userId });
+        if (!lambdaResult || !lambdaResult.Payload) {
+          return;
+        }
+
         bookCoverResults = JSON.parse(toUtf8(lambdaResult.Payload));
         console.log("Processed book covers from Open Library", bookCoverResults);
       } else {

@@ -52,7 +52,7 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     console.log("Books constructed from Bright Data:", allResults);
 
-    const allBookDownloads = [];
+    const allBookDownloads: Promise<void>[] = [];
 
     const scanItemResults = scanItems.map(item => {
       return {
@@ -93,13 +93,15 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     const booksToInsert: PostgresBookObject[] = [];
     for (const item of scanItemResults) {
-      if (item.success) {
+      if (item.success && item.book) {
         const bookToInsert = item.book;
         const book: PostgresBookObject = {
           title: bookToInsert.title,
           pages: bookToInsert.pages ?? null,
           authors: bookToInsert.authors ?? [],
           isbn: bookToInsert.isbn,
+          averageReview: bookToInsert.averageReview ?? null,
+          numberReviews: bookToInsert.reviewsCount ?? null,
           publisher: bookToInsert.publisher,
           publicationDate: bookToInsert.publicationDate,
           isRead: false,
@@ -111,6 +113,8 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
           mediumImagePreview: bookToInsert.mediumImagePreview ?? null,
           editorialReviews: bookToInsert.editorialReviews ?? [],
           userId: bookToInsert.userId,
+          lastRatingsSync: new Date().toISOString().slice(0, 10),
+          lastRatingsSyncSuccess: true,
           dateAdded: new Date()
         };
         booksToInsert.push(book);
@@ -133,6 +137,9 @@ export const lookupBooks = async (scanItems: ScanItem[]) => {
 
     postgresDb.transaction(async tx => {
       for (const packet of successPackets) {
+        if (!packet.book) {
+          continue;
+        }
         await tx
           .update(schema.bookScans)
           .set({
