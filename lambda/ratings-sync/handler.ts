@@ -4,36 +4,13 @@ import { books } from "./drizzle/drizzle-schema";
 import { initializePostgres } from "./util/pg-helper";
 import { getSecrets } from "./util/getSecrets";
 import { isbn13To10 } from "./util/isbn13to10";
-
-const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
-
-type PostgresDb = Awaited<ReturnType<typeof initializePostgres>>;
-
-async function markBooksSynced(
-  db: PostgresDb,
-  bookIds: number[],
-  success: boolean,
-  error: string | null,
-  extra: Record<string, any> = {}
-) {
-  const today = new Date().toISOString().slice(0, 10);
-  for (const id of bookIds) {
-    await db
-      .update(books)
-      .set({
-        lastRatingsSync: today,
-        lastRatingsSyncSuccess: success,
-        lastRatingsSyncError: error,
-        ...extra
-      })
-      .where(eq(books.id, id));
-  }
-}
+import { pollForSnapshot } from "./util/brightdata";
+import { markBooksRatingSynced, RatingsData } from "./util/db-helpers";
 
 export const ratingsSync = async () => {
   const db = await initializePostgres();
 
-  const staleBooks = await db
+  const booksToSync = await db
     .select({
       id: books.id,
       isbn: books.isbn
@@ -43,19 +20,24 @@ export const ratingsSync = async () => {
     .orderBy(sql`${books.lastRatingsSync} ASC NULLS LAST`)
     .limit(10);
 
-  if (!staleBooks.length) {
+  if (!booksToSync.length) {
     console.log("No books need ratings sync");
     return;
   }
 
-  console.log("Books to sync:", staleBooks.length);
+  console.log("Books to sync:", booksToSync.length);
 
-  const validIsbnBooks = staleBooks.filter(b => b.isbn && (b.isbn.length === 10 || b.isbn.length === 13));
-  const invalidIsbnBooks = staleBooks.filter(b => !b.isbn || (b.isbn.length !== 10 && b.isbn.length !== 13));
+  const validIsbnBooks = booksToSync.filter(b => b.isbn && (b.isbn.length === 10 || b.isbn.length === 13));
+  const invalidIsbnBooks = booksToSync.filter(b => !b.isbn || (b.isbn.length !== 10 && b.isbn.length !== 13));
 
   if (invalidIsbnBooks.length) {
     console.log("Skipping books with invalid ISBNs:", invalidIsbnBooks.length);
-    await markBooksSynced(db, invalidIsbnBooks.map(b => b.id), true, null);
+    await markBooksRatingSynced(
+      db,
+      invalidIsbnBooks.map(b => b.id),
+      true,
+      null
+    );
   }
 
   if (!validIsbnBooks.length) {
@@ -70,7 +52,12 @@ export const ratingsSync = async () => {
     const isbn10s = [...new Set(validIsbnBooks.map(b => isbn13To10(b.isbn!)).filter(Boolean))] as string[];
 
     if (!isbn10s.length) {
-      await markBooksSynced(db, validIsbnBooks.map(b => b.id), true, null);
+      await markBooksRatingSynced(
+        db,
+        validIsbnBooks.map(b => b.id),
+        true,
+        null
+      );
       return;
     }
 
@@ -96,97 +83,32 @@ export const ratingsSync = async () => {
       const isbn10 = isbn13To10(book.isbn!);
       const match = results.find(r => r.isbn10 === isbn10 || r.isbn13 === book.isbn || r.isbn10 === book.isbn);
 
-      const extra: Record<string, any> = {};
-      if (match) {
-        if (match.rating !== null) {
-          extra.averageReview = match.rating;
-        }
-        if (match.reviewsCount !== null) {
-          extra.numberReviews = match.reviewsCount;
+      let ratingsData: RatingsData | null = null;
+
+      if (match && match.rating !== null && match.reviewsCount !== null) {
+        let averageReview = match.rating;
+        let numberReviews = match.reviewsCount;
+
+        if (averageReview && numberReviews) {
+          ratingsData = {
+            averageReview,
+            numberReviews
+          };
         }
       }
 
-      await markBooksSynced(db, [book.id], true, null, extra);
+      await markBooksRatingSynced(db, [book.id], true, null, ratingsData);
     }
 
     console.log("Ratings sync completed successfully");
   } catch (err: any) {
     console.error("Ratings sync error:", err);
 
-    await markBooksSynced(db, validIsbnBooks.map(b => b.id), false, err?.message ?? String(err));
+    await markBooksRatingSynced(
+      db,
+      validIsbnBooks.map(b => b.id),
+      false,
+      err?.message ?? String(err)
+    );
   }
-};
-
-type SnapshotResult = {
-  isbn10: string | null;
-  isbn13: string | null;
-  rating: number | null;
-  reviewsCount: number | null;
-};
-
-const getProductDetailData = (type: string, productDetails: { type: string; value: any }[]) => {
-  const productDetail = productDetails.find(detail => detail.type === type);
-  return productDetail ? productDetail.value : null;
-};
-
-const pollForSnapshot = async (snapshotId: string, apiKey: string): Promise<SnapshotResult[]> => {
-  for (let i = 0; i < 40; i++) {
-    await wait(i < 20 ? 5000 : 10000);
-
-    const progress = await fetch(`https://api.brightdata.com/datasets/v3/progress/${snapshotId}`, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      }
-    }).then(res => res.json());
-
-    console.log("Snapshot progress:", progress);
-
-    if (progress.status === "running") {
-      continue;
-    }
-
-    if (progress.status === "ready") {
-      const snapshotData = await fetch(`https://api.brightdata.com/datasets/v3/snapshot/${snapshotId}?format=json`, {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json"
-        }
-      })
-        .then(res => res.json())
-        .then(data => (Array.isArray(data) ? data : []));
-
-      console.log("Snapshot data:", snapshotData);
-
-      return snapshotData
-        .filter(item => !item.error)
-        .map(item => {
-          const productDetails = item.product_details ?? [];
-
-          let isbn10 = getProductDetailData("ISBN-10", productDetails);
-          let isbn13 = getProductDetailData("ISBN-13", productDetails);
-
-          if (isbn10) isbn10 = isbn10.replace(/-/g, "");
-          if (isbn13) isbn13 = isbn13.replace(/-/g, "");
-
-          let reviewsCount: number | null = parseFloat(item.reviews_count);
-          let rating: number | null = null;
-          if (!reviewsCount) {
-            reviewsCount = null;
-          } else {
-            rating = parseFloat(item.rating);
-            if (!rating) {
-              reviewsCount = null;
-              rating = null;
-            }
-          }
-
-          return { isbn10, isbn13, rating, reviewsCount };
-        });
-    }
-
-    throw new Error("Snapshot failed with status: " + progress.status);
-  }
-
-  throw new Error("Snapshot timed out");
 };
