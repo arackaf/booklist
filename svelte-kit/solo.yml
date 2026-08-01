@@ -1,0 +1,10 @@
+name: svelte-kit
+icon: null
+processes:
+  dev server:
+    command: npm run dev
+    working_dir: null
+    auto_start: true
+    auto_restart: true
+    restart_when_changed: []
+    env: {}
