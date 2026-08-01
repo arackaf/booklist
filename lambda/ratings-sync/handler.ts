@@ -1,24 +1,12 @@
-import { or, isNull, sql, eq } from "drizzle-orm";
-
-import { books } from "./drizzle/drizzle-schema";
 import { initializePostgres } from "./util/pg-helper";
-import { getSecrets } from "./util/getSecrets";
 import { isbn13To10 } from "./util/isbn13to10";
-import { pollForSnapshot } from "./util/brightdata";
-import { markBooksRatingSynced, RatingsData } from "./util/db-helpers";
+import { getRatingsData } from "./util/brightdata";
+import { getBooksNeedingRatingsSync, markBooksRatingSynced, RatingsData } from "./util/db-helpers";
 
 export const ratingsSync = async () => {
   const db = await initializePostgres();
 
-  const booksToSync = await db
-    .select({
-      id: books.id,
-      isbn: books.isbn
-    })
-    .from(books)
-    .where(or(isNull(books.lastRatingsSync), sql`${books.lastRatingsSync} < NOW() - INTERVAL '6 months'`))
-    .orderBy(sql`${books.lastRatingsSync} ASC NULLS LAST`)
-    .limit(10);
+  const booksToSync = await getBooksNeedingRatingsSync(db);
 
   if (!booksToSync.length) {
     console.log("No books need ratings sync");
@@ -46,9 +34,6 @@ export const ratingsSync = async () => {
   }
 
   try {
-    const secrets = await getSecrets();
-    const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
-
     const isbn10s = [...new Set(validIsbnBooks.map(b => isbn13To10(b.isbn!)).filter(Boolean))] as string[];
 
     if (!isbn10s.length) {
@@ -61,23 +46,7 @@ export const ratingsSync = async () => {
       return;
     }
 
-    const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
-      method: "POST",
-      body: JSON.stringify(isbn10s.map(isbn => ({ url: `https://www.amazon.com/dp/${isbn}` }))),
-      headers: {
-        Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
-        "Content-Type": "application/json"
-      }
-    }).then(res => res.json());
-
-    const { snapshot_id } = resp;
-    console.log("Snapshot ID:", snapshot_id);
-
-    if (!snapshot_id) {
-      throw new Error("No snapshot ID returned from Bright Data");
-    }
-
-    const results = await pollForSnapshot(snapshot_id, BRIGHT_DATA_API_KEY);
+    const results = await getRatingsData(isbn10s);
 
     for (const book of validIsbnBooks) {
       const isbn10 = isbn13To10(book.isbn!);

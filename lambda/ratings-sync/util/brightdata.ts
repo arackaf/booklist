@@ -1,13 +1,39 @@
+import { getSecrets } from "./getSecrets";
+
 const wait = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-type SnapshotResult = {
+type RatingResult = {
   isbn10: string | null;
   isbn13: string | null;
   rating: number | null;
   reviewsCount: number | null;
 };
 
-export const pollForSnapshot = async (snapshotId: string, apiKey: string): Promise<SnapshotResult[]> => {
+export const getRatingsData = async (isbns: string[]): Promise<RatingResult[]> => {
+  const secrets = await getSecrets();
+  const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
+
+  const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
+    method: "POST",
+    body: JSON.stringify(isbns.map(isbn => ({ url: `https://www.amazon.com/dp/${isbn}` }))),
+    headers: {
+      Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
+      "Content-Type": "application/json"
+    }
+  }).then(res => res.json());
+
+  const { snapshot_id: snapshotId } = resp;
+  console.log("Snapshot ID:", snapshotId);
+
+  if (!snapshotId) {
+    throw new Error("No snapshot ID returned from Bright Data");
+  }
+
+  const snapshotResult = await pollForSnapshot(snapshotId, BRIGHT_DATA_API_KEY);
+  return getRatingsDataResultFromScrapeResult(snapshotResult);
+};
+
+export const pollForSnapshot = async (snapshotId: string, apiKey: string): Promise<any> => {
   for (let i = 0; i < 40; i++) {
     await wait(i < 20 ? 5000 : 10000);
 
@@ -30,44 +56,45 @@ export const pollForSnapshot = async (snapshotId: string, apiKey: string): Promi
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json"
         }
-      })
-        .then(res => res.json())
-        .then(data => (Array.isArray(data) ? data : []));
+      }).then(res => res.json());
 
       console.log("Snapshot data:", snapshotData);
-
-      return snapshotData
-        .filter(item => !item.error)
-        .map(item => {
-          const productDetails = item.product_details ?? [];
-
-          let isbn10 = getProductDetailData("ISBN-10", productDetails);
-          let isbn13 = getProductDetailData("ISBN-13", productDetails);
-
-          if (isbn10) isbn10 = isbn10.replace(/-/g, "");
-          if (isbn13) isbn13 = isbn13.replace(/-/g, "");
-
-          let reviewsCount: number | null = parseFloat(item.reviews_count);
-          let rating: number | null = null;
-
-          if (!reviewsCount) {
-            reviewsCount = null;
-          } else {
-            rating = parseFloat(item.rating);
-            if (!rating) {
-              reviewsCount = null;
-              rating = null;
-            }
-          }
-
-          return { isbn10, isbn13, rating, reviewsCount };
-        });
+      return snapshotData;
     }
-
     throw new Error("Snapshot failed with status: " + progress.status);
   }
-
   throw new Error("Snapshot timed out");
+};
+
+export const getRatingsDataResultFromScrapeResult = (snapshotResult: any): RatingResult[] => {
+  const snapshotData = Array.isArray(snapshotResult) ? snapshotResult : [];
+
+  return snapshotData
+    .filter(item => !item.error)
+    .map(item => {
+      const productDetails = item.product_details ?? [];
+
+      let isbn10 = getProductDetailData("ISBN-10", productDetails);
+      let isbn13 = getProductDetailData("ISBN-13", productDetails);
+
+      if (isbn10) isbn10 = isbn10.replace(/-/g, "");
+      if (isbn13) isbn13 = isbn13.replace(/-/g, "");
+
+      let reviewsCount: number | null = parseFloat(item.reviews_count);
+      let rating: number | null = null;
+
+      if (!reviewsCount) {
+        reviewsCount = null;
+      } else {
+        rating = parseFloat(item.rating);
+        if (!rating) {
+          reviewsCount = null;
+          rating = null;
+        }
+      }
+
+      return { isbn10, isbn13, rating, reviewsCount };
+    });
 };
 
 const getProductDetailData = (type: string, productDetails: { type: string; value: any }[]) => {

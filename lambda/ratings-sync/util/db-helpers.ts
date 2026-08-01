@@ -9,6 +9,18 @@ export type RatingsData = {
   numberReviews: number;
 };
 
+export const getBooksNeedingRatingsSync = async (db: PostgresDb) => {
+  return db
+    .select({
+      id: books.id,
+      isbn: books.isbn
+    })
+    .from(books)
+    .where(or(isNull(books.lastRatingsSync), sql`${books.lastRatingsSync} < NOW() - INTERVAL '6 months'`))
+    .orderBy(sql`${books.lastRatingsSync} ASC NULLS LAST`)
+    .limit(10);
+};
+
 export async function markBooksRatingSynced(
   db: PostgresDb,
   bookIds: number[],
