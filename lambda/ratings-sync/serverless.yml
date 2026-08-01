@@ -1,0 +1,13 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: arackaf
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: ratings-sync
+
+provider:
+  name: aws
+  runtime: nodejs24.x
+  architecture: arm64
+
+functions:
+  hello:
+    handler: handler.hello
