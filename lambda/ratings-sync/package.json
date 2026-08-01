@@ -1,0 +1,22 @@
+{
+  "name": "ratings-sync",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "check": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.264.0",
+    "@aws-sdk/lib-dynamodb": "^3.264.0",
+    "@types/node": "^22.20.1",
+    "drizzle-orm": "^0.43.1",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "typescript": "^7.0.2"
+  }
+}
