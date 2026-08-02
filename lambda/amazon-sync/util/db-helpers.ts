@@ -29,7 +29,7 @@ export async function markBooksRatingSynced(
   error: string | null,
   ratingsData: RatingsData | null = null
 ) {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date();
 
   const ratingsDataToSet = ratingsData ?? {};
   for (const id of bookIds) {

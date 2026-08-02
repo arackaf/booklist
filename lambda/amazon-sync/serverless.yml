@@ -24,8 +24,8 @@ functions:
   ratingsSync:
     handler: handler.ratingsSync
     timeout: 500
-#    events:
-#      - schedule: rate(1 hour)
+    events:
+      - schedule: rate(5 minutes)
 
 package:
   individually: true

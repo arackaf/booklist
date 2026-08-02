@@ -1,5 +1,6 @@
 import { integer, serial, timestamp, boolean, json, pgTable, varchar, numeric, date, text } from "drizzle-orm/pg-core";
 import type { EditorialReview, PreviewPacket } from "./types";
+import { datetime } from "drizzle-orm/mysql-core";
 
 export const books = pgTable("books", {
   id: serial("id").primaryKey(),
@@ -27,7 +28,7 @@ export const books = pgTable("books", {
   lastSimilarItemsSync: date("last_similar_items_sync"),
   lastSimilarItemsSyncSuccess: boolean("last_similar_items_sync_success"),
   lastSimilarItemsSyncError: text("last_similar_items_sync_error"),
-  lastRatingsSync: date("last_ratings_sync"),
+  lastRatingsSync: datetime("last_ratings_sync"),
   lastRatingsSyncSuccess: boolean("last_ratings_sync_success"),
   lastRatingsSyncError: text("last_ratings_sync_error")
 });
