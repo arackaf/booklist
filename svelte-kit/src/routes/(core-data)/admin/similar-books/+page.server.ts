@@ -21,7 +21,7 @@ export const load = async ({ parent, url, locals }) => {
   const now = new Date(new Date().toISOString());
   books.forEach(book => {
     if (!book.lastSimilarItemsSync) {
-      book.lastSimilarItemsSync = "";
+      book.lastSimilarItemsSync = null;
       return;
     }
     const lastSync = new Date(book.lastSimilarItemsSync);
