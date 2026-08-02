@@ -1,4 +1,4 @@
-import { or, isNull, sql, eq } from "drizzle-orm";
+import { or, isNull, sql, eq, desc } from "drizzle-orm";
 import { books } from "../drizzle/drizzle-schema";
 import { initializePostgres } from "./pg-helper";
 
@@ -17,7 +17,8 @@ export const getBooksNeedingRatingsSync = async (db: PostgresDb) => {
     })
     .from(books)
     .where(or(isNull(books.lastRatingsSync), sql`${books.lastRatingsSync} < NOW() - INTERVAL '6 months'`))
-    .orderBy(sql`${books.lastRatingsSync} ASC NULLS LAST`)
+    .orderBy(sql`${books.lastRatingsSync} ASC NULLS LAST`, desc(books.id))
+
     .limit(10);
 };
 
