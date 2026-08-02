@@ -1,7 +1,7 @@
 # "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: arackaf
 # "service" is the name of this project. This will also be added to your AWS resource names.
-service: ratings-sync
+service: amazon-sync
 
 provider:
   name: aws
@@ -24,8 +24,8 @@ functions:
   ratingsSync:
     handler: handler.ratingsSync
     timeout: 500
-    events:
-      - schedule: rate(1 hour)
+#    events:
+#      - schedule: rate(1 hour)
 
 package:
   individually: true

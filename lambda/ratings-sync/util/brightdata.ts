@@ -13,9 +13,22 @@ export const getRatingsData = async (isbns: string[]): Promise<RatingResult[]> =
   const secrets = await getSecrets();
   const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
 
-  const resp = await fetch(`https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`, {
+  const snapshotId = await getBrightDataSnapshotId(
+    `https://api.brightdata.com/datasets/v3/trigger?dataset_id=gd_lwhideng15g8jg63s7&include_errors=true`,
+    JSON.stringify(isbns.map(isbn => ({ url: `https://www.amazon.com/dp/${isbn}` })))
+  );
+
+  const snapshotResult = await pollForSnapshot(snapshotId, BRIGHT_DATA_API_KEY);
+  return getRatingsDataResultFromScrapeResult(snapshotResult);
+};
+
+const getBrightDataSnapshotId = async (url: string, body: string): Promise<string> => {
+  const secrets = await getSecrets();
+  const BRIGHT_DATA_API_KEY = secrets["bright-data-key"];
+
+  const resp = await fetch(url, {
     method: "POST",
-    body: JSON.stringify(isbns.map(isbn => ({ url: `https://www.amazon.com/dp/${isbn}` }))),
+    body,
     headers: {
       Authorization: `Bearer ${BRIGHT_DATA_API_KEY}`,
       "Content-Type": "application/json"
@@ -29,8 +42,7 @@ export const getRatingsData = async (isbns: string[]): Promise<RatingResult[]> =
     throw new Error("No snapshot ID returned from Bright Data");
   }
 
-  const snapshotResult = await pollForSnapshot(snapshotId, BRIGHT_DATA_API_KEY);
-  return getRatingsDataResultFromScrapeResult(snapshotResult);
+  return snapshotId;
 };
 
 export const pollForSnapshot = async (snapshotId: string, apiKey: string): Promise<any> => {
