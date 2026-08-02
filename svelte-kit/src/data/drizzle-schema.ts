@@ -1,6 +1,5 @@
 import { integer, serial, timestamp, boolean, json, pgTable, varchar, numeric, date, text } from "drizzle-orm/pg-core";
 import type { EditorialReview, PreviewPacket } from "./types";
-import { datetime } from "drizzle-orm/mssql-core";
 
 export * from "./auth-schema";
 
@@ -30,7 +29,7 @@ export const books = pgTable("books", {
   lastSimilarItemsSync: date("last_similar_items_sync"),
   lastSimilarItemsSyncSuccess: boolean("last_similar_items_sync_success"),
   lastSimilarItemsSyncError: text("last_similar_items_sync_error"),
-  lastRatingsSync: datetime("last_ratings_sync"),
+  lastRatingsSync: timestamp("last_ratings_sync"),
   lastRatingsSyncSuccess: boolean("last_ratings_sync_success"),
   lastRatingsSyncError: text("last_ratings_sync_error")
 });
