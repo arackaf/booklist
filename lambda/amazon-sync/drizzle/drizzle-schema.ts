@@ -24,7 +24,7 @@ export const books = pgTable("books", {
   averageReview: numeric("average_review", { precision: 2, scale: 1, mode: "number" }),
   numberReviews: integer("number_reviews"),
   amazonSyncEligible: boolean("amazon_sync_eligible"),
-  lastSimilarItemsSync: date("last_similar_items_sync"),
+  lastSimilarItemsSync: timestamp("last_similar_items_sync"),
   lastSimilarItemsSyncSuccess: boolean("last_similar_items_sync_success"),
   lastSimilarItemsSyncError: text("last_similar_items_sync_error"),
   lastRatingsSync: timestamp("last_ratings_sync"),
