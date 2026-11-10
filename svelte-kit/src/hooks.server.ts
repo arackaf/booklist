@@ -13,9 +13,12 @@ export async function handle({ event, resolve }) {
     return new Response(null, { status: 204 }); // Return empty response with 204 No Content
   }
 
+  const start = performance.now();
   const sessionPayload = await auth.api.getSession({
     headers: event.request.headers
   });
+  const end = performance.now();
+  console.log(`get session: ${end - start}ms`);
 
   if (sessionPayload && sessionPayload.session) {
     const providerId = await getProviderId(db, sessionPayload.session.userId);
