@@ -38,5 +38,8 @@
       "id": "cabc3adcf4c44c03b55e2d17aaef7d99",
       "localConnectionString": "postgresql://docker:docker@localhost:5432/my_library"
     }
-  ]
+  ],
+  "placement": {
+    "region": "aws:us-east-1"
+  }
 }
