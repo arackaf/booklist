@@ -28,7 +28,7 @@ export const getBetterAuthObject = (db: DB) => {
       updateAge: 60 * 60 * 24, // Update session every 1 day
       cookieCache: {
         enabled: true,
-        maxAge: 60 * 60 * 24 * 120 // 5 minutes
+        maxAge: 60 * 60 * 24 * 30 // 30 days
       }
     }
   });
