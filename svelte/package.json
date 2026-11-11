@@ -29,7 +29,7 @@
     "history": "^5.0.0",
     "lodash.debounce": "4.0.8",
     "micro-graphql-svelte": "0.2.4",
-    "node-sass": "7.0.1",
+    "node-sass": "7.0.3",
     "persistgraphql": "^0.3.11",
     "purify-css": "1.2.2",
     "query-string": "4.3.2",
